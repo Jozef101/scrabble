@@ -27,13 +27,15 @@ function App() {
 
   const [exchangeZoneLetters, setExchangeZoneLetters] = useState([]);
 
+  const [hasPlacedOnBoardThisTurn, setHasPlacedOnBoardThisTurn] = useState(false);
+  const [hasMovedToExchangeZoneThisTurn, setHasMovedToExchangeZoneThisTurn] = useState(false);
+
+
   const validWordsSet = useRef(new Set(slovakWordsArray.map(word => word.toUpperCase())));
 
-  // REFAKTOROVANÁ FUNKCIA: drawLetters teraz prijíma aktuálny stav vrecúška
-  // a vracia nové písmená a zvyšné vrecúško, bez priamej zmeny stavu.
   const drawLetters = (currentBag, numToDraw) => {
     const drawn = [];
-    const tempBag = [...currentBag]; // Pracujeme s kópiou vrecúška
+    const tempBag = [...currentBag];
 
     for (let i = 0; i < numToDraw; i++) {
       if (tempBag.length > 0) {
@@ -47,12 +49,23 @@ function App() {
   };
 
   useEffect(() => {
-    // Pri prvom načítaní potiahneme 7 písmen a aktualizujeme stav vrecúška
     const { drawnLetters, remainingBag } = drawLetters(letterBag, 7);
     setRackLetters(drawnLetters);
-    setLetterBag(remainingBag); // Aktualizujeme stav vrecúška
+    setLetterBag(remainingBag);
     setBoardAtStartOfTurn(Array(15).fill(null).map(() => Array(15).fill(null)));
   }, []);
+
+  const getPlacedLettersDuringCurrentTurn = (currentBoardState, initialBoardState) => {
+    const placed = [];
+    for (let r = 0; r < 15; r++) {
+      for (let c = 0; c < 15; c++) {
+        if (currentBoardState[r][c] && !initialBoardState[r][c]) {
+          placed.push({ x: r, y: c, letterData: currentBoardState[r][c] });
+        }
+      }
+    }
+    return placed;
+  };
 
   const moveLetter = (letterData, source, target) => {
     let newRackLetters = [...rackLetters];
@@ -103,6 +116,10 @@ function App() {
     setRackLetters(newRackLetters);
     setBoard(newBoard);
     setExchangeZoneLetters(newExchangeZoneLetters);
+
+    const currentPlacedOnBoard = getPlacedLettersDuringCurrentTurn(newBoard, boardAtStartOfTurn);
+    setHasPlacedOnBoardThisTurn(currentPlacedOnBoard.length > 0);
+    setHasMovedToExchangeZoneThisTurn(newExchangeZoneLetters.length > 0);
   };
 
   const isStraightLine = (letters) => {
@@ -303,6 +320,11 @@ function App() {
       alert("Najprv polož aspoň jedno písmeno na dosku!");
       return;
     }
+
+    if (hasMovedToExchangeZoneThisTurn) {
+        alert("Nemôžeš potvrdiť ťah na doske, ak si už presunul(a) písmeno do výmennej zóny v tomto ťahu!");
+        return;
+    }
     
     console.log("DEBUG: Actual Placed Letters:", actualPlacedLetters.map(l => ({ letter: l.letterData.letter, x: l.x, y: l.y })));
 
@@ -388,7 +410,7 @@ function App() {
     
     const numToDraw = actualPlacedLetters.length;
     const { drawnLetters: newLetters, remainingBag: updatedBagAfterTurn } = drawLetters(letterBag, numToDraw);
-    setLetterBag(updatedBagAfterTurn); // Aktualizujeme stav vrecúška po ťahu
+    setLetterBag(updatedBagAfterTurn);
 
     let tempRack = [...rackLetters];
     let newRack = [];
@@ -413,6 +435,9 @@ function App() {
     setIsFirstTurn(false);
     
     setCurrentPlayerIndex(prevIndex => (prevIndex === 0 ? 1 : 0));
+
+    setHasPlacedOnBoardThisTurn(false);
+    setHasMovedToExchangeZoneThisTurn(false);
   };
 
   const handleExchangeLetters = () => {
@@ -420,26 +445,33 @@ function App() {
       alert("Najprv presuň písmená do výmennej zóny!");
       return;
     }
+    if (hasPlacedOnBoardThisTurn) {
+        alert("Nemôžeš vymeniť písmená, ak si už položil(a) písmeno na dosku v tomto ťahu!");
+        return;
+    }
+
     if (letterBag.length < exchangeZoneLetters.length) {
       alert("Vo vrecúšku nie je dostatok písmen na výmenu!");
       return;
     }
 
-    // 1. Vrátime písmená z výmennej zóny do vrecúška a zamiešame ho
-    let updatedBag = [...letterBag, ...exchangeZoneLetters];
+    // DÔLEŽITÁ ZMENA LOGIKY: Najprv potiahni nové písmená, potom vráť staré do vrecúška.
+    const numToDraw = exchangeZoneLetters.length;
+    const { drawnLetters: newLettersForRack, remainingBag: bagAfterDraw } = drawLetters(letterBag, numToDraw);
+    
+    // Vrátime vymenené písmená do vrecúška, ktoré už bolo zmenšené o potiahnuté písmená
+    let updatedBag = [...bagAfterDraw, ...exchangeZoneLetters];
+    
+    // Zamiešame vrecúško po vrátení písmen
     for (let i = updatedBag.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [updatedBag[i], updatedBag[j]] = [updatedBag[j], updatedBag[i]];
     }
     
-    // 2. Vytiahneme nové písmená pre rack z už aktualizovaného a zamiešaného vrecúška
-    const numToDraw = exchangeZoneLetters.length;
-    const { drawnLetters: newLettersForRack, remainingBag: finalBagAfterExchange } = drawLetters(updatedBag, numToDraw);
-    
-    // 3. Aktualizujeme stav vrecúška s finálnym stavom po výmene a ťahaní
-    setLetterBag(finalBagAfterExchange);
+    // Aktualizujeme stav vrecúška s finálnym stavom po výmene a ťahaní
+    setLetterBag(updatedBag);
 
-    // 4. Nahradíme vymenené písmená na racku novými
+    // Nahradíme vymenené písmená na racku novými
     let newRack = [...rackLetters];
     let newLetterIndex = 0;
     for (let i = 0; i < newRack.length; i++) {
@@ -460,6 +492,9 @@ function App() {
 
     alert(`Vymenil si ${numToDraw} písmen.`);
     setCurrentPlayerIndex(prevIndex => (prevIndex === 0 ? 1 : 0)); // Prepni hráča, výmena stojí ťah
+
+    setHasPlacedOnBoardThisTurn(false);
+    setHasMovedToExchangeZoneThisTurn(false);
   };
 
 
