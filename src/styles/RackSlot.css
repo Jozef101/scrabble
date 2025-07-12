@@ -1,0 +1,16 @@
+.rack-slot {
+  width: 40px; /* Rovnaká šírka ako písmeno */
+  height: 40px; /* Rovnaká výška ako písmeno */
+  border: 1px dashed #666; /* Prázdne sloty môžeme vizuálne odlíšiť */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f0f0f0;
+  margin: 2px; /* Malá medzera medzi slotmi */
+  box-sizing: border-box;
+}
+
+.rack-slot-highlight {
+  background-color: #c0f0c0; /* Zelené zvýraznenie pri prejdení myšou */
+  border: 2px solid #008000;
+}

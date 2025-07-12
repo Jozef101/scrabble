@@ -6,7 +6,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #e0e0e0; /* Základná farba políčka */
+background-color: #0b9b8a;
+    /* Základná farba políčka */
   box-sizing: border-box; /* Aby padding a border nepridávali na šírke/výške */
   position: relative; /* Pre umiestnenie bonus textu/hviezdičky */
 }
@@ -22,27 +23,28 @@
 
 /* Štýly pre bonusové políčka */
 .tile-bonus-tw { /* Triple Word - trojnásobok slova (červené) */
-  background-color: #ff4d4d;
+background-color: #f0464a;
   color: white;
 }
 
 .tile-bonus-dw { /* Double Word - dvojnásobok slova (ružové) */
-  background-color: #ff99bb;
+background-color: #f4c2c3;
   color: white;
 }
 
 .tile-bonus-tl { /* Triple Letter - trojnásobok písmena (tmavomodré) */
-  background-color: #004d99;
+background-color: #0fa6ed;
   color: white;
 }
 
 .tile-bonus-dl { /* Double Letter - dvojnásobok písmena (svetlomodré) */
-  background-color: #80b3ff;
+background-color: #68dafa;
   color: white;
 }
 
 .tile-start-square { /* Stredové políčko (ružové s hviezdičkou) */
-  background-color: #ff99bb; /* Rovnaké ako DW, ale s hviezdičkou */
+background-color: #f4c2c3;
+    /* Rovnaké ako DW, ale s hviezdičkou */
   color: white;
 }
 

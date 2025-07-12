@@ -1,44 +1,30 @@
+// src/components/PlayerRack.js
 import React from 'react';
-import { useDrop } from 'react-dnd';
-import Letter from './Letter';
-import '../styles/PlayerRack.css'; // Importujeme CSS pre PlayerRack
+import RackSlot from './RackSlot'; // Importujeme nový komponent RackSlot
+import '../styles/PlayerRack.css'; // Uistite sa, že máte tento CSS súbor
 
 function PlayerRack({ letters, moveLetter }) {
-  // useDrop hook robí z tohto komponentu "drop target"
-  const [{ isOver }, drop] = useDrop({
-    accept: 'LETTER', // Akceptuje iba draggable položky typu 'LETTER'
-    drop: (item, monitor) => {
-      if (monitor.didDrop()) {
-        return;
-      }
-      // Voláme funkciu moveLetter z App.js
-      moveLetter(
-        item.letterData,
-        item.source, // Odkiaľ prišlo (doska)
-        { type: 'rack' } // Kam ide (stojanček)
-      );
-    },
-    collect: (monitor) => ({
-      isOver: monitor.isOver(), // Je nejaká draggable položka nad týmto cieľom?
-    }),
+  // Rack má zvyčajne 7 miest
+  const rackSize = 7;
+  // Vytvoríme pole slotov. Ak je písmeno na danom indexe, vložíme ho do slotu.
+  const rackSlots = Array.from({ length: rackSize }, (_, index) => {
+    const letterInSlot = letters[index] || null; // Ak na indexe nie je písmeno, je to null
+    return (
+      <RackSlot
+        key={index} // Kľúč je dôležitý pre React
+        index={index}
+        letter={letterInSlot}
+        moveLetter={moveLetter}
+      />
+    );
   });
 
-  const dropHighlightClass = isOver ? 'rack-highlight' : '';
-
   return (
-    <div
-      ref={drop} // Pripojíme ref na DOM element, aby ho react-dnd mohol spravovať
-      className={`player-rack ${dropHighlightClass}`}
-    >
-      {letters.map((letterData) => (
-        <Letter
-          key={letterData.id}
-          id={letterData.id}
-          letter={letterData.letter}
-          value={letterData.value}
-          source={{ type: 'rack' }} // Označujeme, že písmeno je na stojančeku
-        />
-      ))}
+    <div className="player-rack-container">
+      <h3>Tvoj stojan:</h3>
+      <div className="player-rack">
+        {rackSlots}
+      </div>
     </div>
   );
 }

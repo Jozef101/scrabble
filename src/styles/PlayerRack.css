@@ -1,17 +1,17 @@
-.player-rack {
-  display: flex;
-  gap: 5px; /* Medzera medzi písmenkami */
-  border: 2px dashed #888;
-  padding: 10px;
-  min-height: 50px; /* Aby sa tam zmestili písmenká */
-  background-color: #e6e6e6;
-  border-radius: 8px;
-  align-items: center;
-  justify-content: center;
-  width: fit-content; /* Prispôsobí sa obsahu */
+/* src/styles/PlayerRack.css */
+.player-rack-container {
+    margin-top: 20px;
+    text-align: center;
 }
-
-.rack-highlight {
-  background-color: #c0c0f0; /* Modré zvýraznenie pri prejdení myšou */
-  border: 2px dashed #000080;
+.player-rack {
+display: flex;
+  justify-content: center;
+border: 1px solid #999;
+    padding: 10px;
+    background-color: #eee;
+    border-radius: 5px;
+    max-width: fit-content;
+    /* Aby sa rack nerozťahoval cez celú šírku */
+    margin: 0 auto;
+    /* Na centrovanie racku */
 }
