@@ -1,0 +1,62 @@
+/* src/styles/Tile.css */
+.tile {
+  width: 40px;
+  height: 40px;
+  border: 1px solid #ccc;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #e0e0e0; /* Základná farba políčka */
+  box-sizing: border-box; /* Aby padding a border nepridávali na šírke/výške */
+  position: relative; /* Pre umiestnenie bonus textu/hviezdičky */
+}
+
+.tile-highlight {
+  background-color: #c0f0c0; /* Zelené zvýraznenie pri prejdení myšou */
+  border: 2px dashed #008000;
+}
+
+.tile-has-letter {
+  background-color: #f0f0f0; /* Trochu iná farba, keď je na nej písmeno */
+}
+
+/* Štýly pre bonusové políčka */
+.tile-bonus-tw { /* Triple Word - trojnásobok slova (červené) */
+  background-color: #ff4d4d;
+  color: white;
+}
+
+.tile-bonus-dw { /* Double Word - dvojnásobok slova (ružové) */
+  background-color: #ff99bb;
+  color: white;
+}
+
+.tile-bonus-tl { /* Triple Letter - trojnásobok písmena (tmavomodré) */
+  background-color: #004d99;
+  color: white;
+}
+
+.tile-bonus-dl { /* Double Letter - dvojnásobok písmena (svetlomodré) */
+  background-color: #80b3ff;
+  color: white;
+}
+
+.tile-start-square { /* Stredové políčko (ružové s hviezdičkou) */
+  background-color: #ff99bb; /* Rovnaké ako DW, ale s hviezdičkou */
+  color: white;
+}
+
+.bonus-text {
+  font-size: 10px;
+  font-weight: bold;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+}
+
+/* Pre stredovú hviezdičku ju môžeme zväčšiť */
+.tile-start-square .bonus-text {
+  font-size: 24px;
+}

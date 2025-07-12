@@ -1,0 +1,13 @@
+.board {
+  display: grid;
+  grid-template-columns: repeat(15, 40px); /* 15 stĺpcov po 40px */
+  grid-template-rows: repeat(15, 40px);    /* 15 riadkov po 40px */
+  border: 2px solid #555;
+  background-color: #a0a0a0; /* Farba pozadia dosky */
+  width: 600px; /* 15 * 40px = 600px */
+  height: 600px; /* 15 * 40px = 600px */
+}
+
+.board-row {
+  display: contents; /* Umožňuje priamemu potomkovi (Tile) byť v grid layoutu rodiča */
+}
