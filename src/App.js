@@ -7,6 +7,7 @@ import LetterBag from './components/LetterBag';
 import Scoreboard from './components/Scoreboard'; // Importujeme nový Scoreboard komponent
 import { createLetterBag, LETTER_VALUES } from './utils/LettersDistribution'; // Importujeme aj LETTER_VALUES
 import ExchangeZone from './components/ExchangeZone'; // Importujeme nový ExchangeZone
+import LetterSelectionModal from './components/LetterSelectionModal'; // Importujeme nový komponent
 import { bonusSquares, BONUS_TYPES } from './utils/boardUtils';
 import slovakWordsArray from './data/slovakWords.json'; // Importujeme slovník
 import './styles/App.css';
@@ -32,8 +33,10 @@ function App() {
 
   const [consecutivePasses, setConsecutivePasses] = useState(0);
   const [isGameOver, setIsGameOver] = useState(false);
-  // NOVÝ STAV: Sleduje, či je vrecúško prázdne
   const [isBagEmpty, setIsBagEmpty] = useState(false);
+
+  const [showLetterSelectionModal, setShowLetterSelectionModal] = useState(false);
+  const [jokerTileCoords, setJokerTileCoords] = useState(null);
 
 
   const validWordsSet = useRef(new Set(slovakWordsArray.map(word => word.toUpperCase())));
@@ -47,7 +50,7 @@ function App() {
         drawn.push(tempBag.pop());
       } else {
         console.warn("Vrecúško je prázdne, nedá sa ťahať viac písmen.");
-        setIsBagEmpty(true); // Nastavíme, že vrecúško je prázdne
+        setIsBagEmpty(true);
         break;
       }
     }
@@ -105,32 +108,90 @@ function App() {
       return;
     }
 
-    let currentLetter = letterData;
-    
+    // Tieto kontroly sú presunuté do confirmTurn a handleExchangeLetters
+    // if (target.type === 'board' && hasMovedToExchangeZoneThisTurn) {
+    //     alert("Nemôžeš položiť písmená na dosku, ak si už presunul(a) písmeno do výmennej zóny v tomto ťahu!");
+    //     return;
+    // }
+    // if (target.type === 'exchangeZone' && hasPlacedOnBoardThisTurn) {
+    //     alert("Nemôžeš presunúť písmená do výmennej zóny, ak si už položil(a) písmeno na dosku v tomto ťahu!");
+    //     return;
+    // }
+
+    let letterToMove = null;
+
+    // --- Odstránenie písmena zo zdroja a príprava letterToMove ---
     if (source.type === 'board') {
-      currentLetter = newBoard[source.x][source.y];
-      newBoard[source.x][source.y] = null;
+      // Získame skutočný objekt písmena z dosky a vytvoríme HLBOKÚ KÓPIU
+      letterToMove = { ...newBoard[source.x][source.y] };
+      newBoard[source.x][source.y] = null; // Vymažeme pôvodné miesto na doske
+      // Ak je to žolík presúvajúci sa Z dosky, resetujeme mu priradené písmeno
+      if (letterToMove && letterToMove.letter === '') {
+        letterToMove.assignedLetter = null;
+      }
     } else if (source.type === 'rack') {
-      newRackLetters[source.index] = null;
+      // Získame skutočný objekt písmena z racku a vytvoríme HLBOKÚ KÓPIU
+      letterToMove = { ...newRackLetters[source.index] };
+      newRackLetters[source.index] = null; // Vymažeme pôvodné miesto na racku
     } else if (source.type === 'exchangeZone') {
-      newExchangeZoneLetters = newExchangeZoneLetters.filter(l => l.id !== letterData.id);
+      // Nájdeme písmeno v poli výmennej zóny a vytvoríme HLBOKÚ KÓPIU
+      const indexInExchangeZone = newExchangeZoneLetters.findIndex(l => l.id === letterData.id);
+      if (indexInExchangeZone !== -1) {
+        letterToMove = { ...newExchangeZoneLetters[indexInExchangeZone] };
+        newExchangeZoneLetters.splice(indexInExchangeZone, 1); // Odstránime ho z výmennej zóny
+        // Ak je to žolík presúvajúci sa Z výmennej zóny, resetujeme mu priradené písmeno
+        if (letterToMove && letterToMove.letter === '') {
+          letterToMove.assignedLetter = null;
+        }
+      } else {
+        console.warn("Písmeno sa nenašlo vo výmennej zóne pri pokuse o presun.");
+        return;
+      }
     }
 
+    // Zabezpečíme, že máme platné písmeno na presun
+    if (!letterToMove || letterToMove.id === undefined) {
+        console.warn("Nepodarilo sa nájsť platné písmeno na presun alebo chýba ID.");
+        return;
+    }
+
+    // --- Umiestnenie písmena na cieľové miesto ---
     if (target.type === 'rack') {
-      newRackLetters[target.index] = currentLetter;
+      newRackLetters[target.index] = letterToMove;
     } else if (target.type === 'board') {
-      newBoard[target.x][target.y] = currentLetter;
+      newBoard[target.x][target.y] = letterToMove;
+      // Ak je žolík položený NA dosku, zobrazíme modálne okno
+      if (letterToMove.letter === '') {
+        setJokerTileCoords({ x: target.x, y: target.y });
+        setShowLetterSelectionModal(true);
+      }
     } else if (target.type === 'exchangeZone') {
-        newExchangeZoneLetters.push(currentLetter);
+        newExchangeZoneLetters.push(letterToMove);
     }
 
     setRackLetters(newRackLetters);
     setBoard(newBoard);
     setExchangeZoneLetters(newExchangeZoneLetters);
 
+    // --- Aktualizácia flagov na základe aktuálneho stavu ---
     const currentPlacedOnBoard = getPlacedLettersDuringCurrentTurn(newBoard, boardAtStartOfTurn);
     setHasPlacedOnBoardThisTurn(currentPlacedOnBoard.length > 0);
     setHasMovedToExchangeZoneThisTurn(newExchangeZoneLetters.length > 0);
+  };
+
+  const assignLetterToJoker = (selectedLetter) => {
+    if (jokerTileCoords) {
+      setBoard(prevBoard => {
+        const newBoard = prevBoard.map(row => [...row]);
+        const { x, y } = jokerTileCoords;
+        if (newBoard[x][y] && newBoard[x][y].letter === '') {
+          newBoard[x][y] = { ...newBoard[x][y], assignedLetter: selectedLetter };
+        }
+        return newBoard;
+      });
+    }
+    setShowLetterSelectionModal(false);
+    setJokerTileCoords(null);
   };
 
   const isStraightLine = (letters) => {
@@ -259,7 +320,7 @@ function App() {
 
     const addWordIfNew = (wordLetters) => {
         if (wordLetters.length > 1) {
-            const wordString = wordLetters.map(l => l.letterData.letter).join('');
+            const wordString = wordLetters.map(l => (l.letterData.letter === '' ? l.letterData.assignedLetter : l.letterData.letter)).join('');
             if (!addedWordStrings.has(wordString)) {
                 addedWordStrings.add(wordString);
                 formedWordObjects.push({ wordString, letters: wordLetters });
@@ -290,7 +351,7 @@ function App() {
     wordLetters.forEach(letterObj => {
       const { x, y, letterData } = letterObj;
       const bonusType = bonusSquares[`${x},${y}`];
-      let letterValue = LETTER_VALUES[letterData.letter] || 0;
+      let letterValue = (letterData.letter === '') ? 0 : (LETTER_VALUES[letterData.letter] || 0);
 
       const isNewLetter = boardStateAtStartOfTurn[x][y] === null;
 
@@ -312,20 +373,19 @@ function App() {
     return wordScore;
   };
 
-  // NOVÁ FUNKCIA: Získanie bodovej hodnoty písmen na racku
   const getRackPoints = (rack) => {
-    return rack.reduce((sum, letter) => sum + (letter ? LETTER_VALUES[letter.letter] : 0), 0);
+    return rack.reduce((sum, letter) => {
+        if (!letter) return sum;
+        return sum + (letter.letter === '' ? 0 : (LETTER_VALUES[letter.letter] || 0));
+    }, 0);
   };
 
-  // NOVÁ FUNKCIA: Spracovanie konca hry a finálneho bodovania
   const calculateFinalScores = (endingPlayerIndex, finalRackLetters) => {
     let finalScores = [...playerScores];
     let totalOpponentRackPoints = 0;
 
-    // Odpočítanie bodov za zostávajúce písmená pre všetkých hráčov
-    // A spočítanie bodov súperov, ak jeden hráč vyprázdnil rack
     for (let i = 0; i < playerScores.length; i++) {
-        const rack = (i === endingPlayerIndex) ? finalRackLetters : rackLetters; // Použijeme finálny rack pre končiaceho hráča
+        const rack = (i === endingPlayerIndex) ? finalRackLetters : rackLetters;
         const pointsOnRack = getRackPoints(rack);
         finalScores[i] -= pointsOnRack;
 
@@ -334,8 +394,7 @@ function App() {
         }
     }
 
-    // Ak hra skončila vyprázdnením racku (nie pasovaním)
-    if (endingPlayerIndex !== null) { // endingPlayerIndex je null pri konci hry pasovaním
+    if (endingPlayerIndex !== null) {
         finalScores[endingPlayerIndex] += totalOpponentRackPoints;
     }
 
@@ -350,6 +409,15 @@ function App() {
       alert("Hra skončila!");
       return;
     }
+
+    const placedJokersWithoutAssignment = getPlacedLettersDuringCurrentTurn(board, boardAtStartOfTurn)
+        .filter(l => l.letterData.letter === '' && l.letterData.assignedLetter === null);
+    
+    if (placedJokersWithoutAssignment.length > 0) {
+        alert("Všetkým žolíkom na doske musí byť priradené písmeno!");
+        return;
+    }
+
 
     const actualPlacedLetters = [];
     for (let r = 0; r < 15; r++) {
@@ -374,7 +442,7 @@ function App() {
         return;
     }
     
-    console.log("DEBUG: Actual Placed Letters:", actualPlacedLetters.map(l => ({ letter: l.letterData.letter, x: l.x, y: l.y })));
+    console.log("DEBUG: Actual Placed Letters:", actualPlacedLetters.map(l => ({ letter: l.letterData.letter, assigned: l.letterData.assignedLetter, x: l.x, y: l.y })));
 
     if (!isStraightLine(actualPlacedLetters)) {
       alert("Písmená musia byť v jednom rade alebo stĺpci!");
@@ -383,7 +451,7 @@ function App() {
     
     const allFormedWords = getAllWordsInTurn(actualPlacedLetters, board);
 
-    console.log("DEBUG: All Formed Words (before validation):", allFormedWords.map(w => ({ word: w.wordString, letters: w.letters.map(l => l.letterData.letter) })));
+    console.log("DEBUG: All Formed Words (before validation):", allFormedWords.map(w => ({ word: w.wordString, letters: w.letters.map(l => (l.letterData.letter === '' ? l.letterData.assignedLetter : l.letterData.letter)) })));
 
     if (allFormedWords.length === 0) {
         alert("Nezistilo sa žiadne platné slovo. Skontroluj umiestnenie.");
@@ -392,7 +460,7 @@ function App() {
 
     for (const wordObj of allFormedWords) {
         console.log(`DEBUG: Checking contiguity for word: "${wordObj.wordString}"`);
-        console.log("DEBUG: Letters for contiguity check:", wordObj.letters.map(l => ({ letter: l.letterData.letter, x: l.x, y: l.y })));
+        console.log("DEBUG: Letters for contiguity check:", wordObj.letters.map(l => ({ letter: (l.letterData.letter === '' ? l.letterData.assignedLetter : l.letterData.letter), x: l.x, y: l.y })));
 
         if (!areLettersContiguous(wordObj.letters)) {
             alert(`Slovo "${wordObj.wordString}" nie je súvislé (žiadne diery)!`);
@@ -446,10 +514,9 @@ function App() {
         alert("BINGO! +50 bodov!");
     }
 
-    // Dočasne aktualizujeme skóre pre aktuálneho hráča
     let newScores = [...playerScores];
     newScores[currentPlayerIndex] += turnScore;
-    setPlayerScores(newScores); // Aktualizujeme stav skóre
+    setPlayerScores(newScores);
 
     alert(`Ťah je platný! Získal si ${turnScore} bodov. Vytvorené slová: ${allFormedWords.map(w => w.wordString).join(', ')}`);
 
@@ -457,47 +524,36 @@ function App() {
     
     const numToDraw = actualPlacedLetters.length;
     const { drawnLetters: newLetters, remainingBag: updatedBagAfterTurn } = drawLetters(letterBag, numToDraw);
-    
-    // Pred aktualizáciou racku skontrolujeme koniec hry
-    const finalRackAfterPlay = [...rackLetters].map((letter, index) => {
-      // Ak bolo písmeno z racku položené, bude null. Ak nie, zostane.
-      const placedThisTurn = actualPlacedLetters.find(l => l.letterData.id === letter?.id);
-      return placedThisTurn ? null : letter;
-    }).filter(l => l !== null); // Odstránime null hodnoty
-
-    // Pridáme nové písmená do dočasného racku
-    let tempNewRack = [...finalRackAfterPlay];
-    let newLetterIndex = 0;
-    for (let i = 0; i < 7; i++) { // Prechádzame 7 slotov racku
-        if (tempNewRack[i] === undefined || tempNewRack[i] === null) { // Ak je slot prázdny
-            if (newLetterIndex < newLetters.length) {
-                tempNewRack[i] = newLetters[newLetterIndex];
-                newLetterIndex++;
-            } else {
-                tempNewRack[i] = null; // Ak už nie sú nové písmená, zostane null
-            }
-        }
-    }
-    // Ak zostali nejaké nové písmená, pridáme ich na koniec (nemalo by sa stať, ak je rack 7)
-    while(newLetterIndex < newLetters.length) {
-        tempNewRack.push(newLetters[newLetterIndex]);
-        newLetterIndex++;
-    }
-    // Orezanie na 7 a doplnenie null, ak je potrebné
-    tempNewRack = tempNewRack.slice(0, 7);
-    while (tempNewRack.length < 7) tempNewRack.push(null);
-
-
-    // KONIEC HRY: Ak je vrecúško prázdne A hráč vyprázdnil svoj rack
-    if (isBagEmpty && tempNewRack.every(l => l === null)) {
-        setRackLetters(tempNewRack); // Najprv aktualizujeme rack
-        setLetterBag(updatedBagAfterTurn); // Potom aktualizujeme vrecúško
-        calculateFinalScores(currentPlayerIndex, tempNewRack); // Spustíme finálne bodovanie
-        return; // Zastavíme ďalšie spracovanie, hra skončila
-    }
-
-    setRackLetters(tempNewRack);
     setLetterBag(updatedBagAfterTurn);
+
+    let tempRack = [...rackLetters];
+    let newRack = [];
+    let newLetterIndex = 0;
+
+    for (let i = 0; i < tempRack.length; i++) {
+      if (tempRack[i] === null && newLetterIndex < newLetters.length) {
+        newRack.push(newLetters[newLetterIndex]);
+        newLetterIndex++;
+      } else {
+        newRack.push(tempRack[i]);
+      }
+    }
+    while(newLetterIndex < newLetters.length) {
+      newRack.push(newLetters[newLetterIndex]);
+      newLetterIndex++;
+    }
+    while (newRack.length < 7) newRack.push(null);
+    newRack = newRack.slice(0, 7);
+
+    const finalRackAfterPlay = newRack.filter(l => l !== null);
+
+    if (isBagEmpty && finalRackAfterPlay.length === 0) {
+        setRackLetters(newRack);
+        calculateFinalScores(currentPlayerIndex, newRack);
+        return;
+    }
+
+    setRackLetters(newRack);
     setIsFirstTurn(false);
     
     setCurrentPlayerIndex(prevIndex => (prevIndex === 0 ? 1 : 0));
@@ -511,6 +567,14 @@ function App() {
     if (isGameOver) {
       alert("Hra skončila!");
       return;
+    }
+
+    const placedJokersWithoutAssignment = getPlacedLettersDuringCurrentTurn(board, boardAtStartOfTurn)
+        .filter(l => l.letterData.letter === '' && l.letterData.assignedLetter === null);
+    
+    if (placedJokersWithoutAssignment.length > 0) {
+        alert("Všetkým žolíkom na doske musí byť priradené písmeno, aby si mohol(a) vymeniť písmená!");
+        return;
     }
 
     if (exchangeZoneLetters.length === 0) {
@@ -545,6 +609,8 @@ function App() {
       if (newRack[i] === null && newLetterIndex < newLettersForRack.length) {
         newRack[i] = newLettersForRack[newLetterIndex];
         newLetterIndex++;
+      } else if (exchangeZoneLetters.some(l => l.id === newRack[i]?.id)) {
+        newRack[i] = null;
       }
     }
     while (newLetterIndex < newLettersForRack.length) {
@@ -571,6 +637,14 @@ function App() {
       return;
     }
 
+    const placedJokersWithoutAssignment = getPlacedLettersDuringCurrentTurn(board, boardAtStartOfTurn)
+        .filter(l => l.letterData.letter === '' && l.letterData.assignedLetter === null);
+    
+    if (placedJokersWithoutAssignment.length > 0) {
+        alert("Všetkým žolíkom na doske musí byť priradené písmeno, aby si mohol(a) prejsť ťah!");
+        return;
+    }
+
     if (hasPlacedOnBoardThisTurn) {
         alert("Nemôžeš prejsť ťah, ak máš položené písmená na doske. Buď ich potvrď, alebo vráť na stojan.");
         return;
@@ -583,12 +657,10 @@ function App() {
     const newConsecutivePasses = consecutivePasses + 1;
     setConsecutivePasses(newConsecutivePasses);
 
-    // Koniec hry, ak všetci hráči pasovali dvakrát po sebe
-    // Pre 2 hráčov to znamená 4 po sebe idúce pasy
     if (newConsecutivePasses >= 4) {
         setIsGameOver(true);
         alert("Hra skončila! Obaja hráči pasovali dvakrát po sebe.");
-        calculateFinalScores(null, null); // Koniec hry pasovaním, nikto nevyprázdnil rack
+        calculateFinalScores(null, null);
         return;
     }
 
@@ -605,7 +677,7 @@ function App() {
       <div className="app-container">
         <h1>Scrabble</h1>
         {isGameOver && <h2 className="game-over-message">Hra skončila!</h2>}
-        <Scoreboard playerScores={playerScores} currentPlayerIndex={currentPlayerIndex} isGameOver={isGameOver} /> {/* Pridaný isGameOver prop */}
+        <Scoreboard playerScores={playerScores} currentPlayerIndex={currentPlayerIndex} isGameOver={isGameOver} />
         <Board board={board} moveLetter={moveLetter} boardAtStartOfTurn={boardAtStartOfTurn} />
         <PlayerRack letters={rackLetters} moveLetter={moveLetter} />
         <LetterBag remainingLettersCount={letterBag.length} />
@@ -619,29 +691,60 @@ function App() {
           <button
             className="confirm-turn-button"
             onClick={confirmTurn}
-            disabled={isGameOver}
+            disabled={isGameOver || showLetterSelectionModal}
           >
             Potvrdiť ťah
           </button>
           <button
             className="exchange-letters-button"
             onClick={handleExchangeLetters}
-            disabled={isGameOver || letterBag.length < 7} // Zablokovať výmenu, ak nie je dosť písmen vo vrecúšku
+            disabled={isGameOver || letterBag.length < 7 || showLetterSelectionModal}
           >
             Vymeniť písmená ({exchangeZoneLetters.length})
           </button>
           <button
             className="pass-turn-button"
             onClick={handlePassTurn}
-            disabled={isGameOver}
+            disabled={isGameOver || showLetterSelectionModal}
           >
             Pass
           </button>
         </div>
+
+        {showLetterSelectionModal && (
+          <LetterSelectionModal
+            onSelectLetter={assignLetterToJoker}
+            onClose={() => {
+              if (jokerTileCoords) {
+                setBoard(prevBoard => {
+                  const newBoard = prevBoard.map(row => [...row]);
+                  const { x, y } = jokerTileCoords;
+                  const jokerLetter = newBoard[x][y];
+                  newBoard[x][y] = null;
+                  const firstEmptyRackSlot = rackLetters.findIndex(l => l === null);
+                  if (firstEmptyRackSlot !== -1) {
+                    setRackLetters(prevRack => {
+                      const updatedRack = [...prevRack];
+                      updatedRack[firstEmptyRackSlot] = { ...jokerLetter, assignedLetter: null };
+                      return updatedRack;
+                    });
+                  } else {
+                    setRackLetters(prevRack => [...prevRack, { ...jokerLetter, assignedLetter: null }]);
+                  }
+                  return newBoard;
+                });
+              }
+              setShowLetterSelectionModal(false);
+              setJokerTileCoords(null);
+              const currentPlacedOnBoard = getPlacedLettersDuringCurrentTurn(board, boardAtStartOfTurn);
+              setHasPlacedOnBoardThisTurn(currentPlacedOnBoard.length > 0);
+              setHasMovedToExchangeZoneThisTurn(exchangeZoneLetters.length > 0);
+            }}
+          />
+        )}
       </div>
     </DndProvider>
   );
 }
 
 export default App;
-

@@ -1,33 +1,37 @@
-// src/components/Letter.js
 import React from 'react';
 import { useDrag } from 'react-dnd';
-import '../styles/Letter.css'; // Importujeme CSS pre Letter
+import '../styles/Letter.css';
 
-// Pridaná isDraggable prop
-function Letter({ id, letter, value, source, isDraggable = true }) { // isDraggable s default hodnotou true
+// Pridaný 'assignedLetter' do propov komponentu
+function Letter({ id, letter, value, assignedLetter, source, isDraggable = true }) {
+  // Ak je písmeno žolík a má priradené písmeno, zobrazíme ho
+  const displayLetter = letter === '' ? (assignedLetter || '') : letter;
+  const isJoker = letter === ''; // Kontrola, či je to žolík
+
   const [{ isDragging }, drag] = useDrag({
     type: 'LETTER',
-    item: {
-      letterData: { id, letter, value },
-      source: source,
-    },
-    // Dôležité: canDrag závisí od isDraggable prop
-    canDrag: isDraggable, 
+    // Vytvoríme item objekt z propov
+    item: { letterData: { id, letter, value, assignedLetter }, source },
+    canDrag: isDraggable, // Používame prop isDraggable
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),
     }),
   });
 
-  const opacity = isDragging ? 0 : 1; // 0 pre skrývanie ťahaného, 1 pre normálne zobrazenie
-  const cursorStyle = isDraggable ? 'grab' : 'not-allowed'; // Zmení kurzor
+  const dragClass = isDragging ? 'dragging' : '';
+  const jokerClass = isJoker ? 'joker-tile' : ''; // Trieda pre žolíka
 
   return (
     <div
       ref={drag}
-      className="letter"
-      style={{ opacity, cursor: cursorStyle }} // Aplikujeme štýl kurzora
+      className={`letter-tile ${dragClass} ${jokerClass}`}
+      style={{ opacity: isDragging ? 0.5 : 1 }}
     >
-      <span className="letter-char">{letter}</span>
+      <span className="main-letter">{displayLetter}</span>
+      {/* Ak je to žolík a má priradené písmeno, zobrazíme ho menším písmom */}
+      {isJoker && assignedLetter && ( // Používame priamo prop 'assignedLetter'
+        <span className="joker-assigned-letter">{assignedLetter}</span>
+      )}
       <span className="letter-value">{value}</span>
     </div>
   );

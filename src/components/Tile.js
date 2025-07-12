@@ -1,4 +1,3 @@
-// src/components/Tile.js
 import React from 'react';
 import { useDrop } from 'react-dnd';
 import Letter from './Letter';
@@ -10,44 +9,41 @@ function Tile({ x, y, letter, moveLetter, boardAtStartOfTurn }) {
 
   const isDraggable = letter !== null && (boardAtStartOfTurn[x][y] === null);
 
-  const [{ isOver, canDrop }, drop] = useDrop({ // Pridaný 'canDrop' do destructuring
+  const [{ isOver, canDrop }, drop] = useDrop({
     accept: 'LETTER',
-    // KĽÚČOVÁ ZMENA: canDrop funkcia
     canDrop: (item) => {
-      // Písmeno je možné položiť, len ak políčko (this.props.letter) je prázdne
-      // ALEBO ak sa presúva z tohto istého políčka (čo by sa nemalo stať, ale pre istotu)
-      // A NESMIE byť zamknuté (teda už bolo na doske na začiatku ťahu)
-      // Táto logika canDrop zabráni položeniu na obsadené políčko
-      return letter === null || (item.source.type === 'board' && item.source.x === x && item.source.y === y);
+      if (letter === null) return true;
+      return item.source.type === 'board' && item.source.x === x && item.source.y === y;
     },
     drop: (item, monitor) => {
       if (monitor.didDrop()) {
         return;
       }
-      // Pred volaním moveLetter, ak by sa náhodou dostal drop sem, skontrolujeme opäť
       if (letter !== null && !(item.source.type === 'board' && item.source.x === x && item.source.y === y)) {
           console.log("Políčko už je obsadené, nemôžeš tam položiť písmeno.");
           return;
       }
 
+      // Vždy zavoláme moveLetter. Logika pre zobrazenie modálneho okna žolíka
+      // je v App.js funkcii moveLetter.
       moveLetter(
         item.letterData,
         item.source,
-        { type: 'board', x, y }
+        { type: 'board', x, y } // 'target' je tu správne definovaný ako objekt
       );
     },
     collect: (monitor) => ({
       isOver: monitor.isOver(),
-      canDrop: monitor.canDrop(), // Zbiera aj canDrop stav
+      canDrop: monitor.canDrop(),
     }),
   });
 
-  // Vizuálne zvýraznenie pre "canDrop"
   const dropHighlightClass = isOver && canDrop ? 'tile-highlight-can-drop' : (isOver ? 'tile-highlight' : '');
   const hasLetterClass = letter ? 'tile-has-letter' : '';
   const bonusClass = bonusType ? `tile-bonus-${bonusType.toLowerCase()}` : '';
   const startSquareClass = bonusType === BONUS_TYPES.START_SQUARE ? 'tile-start-square' : '';
-  const lockedClass = isDraggable ? '' : 'tile-locked';
+  const lockedClass = !isDraggable && letter !== null ? 'tile-locked' : '';
+
 
   return (
     <div
@@ -59,13 +55,14 @@ function Tile({ x, y, letter, moveLetter, boardAtStartOfTurn }) {
           id={letter.id}
           letter={letter.letter}
           value={letter.value}
+          assignedLetter={letter.assignedLetter}
           source={{ type: 'board', x, y }}
           isDraggable={isDraggable}
         />
       )}
       {!letter && bonusType && (
         <span className="bonus-text">
-          {bonusType === BONUS_TYPES.STAR ? '★' : bonusType.replace(/_/g, ' ')}
+          {bonusType === BONUS_TYPES.START_SQUARE ? '★' : bonusType.replace(/_/g, ' ')}
         </span>
       )}
     </div>
