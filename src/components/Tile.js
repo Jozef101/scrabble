@@ -2,12 +2,18 @@
 import React from 'react';
 import { useDrop } from 'react-dnd';
 import Letter from './Letter';
-import { getBonusType, BONUS_TYPES } from '../utils/boardUtils'; // Importujeme naše bonusy
+import { getBonusType, BONUS_TYPES } from '../utils/boardUtils';
 import '../styles/Tile.css';
 
-function Tile({ x, y, letter, moveLetter }) {
-  // Získame typ bonusu pre toto políčko
+// Tile teraz prijíma boardAtStartOfTurn
+function Tile({ x, y, letter, moveLetter, boardAtStartOfTurn }) {
   const bonusType = getBonusType(x, y);
+
+  // Uistíme sa, že isDraggable je true iba pre písmená na racku alebo pre písmená práve položené na dosku
+  // Ak letter === null, nie je tam písmeno, takže nie je dragovateľné.
+  // Ak letter !== null A boardAtStartOfTurn[x][y] NIE JE null, znamená to, že písmeno je už zamknuté.
+  const isDraggable = letter !== null && (boardAtStartOfTurn[x][y] === null);
+
 
   const [{ isOver }, drop] = useDrop({
     accept: 'LETTER',
@@ -15,7 +21,6 @@ function Tile({ x, y, letter, moveLetter }) {
       if (monitor.didDrop()) {
         return;
       }
-      // Voláme funkciu moveLetter z App.js
       moveLetter(
         item.letterData,
         item.source,
@@ -27,18 +32,19 @@ function Tile({ x, y, letter, moveLetter }) {
     }),
   });
 
-  // Dynamicky pridávame triedy na základe typu bonusu
   const dropHighlightClass = isOver ? 'tile-highlight' : '';
   const hasLetterClass = letter ? 'tile-has-letter' : '';
-  const bonusClass = bonusType ? `tile-bonus-${bonusType.toLowerCase()}` : ''; // Napr. 'tile-bonus-tw'
-
-  // Pre stredové políčko pridáme špeciálnu triedu pre hviezdičku
+  const bonusClass = bonusType ? `tile-bonus-${bonusType.toLowerCase()}` : '';
   const startSquareClass = bonusType === BONUS_TYPES.START_SQUARE ? 'tile-start-square' : '';
+
+  // Nová trieda pre zamknuté písmená
+  const lockedClass = isDraggable ? '' : 'tile-locked';
 
   return (
     <div
       ref={drop}
-      className={`tile ${dropHighlightClass} ${hasLetterClass} ${bonusClass} ${startSquareClass}`}
+      // Komentár presunutý mimo reťazec className
+      className={`tile ${dropHighlightClass} ${hasLetterClass} ${bonusClass} ${startSquareClass} ${lockedClass}`} 
     >
       {letter && (
         <Letter
@@ -46,9 +52,9 @@ function Tile({ x, y, letter, moveLetter }) {
           letter={letter.letter}
           value={letter.value}
           source={{ type: 'board', x, y }}
+          isDraggable={isDraggable} // Odovzdávame isDraggable do Letter komponentu
         />
       )}
-      {/* Zobrazíme text bonusu (voliteľné, môžete namiesto textu použiť ikony) */}
       {!letter && bonusType && (
         <span className="bonus-text">
           {bonusType === BONUS_TYPES.START_SQUARE ? '★' : bonusType}

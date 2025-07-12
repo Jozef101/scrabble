@@ -62,3 +62,11 @@ background-color: #f4c2c3;
 .tile-start-square .bonus-text {
   font-size: 24px;
 }
+.tile-locked {
+    cursor: not-allowed !important;
+    /* Zmení kurzor na "zákaz" */
+    opacity: 0.8;
+    /* Mierne zníži priehľadnosť pre vizuálnu indikáciu */
+    /* Môžete pridať aj iný background-color alebo border pre jasnejšiu indikáciu */
+    /* background-color: #888; */
+}

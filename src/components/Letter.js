@@ -1,28 +1,31 @@
+// src/components/Letter.js
 import React from 'react';
 import { useDrag } from 'react-dnd';
 import '../styles/Letter.css'; // Importujeme CSS pre Letter
 
-function Letter({ id, letter, value, source }) {
-  // useDrag hook robí z tohto komponentu "draggable"
+// Pridaná isDraggable prop
+function Letter({ id, letter, value, source, isDraggable = true }) { // isDraggable s default hodnotou true
   const [{ isDragging }, drag] = useDrag({
-    type: 'LETTER', // Typ tejto draggable položky
+    type: 'LETTER',
     item: {
-      letterData: { id, letter, value }, // Dáta, ktoré sa prenášajú
-      source: source, // Informácie o pôvodnom mieste (stojanček alebo doska)
+      letterData: { id, letter, value },
+      source: source,
     },
+    // Dôležité: canDrag závisí od isDraggable prop
+    canDrag: isDraggable, 
     collect: (monitor) => ({
-      isDragging: monitor.isDragging(), // Sleduje, či je položka práve ťahaná
+      isDragging: monitor.isDragging(),
     }),
   });
 
-  // Štýl pre skrytie ťahaného písmena (voliteľné, react-dnd duplikuje vizuál)
-  const opacity = isDragging ? 0 : 1;
+  const opacity = isDragging ? 0 : 1; // 0 pre skrývanie ťahaného, 1 pre normálne zobrazenie
+  const cursorStyle = isDraggable ? 'grab' : 'not-allowed'; // Zmení kurzor
 
   return (
     <div
-      ref={drag} // Pripojíme ref na DOM element, aby ho react-dnd mohol spravovať
+      ref={drag}
       className="letter"
-      style={{ opacity }}
+      style={{ opacity, cursor: cursorStyle }} // Aplikujeme štýl kurzora
     >
       <span className="letter-char">{letter}</span>
       <span className="letter-value">{value}</span>

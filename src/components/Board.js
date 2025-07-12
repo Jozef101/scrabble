@@ -1,8 +1,10 @@
+// src/components/Board.js
 import React from 'react';
 import Tile from './Tile';
-import '../styles/Board.css'; // Importujeme CSS pre Board
+import '../styles/Board.css';
 
-function Board({ board, moveLetter }) {
+// Board teraz prijíma aj boardAtStartOfTurn
+function Board({ board, moveLetter, boardAtStartOfTurn }) { // PRIDANÉ boardAtStartOfTurn
   return (
     <div className="board">
       {board.map((row, rowIndex) => (
@@ -12,8 +14,9 @@ function Board({ board, moveLetter }) {
               key={`${rowIndex}-${colIndex}`}
               x={rowIndex}
               y={colIndex}
-              letter={tileData} // tileData bude buď objekt písmena alebo null
+              letter={tileData}
               moveLetter={moveLetter}
+              boardAtStartOfTurn={boardAtStartOfTurn} // PRIDANÉ PROP
             />
           ))}
         </div>
