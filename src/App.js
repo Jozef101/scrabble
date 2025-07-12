@@ -1,12 +1,13 @@
 // src/App.js
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react'; // Pridáme useRef
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import Board from './components/Board';
 import PlayerRack from './components/PlayerRack';
 import LetterBag from './components/LetterBag';
-import { createLetterBag } from './utils/LettersDistribution';
+import { createLetterBag } from './utils/LettersDistribution'; // Opravený názov importu
 import { bonusSquares, BONUS_TYPES } from './utils/boardUtils';
+import slovakWordsArray from './data/slovakWords.json'; // Importujeme slovník
 import './styles/App.css';
 
 function App() {
@@ -20,6 +21,10 @@ function App() {
     Array(15).fill(null).map(() => Array(15).fill(null))
   );
   const [isFirstTurn, setIsFirstTurn] = useState(true);
+
+  // NOVÝ KÓD: Slovník ako Set pre rýchle vyhľadávanie
+  // useRef zabezpečí, že Set sa vytvorí len raz a uchová sa medzi renderovaním
+  const validWordsSet = useRef(new Set(slovakWordsArray.map(word => word.toUpperCase())));
 
   const drawLetters = (numToDraw) => {
     const drawn = [];
@@ -85,7 +90,7 @@ function App() {
       newRackLetters[source.index] = null; // Vymažeme písmeno z racku
     }
 
-    // Po presune: Umiestnime písmeno na nové miesto (rack alebo doska)
+    // Po presunoch: Umiestnime písmeno na nové miesto (rack alebo doska)
     if (target.type === 'rack') {
       newRackLetters[target.index] = currentLetter;
     } else if (target.type === 'board') {
@@ -109,116 +114,95 @@ function App() {
     return isRow || isCol;
   };
 
+  // Upravená funkcia getFullWordLetters pre presnejšie získanie slova
   const getFullWordLetters = (currentPlacedLetters, currentBoard) => {
     if (currentPlacedLetters.length === 0) return [];
 
-    let primaryOrientation = null; // 'horizontal' or 'vertical'
+    let primaryOrientation = null;
+    let mainWordLetters = [];
 
-    // Determine primary orientation if more than one letter is placed
-    if (currentPlacedLetters.length > 1) {
-        // Sort letters to make sure we can easily determine orientation and contiguity later
-        currentPlacedLetters.sort((a, b) => a.x === b.x ? a.y - b.y : a.x - b.x);
-
-        const firstLetter = currentPlacedLetters[0];
-        const secondLetter = currentPlacedLetters[1];
-
-        if (firstLetter.x === secondLetter.x) {
-            primaryOrientation = 'horizontal';
-        } else if (firstLetter.y === secondLetter.y) {
-            primaryOrientation = 'vertical';
-        } else {
-            // If more than one letter but not in a straight line, it's invalid here.
-            // isStraightLine check should catch this earlier, but good to be safe.
-            return [];
-        }
-    } else { // Only one letter placed
-        const [singleLetter] = currentPlacedLetters;
-        const x = singleLetter.x;
-        const y = singleLetter.y;
-
-        // Check for horizontal neighbors
-        const hasHorizontalNeighbor = (y > 0 && currentBoard[x][y - 1]) ||
-                                      (y < 14 && currentBoard[x][y + 1]);
-        // Check for vertical neighbors
-        const hasVerticalNeighbor = (x > 0 && currentBoard[x - 1][y]) ||
-                                    (x < 14 && currentBoard[x + 1][y]);
+    // Ak je len jedno písmeno, musíme určiť orientáciu podľa susedov
+    if (currentPlacedLetters.length === 1) {
+        const { x, y } = currentPlacedLetters[0];
+        const hasHorizontalNeighbor = (y > 0 && currentBoard[x][y - 1] !== null) || (y < 14 && currentBoard[x][y + 1] !== null);
+        const hasVerticalNeighbor = (x > 0 && currentBoard[x - 1][y] !== null) || (x < 14 && currentBoard[x + 1][y] !== null);
 
         if (hasHorizontalNeighbor && !hasVerticalNeighbor) {
             primaryOrientation = 'horizontal';
         } else if (!hasHorizontalNeighbor && hasVerticalNeighbor) {
             primaryOrientation = 'vertical';
         } else if (hasHorizontalNeighbor && hasVerticalNeighbor) {
-            // If it connects both horizontally and vertically, it's a crossroad.
-            // For simplicity, let's assume primary word is horizontal.
-            // The secondary word will be checked by cross-word validation later (not implemented yet, but for future)
+            // Ak sa spája v oboch smeroch (kríž), hlavné slovo môže byť ľubovoľné.
+            // Pre jednoduchosť zvolíme horizontálne, krížové slová sa validujú samostatne.
             primaryOrientation = 'horizontal'; 
         } else {
-            // No neighbors and only one letter placed: this is an isolated letter, not a valid word yet.
-            // Unless it's the first turn and it's on the center square, which isChecked handles.
-            // For now, if no neighbors, no "word" is formed by this single letter itself.
-            return [];
+            // Jedno písmeno bez susedov netvorí slovo (okrem prvého ťahu na stred, ale to sa rieši v isConnected)
+            return currentPlacedLetters; // Vráti len to jedno písmeno, ak netvorí slovo
+        }
+    } else {
+        // Viacero písmen: určíme orientáciu z ich pozícií
+        const firstLetter = currentPlacedLetters[0];
+        const secondLetter = currentPlacedLetters[1]; // Predpokladáme, že sú už zoradené alebo isStraightLine to overí
+        if (firstLetter.x === secondLetter.x) {
+            primaryOrientation = 'horizontal';
+        } else if (firstLetter.y === secondLetter.y) {
+            primaryOrientation = 'vertical';
+        } else {
+            return []; // Nemali by sme sa sem dostať, ak isStraightLine prešla
         }
     }
 
-    let wordLetters = [];
     if (primaryOrientation === 'horizontal') {
-        const row = currentPlacedLetters[0].x; // All letters are in the same row
-        let minCol = currentPlacedLetters[0].y;
-        let maxCol = currentPlacedLetters[0].y;
+        const row = currentPlacedLetters[0].x;
+        let minCol = Math.min(...currentPlacedLetters.map(l => l.y));
+        let maxCol = Math.max(...currentPlacedLetters.map(l => l.y));
 
-        // Find the leftmost and rightmost column for the potential word
-        currentPlacedLetters.forEach(l => {
-            if (l.y < minCol) minCol = l.y;
-            if (l.y > maxCol) maxCol = l.y;
-        });
-
-        // Expand left to find existing letters
+        // Rozšíriť doľava
         while (minCol > 0 && currentBoard[row][minCol - 1]) {
             minCol--;
         }
-        // Expand right to find existing letters
+        // Rozšíriť doprava
         while (maxCol < 14 && currentBoard[row][maxCol + 1]) {
             maxCol++;
         }
 
-        // Collect all letters in this determined range
         for (let y = minCol; y <= maxCol; y++) {
-            if (currentBoard[row][y]) { // If there is a letter at this position
-                wordLetters.push({ x: row, y: y, letterData: currentBoard[row][y] });
+            if (currentBoard[row][y]) {
+                mainWordLetters.push({ x: row, y: y, letterData: currentBoard[row][y] });
+            } else {
+                // Ak je diera v rekonštruovanom slove, je to neplatné
+                return []; 
             }
         }
-        wordLetters.sort((a, b) => a.y - b.y); // Sort horizontally
+        mainWordLetters.sort((a, b) => a.y - b.y);
     } else if (primaryOrientation === 'vertical') {
-        const col = currentPlacedLetters[0].y; // All letters are in the same column
-        let minRow = currentPlacedLetters[0].x;
-        let maxRow = currentPlacedLetters[0].x;
+        const col = currentPlacedLetters[0].y;
+        let minRow = Math.min(...currentPlacedLetters.map(l => l.x));
+        let maxRow = Math.max(...currentPlacedLetters.map(l => l.x));
 
-        // Find the topmost and bottommost row for the potential word
-        currentPlacedLetters.forEach(l => {
-            if (l.x < minRow) minRow = l.x;
-            if (l.x > maxRow) maxRow = l.x;
-        });
-
-        // Expand up to find existing letters
+        // Rozšíriť nahor
         while (minRow > 0 && currentBoard[minRow - 1][col]) {
             minRow--;
         }
-        // Expand down to find existing letters
+        // Rozšíriť nadol
         while (maxRow < 14 && currentBoard[maxRow + 1][col]) {
             maxRow++;
         }
 
-        // Collect all letters in this determined range
         for (let x = minRow; x <= maxRow; x++) {
-            if (currentBoard[x][col]) { // If there is a letter at this position
-                wordLetters.push({ x: x, y: col, letterData: currentBoard[x][col] });
+            if (currentBoard[x][col]) {
+                mainWordLetters.push({ x: x, y: col, letterData: currentBoard[x][col] });
+            } else {
+                // Ak je diera v rekonštruovanom slove, je to neplatné
+                return [];
             }
         }
-        wordLetters.sort((a, b) => a.x - b.x); // Sort vertically
+        mainWordLetters.sort((a, b) => a.x - b.x);
     }
 
-    return wordLetters;
+    return mainWordLetters;
   };
+
 
   const areLettersContiguous = (allWordLetters) => {
     if (allWordLetters.length <= 1) return true;
@@ -268,14 +252,77 @@ function App() {
     return true;
   };
 
+  // NOVÁ FUNKCIA: Získanie všetkých slov vytvorených ťahom (hlavné + krížové)
+  const getAllWordsInTurn = (actualPlacedLetters, currentBoard) => {
+    const words = new Set(); // Použijeme Set na automatické odstránenie duplicít
+
+    // 1. Získanie hlavného slova
+    const mainWordLetters = getFullWordLetters(actualPlacedLetters, currentBoard);
+    const mainWordString = mainWordLetters.map(l => l.letterData.letter).join('');
+    if (mainWordString.length > 1) {
+        words.add(mainWordString);
+    }
+
+    // 2. Získanie krížových slov
+    // Určíme orientáciu hlavného slova
+    const isMainWordHorizontal = actualPlacedLetters.length > 1 && actualPlacedLetters[0].x === actualPlacedLetters[1].x;
+    const isMainWordVertical = actualPlacedLetters.length > 1 && actualPlacedLetters[0].y === actualPlacedLetters[1].y;
+
+    actualPlacedLetters.forEach(pLetter => {
+        const x = pLetter.x;
+        const y = pLetter.y;
+
+        // Skontroluj vertikálne slovo, ak hlavné slovo je horizontálne alebo je to jedno písmeno
+        if (isMainWordHorizontal || (actualPlacedLetters.length === 1 && isMainWordHorizontal === false)) {
+            let crossWordLetters = [];
+            // Hore
+            let tempX = x;
+            while (tempX >= 0 && currentBoard[tempX][y]) {
+                crossWordLetters.unshift({x: tempX, y: y, letterData: currentBoard[tempX][y]});
+                tempX--;
+            }
+            // Dole
+            tempX = x + 1;
+            while (tempX < 15 && currentBoard[tempX][y]) {
+                crossWordLetters.push({x: tempX, y: y, letterData: currentBoard[tempX][y]});
+                tempX++;
+            }
+            const crossWordString = crossWordLetters.map(l => l.letterData.letter).join('');
+            if (crossWordString.length > 1) { // Krížové slovo musí mať aspoň 2 písmená
+                words.add(crossWordString);
+            }
+        }
+
+        // Skontroluj horizontálne slovo, ak hlavné slovo je vertikálne alebo je to jedno písmeno
+        if (isMainWordVertical || (actualPlacedLetters.length === 1 && isMainWordVertical === false)) {
+            let crossWordLetters = [];
+            // Vľavo
+            let tempY = y;
+            while (tempY >= 0 && currentBoard[x][tempY]) {
+                crossWordLetters.unshift({x: x, y: tempY, letterData: currentBoard[x][tempY]});
+                tempY--;
+            }
+            // Vpravo
+            tempY = y + 1;
+            while (tempY < 15 && currentBoard[x][tempY]) {
+                crossWordLetters.push({x: x, y: tempY, letterData: currentBoard[x][tempY]});
+                tempY++;
+            }
+            const crossWordString = crossWordLetters.map(l => l.letterData.letter).join('');
+            if (crossWordString.length > 1) { // Krížové slovo musí mať aspoň 2 písmená
+                words.add(crossWordString);
+            }
+        }
+    });
+
+    return Array.from(words); // Vráti pole unikátnych slov
+  };
+
   const confirmTurn = () => {
     // 1. Získame VŠETKY písmená, ktoré boli položené z Racku v tomto ťahu
-    // Porovnáme aktuálny `board` s `boardAtStartOfTurn`.
     const actualPlacedLetters = [];
     for (let r = 0; r < 15; r++) {
       for (let c = 0; c < 15; c++) {
-        // Ak je na aktuálnej doske písmeno, ale na doske na začiatku ťahu tam nebolo,
-        // potom je to písmeno, ktoré bolo položené v tomto ťahu.
         if (board[r][c] && !boardAtStartOfTurn[r][c]) {
           actualPlacedLetters.push({
             letterData: board[r][c],
@@ -298,21 +345,22 @@ function App() {
     }
     
     // 3. Získame celý rad/stĺpec, ktorý bol vytvorený, vrátane existujúcich písmen.
-    const allWordLetters = getFullWordLetters(actualPlacedLetters, board);
+    // Používame aktuálny board, ktorý už obsahuje položené písmená.
+    const allWordLettersInMainLine = getFullWordLetters(actualPlacedLetters, board);
 
-    if (allWordLetters.length === 0) {
+    if (allWordLettersInMainLine.length === 0 || allWordLettersInMainLine.length === 1 && actualPlacedLetters.length === 1 && !isFirstTurn) {
         alert("Nezistilo sa žiadne platné slovo. Skontroluj umiestnenie.");
         return;
     }
 
     // 4. Kontrola súvislosti VŠETKÝCH písmen vo vytvorenom slove (vrátane existujúcich)
-    if (!areLettersContiguous(allWordLetters)) {
+    if (!areLettersContiguous(allWordLettersInMainLine)) {
       alert("Položené písmená musia tvoriť súvislú líniu s existujúcimi písmenami (žiadne diery)!");
       return;
     }
 
     // 5. Kontrola pripojenia k existujúcim písmenám alebo stredu
-    if (!isConnected(actualPlacedLetters, board, isFirstTurn, allWordLetters)) {
+    if (!isConnected(actualPlacedLetters, board, isFirstTurn, allWordLettersInMainLine)) {
       if (isFirstTurn) {
         alert("Prvý ťah musí pokrývať stredové políčko (hviezdičku)!");
       } else {
@@ -322,7 +370,6 @@ function App() {
     }
 
     // 6. Kontrola, či novo položené písmená nevyplnili existujúce písmeno z predchádzajúceho ťahu
-    // (t.j. či sa písmeno položilo na prázdne políčko)
     for (const letter of actualPlacedLetters) {
         if (boardAtStartOfTurn[letter.x][letter.y] !== null) {
             alert("Nemôžeš položiť písmeno na už obsadené políčko!");
@@ -330,17 +377,26 @@ function App() {
         }
     }
     
-    // Ak sa v tomto ťahu položilo len jedno písmeno, ale nejaké slovo už existovalo,
-    // potom getFullWordLetters by malo vrátiť slovo s viacerými písmenami.
-    // Ak je length 1, a nie je to prvý ťah, znamená to, že sa neprichytilo.
-    if (actualPlacedLetters.length === 1 && allWordLetters.length === 1 && !isFirstTurn) {
-         alert("Musíš vytvoriť slovo spojením s existujúcimi písmenami.");
-         return;
+    // 7. NOVÁ VALIDÁCIA: Overenie platnosti všetkých vytvorených slov
+    const allFormedWords = getAllWordsInTurn(actualPlacedLetters, board);
+    console.log("Všetky vytvorené slová v ťahu:", allFormedWords);
+
+    const invalidWords = allFormedWords.filter(word => {
+        // Kontrolujeme len slová do dĺžky 5, ostatné prejdú
+        if (word.length > 5) {
+            return false; 
+        }
+        return !validWordsSet.current.has(word.toUpperCase());
+    });
+
+    if (invalidWords.length > 0) {
+        alert(`Neplatné slovo(á) nájdené: ${invalidWords.join(', ')}. Skontroluj slovník (platné sú len 2-5 písmenkové slová).`);
+        return;
     }
 
 
     // Ak všetky validácie prešli:
-    alert("Ťah je platný!");
+    alert(`Ťah je platný! Vytvorené slová: ${allFormedWords.join(', ')}`);
 
     // Aktualizácia stavu boardAtStartOfTurn na aktuálny stav boardu PO PLATNOM ŤAHU
     setBoardAtStartOfTurn(board.map(row => [...row]));
