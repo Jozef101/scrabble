@@ -1,38 +1,33 @@
-.App {
-  text-align: center;
-}
+/* src/styles/App.css */
+/* ... (existujúce štýly) ... */
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.game-controls {
+  margin-top: 20px;
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  gap: 15px;
+  /* Medzera medzi tlačidlami */
   justify-content: center;
-  font-size: calc(10px + 2vmin);
+  width: 100%;
+  max-width: 600px;
+}
+
+.exchange-letters-button {
+  padding: 10px 20px;
+  font-size: 18px;
+  font-weight: bold;
+  background-color: #f44336;
+  /* Červená farba */
   color: white;
+  border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
-.App-link {
-  color: #61dafb;
+.exchange-letters-button:hover {
+  background-color: #da190b;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.exchange-letters-button:active {
+  background-color: #b71c1c;
 }
