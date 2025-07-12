@@ -70,3 +70,11 @@ background-color: #f4c2c3;
     /* Môžete pridať aj iný background-color alebo border pre jasnejšiu indikáciu */
     /* background-color: #888; */
 }
+/* Nový štýl pre políčka, na ktoré možno položiť písmeno */
+.tile-highlight-can-drop {
+    border: 2px solid lightgreen;
+    /* Svetlejší okraj, ak je možné položiť */
+    box-shadow: 0 0 8px lightgreen;
+    background-color: rgba(144, 238, 144, 0.3);
+    /* Jemný zelený nádych */
+}
