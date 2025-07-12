@@ -30,10 +30,10 @@ function App() {
   const [hasPlacedOnBoardThisTurn, setHasPlacedOnBoardThisTurn] = useState(false);
   const [hasMovedToExchangeZoneThisTurn, setHasMovedToExchangeZoneThisTurn] = useState(false);
 
-  // NOVÝ STAV: Počítadlo po sebe idúcich pasov
   const [consecutivePasses, setConsecutivePasses] = useState(0);
-  // NOVÝ STAV: Indikátor konca hry
   const [isGameOver, setIsGameOver] = useState(false);
+  // NOVÝ STAV: Sleduje, či je vrecúško prázdne
+  const [isBagEmpty, setIsBagEmpty] = useState(false);
 
 
   const validWordsSet = useRef(new Set(slovakWordsArray.map(word => word.toUpperCase())));
@@ -47,6 +47,7 @@ function App() {
         drawn.push(tempBag.pop());
       } else {
         console.warn("Vrecúško je prázdne, nedá sa ťahať viac písmen.");
+        setIsBagEmpty(true); // Nastavíme, že vrecúško je prázdne
         break;
       }
     }
@@ -73,7 +74,6 @@ function App() {
   };
 
   const moveLetter = (letterData, source, target) => {
-    // Ak je hra skončená, zablokujeme presuny
     if (isGameOver) {
       console.log("Hra skončila, nemôžeš presúvať písmená.");
       return;
@@ -312,9 +312,40 @@ function App() {
     return wordScore;
   };
 
+  // NOVÁ FUNKCIA: Získanie bodovej hodnoty písmen na racku
+  const getRackPoints = (rack) => {
+    return rack.reduce((sum, letter) => sum + (letter ? LETTER_VALUES[letter.letter] : 0), 0);
+  };
+
+  // NOVÁ FUNKCIA: Spracovanie konca hry a finálneho bodovania
+  const calculateFinalScores = (endingPlayerIndex, finalRackLetters) => {
+    let finalScores = [...playerScores];
+    let totalOpponentRackPoints = 0;
+
+    // Odpočítanie bodov za zostávajúce písmená pre všetkých hráčov
+    // A spočítanie bodov súperov, ak jeden hráč vyprázdnil rack
+    for (let i = 0; i < playerScores.length; i++) {
+        const rack = (i === endingPlayerIndex) ? finalRackLetters : rackLetters; // Použijeme finálny rack pre končiaceho hráča
+        const pointsOnRack = getRackPoints(rack);
+        finalScores[i] -= pointsOnRack;
+
+        if (i !== endingPlayerIndex) {
+            totalOpponentRackPoints += pointsOnRack;
+        }
+    }
+
+    // Ak hra skončila vyprázdnením racku (nie pasovaním)
+    if (endingPlayerIndex !== null) { // endingPlayerIndex je null pri konci hry pasovaním
+        finalScores[endingPlayerIndex] += totalOpponentRackPoints;
+    }
+
+    setPlayerScores(finalScores);
+    setIsGameOver(true);
+    alert(`Hra skončila! Konečné skóre: Hráč 1: ${finalScores[0]}, Hráč 2: ${finalScores[1]}`);
+  };
+
 
   const confirmTurn = () => {
-    // Ak je hra skončená, zablokujeme akcie
     if (isGameOver) {
       alert("Hra skončila!");
       return;
@@ -415,11 +446,10 @@ function App() {
         alert("BINGO! +50 bodov!");
     }
 
-    setPlayerScores(prevScores => {
-        const newScores = [...prevScores];
-        newScores[currentPlayerIndex] += turnScore;
-        return newScores;
-    });
+    // Dočasne aktualizujeme skóre pre aktuálneho hráča
+    let newScores = [...playerScores];
+    newScores[currentPlayerIndex] += turnScore;
+    setPlayerScores(newScores); // Aktualizujeme stav skóre
 
     alert(`Ťah je platný! Získal si ${turnScore} bodov. Vytvorené slová: ${allFormedWords.map(w => w.wordString).join(', ')}`);
 
@@ -427,39 +457,57 @@ function App() {
     
     const numToDraw = actualPlacedLetters.length;
     const { drawnLetters: newLetters, remainingBag: updatedBagAfterTurn } = drawLetters(letterBag, numToDraw);
-    setLetterBag(updatedBagAfterTurn);
+    
+    // Pred aktualizáciou racku skontrolujeme koniec hry
+    const finalRackAfterPlay = [...rackLetters].map((letter, index) => {
+      // Ak bolo písmeno z racku položené, bude null. Ak nie, zostane.
+      const placedThisTurn = actualPlacedLetters.find(l => l.letterData.id === letter?.id);
+      return placedThisTurn ? null : letter;
+    }).filter(l => l !== null); // Odstránime null hodnoty
 
-    let tempRack = [...rackLetters];
-    let newRack = [];
+    // Pridáme nové písmená do dočasného racku
+    let tempNewRack = [...finalRackAfterPlay];
     let newLetterIndex = 0;
-
-    for (let i = 0; i < tempRack.length; i++) {
-      if (tempRack[i] === null && newLetterIndex < newLetters.length) {
-        newRack.push(newLetters[newLetterIndex]);
-        newLetterIndex++;
-      } else {
-        newRack.push(tempRack[i]);
-      }
+    for (let i = 0; i < 7; i++) { // Prechádzame 7 slotov racku
+        if (tempNewRack[i] === undefined || tempNewRack[i] === null) { // Ak je slot prázdny
+            if (newLetterIndex < newLetters.length) {
+                tempNewRack[i] = newLetters[newLetterIndex];
+                newLetterIndex++;
+            } else {
+                tempNewRack[i] = null; // Ak už nie sú nové písmená, zostane null
+            }
+        }
     }
+    // Ak zostali nejaké nové písmená, pridáme ich na koniec (nemalo by sa stať, ak je rack 7)
     while(newLetterIndex < newLetters.length) {
-      newRack.push(newLetters[newLetterIndex]);
-      newLetterIndex++;
+        tempNewRack.push(newLetters[newLetterIndex]);
+        newLetterIndex++;
     }
-    while (newRack.length < 7) newRack.push(null);
-    newRack = newRack.slice(0, 7);
+    // Orezanie na 7 a doplnenie null, ak je potrebné
+    tempNewRack = tempNewRack.slice(0, 7);
+    while (tempNewRack.length < 7) tempNewRack.push(null);
 
-    setRackLetters(newRack);
+
+    // KONIEC HRY: Ak je vrecúško prázdne A hráč vyprázdnil svoj rack
+    if (isBagEmpty && tempNewRack.every(l => l === null)) {
+        setRackLetters(tempNewRack); // Najprv aktualizujeme rack
+        setLetterBag(updatedBagAfterTurn); // Potom aktualizujeme vrecúško
+        calculateFinalScores(currentPlayerIndex, tempNewRack); // Spustíme finálne bodovanie
+        return; // Zastavíme ďalšie spracovanie, hra skončila
+    }
+
+    setRackLetters(tempNewRack);
+    setLetterBag(updatedBagAfterTurn);
     setIsFirstTurn(false);
     
     setCurrentPlayerIndex(prevIndex => (prevIndex === 0 ? 1 : 0));
 
     setHasPlacedOnBoardThisTurn(false);
     setHasMovedToExchangeZoneThisTurn(false);
-    setConsecutivePasses(0); // Resetujeme počítadlo pasov po platnom ťahu
+    setConsecutivePasses(0);
   };
 
   const handleExchangeLetters = () => {
-    // Ak je hra skončená, zablokujeme akcie
     if (isGameOver) {
       alert("Hra skončila!");
       return;
@@ -514,11 +562,10 @@ function App() {
 
     setHasPlacedOnBoardThisTurn(false);
     setHasMovedToExchangeZoneThisTurn(false);
-    setConsecutivePasses(0); // Resetujeme počítadlo pasov po výmene písmen
+    setConsecutivePasses(0);
   };
 
   const handlePassTurn = () => {
-    // Ak je hra skončená, zablokujeme akcie
     if (isGameOver) {
       alert("Hra skončila!");
       return;
@@ -533,24 +580,21 @@ function App() {
         return;
     }
 
-    // Zvýšime počítadlo po sebe idúcich pasov
     const newConsecutivePasses = consecutivePasses + 1;
     setConsecutivePasses(newConsecutivePasses);
 
-    // Kontrola podmienky pre koniec hry (2 po sebe idúce pasy od každého hráča = 4 celkové pasy)
-    // Pre 2 hráčov to znamená, že každý pasoval 2x, teda celkovo 4 pasy.
-    // Ak by bolo viac hráčov, bolo by to (počet_hráčov * 2) pasov.
-    if (newConsecutivePasses >= 4) { // Pre 2 hráčov, každý 2x = 4 pasy celkovo
+    // Koniec hry, ak všetci hráči pasovali dvakrát po sebe
+    // Pre 2 hráčov to znamená 4 po sebe idúce pasy
+    if (newConsecutivePasses >= 4) {
         setIsGameOver(true);
         alert("Hra skončila! Obaja hráči pasovali dvakrát po sebe.");
-        // TODO: Tu by sa mohlo pridať zobrazenie konečného skóre a víťaza
-        return; // Zastavíme ďalšie spracovanie, hra skončila
+        calculateFinalScores(null, null); // Koniec hry pasovaním, nikto nevyprázdnil rack
+        return;
     }
 
     alert("Ťah bol prenesený na ďalšieho hráča.");
     setCurrentPlayerIndex(prevIndex => (prevIndex === 0 ? 1 : 0));
 
-    // Resetujeme flagy pre ďalší ťah
     setHasPlacedOnBoardThisTurn(false);
     setHasMovedToExchangeZoneThisTurn(false);
   };
@@ -560,8 +604,8 @@ function App() {
     <DndProvider backend={HTML5Backend}>
       <div className="app-container">
         <h1>Scrabble</h1>
-        {isGameOver && <h2 className="game-over-message">Hra skončila!</h2>} {/* Zobrazíme správu o konci hry */}
-        <Scoreboard playerScores={playerScores} currentPlayerIndex={currentPlayerIndex} />
+        {isGameOver && <h2 className="game-over-message">Hra skončila!</h2>}
+        <Scoreboard playerScores={playerScores} currentPlayerIndex={currentPlayerIndex} isGameOver={isGameOver} /> {/* Pridaný isGameOver prop */}
         <Board board={board} moveLetter={moveLetter} boardAtStartOfTurn={boardAtStartOfTurn} />
         <PlayerRack letters={rackLetters} moveLetter={moveLetter} />
         <LetterBag remainingLettersCount={letterBag.length} />
@@ -575,21 +619,21 @@ function App() {
           <button
             className="confirm-turn-button"
             onClick={confirmTurn}
-            disabled={isGameOver} // Zablokujeme tlačidlo, ak hra skončila
+            disabled={isGameOver}
           >
             Potvrdiť ťah
           </button>
           <button
             className="exchange-letters-button"
             onClick={handleExchangeLetters}
-            disabled={isGameOver} // Zablokujeme tlačidlo, ak hra skončila
+            disabled={isGameOver || letterBag.length < 7} // Zablokovať výmenu, ak nie je dosť písmen vo vrecúšku
           >
             Vymeniť písmená ({exchangeZoneLetters.length})
           </button>
           <button
             className="pass-turn-button"
             onClick={handlePassTurn}
-            disabled={isGameOver} // Zablokujeme tlačidlo, ak hra skončila
+            disabled={isGameOver}
           >
             Pass
           </button>
@@ -600,3 +644,4 @@ function App() {
 }
 
 export default App;
+
