@@ -1,3 +1,5 @@
+// src/utils/boardUtils.js
+
 // Definovanie typov bonusov
 export const BONUS_TYPES = {
   DOUBLE_LETTER: 'DL', // Dvojnásobná hodnota písmena
