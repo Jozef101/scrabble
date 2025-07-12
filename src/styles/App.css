@@ -22,3 +22,45 @@
 .confirm-turn-button:active {
     background-color: #3e8e41;
 }
+.pass-turn-button {
+    padding: 10px 20px;
+    font-size: 18px;
+    font-weight: bold;
+    background-color: #607D8B;
+    /* Modro-šedá farba */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.game-over-message {
+    color: #d32f2f;
+    /* Tmavočervená farba */
+    font-size: 2.5em;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 20px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+    animation: fadeIn 1s ease-out;
+    /* Jednoduchá animácia */
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Zablokované tlačidlá, ak je hra skončená */
+button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}

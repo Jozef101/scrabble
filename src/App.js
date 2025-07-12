@@ -30,6 +30,11 @@ function App() {
   const [hasPlacedOnBoardThisTurn, setHasPlacedOnBoardThisTurn] = useState(false);
   const [hasMovedToExchangeZoneThisTurn, setHasMovedToExchangeZoneThisTurn] = useState(false);
 
+  // NOVÝ STAV: Počítadlo po sebe idúcich pasov
+  const [consecutivePasses, setConsecutivePasses] = useState(0);
+  // NOVÝ STAV: Indikátor konca hry
+  const [isGameOver, setIsGameOver] = useState(false);
+
 
   const validWordsSet = useRef(new Set(slovakWordsArray.map(word => word.toUpperCase())));
 
@@ -68,6 +73,12 @@ function App() {
   };
 
   const moveLetter = (letterData, source, target) => {
+    // Ak je hra skončená, zablokujeme presuny
+    if (isGameOver) {
+      console.log("Hra skončila, nemôžeš presúvať písmená.");
+      return;
+    }
+
     let newRackLetters = [...rackLetters];
     let newBoard = board.map(row => [...row]);
     let newExchangeZoneLetters = [...exchangeZoneLetters];
@@ -303,6 +314,12 @@ function App() {
 
 
   const confirmTurn = () => {
+    // Ak je hra skončená, zablokujeme akcie
+    if (isGameOver) {
+      alert("Hra skončila!");
+      return;
+    }
+
     const actualPlacedLetters = [];
     for (let r = 0; r < 15; r++) {
       for (let c = 0; c < 15; c++) {
@@ -438,9 +455,16 @@ function App() {
 
     setHasPlacedOnBoardThisTurn(false);
     setHasMovedToExchangeZoneThisTurn(false);
+    setConsecutivePasses(0); // Resetujeme počítadlo pasov po platnom ťahu
   };
 
   const handleExchangeLetters = () => {
+    // Ak je hra skončená, zablokujeme akcie
+    if (isGameOver) {
+      alert("Hra skončila!");
+      return;
+    }
+
     if (exchangeZoneLetters.length === 0) {
       alert("Najprv presuň písmená do výmennej zóny!");
       return;
@@ -455,23 +479,18 @@ function App() {
       return;
     }
 
-    // DÔLEŽITÁ ZMENA LOGIKY: Najprv potiahni nové písmená, potom vráť staré do vrecúška.
     const numToDraw = exchangeZoneLetters.length;
     const { drawnLetters: newLettersForRack, remainingBag: bagAfterDraw } = drawLetters(letterBag, numToDraw);
     
-    // Vrátime vymenené písmená do vrecúška, ktoré už bolo zmenšené o potiahnuté písmená
     let updatedBag = [...bagAfterDraw, ...exchangeZoneLetters];
     
-    // Zamiešame vrecúško po vrátení písmen
     for (let i = updatedBag.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [updatedBag[i], updatedBag[j]] = [updatedBag[j], updatedBag[i]];
     }
     
-    // Aktualizujeme stav vrecúška s finálnym stavom po výmene a ťahaní
     setLetterBag(updatedBag);
 
-    // Nahradíme vymenené písmená na racku novými
     let newRack = [...rackLetters];
     let newLetterIndex = 0;
     for (let i = 0; i < newRack.length; i++) {
@@ -488,11 +507,50 @@ function App() {
     newRack = newRack.slice(0, 7);
 
     setRackLetters(newRack);
-    setExchangeZoneLetters([]); // Vyčistíme výmennú zónu
+    setExchangeZoneLetters([]);
 
     alert(`Vymenil si ${numToDraw} písmen.`);
-    setCurrentPlayerIndex(prevIndex => (prevIndex === 0 ? 1 : 0)); // Prepni hráča, výmena stojí ťah
+    setCurrentPlayerIndex(prevIndex => (prevIndex === 0 ? 1 : 0));
 
+    setHasPlacedOnBoardThisTurn(false);
+    setHasMovedToExchangeZoneThisTurn(false);
+    setConsecutivePasses(0); // Resetujeme počítadlo pasov po výmene písmen
+  };
+
+  const handlePassTurn = () => {
+    // Ak je hra skončená, zablokujeme akcie
+    if (isGameOver) {
+      alert("Hra skončila!");
+      return;
+    }
+
+    if (hasPlacedOnBoardThisTurn) {
+        alert("Nemôžeš prejsť ťah, ak máš položené písmená na doske. Buď ich potvrď, alebo vráť na stojan.");
+        return;
+    }
+    if (hasMovedToExchangeZoneThisTurn) {
+        alert("Nemôžeš prejsť ťah, ak máš písmená vo výmennej zóne. Buď ich vymeň, alebo vráť na stojan.");
+        return;
+    }
+
+    // Zvýšime počítadlo po sebe idúcich pasov
+    const newConsecutivePasses = consecutivePasses + 1;
+    setConsecutivePasses(newConsecutivePasses);
+
+    // Kontrola podmienky pre koniec hry (2 po sebe idúce pasy od každého hráča = 4 celkové pasy)
+    // Pre 2 hráčov to znamená, že každý pasoval 2x, teda celkovo 4 pasy.
+    // Ak by bolo viac hráčov, bolo by to (počet_hráčov * 2) pasov.
+    if (newConsecutivePasses >= 4) { // Pre 2 hráčov, každý 2x = 4 pasy celkovo
+        setIsGameOver(true);
+        alert("Hra skončila! Obaja hráči pasovali dvakrát po sebe.");
+        // TODO: Tu by sa mohlo pridať zobrazenie konečného skóre a víťaza
+        return; // Zastavíme ďalšie spracovanie, hra skončila
+    }
+
+    alert("Ťah bol prenesený na ďalšieho hráča.");
+    setCurrentPlayerIndex(prevIndex => (prevIndex === 0 ? 1 : 0));
+
+    // Resetujeme flagy pre ďalší ťah
     setHasPlacedOnBoardThisTurn(false);
     setHasMovedToExchangeZoneThisTurn(false);
   };
@@ -502,6 +560,7 @@ function App() {
     <DndProvider backend={HTML5Backend}>
       <div className="app-container">
         <h1>Scrabble</h1>
+        {isGameOver && <h2 className="game-over-message">Hra skončila!</h2>} {/* Zobrazíme správu o konci hry */}
         <Scoreboard playerScores={playerScores} currentPlayerIndex={currentPlayerIndex} />
         <Board board={board} moveLetter={moveLetter} boardAtStartOfTurn={boardAtStartOfTurn} />
         <PlayerRack letters={rackLetters} moveLetter={moveLetter} />
@@ -513,11 +572,26 @@ function App() {
         />
 
         <div className="game-controls">
-          <button className="confirm-turn-button" onClick={confirmTurn}>
+          <button
+            className="confirm-turn-button"
+            onClick={confirmTurn}
+            disabled={isGameOver} // Zablokujeme tlačidlo, ak hra skončila
+          >
             Potvrdiť ťah
           </button>
-          <button className="exchange-letters-button" onClick={handleExchangeLetters}>
+          <button
+            className="exchange-letters-button"
+            onClick={handleExchangeLetters}
+            disabled={isGameOver} // Zablokujeme tlačidlo, ak hra skončila
+          >
             Vymeniť písmená ({exchangeZoneLetters.length})
+          </button>
+          <button
+            className="pass-turn-button"
+            onClick={handlePassTurn}
+            disabled={isGameOver} // Zablokujeme tlačidlo, ak hra skončila
+          >
+            Pass
           </button>
         </div>
       </div>
