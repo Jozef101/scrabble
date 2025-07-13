@@ -1,94 +1,246 @@
-/* src/styles/App.css */
-/* ... (predchádzajúce štýly) ... */
-
-.confirm-turn-button {
-    margin-top: 20px;
-    padding: 10px 20px;
-    font-size: 18px;
-    font-weight: bold;
-    background-color: #4CAF50;
-    /* Zelená farba */
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+.app-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    background-color: #f4f4f4;
+    min-height: 100vh;
+    /* Zabezpečí, že kontajner zaberá celú výšku obrazovky */
+    font-family: 'Inter', sans-serif;
+    /* Použitie fontu Inter */
 }
 
-.confirm-turn-button:hover {
-    background-color: #45a049;
-}
-
-.confirm-turn-button:active {
-    background-color: #3e8e41;
-}
-.pass-turn-button {
-    padding: 10px 20px;
-    font-size: 18px;
-    font-weight: bold;
-    background-color: #607D8B;
-    /* Modro-šedá farba */
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+h1 {
+    color: #333;
+    margin-bottom: 20px;
 }
 
 .game-over-message {
     color: #d32f2f;
-    /* Tmavočervená farba */
-    font-size: 2.5em;
-    font-weight: bold;
+    /* Červená farba */
+    font-size: 2em;
+    margin-bottom: 20px;
     text-align: center;
-    margin-top: 20px;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
-    animation: fadeIn 1s ease-out;
-    /* Jednoduchá animácia */
 }
 
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(-20px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* Zablokované tlačidlá, ak je hra skončená */
-button:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-}
-.player-racks-container {
+.scoreboard-container {
     display: flex;
     justify-content: space-around;
-    /* Rozloží racky rovnomerne */
     width: 100%;
-    max-width: 900px;
-    /* Prispôsobte podľa potreby */
-    margin: 20px auto;
-    /* Medzera hore/dole a centrovanie */
-    flex-wrap: wrap;
-    /* Pre responzívnosť na menších obrazovkách */
-}
-
-.player-rack-section {
-    text-align: center;
-    margin: 10px;
-    padding: 10px;
-    background-color: #e0f2f7;
-    /* Svetlomodré pozadie pre sekciu racku */
+    max-width: 600px;
+    margin-bottom: 20px;
+    background-color: #fff;
+    padding: 15px;
     border-radius: 8px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
+.player-score {
+    text-align: center;
+    font-size: 1.2em;
+    font-weight: bold;
+padding: 5px 10px;
+    border-radius: 5px;
+}
+
+.current-player {
+    background-color: #e0f2f7;
+    /* Svetlomodrá pre aktuálneho hráča */
+    border: 1px solid #2196F3;
+}
+
+/* Nový kontajner pre dosku a stojany */
+.game-area-container {
+    display: flex;
+    flex-direction: column;
+    /* Predvolene pre menšie obrazovky */
+    align-items: center;
+    gap: 20px;
+    /* Medzera medzi doskou a stojanmi */
+    width: 100%;
+    max-width: 1200px;
+    /* Maximálna šírka pre celé rozloženie */
+}
+
+@media (min-width: 1024px) {
+
+    /* Pre väčšie obrazovky (desktop) */
+    .game-area-container {
+        flex-direction: row;
+        /* Usporiadanie vedľa seba */
+        justify-content: center;
+        /* Centrovanie obsahu */
+        align-items: flex-start;
+        /* Zarovnanie na začiatok vertikálne */
+    }
+}
+
+.board-container {
+    display: grid;
+    grid-template-columns: repeat(15, 40px);
+    /* 15 stĺpcov po 40px */
+    grid-template-rows: repeat(15, 40px);
+    /* 15 riadkov po 40px */
+    border: 5px solid #8B4513;
+    /* Hnedý okraj dosky */
+    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
+    margin-bottom: 20px;
+    /* Medzera pod doskou */
+}
+
+.player-racks-container {
+display: flex;
+flex-direction: column;
+    /* Stojany pod sebou vpravo */
+    gap: 20px;
+    /* Medzera medzi stojanmi */
+    align-items: center;
+    /* Centrovanie stojanov */
+    width: 100%;
+    /* Zaberá celú šírku v stĺpci */
+    max-width: 400px;
+    /* Maximálna šírka pre kontajner stojanov */
+}
+
+.player-rack-section {
+text-align: center;
+margin: 0;
+    /* Odstránime pôvodný margin */
+    padding: 10px;
+background-color: #e0f2f7;
+    /* Svetlomodré pozadie pre sekciu racku */
+    border-radius: 8px;
+box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    /* Zabezpečí, že sekcia zaberá celú šírku player-racks-container */
+}
 
 .player-rack-section h3 {
-    margin-top: 0;
-    color: #2196F3;
+margin-top: 0;
+color: #2196F3;
     /* Modrá farba pre nadpis hráča */
+}
+
+.letter-bag-container {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.exchange-zone-container {
+    border: 2px dashed #ccc;
+    padding: 15px;
+    margin-top: 20px;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    min-height: 80px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    width: 100%;
+    max-width: 600px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.exchange-zone-container p {
+    color: #666;
+    font-style: italic;
+}
+
+.game-controls {
+    margin-top: 20px;
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.game-controls button {
+    padding: 10px 20px;
+    font-size: 1em;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: #2196F3;
+    /* Modrá */
+    color: white;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s ease, transform 0.1s ease;
+}
+
+.game-controls button:hover {
+    background-color: #1976D2;
+    /* Tmavšia modrá */
+    transform: translateY(-1px);
+}
+
+.game-controls button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+/* Modálne okno pre výber písmena žolíka */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    max-width: 90%;
+}
+
+.modal-content h2 {
+    margin-top: 0;
+    color: #333;
+}
+
+.letter-options {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.letter-option-button {
+    padding: 10px 15px;
+    font-size: 1.2em;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f0f0f0;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.letter-option-button:hover {
+    background-color: #e0e0e0;
+}
+
+.modal-close-button {
+    margin-top: 20px;
+    padding: 8px 15px;
+    background-color: #f44336;
+    /* Červená */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
 }

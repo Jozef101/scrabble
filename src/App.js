@@ -705,17 +705,21 @@ function App() {
         <h1>Scrabble</h1>
         {isGameOver && <h2 className="game-over-message">Hra skončila!</h2>}
         <Scoreboard playerScores={playerScores} currentPlayerIndex={currentPlayerIndex} isGameOver={isGameOver} />
-        <Board board={board} moveLetter={moveLetter} boardAtStartOfTurn={boardAtStartOfTurn} />
-        <LetterBag remainingLettersCount={letterBag.length} />
+        <LetterBag remainingLettersCount={letterBag.length} /> {/* Posunuté vyššie */}
 
-        <div className="player-racks-container">
-          <div className="player-rack-section">
-            <h3>Hráč 1 Rack:</h3>
-            <PlayerRack letters={playerRacks[0]} moveLetter={moveLetter} playerIndex={0} />
-          </div>
-          <div className="player-rack-section">
-            <h3>Hráč 2 Rack:</h3>
-            <PlayerRack letters={playerRacks[1]} moveLetter={moveLetter} playerIndex={1} />
+        {/* Nový kontajner pre dosku a stojany, ktorý bude používať flexbox */}
+        <div className="game-area-container">
+          <Board board={board} moveLetter={moveLetter} boardAtStartOfTurn={boardAtStartOfTurn} />
+          
+          <div className="player-racks-container">
+            <div className="player-rack-section">
+              <h3>Hráč 1 Rack:</h3>
+              <PlayerRack letters={playerRacks[0]} moveLetter={moveLetter} playerIndex={0} />
+            </div>
+            <div className="player-rack-section">
+              <h3>Hráč 2 Rack:</h3>
+              <PlayerRack letters={playerRacks[1]} moveLetter={moveLetter} playerIndex={1} />
+            </div>
           </div>
         </div>
         
