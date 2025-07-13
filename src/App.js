@@ -1,23 +1,27 @@
+// src/App.js
 import React, { useState, useEffect, useRef } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
+import io from 'socket.io-client';
+
 import Board from './components/Board';
 import PlayerRack from './components/PlayerRack';
 import LetterBag from './components/LetterBag';
-import Scoreboard from './components/Scoreboard'; // Importujeme nový Scoreboard komponent
-import { createLetterBag, LETTER_VALUES } from './utils/LettersDistribution'; // Importujeme aj LETTER_VALUES
-import ExchangeZone from './components/ExchangeZone'; // Importujeme nový ExchangeZone
-import LetterSelectionModal from './components/LetterSelectionModal'; // Importujeme nový komponent
+import Scoreboard from './components/Scoreboard';
+import ExchangeZone from './components/ExchangeZone';
+import LetterSelectionModal from './components/LetterSelectionModal';
+import { LETTER_VALUES } from './utils/LettersDistribution';
 import { bonusSquares, BONUS_TYPES } from './utils/boardUtils';
-import slovakWordsArray from './data/slovakWords.json'; // Importujeme slovník
+import slovakWordsArray from './data/slovakWords.json';
 import './styles/App.css';
 
+const SERVER_URL = 'http://localhost:4000';
+
 function App() {
-  const [letterBag, setLetterBag] = useState(() => createLetterBag());
-  // ZMENA: rackLetters je teraz pole polí pre každého hráča
+  const [letterBag, setLetterBag] = useState([]); 
   const [playerRacks, setPlayerRacks] = useState([
-    Array(7).fill(null), // Rack pre hráča 0
-    Array(7).fill(null)  // Rack pre hráča 1
+    Array(7).fill(null),
+    Array(7).fill(null)
   ]);
   const [board, setBoard] = useState(
     Array(15).fill(null).map(() => Array(15).fill(null))
@@ -42,8 +46,124 @@ function App() {
   const [showLetterSelectionModal, setShowLetterSelectionModal] = useState(false);
   const [jokerTileCoords, setJokerTileCoords] = useState(null);
 
+  const [socket, setSocket] = useState(null);
+  const [myPlayerIndex, setMyPlayerIndex] = useState(null);
+  const [connectionStatus, setConnectionStatus] = useState('Nepripojený');
+  const [chatMessages, setChatMessages] = useState([]);
+  const [newChatMessage, setNewChatMessage] = useState('');
+  const chatMessagesEndRef = useRef(null);
+
+  // NOVÝ STAV: Sleduje, či bol prijatý počiatočný stav hry zo servera
+  const [hasInitialGameStateReceived, setHasInitialGameStateReceived] = useState(false);
 
   const validWordsSet = useRef(new Set(slovakWordsArray.map(word => word.toUpperCase())));
+
+  useEffect(() => {
+    const newSocket = io(SERVER_URL);
+    setSocket(newSocket);
+
+    newSocket.on('connect', () => {
+      setConnectionStatus('Pripojený');
+      console.log('Pripojený k serveru Socket.IO');
+      newSocket.emit('joinGame');
+    });
+
+    newSocket.on('disconnect', () => {
+      setConnectionStatus('Odpojený');
+      console.log('Odpojený od servera Socket.IO');
+      // Reset všetkých stavov pri odpojení
+      setLetterBag([]);
+      setPlayerRacks([Array(7).fill(null), Array(7).fill(null)]);
+      setBoard(Array(15).fill(null).map(() => Array(15).fill(null)));
+      setBoardAtStartOfTurn(Array(15).fill(null).map(() => Array(15).fill(null)));
+      setIsFirstTurn(true);
+      setPlayerScores([0, 0]);
+      setCurrentPlayerIndex(0);
+      setExchangeZoneLetters([]);
+      setHasPlacedOnBoardThisTurn(false);
+      setHasMovedToExchangeZoneThisTurn(false);
+      setConsecutivePasses(0);
+      setIsGameOver(false);
+      setIsBagEmpty(false);
+      setMyPlayerIndex(null);
+      setChatMessages([]);
+      setHasInitialGameStateReceived(false); // Reset tohto flagu
+    });
+
+    newSocket.on('playerAssigned', (playerIndex) => {
+      setMyPlayerIndex(playerIndex);
+      console.log(`Bol si priradený ako Hráč ${playerIndex + 1}.`);
+      console.log(`DEBUG: myPlayerIndex po priradení: ${playerIndex}`);
+    });
+
+    newSocket.on('gameStateUpdate', (serverGameState) => {
+      console.log('Prijatá aktualizácia stavu hry:', serverGameState);
+      setLetterBag(serverGameState.letterBag);
+      setPlayerRacks(serverGameState.playerRacks);
+      setBoard(serverGameState.board);
+      setBoardAtStartOfTurn(serverGameState.boardAtStartOfTurn);
+      setIsFirstTurn(serverGameState.isFirstTurn);
+      setPlayerScores(serverGameState.playerScores);
+      setCurrentPlayerIndex(serverGameState.currentPlayerIndex);
+      setExchangeZoneLetters(serverGameState.exchangeZoneLetters);
+      setConsecutivePasses(serverGameState.consecutivePasses);
+      setIsGameOver(serverGameState.isGameOver);
+      setIsBagEmpty(serverGameState.isBagEmpty);
+      setHasPlacedOnBoardThisTurn(serverGameState.hasPlacedOnBoardThisTurn);
+      setHasMovedToExchangeZoneThisTurn(serverGameState.hasMovedToExchangeZoneThisTurn);
+      
+      // Nastavíme tento flag na true, keď je prijatý stav hry
+      setHasInitialGameStateReceived(true); 
+    });
+
+    newSocket.on('gameError', (message) => {
+      alert(`Chyba hry: ${message}`);
+      console.error('Chyba hry:', message);
+      setHasInitialGameStateReceived(false); // Ak je chyba, predpokladáme, že nie je pripravené
+    });
+
+    newSocket.on('gameReset', (message) => {
+      alert(`Hra bola resetovaná: ${message}`);
+      console.log('Hra bola resetovaná.');
+      setLetterBag([]);
+      setPlayerRacks([Array(7).fill(null), Array(7).fill(null)]);
+      setBoard(Array(15).fill(null).map(() => Array(15).fill(null)));
+      setBoardAtStartOfTurn(Array(15).fill(null).map(() => Array(15).fill(null)));
+      setIsFirstTurn(true);
+      setPlayerScores([0, 0]);
+      setCurrentPlayerIndex(0);
+      setExchangeZoneLetters([]);
+      setHasPlacedOnBoardThisTurn(false);
+      setHasMovedToExchangeZoneThisTurn(false);
+      setConsecutivePasses(0);
+      setIsGameOver(false);
+      setIsBagEmpty(false);
+      setMyPlayerIndex(null);
+      setChatMessages([]);
+      setHasInitialGameStateReceived(false); // Reset tohto flagu
+      newSocket.emit('joinGame');
+    });
+
+    newSocket.on('receiveChatMessage', (message) => {
+      setChatMessages((prevMessages) => [...prevMessages, message]);
+    });
+
+    newSocket.on('chatHistory', (history) => {
+      setChatMessages(history);
+    });
+
+    return () => {
+      newSocket.disconnect();
+    };
+  }, []);
+
+  // Tento useEffect zabezpečí, že herná oblasť sa zobrazí až po priradení hráča
+  // A po prijatí počiatočného stavu hry.
+  const isGameReadyToRender = myPlayerIndex !== null && hasInitialGameStateReceived;
+
+  useEffect(() => {
+    chatMessagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [chatMessages]);
 
   const drawLetters = (currentBag, numToDraw) => {
     const drawn = [];
@@ -54,26 +174,11 @@ function App() {
         drawn.push(tempBag.pop());
       } else {
         console.warn("Vrecúško je prázdne, nedá sa ťahať viac písmen.");
-        setIsBagEmpty(true);
-        break;
+        return { drawnLetters: drawn, remainingBag: tempBag, bagEmpty: true };
       }
     }
-    return { drawnLetters: drawn, remainingBag: tempBag };
+    return { drawnLetters: drawn, remainingBag: tempBag, bagEmpty: false };
   };
-
-  useEffect(() => {
-    let currentBag = [...letterBag];
-    const newPlayerRacks = [[], []];
-
-    for (let i = 0; i < 2; i++) { // Pre každého z 2 hráčov
-      const { drawnLetters, remainingBag } = drawLetters(currentBag, 7);
-      newPlayerRacks[i] = drawnLetters;
-      currentBag = remainingBag;
-    }
-    setPlayerRacks(newPlayerRacks);
-    setLetterBag(currentBag);
-    setBoardAtStartOfTurn(Array(15).fill(null).map(() => Array(15).fill(null)));
-  }, []);
 
   const getPlacedLettersDuringCurrentTurn = (currentBoardState, initialBoardState) => {
     const placed = [];
@@ -88,8 +193,13 @@ function App() {
   };
 
   const moveLetter = (letterData, source, target) => {
-    if (isGameOver) {
-      console.log("Hra skončila, nemôžeš presúvať písmená.");
+    console.log("DEBUG (moveLetter call): letterData:", letterData, "source:", source, "target:", target);
+    console.log("DEBUG (moveLetter conditions): isGameOver:", isGameOver, "myPlayerIndex:", myPlayerIndex, "currentPlayerIndex:", currentPlayerIndex);
+    console.log("DEBUG (moveLetter condition check): isGameOver || myPlayerIndex === null || currentPlayerIndex !== myPlayerIndex =>", 
+      isGameOver || myPlayerIndex === null || currentPlayerIndex !== myPlayerIndex);
+
+    if (isGameOver || myPlayerIndex === null || currentPlayerIndex !== myPlayerIndex) {
+      console.log("Nemôžeš presúvať písmená (hra skončila, nie si pripojený alebo nie je tvoj ťah).");
       return;
     }
 
@@ -102,10 +212,8 @@ function App() {
       return;
     }
 
-    // ZMENA: Logika presunu z racku na rack (preskupovanie) pre konkrétneho hráča
     if (source.type === 'rack' && target.type === 'rack') {
-      // Kontrola, či sa presúva v rámci racku aktuálneho hráča
-      if (source.playerIndex !== currentPlayerIndex) {
+      if (source.playerIndex !== myPlayerIndex) {
         console.log("Nemôžeš presúvať písmená z racku iného hráča.");
         return;
       }
@@ -113,28 +221,30 @@ function App() {
       const fromIndex = source.index;
       const toIndex = target.index;
 
-      // Ak je cieľový slot prázdny, jednoducho presunieme
-      if (newPlayerRacks[currentPlayerIndex][toIndex] === null) {
-        newPlayerRacks[currentPlayerIndex][toIndex] = newPlayerRacks[currentPlayerIndex][fromIndex];
-        newPlayerRacks[currentPlayerIndex][fromIndex] = null;
+      if (newPlayerRacks[myPlayerIndex][toIndex] === null) {
+        newPlayerRacks[myPlayerIndex][toIndex] = newPlayerRacks[myPlayerIndex][fromIndex];
+        newPlayerRacks[myPlayerIndex][fromIndex] = null;
       } else {
-        // Ak je cieľový slot obsadený, vykonáme preskupenie (splice)
-        const [movedLetter] = newPlayerRacks[currentPlayerIndex].splice(fromIndex, 1);
-        newPlayerRacks[currentPlayerIndex].splice(toIndex, 0, movedLetter);
+        const [movedLetter] = newPlayerRacks[myPlayerIndex].splice(fromIndex, 1);
+        newPlayerRacks[myPlayerIndex].splice(toIndex, 0, movedLetter);
       }
 
-      // Doplnenie null slotov a orezanie na 7
-      newPlayerRacks[currentPlayerIndex] = newPlayerRacks[currentPlayerIndex].filter(l => l !== undefined && l !== null);
-      while (newPlayerRacks[currentPlayerIndex].length < 7) { newPlayerRacks[currentPlayerIndex].push(null); }
-      while (newPlayerRacks[currentPlayerIndex].length > 7) { newPlayerRacks[currentPlayerIndex].pop(); }
+      newPlayerRacks[myPlayerIndex] = newPlayerRacks[myPlayerIndex].filter(l => l !== undefined && l !== null);
+      while (newPlayerRacks[myPlayerIndex].length < 7) { newPlayerRacks[myPlayerIndex].push(null); }
+      while (newPlayerRacks[myPlayerIndex].length > 7) { newPlayerRacks[myPlayerIndex].pop(); }
 
-      setPlayerRacks(newPlayerRacks);
+      socket.emit('playerAction', {
+        type: 'updateGameState',
+        payload: {
+          ...getCurrentGameState(),
+          playerRacks: newPlayerRacks,
+        }
+      });
       return;
     }
 
     let letterToMove = null;
 
-    // --- Odstránenie písmena zo zdroja a príprava letterToMove ---
     if (source.type === 'board') {
       letterToMove = { ...newBoard[source.x][source.y] };
       newBoard[source.x][source.y] = null;
@@ -142,12 +252,12 @@ function App() {
         letterToMove.assignedLetter = null;
       }
     } else if (source.type === 'rack') {
-      if (source.playerIndex !== currentPlayerIndex) {
+      if (source.playerIndex !== myPlayerIndex) {
         console.log("Nemôžeš presúvať písmená z racku iného hráča.");
         return;
       }
-      letterToMove = { ...newPlayerRacks[currentPlayerIndex][source.index] };
-      newPlayerRacks[currentPlayerIndex][source.index] = null;
+      letterToMove = { ...newPlayerRacks[myPlayerIndex][source.index] };
+      newPlayerRacks[myPlayerIndex][source.index] = null;
     } else if (source.type === 'exchangeZone') {
       const indexInExchangeZone = newExchangeZoneLetters.findIndex(l => l.id === letterData.id);
       if (indexInExchangeZone !== -1) {
@@ -167,14 +277,12 @@ function App() {
         return;
     }
 
-    // --- Umiestnenie písmena na cieľové miesto ---
     if (target.type === 'rack') {
-      // ZMENA: Umiestnenie na rack aktuálneho hráča
-      if (target.playerIndex !== currentPlayerIndex) {
+      if (target.playerIndex !== myPlayerIndex) {
         console.log("Nemôžeš presúvať písmená na rack iného hráča.");
         return;
       }
-      newPlayerRacks[currentPlayerIndex][target.index] = letterToMove;
+      newPlayerRacks[myPlayerIndex][target.index] = letterToMove;
     } else if (target.type === 'board') {
       newBoard[target.x][target.y] = letterToMove;
       if (letterToMove.letter === '') {
@@ -185,24 +293,32 @@ function App() {
         newExchangeZoneLetters.push(letterToMove);
     }
 
-    setPlayerRacks(newPlayerRacks);
-    setBoard(newBoard);
-    setExchangeZoneLetters(newExchangeZoneLetters);
-
-    const currentPlacedOnBoard = getPlacedLettersDuringCurrentTurn(newBoard, boardAtStartOfTurn);
-    setHasPlacedOnBoardThisTurn(currentPlacedOnBoard.length > 0);
-    setHasMovedToExchangeZoneThisTurn(newExchangeZoneLetters.length > 0);
+    socket.emit('playerAction', {
+      type: 'updateGameState',
+      payload: {
+        ...getCurrentGameState(),
+        playerRacks: newPlayerRacks,
+        board: newBoard,
+        exchangeZoneLetters: newExchangeZoneLetters,
+        hasPlacedOnBoardThisTurn: getPlacedLettersDuringCurrentTurn(newBoard, boardAtStartOfTurn).length > 0,
+        hasMovedToExchangeZoneThisTurn: newExchangeZoneLetters.length > 0,
+      }
+    });
   };
 
   const assignLetterToJoker = (selectedLetter) => {
     if (jokerTileCoords) {
-      setBoard(prevBoard => {
-        const newBoard = prevBoard.map(row => [...row]);
-        const { x, y } = jokerTileCoords;
-        if (newBoard[x][y] && newBoard[x][y].letter === '') {
-          newBoard[x][y] = { ...newBoard[x][y], assignedLetter: selectedLetter };
+      const newBoard = board.map(row => [...row]);
+      const { x, y } = jokerTileCoords;
+      if (newBoard[x][y] && newBoard[x][y].letter === '') {
+        newBoard[x][y] = { ...newBoard[x][y], assignedLetter: selectedLetter };
+      }
+      socket.emit('playerAction', {
+        type: 'updateGameState',
+        payload: {
+          ...getCurrentGameState(),
+          board: newBoard,
         }
-        return newBoard;
       });
     }
     setShowLetterSelectionModal(false);
@@ -359,16 +475,16 @@ function App() {
     return formedWordObjects;
   };
 
-  const calculateWordScore = (wordLetters, actualPlacedLetters, boardStateAtStartOfTurn) => {
+  const calculateWordScore = (wordLetters, boardAtStartOfTurn) => {
     let wordScore = 0;
     let wordMultiplier = 1;
 
     wordLetters.forEach(letterObj => {
       const { x, y, letterData } = letterObj;
       const bonusType = bonusSquares[`${x},${y}`];
-      let letterValue = (letterData.letter === '') ? 0 : (LETTER_VALUES[letterData.letter] || 0);
+      let letterValue = (letterData.letter === '' ? (LETTER_VALUES[letterData.assignedLetter] || 0) : (LETTER_VALUES[letterData.letter] || 0));
 
-      const isNewLetter = boardStateAtStartOfTurn[x][y] === null;
+      const isNewLetter = boardAtStartOfTurn[x][y] === null;
 
       if (isNewLetter) {
         if (bonusType === BONUS_TYPES.DOUBLE_LETTER) {
@@ -413,15 +529,39 @@ function App() {
         finalScores[endingPlayerIndex] += totalOpponentRackPoints;
     }
 
-    setPlayerScores(finalScores);
-    setIsGameOver(true);
+    socket.emit('playerAction', {
+        type: 'updateGameState',
+        payload: {
+            ...getCurrentGameState(),
+            playerScores: finalScores,
+            isGameOver: true,
+        }
+    });
     alert(`Hra skončila! Konečné skóre: Hráč 1: ${finalScores[0]}, Hráč 2: ${finalScores[1]}`);
+  };
+
+  const getCurrentGameState = () => {
+    return {
+      letterBag,
+      playerRacks,
+      board,
+      boardAtStartOfTurn,
+      isFirstTurn,
+      playerScores,
+      currentPlayerIndex,
+      exchangeZoneLetters,
+      hasPlacedOnBoardThisTurn,
+      hasMovedToExchangeZoneThisTurn,
+      consecutivePasses,
+      isGameOver,
+      isBagEmpty,
+    };
   };
 
 
   const confirmTurn = () => {
-    if (isGameOver) {
-      alert("Hra skončila!");
+    if (isGameOver || myPlayerIndex === null || currentPlayerIndex !== myPlayerIndex) {
+      alert("Hra skončila, nie si pripojený alebo nie je tvoj ťah!");
       return;
     }
 
@@ -521,7 +661,7 @@ function App() {
 
     let turnScore = 0;
     allFormedWords.forEach(wordObj => {
-        turnScore += calculateWordScore(wordObj.letters, actualPlacedLetters, boardAtStartOfTurn);
+        turnScore += calculateWordScore(wordObj.letters, boardAtStartOfTurn);
     });
 
     if (actualPlacedLetters.length === 7) {
@@ -531,16 +671,14 @@ function App() {
 
     let newScores = [...playerScores];
     newScores[currentPlayerIndex] += turnScore;
-    setPlayerScores(newScores);
 
     alert(`Ťah je platný! Získal si ${turnScore} bodov. Vytvorené slová: ${allFormedWords.map(w => w.wordString).join(', ')}`);
 
-    setBoardAtStartOfTurn(board.map(row => [...row]));
+    const newBoardAtStartOfTurn = board.map(row => [...row]);
     
     const numToDraw = actualPlacedLetters.length;
-    const { drawnLetters: newLetters, remainingBag: updatedBagAfterTurn } = drawLetters(letterBag, numToDraw);
-    setLetterBag(updatedBagAfterTurn);
-
+    const { drawnLetters: newLetters, remainingBag: updatedBagAfterTurn, bagEmpty: currentBagEmpty } = drawLetters(letterBag, numToDraw);
+    
     let tempRack = [...playerRacks[currentPlayerIndex]];
     let newRackForCurrentPlayer = [];
     let newLetterIndex = 0;
@@ -562,33 +700,66 @@ function App() {
 
     const finalRackAfterPlay = newRackForCurrentPlayer.filter(l => l !== null);
 
-    if (isBagEmpty && finalRackAfterPlay.length === 0) {
-        setPlayerRacks(prevPlayerRacks => {
-          const updatedPlayerRacks = [...prevPlayerRacks];
-          updatedPlayerRacks[currentPlayerIndex] = newRackForCurrentPlayer;
-          return updatedPlayerRacks;
+    if (currentBagEmpty && finalRackAfterPlay.length === 0) {
+        let finalScores = [...newScores];
+        let totalOpponentRackPoints = 0;
+
+        for (let i = 0; i < playerScores.length; i++) {
+            const rack = (i === currentPlayerIndex) ? newRackForCurrentPlayer : playerRacks[i];
+            const pointsOnRack = getRackPoints(rack);
+            finalScores[i] -= pointsOnRack;
+
+            if (i !== currentPlayerIndex) {
+                totalOpponentRackPoints += pointsOnRack;
+            }
+        }
+        finalScores[currentPlayerIndex] += totalOpponentRackPoints;
+
+        socket.emit('playerAction', {
+            type: 'updateGameState',
+            payload: {
+                letterBag: updatedBagAfterTurn,
+                playerRacks: playerRacks.map((rack, idx) => idx === currentPlayerIndex ? newRackForCurrentPlayer : rack),
+                board: board,
+                boardAtStartOfTurn: newBoardAtStartOfTurn,
+                isFirstTurn: false,
+                playerScores: finalScores,
+                currentPlayerIndex: currentPlayerIndex,
+                exchangeZoneLetters: [],
+                hasPlacedOnBoardThisTurn: false,
+                hasMovedToExchangeZoneThisTurn: false,
+                consecutivePasses: 0,
+                isGameOver: true,
+                isBagEmpty: currentBagEmpty,
+            }
         });
-        calculateFinalScores(currentPlayerIndex, newRackForCurrentPlayer);
+        alert(`Hra skončila! Konečné skóre: Hráč 1: ${finalScores[0]}, Hráč 2: ${finalScores[1]}`);
         return;
     }
 
-    setPlayerRacks(prevPlayerRacks => {
-      const updatedPlayerRacks = [...prevPlayerRacks];
-      updatedPlayerRacks[currentPlayerIndex] = newRackForCurrentPlayer;
-      return updatedPlayerRacks;
+    socket.emit('playerAction', {
+        type: 'updateGameState',
+        payload: {
+            letterBag: updatedBagAfterTurn,
+            playerRacks: playerRacks.map((rack, idx) => idx === currentPlayerIndex ? newRackForCurrentPlayer : rack),
+            board: board,
+            boardAtStartOfTurn: newBoardAtStartOfTurn,
+            isFirstTurn: false,
+            playerScores: newScores,
+            currentPlayerIndex: (currentPlayerIndex === 0 ? 1 : 0),
+            exchangeZoneLetters: [],
+            hasPlacedOnBoardThisTurn: false,
+            hasMovedToExchangeZoneThisTurn: false,
+            consecutivePasses: 0,
+            isGameOver: false,
+            isBagEmpty: currentBagEmpty,
+        }
     });
-    setIsFirstTurn(false);
-    
-    setCurrentPlayerIndex(prevIndex => (prevIndex === 0 ? 1 : 0));
-
-    setHasPlacedOnBoardThisTurn(false);
-    setHasMovedToExchangeZoneThisTurn(false);
-    setConsecutivePasses(0);
   };
 
   const handleExchangeLetters = () => {
-    if (isGameOver) {
-      alert("Hra skončila!");
+    if (isGameOver || myPlayerIndex === null || currentPlayerIndex !== myPlayerIndex) {
+      alert("Hra skončila, nie si pripojený alebo nie je tvoj ťah!");
       return;
     }
 
@@ -615,7 +786,7 @@ function App() {
     }
 
     const numToDraw = exchangeZoneLetters.length;
-    const { drawnLetters: newLettersForRack, remainingBag: bagAfterDraw } = drawLetters(letterBag, numToDraw);
+    const { drawnLetters: newLettersForRack, remainingBag: bagAfterDraw, bagEmpty: currentBagEmpty } = drawLetters(letterBag, numToDraw);
     
     let updatedBag = [...bagAfterDraw, ...exchangeZoneLetters];
     
@@ -623,44 +794,55 @@ function App() {
       const j = Math.floor(Math.random() * (i + 1));
       [updatedBag[i], updatedBag[j]] = [updatedBag[j], updatedBag[i]];
     }
-    
-    setLetterBag(updatedBag);
 
+    // NOVÁ LOGIKA: Konštrukcia newRack pre aktuálneho hráča
     let newRack = [...playerRacks[currentPlayerIndex]];
     let newLetterIndex = 0;
+    // Najprv odstránime písmená, ktoré boli vymenené z racku (sú už vo exchangeZoneLetters)
+    // Tieto písmená už boli odstránené z rackLetters v moveLetter, keď boli presunuté do ExchangeZone.
+    // Teraz len vložíme nové písmená na prázdne miesta.
     for (let i = 0; i < newRack.length; i++) {
+      // Ak je slot prázdny a máme nové písmená na pridanie
       if (newRack[i] === null && newLetterIndex < newLettersForRack.length) {
         newRack[i] = newLettersForRack[newLetterIndex];
         newLetterIndex++;
       } else if (exchangeZoneLetters.some(l => l.id === newRack[i]?.id)) {
+        // Ak písmeno v racku je jedno z tých, ktoré sa vymieňajú, nastavíme ho na null
         newRack[i] = null;
       }
     }
+    // Ak zostali nejaké nové písmená, pridáme ich na koniec
     while (newLetterIndex < newLettersForRack.length) {
       newRack.push(newLettersForRack[newLetterIndex]);
       newLetterIndex++;
     }
-    while (newRack.length < 7) newRack.push(null);
-    newRack = newRack.slice(0, 7);
+    while (newRack.length < 7) newRack.push(null); // Doplníme null, ak je menej ako 7
+    newRack = newRack.slice(0, 7); // Orezanie na 7
 
-    setPlayerRacks(prevPlayerRacks => {
-      const updatedPlayerRacks = [...prevPlayerRacks];
-      updatedPlayerRacks[currentPlayerIndex] = newRack;
-      return updatedPlayerRacks;
+
+    socket.emit('playerAction', {
+        type: 'updateGameState',
+        payload: {
+            letterBag: updatedBag,
+            playerRacks: playerRacks.map((rack, idx) => idx === currentPlayerIndex ? newRack : rack), // Používame newRack
+            board: board,
+            boardAtStartOfTurn: boardAtStartOfTurn,
+            isFirstTurn: isFirstTurn,
+            playerScores: playerScores,
+            currentPlayerIndex: (currentPlayerIndex === 0 ? 1 : 0),
+            exchangeZoneLetters: [],
+            hasPlacedOnBoardThisTurn: false,
+            hasMovedToExchangeZoneThisTurn: false,
+            consecutivePasses: 0,
+            isGameOver: false,
+            isBagEmpty: currentBagEmpty,
+        }
     });
-    setExchangeZoneLetters([]);
-
-    alert(`Vymenil si ${numToDraw} písmen.`);
-    setCurrentPlayerIndex(prevIndex => (prevIndex === 0 ? 1 : 0));
-
-    setHasPlacedOnBoardThisTurn(false);
-    setHasMovedToExchangeZoneThisTurn(false);
-    setConsecutivePasses(0);
   };
 
   const handlePassTurn = () => {
-    if (isGameOver) {
-      alert("Hra skončila!");
+    if (isGameOver || myPlayerIndex === null || currentPlayerIndex !== myPlayerIndex) {
+      alert("Hra skončila, nie si pripojený alebo nie je tvoj ťah!");
       return;
     }
 
@@ -682,109 +864,178 @@ function App() {
     }
 
     const newConsecutivePasses = consecutivePasses + 1;
-    setConsecutivePasses(newConsecutivePasses);
+    
+    socket.emit('playerAction', {
+        type: 'updateGameState',
+        payload: {
+            ...getCurrentGameState(),
+            currentPlayerIndex: (currentPlayerIndex === 0 ? 1 : 0),
+            hasPlacedOnBoardThisTurn: false,
+            hasMovedToExchangeZoneThisTurn: false,
+            consecutivePasses: newConsecutivePasses,
+            isGameOver: (newConsecutivePasses >= 4),
+        }
+    });
 
     if (newConsecutivePasses >= 4) {
-        setIsGameOver(true);
         alert("Hra skončila! Obaja hráči pasovali dvakrát po sebe.");
-        calculateFinalScores(null, null);
-        return;
+    } else {
+        alert("Ťah bol prenesený na ďalšieho hráča.");
     }
+  };
 
-    alert("Ťah bol prenesený na ďalšieho hráča.");
-    setCurrentPlayerIndex(prevIndex => (prevIndex === 0 ? 1 : 0));
-
-    setHasPlacedOnBoardThisTurn(false);
-    setHasMovedToExchangeZoneThisTurn(false);
+  const handleSendChatMessage = () => {
+    if (newChatMessage.trim() !== '' && socket) {
+      socket.emit('chatMessage', newChatMessage);
+      setNewChatMessage('');
+    }
   };
 
 
   return (
     <DndProvider backend={HTML5Backend}>
       <div className="app-container">
-        <h1>Scrabble</h1>
+        <div className="game-header">
+          <h1>Scrabble</h1>
+          <div className="connection-status">
+            Stav pripojenia: <span className={connectionStatus === 'Pripojený' ? 'connected' : 'disconnected'}>{connectionStatus}</span>
+            {myPlayerIndex !== null && ` | Si Hráč ${myPlayerIndex + 1}`}
+          </div>
+        </div>
+        
         {isGameOver && <h2 className="game-over-message">Hra skončila!</h2>}
         <Scoreboard playerScores={playerScores} currentPlayerIndex={currentPlayerIndex} isGameOver={isGameOver} />
         <LetterBag remainingLettersCount={letterBag.length} />
 
-        {/* Nový kontajner pre dosku a pravý panel (stojany, výmenná zóna, ovládacie prvky) */}
-        <div className="game-area-container">
-          <Board board={board} moveLetter={moveLetter} boardAtStartOfTurn={boardAtStartOfTurn} />
-          
-          {/* Nový kontajner pre stojany, výmennú zónu a ovládacie prvky */}
-          <div className="right-panel-content">
-            <div className="player-racks-container">
-              <div className="player-rack-section">
-                <h3>Hráč 1 Rack:</h3>
-                <PlayerRack letters={playerRacks[0]} moveLetter={moveLetter} playerIndex={0} />
-              </div>
-              <div className="player-rack-section">
-                <h3>Hráč 2 Rack:</h3>
-                <PlayerRack letters={playerRacks[1]} moveLetter={moveLetter} playerIndex={1} />
-              </div>
-            </div>
-            
-            <ExchangeZone
-              lettersInZone={exchangeZoneLetters}
-              moveLetter={moveLetter}
+        {/* Podmienené renderovanie hernej plochy a ovládacích prvkov */}
+        {isGameReadyToRender ? (
+          <div className="game-area-container">
+            <Board 
+              board={board} 
+              moveLetter={moveLetter} 
+              boardAtStartOfTurn={boardAtStartOfTurn} 
+              myPlayerIndex={myPlayerIndex}
+              currentPlayerIndex={currentPlayerIndex}
             />
+            
+            <div className="right-panel-content">
+              <div className="player-racks-container">
+                <div className="player-rack-section">
+                  <h3>Hráč 1 Rack:</h3>
+                  <PlayerRack 
+                    letters={playerRacks[0]} 
+                    moveLetter={moveLetter} 
+                    playerIndex={0} 
+                    myPlayerIndex={myPlayerIndex}
+                    currentPlayerIndex={currentPlayerIndex}
+                  />
+                </div>
+                <div className="player-rack-section">
+                  <h3>Hráč 2 Rack:</h3>
+                  <PlayerRack 
+                    letters={playerRacks[1]} 
+                    moveLetter={moveLetter} 
+                    playerIndex={1} 
+                    myPlayerIndex={myPlayerIndex}
+                    currentPlayerIndex={currentPlayerIndex}
+                  />
+                </div>
+              </div>
+              
+              <ExchangeZone
+                lettersInZone={exchangeZoneLetters}
+                moveLetter={moveLetter}
+                myPlayerIndex={myPlayerIndex}
+                currentPlayerIndex={currentPlayerIndex}
+              />
 
-            <div className="game-controls">
-              <button
-                className="confirm-turn-button"
-                onClick={confirmTurn}
-                disabled={isGameOver || showLetterSelectionModal}
-              >
-                Potvrdiť ťah
-              </button>
-              <button
-                className="exchange-letters-button"
-                onClick={handleExchangeLetters}
-                disabled={isGameOver || letterBag.length < 7 || showLetterSelectionModal}
-              >
-                Vymeniť písmená ({exchangeZoneLetters.length})
-              </button>
-              <button
-                className="pass-turn-button"
-                onClick={handlePassTurn}
-                disabled={isGameOver || showLetterSelectionModal}
-              >
-                Pass
-              </button>
+              <div className="game-controls">
+                <button
+                  className="confirm-turn-button"
+                  onClick={confirmTurn}
+                  disabled={isGameOver || showLetterSelectionModal || myPlayerIndex === null || currentPlayerIndex !== myPlayerIndex}
+                >
+                  Potvrdiť ťah
+                </button>
+                <button
+                  className="exchange-letters-button"
+                  onClick={handleExchangeLetters}
+                  disabled={isGameOver || letterBag.length < 7 || showLetterSelectionModal || myPlayerIndex === null || currentPlayerIndex !== myPlayerIndex}
+                >
+                  Vymeniť písmená ({exchangeZoneLetters.length})
+                </button>
+                <button
+                  className="pass-turn-button"
+                  onClick={handlePassTurn}
+                  disabled={isGameOver || showLetterSelectionModal || myPlayerIndex === null || currentPlayerIndex !== myPlayerIndex}
+                >
+                  Pass
+                </button>
+              </div>
             </div>
-          </div> {/* Koniec .right-panel-content */}
-        </div> {/* Koniec .game-area-container */}
+          </div>
+        ) : (
+          <div className="waiting-message">
+            <p>Čaká sa na pripojenie hráčov...</p>
+            <p>Uistite sa, že máte otvorené dve karty prehliadača.</p>
+          </div>
+        )}
+
+        <div className="chat-container">
+          <h3>Chat</h3>
+          <div className="chat-messages">
+            {chatMessages.map((msg, index) => (
+              <div key={index} className={`chat-message ${msg.senderIndex === myPlayerIndex ? 'my-message' : 'other-message'}`}>
+                <strong>Hráč {msg.senderIndex + 1}:</strong> {msg.text}
+              </div>
+            ))}
+            <div ref={chatMessagesEndRef} />
+          </div>
+          <div className="chat-input">
+            <input
+              type="text"
+              value={newChatMessage}
+              onChange={(e) => setNewChatMessage(e.target.value)}
+              onKeyPress={(e) => {
+                if (e.key === 'Enter') handleSendChatMessage();
+              }}
+              placeholder="Napíš správu..."
+              disabled={myPlayerIndex === null}
+            />
+            <button onClick={handleSendChatMessage} disabled={myPlayerIndex === null}>Odoslať</button>
+          </div>
+        </div>
 
         {showLetterSelectionModal && (
           <LetterSelectionModal
             onSelectLetter={assignLetterToJoker}
             onClose={() => {
               if (jokerTileCoords) {
-                setBoard(prevBoard => {
-                  const newBoard = prevBoard.map(row => [...row]);
-                  const { x, y } = jokerTileCoords;
-                  const jokerLetter = newBoard[x][y];
-                  newBoard[x][y] = null;
-                  const currentPlayersRack = [...playerRacks[currentPlayerIndex]];
-                  const firstEmptyRackSlot = currentPlayersRack.findIndex(l => l === null);
-                  if (firstEmptyRackSlot !== -1) {
-                    currentPlayersRack[firstEmptyRackSlot] = { ...jokerLetter, assignedLetter: null };
-                  } else {
-                    currentPlayersRack.push({ ...jokerLetter, assignedLetter: null });
+                const newBoard = board.map(row => [...row]);
+                const { x, y } = jokerTileCoords;
+                const jokerLetter = newBoard[x][y];
+                newBoard[x][y] = null;
+
+                const currentPlayersRack = [...playerRacks[myPlayerIndex]];
+                const firstEmptyRackSlot = currentPlayersRack.findIndex(l => l === null);
+                if (firstEmptyRackSlot !== -1) {
+                  currentPlayersRack[firstEmptyRackSlot] = { ...jokerLetter, assignedLetter: null };
+                } else {
+                  currentPlayersRack.push({ ...jokerLetter, assignedLetter: null });
+                }
+                
+                socket.emit('playerAction', {
+                  type: 'updateGameState',
+                  payload: {
+                    ...getCurrentGameState(),
+                    board: newBoard,
+                    playerRacks: playerRacks.map((rack, idx) => idx === myPlayerIndex ? currentPlayersRack : rack),
+                    hasPlacedOnBoardThisTurn: getPlacedLettersDuringCurrentTurn(newBoard, boardAtStartOfTurn).length > 0,
                   }
-                  setPlayerRacks(prevPlayerRacks => {
-                    const updatedPlayerRacks = [...prevPlayerRacks];
-                    updatedPlayerRacks[currentPlayerIndex] = currentPlayersRack;
-                    return updatedPlayerRacks;
-                  });
-                  return newBoard;
                 });
               }
               setShowLetterSelectionModal(false);
               setJokerTileCoords(null);
-              const currentPlacedOnBoard = getPlacedLettersDuringCurrentTurn(board, boardAtStartOfTurn);
-              setHasPlacedOnBoardThisTurn(currentPlacedOnBoard.length > 0);
-              setHasMovedToExchangeZoneThisTurn(exchangeZoneLetters.length > 0);
             }}
           />
         )}

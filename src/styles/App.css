@@ -1,24 +1,47 @@
+/* src/styles/App.css */
 .app-container {
 display: flex;
     flex-direction: column;
     align-items: center;
     padding: 20px;
     background-color: #f4f4f4;
-min-height: 100vh;
-    /* Zabezpečí, že kontajner zaberá celú výšku obrazovky */
-    font-family: 'Inter', sans-serif;
-    /* Použitie fontu Inter */
+    min-height: 100vh;
+font-family: 'Inter', sans-serif;
+}
+
+.game-header {
+    width: 100%;
+    max-width: 1200px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
 }
 
 h1 {
 color: #333;
-    margin-bottom: 20px;
+margin: 0;
+}
+
+.connection-status {
+    font-weight: bold;
+    font-size: 0.9em;
+    color: #555;
+}
+
+.connection-status .connected {
+    color: #28a745;
+    /* Zelená */
+}
+
+.connection-status .disconnected {
+    color: #dc3545;
+    /* Červená */
 }
 
 .game-over-message {
 color: #d32f2f;
-    /* Červená farba */
-    font-size: 2em;
+font-size: 2em;
     margin-bottom: 20px;
     text-align: center;
 }
@@ -33,6 +56,8 @@ display: flex;
     padding: 15px;
     border-radius: 8px;
 box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    flex-wrap: wrap;
+        /* Aby sa správa o víťazovi zmestila */
 }
 
 .player-score {
@@ -41,104 +66,78 @@ text-align: center;
     font-weight: bold;
     padding: 5px 10px;
     border-radius: 5px;
+flex: 1;
+    margin: 5px;
 }
 
-.current-player {
-background-color: #e0f2f7;
-    /* Svetlomodrá pre aktuálneho hráča */
-    border: 1px solid #2196F3;
+.active-player {
+    /* Trieda pre aktívneho hráča */
+    background-color: #e0f2f7;
+border: 1px solid #2196F3;
 }
 
-/* Nový kontajner pre dosku a pravý panel (stojany, výmenná zóna, ovládacie prvky) */
 .game-area-container {
 display: flex;
-flex-direction: column;
-    /* Predvolene pre menšie obrazovky */
-    align-items: center;
-gap: 20px;
-    /* Medzera medzi doskou a pravým panelom */
-    width: 100%;
-max-width: 1200px;
-    /* Maximálna šírka pre celé rozloženie */
+    flex-direction: column;
+align-items: center;
+    gap: 20px;
+width: 100%;
+    max-width: 1200px;
 }
 
 @media (min-width: 1024px) {
-
-    /* Pre väčšie obrazovky (desktop) */
-    .game-area-container {
+.game-area-container {
     flex-direction: row;
-        /* Usporiadanie vedľa seba */
-        justify-content: center;
-        /* Centrovanie obsahu */
-        align-items: flex-start;
-        /* Zarovnanie na začiatok vertikálne */
-    }
+    justify-content: center;
+    align-items: flex-start;
+}
 }
 
-/* Nový štýl pre pravý panel */
 .right-panel-content {
-    display: flex;
+display: flex;
     flex-direction: column;
-    /* Usporiadanie elementov v stĺpci */
-    gap: 20px;
-    /* Medzera medzi stojanmi, výmennou zónou a ovládacími prvkami */
-    align-items: center;
-    /* Centrovanie obsahu v paneli */
-    width: 100%;
-    /* Zaberá celú šírku v stĺpci */
-    max-width: 400px;
-    /* Maximálna šírka pre pravý panel */
+gap: 20px;
+align-items: center;
+width: 100%;
+max-width: 400px;
 }
+
 .board-container {
 display: grid;
-grid-template-columns: repeat(15, 40px);
-    /* 15 stĺpcov po 40px */
-    grid-template-rows: repeat(15, 40px);
-    /* 15 riadkov po 40px */
-    border: 5px solid #8B4513;
-    /* Hnedý okraj dosky */
-    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
-margin-bottom: 20px;
-    /* Medzera pod doskou */
+    grid-template-columns: repeat(15, 40px);
+grid-template-rows: repeat(15, 40px);
+border: 5px solid #8B4513;
+box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
+    margin-bottom: 20px;
 }
 
 .player-racks-container {
 display: flex;
-flex-direction: column;
-    /* Stojany pod sebou vpravo */
-    gap: 20px;
-    /* Medzera medzi stojanmi */
-    align-items: center;
-    /* Centrovanie stojanov */
-    width: 100%;
-    /* Zaberá celú šírku v stĺpci */
-    max-width: 400px;
-    /* Maximálna šírka pre kontajner stojanov */
+    flex-direction: column;
+gap: 20px;
+align-items: center;
+width: 100%;
+max-width: 400px;
 }
 
 .player-rack-section {
 text-align: center;
-margin: 0;
-    /* Odstránime pôvodný margin */
-    padding: 10px;
-background-color: #e0f2f7;
-    /* Svetlomodré pozadie pre sekciu racku */
-    border-radius: 8px;
+    margin: 0;
+padding: 10px;
+    background-color: #e0f2f7;
+border-radius: 8px;
 box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     width: 100%;
-    /* Zabezpečí, že sekcia zaberá celú šírku player-racks-container */
 }
 
 .player-rack-section h3 {
 margin-top: 0;
-color: #2196F3;
-    /* Modrá farba pre nadpis hráča */
+    color: #2196F3;
 }
 
 .letter-bag-container {
 margin-top: 20px;
-    /* Adjust margin as it's now outside game-area-container */
-    padding: 15px;
+padding: 15px;
     background-color: #fff;
     border-radius: 8px;
 box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
@@ -148,9 +147,8 @@ box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 .exchange-zone-container {
 border: 2px dashed #ccc;
     padding: 15px;
-margin-top: 0;
-    /* Odstránime top margin, je to teraz súčasťou flex gap v right-panel-content */
-    border-radius: 8px;
+    margin-top: 0;
+border-radius: 8px;
     background-color: #f9f9f9;
     min-height: 80px;
     display: flex;
@@ -158,9 +156,8 @@ margin-top: 0;
     align-items: center;
     justify-content: center;
     gap: 5px;
-width: 100%;
-    /* Zabezpečí, že zaberá celú šírku rodiča */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    width: 100%;
+box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .exchange-zone-container p {
@@ -170,13 +167,11 @@ color: #666;
 
 .game-controls {
 margin-top: 0;
-    /* Odstránime top margin, je to teraz súčasťou flex gap v right-panel-content */
-    display: flex;
+display: flex;
     gap: 15px;
     flex-wrap: wrap;
     justify-content: center;
-width: 100%;
-    /* Zabezpečí, že zaberá celú šírku rodiča */
+    width: 100%;
 }
 
 .game-controls button {
@@ -185,17 +180,15 @@ padding: 10px 20px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-background-color: #2196F3;
-    /* Modrá */
-    color: white;
+    background-color: #2196F3;
+color: white;
 box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
     transition: background-color 0.3s ease, transform 0.1s ease;
 }
 
 .game-controls button:hover {
 background-color: #1976D2;
-    /* Tmavšia modrá */
-    transform: translateY(-1px);
+transform: translateY(-1px);
 }
 
 .game-controls button:disabled {
@@ -257,10 +250,102 @@ background-color: #e0e0e0;
 .modal-close-button {
 margin-top: 20px;
     padding: 8px 15px;
-background-color: #f44336;
-    /* Červená */
+    background-color: #f44336;
+color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* Štýly pre chat */
+.chat-container {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-top: 20px;
+    width: 100%;
+    max-width: 600px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.chat-container h3 {
+    margin-top: 0;
+    color: #333;
+    text-align: center;
+}
+
+.chat-messages {
+    border: 1px solid #eee;
+    border-radius: 5px;
+    padding: 10px;
+    min-height: 150px;
+    max-height: 300px;
+    /* Obmedzenie výšky pre scrollovanie */
+    overflow-y: auto;
+    background-color: #fdfdfd;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.chat-message {
+    padding: 8px 12px;
+    border-radius: 15px;
+    max-width: 80%;
+    word-wrap: break-word;
+    font-size: 0.9em;
+}
+
+.chat-message.my-message {
+    background-color: #dcf8c6;
+    /* Svetlozelená pre vlastné správy */
+    align-self: flex-end;
+    /* Zarovnanie doprava */
+}
+
+.chat-message.other-message {
+    background-color: #e9e9eb;
+    /* Svetlosivá pre správy od ostatných */
+    align-self: flex-start;
+    /* Zarovnanie doľava */
+}
+
+.chat-message strong {
+    color: #075e54;
+    /* Tmavšia zelená pre meno odosielateľa */
+}
+
+.chat-input {
+    display: flex;
+    gap: 10px;
+}
+
+.chat-input input {
+    flex-grow: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1em;
+}
+
+.chat-input button {
+    padding: 10px 15px;
+    background-color: #2196F3;
     color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
+transition: background-color 0.2s ease;
+}
+
+.chat-input button:hover {
+    background-color: #1976D2;
+}
+
+.chat-input button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
 }

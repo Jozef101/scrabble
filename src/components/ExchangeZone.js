@@ -1,44 +1,51 @@
+// src/components/ExchangeZone.js
 import React from 'react';
 import { useDrop } from 'react-dnd';
 import Letter from './Letter';
 import '../styles/ExchangeZone.css';
 
-function ExchangeZone({ lettersInZone, moveLetter }) {
-  const [{ isOver }, drop] = useDrop({
+function ExchangeZone({ lettersInZone, moveLetter, myPlayerIndex, currentPlayerIndex }) { // PRIDANÉ myPlayerIndex, currentPlayerIndex
+  const [{ isOver, canDrop: dropAllowed }, drop] = useDrop({ // Premenované canDrop na dropAllowed
     accept: 'LETTER',
-    drop: (item, monitor) => {
-      // Táto kontrola je dôležitá: Ak sa písmeno presúva z racku alebo dosky do výmennej zóny,
-      // zavoláme centrálnu funkciu moveLetter v App.js.
-      if (item.source.type === 'rack' || item.source.type === 'board') { // PRIDANÉ: item.source.type === 'board'
-        moveLetter(item.letterData, item.source, { type: 'exchangeZone' });
-      } else {
-        console.warn("Neplatný presun do výmennej zóny.");
+    canDrop: (item) => {
+      // Povoliť drop iba ak je na ťahu správny hráč
+      if (myPlayerIndex === null || currentPlayerIndex !== myPlayerIndex) {
+        return false;
       }
+      // Povoliť drop iba ak sa presúva z racku
+      return item.source.type === 'rack';
+    },
+    drop: (item, monitor) => {
+      if (monitor.didDrop()) {
+        return;
+      }
+      moveLetter(item.letterData, item.source, { type: 'exchangeZone' });
     },
     collect: (monitor) => ({
       isOver: monitor.isOver(),
+      canDrop: monitor.canDrop(), // Stále zbierame canDrop z monitora
     }),
   });
 
-  const highlightClass = isOver ? 'exchange-zone-highlight' : '';
+  const highlightClass = isOver && dropAllowed ? 'exchange-zone-highlight' : ''; // Používame dropAllowed
 
   return (
     <div ref={drop} className={`exchange-zone-container ${highlightClass}`}>
       <h3>Písmená na výmenu:</h3>
       <div className="exchange-zone-slots">
         {lettersInZone.length === 0 ? (
-          <p className="placeholder-text">Presuň sem písmená z racku alebo dosky, ktoré chceš vymeniť.</p>
+          <p className="placeholder-text">Presuň sem písmená z racku, ktoré chceš vymeniť.</p>
         ) : (
           lettersInZone.map((letter) => (
             <Letter
-              key={letter.id} // Použijeme unikátne ID písmena ako kľúč
+              key={letter.id}
               id={letter.id}
               letter={letter.letter}
               value={letter.value}
-              // Zdroj pre písmená *vo vnútri* výmennej zóny je 'exchangeZone'
-              // To umožňuje ich presúvanie *von* z výmennej zóny späť na rack
-              source={{ type: 'exchangeZone' }} // Pre zónu už nie je potrebný index
-              isDraggable={true}
+              assignedLetter={letter.assignedLetter}
+              source={{ type: 'exchangeZone' }}
+              // Písmená vo výmennej zóne sú draggable len ak je na ťahu aktuálny hráč
+              isDraggable={myPlayerIndex !== null && currentPlayerIndex === myPlayerIndex}
             />
           ))
         )}
