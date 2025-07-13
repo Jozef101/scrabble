@@ -1,7 +1,7 @@
 .letter-tile {
-    width: 40px;
+  width: 40px;
     height: 40px;
-    background-color: #ffe0b2;
+  background-color: #ffe0b2;
     /* Svetlooranžová/krémová */
     border: 1px solid #d7a07c;
     border-radius: 5px;
@@ -9,61 +9,48 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-font-size: 24px;
+  font-size: 24px;
   font-weight: bold;
-color: #333;
+  color: #333;
     cursor: grab;
     position: relative;
     box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
     transition: transform 0.1s ease-in-out, box-shadow 0.1s ease-in-out;
-    user-select: none;
+  user-select: none;
     /* Zabrániť výberu textu */
     box-sizing: border-box;
     /* Zabezpečí, že border je súčasťou šírky/výšky */
 }
 
 .letter-tile:hover {
-    transform: translateY(-2px);
+  transform: translateY(-2px);
     box-shadow: 3px 3px 7px rgba(0, 0, 0, 0.3);
 }
 
 .letter-tile.dragging {
-    opacity: 0.5;
+  opacity: 0.5;
     cursor: grabbing;
 }
 
 .main-letter {
-    line-height: 1;
+  line-height: 1;
     /* Zabezpečiť vertikálne centrovanie písmena */
 }
 
 .letter-value {
-position: absolute;
+  position: absolute;
     bottom: 2px;
     right: 4px;
   font-size: 10px;
-font-weight: normal;
+  font-weight: normal;
   color: #555;
 }
 
 /* Špecifické štýly pre žolíka */
 .joker-tile {
-    background-color: #f0f0f0;
-    /* Svetlejšie pozadie pre žolíka */
-    border: 1px dashed #999;
-    /* Čiarkovaná hranica pre žolíka */
-    color: #666;
-    /* Mierne tlmená farba pre písmeno žolíka */
+  color: #333;
 }
 
-.joker-assigned-letter {
-    position: absolute;
-    top: 2px;
-    /* Poloha vpravo hore */
-    right: 4px;
-    font-size: 10px;
-    /* Menšie písmo pre priradené písmeno */
-    font-weight: normal;
-    color: #4CAF50;
-    /* Zelená farba pre priradené písmeno */
+.joker-assigned-color {
+  color: #ff69b4;
 }
