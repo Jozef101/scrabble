@@ -1,9 +1,10 @@
 // Hodnoty písmen v Scrabble
 export const LETTER_VALUES = {
-  'A': 1, 'B': 3, 'C': 4, 'D': 3, 'E': 1, 'F': 5, 'G': 3, 'H': 3, 'I': 1, 'J': 8,
-  'K': 2, 'L': 2, 'M': 3, 'N': 1, 'O': 1, 'P': 3, 'Q': 10, 'R': 1, 'S': 1, 'T': 1,
-  'U': 4, 'V': 4, 'W': 5, 'X': 8, 'Y': 10, 'Z': 10,
-  '': 0 // Hodnota žolíka (prázdne písmeno) je 0
+  'A': 1, 'Á': 4, 'Ä': 10, 'B': 4, 'C': 4, 'Č': 5, 'D': 2, 'Ď': 8, 'E': 1, 'É': 7,
+  'F': 8, 'G': 8, 'H': 4, 'I': 1, 'Í': 5, 'J': 3, 'K': 2, 'L': 2, 'Ľ': 7, 'Ĺ': 10,
+  'M': 2, 'N': 1, 'Ň': 8, 'O': 1, 'Ô': 8, 'Ó': 10, 'P': 2, 'Q': 10, 'R': 1, 'Ŕ': 10,
+  'S': 1, 'Š': 5, 'T': 1, 'Ť': 7, 'U': 3, 'Ú': 7, 'V': 1, 'W': 5, 'X': 10, 'Y': 4, 'Ý': 5,
+  'Z': 4, 'Ž': 5, '': 0 // Hodnota žolíka (prázdne písmeno) je 0
 };
 
 // Distribúcia písmen vo vrecúšku Scrabble (pre slovenskú verziu, ak je to možné, inak anglická)
