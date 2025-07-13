@@ -10,38 +10,48 @@ import LetterBag from './components/LetterBag';
 import Scoreboard from './components/Scoreboard';
 import ExchangeZone from './components/ExchangeZone';
 import LetterSelectionModal from './components/LetterSelectionModal';
-import { LETTER_VALUES } from './utils/LettersDistribution';
-import { bonusSquares, BONUS_TYPES } from './utils/boardUtils';
+
+// Importujeme funkcie z nových utility súborov
+import {
+  drawLetters,
+  getPlacedLettersDuringCurrentTurn,
+  isStraightLine,
+  getSequenceInDirection,
+  getFullWordLetters,
+  areLettersContiguous,
+  isConnected,
+  getAllWordsInTurn,
+  calculateWordScore,
+  getRackPoints,
+  calculateFinalScores,
+  createLetterBag // Importujeme aj createLetterBag pre počiatočné nastavenie
+} from './utils/gameLogic';
+import { setupSocketListeners, sendChatMessage, sendPlayerAction } from './utils/socketHandlers';
+import { SERVER_URL, BOARD_SIZE, RACK_SIZE } from './utils/constants'; // Importujeme konštanty
+
+import { LETTER_VALUES } from './utils/LettersDistribution'; // Stále potrebujeme pre zobrazenie hodnôt
+import { bonusSquares, BONUS_TYPES } from './utils/boardUtils'; // Stále potrebujeme pre zobrazenie bonusov
 import slovakWordsArray from './data/slovakWords.json';
 import './styles/App.css';
 
-const SERVER_URL = 'http://localhost:4000';
-
 function App() {
-  const [letterBag, setLetterBag] = useState([]); 
-  const [playerRacks, setPlayerRacks] = useState([
-    Array(7).fill(null),
-    Array(7).fill(null)
-  ]);
-  const [board, setBoard] = useState(
-    Array(15).fill(null).map(() => Array(15).fill(null))
-  );
-  const [boardAtStartOfTurn, setBoardAtStartOfTurn] = useState(
-    Array(15).fill(null).map(() => Array(15).fill(null))
-  );
-  const [isFirstTurn, setIsFirstTurn] = useState(true);
-
-  const [playerScores, setPlayerScores] = useState([0, 0]);
-  const [currentPlayerIndex, setCurrentPlayerIndex] = useState(0);
-
-  const [exchangeZoneLetters, setExchangeZoneLetters] = useState([]);
-
-  const [hasPlacedOnBoardThisTurn, setHasPlacedOnBoardThisTurn] = useState(false);
-  const [hasMovedToExchangeZoneThisTurn, setHasMovedToExchangeZoneThisTurn] = useState(false);
-
-  const [consecutivePasses, setConsecutivePasses] = useState(0);
-  const [isGameOver, setIsGameOver] = useState(false);
-  const [isBagEmpty, setIsBagEmpty] = useState(false);
+  // Stav hry, ktorý bude aktualizovaný zo servera
+  const [gameState, setGameState] = useState({
+    letterBag: [],
+    playerRacks: Array(2).fill(null).map(() => Array(RACK_SIZE).fill(null)),
+    board: Array(BOARD_SIZE).fill(null).map(() => Array(BOARD_SIZE).fill(null)),
+    boardAtStartOfTurn: Array(BOARD_SIZE).fill(null).map(() => Array(BOARD_SIZE).fill(null)),
+    isFirstTurn: true,
+    playerScores: [0, 0],
+    currentPlayerIndex: 0,
+    exchangeZoneLetters: [],
+    hasPlacedOnBoardThisTurn: false,
+    hasMovedToExchangeZoneThisTurn: false,
+    consecutivePasses: 0,
+    isGameOver: false,
+    isBagEmpty: false,
+    hasInitialGameStateReceived: false, // Nový stav pre sledovanie počiatočného stavu
+  });
 
   const [showLetterSelectionModal, setShowLetterSelectionModal] = useState(false);
   const [jokerTileCoords, setJokerTileCoords] = useState(null);
@@ -53,151 +63,58 @@ function App() {
   const [newChatMessage, setNewChatMessage] = useState('');
   const chatMessagesEndRef = useRef(null);
 
-  // NOVÝ STAV: Sleduje, či bol prijatý počiatočný stav hry zo servera
-  const [hasInitialGameStateReceived, setHasInitialGameStateReceived] = useState(false);
-
   const validWordsSet = useRef(new Set(slovakWordsArray.map(word => word.toUpperCase())));
 
+  // Effect pre Socket.IO pripojenie a poslucháčov
   useEffect(() => {
     const newSocket = io(SERVER_URL);
     setSocket(newSocket);
 
-    newSocket.on('connect', () => {
-      setConnectionStatus('Pripojený');
-      console.log('Pripojený k serveru Socket.IO');
-      newSocket.emit('joinGame');
-    });
-
-    newSocket.on('disconnect', () => {
-      setConnectionStatus('Odpojený');
-      console.log('Odpojený od servera Socket.IO');
-      // Reset všetkých stavov pri odpojení
-      setLetterBag([]);
-      setPlayerRacks([Array(7).fill(null), Array(7).fill(null)]);
-      setBoard(Array(15).fill(null).map(() => Array(15).fill(null)));
-      setBoardAtStartOfTurn(Array(15).fill(null).map(() => Array(15).fill(null)));
-      setIsFirstTurn(true);
-      setPlayerScores([0, 0]);
-      setCurrentPlayerIndex(0);
-      setExchangeZoneLetters([]);
-      setHasPlacedOnBoardThisTurn(false);
-      setHasMovedToExchangeZoneThisTurn(false);
-      setConsecutivePasses(0);
-      setIsGameOver(false);
-      setIsBagEmpty(false);
-      setMyPlayerIndex(null);
-      setChatMessages([]);
-      setHasInitialGameStateReceived(false); // Reset tohto flagu
-    });
-
-    newSocket.on('playerAssigned', (playerIndex) => {
-      setMyPlayerIndex(playerIndex);
-      console.log(`Bol si priradený ako Hráč ${playerIndex + 1}.`);
-      console.log(`DEBUG: myPlayerIndex po priradení: ${playerIndex}`);
-    });
-
-    newSocket.on('gameStateUpdate', (serverGameState) => {
-      console.log('Prijatá aktualizácia stavu hry:', serverGameState);
-      setLetterBag(serverGameState.letterBag);
-      setPlayerRacks(serverGameState.playerRacks);
-      setBoard(serverGameState.board);
-      setBoardAtStartOfTurn(serverGameState.boardAtStartOfTurn);
-      setIsFirstTurn(serverGameState.isFirstTurn);
-      setPlayerScores(serverGameState.playerScores);
-      setCurrentPlayerIndex(serverGameState.currentPlayerIndex);
-      setExchangeZoneLetters(serverGameState.exchangeZoneLetters);
-      setConsecutivePasses(serverGameState.consecutivePasses);
-      setIsGameOver(serverGameState.isGameOver);
-      setIsBagEmpty(serverGameState.isBagEmpty);
-      setHasPlacedOnBoardThisTurn(serverGameState.hasPlacedOnBoardThisTurn);
-      setHasMovedToExchangeZoneThisTurn(serverGameState.hasMovedToExchangeZoneThisTurn);
-      
-      // Nastavíme tento flag na true, keď je prijatý stav hry
-      setHasInitialGameStateReceived(true); 
-    });
-
-    newSocket.on('gameError', (message) => {
-      alert(`Chyba hry: ${message}`);
-      console.error('Chyba hry:', message);
-      setHasInitialGameStateReceived(false); // Ak je chyba, predpokladáme, že nie je pripravené
-    });
-
-    newSocket.on('gameReset', (message) => {
-      alert(`Hra bola resetovaná: ${message}`);
-      console.log('Hra bola resetovaná.');
-      setLetterBag([]);
-      setPlayerRacks([Array(7).fill(null), Array(7).fill(null)]);
-      setBoard(Array(15).fill(null).map(() => Array(15).fill(null)));
-      setBoardAtStartOfTurn(Array(15).fill(null).map(() => Array(15).fill(null)));
-      setIsFirstTurn(true);
-      setPlayerScores([0, 0]);
-      setCurrentPlayerIndex(0);
-      setExchangeZoneLetters([]);
-      setHasPlacedOnBoardThisTurn(false);
-      setHasMovedToExchangeZoneThisTurn(false);
-      setConsecutivePasses(0);
-      setIsGameOver(false);
-      setIsBagEmpty(false);
-      setMyPlayerIndex(null);
-      setChatMessages([]);
-      setHasInitialGameStateReceived(false); // Reset tohto flagu
-      newSocket.emit('joinGame');
-    });
-
-    newSocket.on('receiveChatMessage', (message) => {
-      setChatMessages((prevMessages) => [...prevMessages, message]);
-    });
-
-    newSocket.on('chatHistory', (history) => {
-      setChatMessages(history);
-    });
+    // Používame setupSocketListeners z nového súboru
+    setupSocketListeners(
+      newSocket,
+      setConnectionStatus,
+      setMyPlayerIndex,
+      (updatedState) => {
+        setGameState(prevState => ({ ...prevState, ...updatedState, hasInitialGameStateReceived: true }));
+      },
+      setChatMessages
+    );
 
     return () => {
       newSocket.disconnect();
     };
   }, []);
 
-  // Tento useEffect zabezpečí, že herná oblasť sa zobrazí až po priradení hráča
-  // A po prijatí počiatočného stavu hry.
-  const isGameReadyToRender = myPlayerIndex !== null && hasInitialGameStateReceived;
-
+  // Effect pre posúvanie chatu
   useEffect(() => {
     chatMessagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [chatMessages]);
 
-  const drawLetters = (currentBag, numToDraw) => {
-    const drawn = [];
-    const tempBag = [...currentBag];
+  // Destrukturujeme stav hry pre jednoduchší prístup
+  const {
+    letterBag,
+    playerRacks,
+    board,
+    boardAtStartOfTurn,
+    isFirstTurn,
+    playerScores,
+    currentPlayerIndex,
+    exchangeZoneLetters,
+    hasPlacedOnBoardThisTurn,
+    hasMovedToExchangeZoneThisTurn,
+    consecutivePasses,
+    isGameOver,
+    isBagEmpty,
+    hasInitialGameStateReceived,
+  } = gameState;
 
-    for (let i = 0; i < numToDraw; i++) {
-      if (tempBag.length > 0) {
-        drawn.push(tempBag.pop());
-      } else {
-        console.warn("Vrecúško je prázdne, nedá sa ťahať viac písmen.");
-        return { drawnLetters: drawn, remainingBag: tempBag, bagEmpty: true };
-      }
-    }
-    return { drawnLetters: drawn, remainingBag: tempBag, bagEmpty: false };
-  };
+  // Tento useEffect zabezpečí, že herná oblasť sa zobrazí až po priradení hráča
+  // A po prijatí počiatočného stavu hry.
+  const isGameReadyToRender = myPlayerIndex !== null && hasInitialGameStateReceived;
 
-  const getPlacedLettersDuringCurrentTurn = (currentBoardState, initialBoardState) => {
-    const placed = [];
-    for (let r = 0; r < 15; r++) {
-      for (let c = 0; c < 15; c++) {
-        if (currentBoardState[r][c] && !initialBoardState[r][c]) {
-          placed.push({ x: r, y: c, letterData: currentBoardState[r][c] });
-        }
-      }
-    }
-    return placed;
-  };
 
   const moveLetter = (letterData, source, target) => {
-    console.log("DEBUG (moveLetter call): letterData:", letterData, "source:", source, "target:", target);
-    console.log("DEBUG (moveLetter conditions): isGameOver:", isGameOver, "myPlayerIndex:", myPlayerIndex, "currentPlayerIndex:", currentPlayerIndex);
-    console.log("DEBUG (moveLetter condition check): isGameOver || myPlayerIndex === null || currentPlayerIndex !== myPlayerIndex =>", 
-      isGameOver || myPlayerIndex === null || currentPlayerIndex !== myPlayerIndex);
-
     if (isGameOver || myPlayerIndex === null || currentPlayerIndex !== myPlayerIndex) {
       console.log("Nemôžeš presúvať písmená (hra skončila, nie si pripojený alebo nie je tvoj ťah).");
       return;
@@ -230,15 +147,12 @@ function App() {
       }
 
       newPlayerRacks[myPlayerIndex] = newPlayerRacks[myPlayerIndex].filter(l => l !== undefined && l !== null);
-      while (newPlayerRacks[myPlayerIndex].length < 7) { newPlayerRacks[myPlayerIndex].push(null); }
-      while (newPlayerRacks[myPlayerIndex].length > 7) { newPlayerRacks[myPlayerIndex].pop(); }
+      while (newPlayerRacks[myPlayerIndex].length < RACK_SIZE) { newPlayerRacks[myPlayerIndex].push(null); }
+      while (newPlayerRacks[myPlayerIndex].length > RACK_SIZE) { newPlayerRacks[myPlayerIndex].pop(); }
 
-      socket.emit('playerAction', {
-        type: 'updateGameState',
-        payload: {
-          ...getCurrentGameState(),
-          playerRacks: newPlayerRacks,
-        }
+      sendPlayerAction(socket, 'updateGameState', {
+        ...gameState, // Posielame celý aktuálny stav
+        playerRacks: newPlayerRacks,
       });
       return;
     }
@@ -293,16 +207,14 @@ function App() {
         newExchangeZoneLetters.push(letterToMove);
     }
 
-    socket.emit('playerAction', {
-      type: 'updateGameState',
-      payload: {
-        ...getCurrentGameState(),
-        playerRacks: newPlayerRacks,
-        board: newBoard,
-        exchangeZoneLetters: newExchangeZoneLetters,
-        hasPlacedOnBoardThisTurn: getPlacedLettersDuringCurrentTurn(newBoard, boardAtStartOfTurn).length > 0,
-        hasMovedToExchangeZoneThisTurn: newExchangeZoneLetters.length > 0,
-      }
+    // Posielame aktualizovaný stav na server
+    sendPlayerAction(socket, 'updateGameState', {
+      ...gameState, // Posielame celý aktuálny stav
+      playerRacks: newPlayerRacks,
+      board: newBoard,
+      exchangeZoneLetters: newExchangeZoneLetters,
+      hasPlacedOnBoardThisTurn: getPlacedLettersDuringCurrentTurn(newBoard, boardAtStartOfTurn).length > 0,
+      hasMovedToExchangeZoneThisTurn: newExchangeZoneLetters.length > 0,
     });
   };
 
@@ -313,251 +225,14 @@ function App() {
       if (newBoard[x][y] && newBoard[x][y].letter === '') {
         newBoard[x][y] = { ...newBoard[x][y], assignedLetter: selectedLetter };
       }
-      socket.emit('playerAction', {
-        type: 'updateGameState',
-        payload: {
-          ...getCurrentGameState(),
-          board: newBoard,
-        }
+      sendPlayerAction(socket, 'updateGameState', {
+        ...gameState,
+        board: newBoard,
       });
     }
     setShowLetterSelectionModal(false);
     setJokerTileCoords(null);
   };
-
-  const isStraightLine = (letters) => {
-    if (letters.length <= 1) return true;
-    const firstX = letters[0].x;
-    const firstY = letters[0].y;
-    let isRow = true;
-    let isCol = true;
-    for (let i = 1; i < letters.length; i++) {
-      if (letters[i].x !== firstX) isRow = false;
-      if (letters[i].y !== firstY) isCol = false;
-    }
-    return isRow || isCol;
-  };
-
-  const getSequenceInDirection = (startCoordX, startCoordY, boardState, dx, dy) => {
-    let letters = [];
-    
-    let scanX = startCoordX;
-    let scanY = startCoordY;
-    while (scanX >= 0 && scanX < 15 && scanY >= 0 && scanY < 15 && boardState[scanX][scanY]) {
-        scanX -= dx;
-        scanY -= dy;
-    }
-    let wordStartX = scanX + dx;
-    let wordStartY = scanY + dy;
-
-    while (wordStartX >= 0 && wordStartX < 15 && wordStartY >= 0 && wordStartY < 15 && boardState[wordStartX][wordStartY]) {
-        letters.push({ x: wordStartX, y: wordStartY, letterData: boardState[wordStartX][wordStartY] });
-        wordStartX += dx;
-        wordStartY += dy;
-    }
-    return letters;
-  };
-
-  const getFullWordLetters = (currentPlacedLetters, currentBoard) => {
-    if (currentPlacedLetters.length === 0) return [];
-
-    const sortedPlaced = [...currentPlacedLetters].sort((a, b) => {
-        if (a.x === b.x) return a.y - b.y;
-        return a.x - b.x;
-    });
-
-    const firstPlaced = sortedPlaced[0];
-    let mainWord = [];
-
-    let isHorizontal = false;
-    if (sortedPlaced.length > 1 && sortedPlaced[0].x === sortedPlaced[1].x) {
-        isHorizontal = true;
-    } else if (sortedPlaced.length === 1) {
-        const x = firstPlaced.x;
-        const y = firstPlaced.y;
-        const hasHorizontalNeighbor = (y > 0 && currentBoard[x][y - 1] !== null) || (y < 14 && currentBoard[x][y + 1] !== null);
-        const hasVerticalNeighbor = (x > 0 && currentBoard[x - 1][y] !== null) || (x < 14 && currentBoard[x + 1][y] !== null);
-
-        if (hasHorizontalNeighbor && !hasVerticalNeighbor) {
-            isHorizontal = true;
-        } else if (!hasHorizontalNeighbor && hasVerticalNeighbor) {
-            isHorizontal = false;
-        } else if (hasHorizontalNeighbor && hasVerticalNeighbor) {
-            isHorizontal = true;
-        } else {
-            return [firstPlaced];
-        }
-    }
-
-    if (isHorizontal) {
-        mainWord = getSequenceInDirection(firstPlaced.x, firstPlaced.y, currentBoard, 0, 1);
-    } else {
-        mainWord = getSequenceInDirection(firstPlaced.x, firstPlaced.y, currentBoard, 1, 0);
-    }
-
-    return mainWord;
-  };
-
-  const areLettersContiguous = (allWordLetters) => {
-    if (allWordLetters.length <= 1) return true;
-    for (let i = 0; i < allWordLetters.length - 1; i++) {
-      const current = allWordLetters[i];
-      const next = allWordLetters[i + 1];
-      if (current.x === next.x) {
-        if (next.y - current.y !== 1) { return false; }
-      } else if (current.y === next.y) {
-        if (next.x - current.x !== 1) { return false; }
-      } else {
-        return false;
-      }
-    }
-    return true;
-  };
-
-  const isConnected = (currentPlacedLetters, currentBoard, isFirstTurn, allWordLetters) => {
-    if (currentPlacedLetters.length === 0) return false;
-
-    if (isFirstTurn) {
-      const centerSquare = { x: 7, y: 7 };
-      const coversCenter = currentPlacedLetters.some(
-        (l) => l.x === centerSquare.x && l.y === centerSquare.y
-      );
-      if (!coversCenter) { return false; }
-    } else {
-      const hasExistingLetterInLine = allWordLetters.some(l => 
-        !currentPlacedLetters.some(pl => pl.x === l.x && pl.y === l.y)
-      );
-      
-      const touchesExistingNeighbor = currentPlacedLetters.some(pl => {
-        const neighbors = [
-          [pl.x - 1, pl.y], [pl.x + 1, pl.y], [pl.x, pl.y - 1], [pl.x, pl.y + 1]
-        ];
-        return neighbors.some(([nx, ny]) =>
-          nx >= 0 && nx < 15 && ny >= 0 && ny < 15 && currentBoard[nx][ny] &&
-          !currentPlacedLetters.some(l => l.x === nx && l.y === ny)
-        );
-      });
-
-      if (!hasExistingLetterInLine && !touchesExistingNeighbor) {
-        return false;
-      }
-    }
-    return true;
-  };
-
-  const getAllWordsInTurn = (actualPlacedLetters, currentBoard) => {
-    const formedWordObjects = [];
-    const addedWordStrings = new Set();
-
-    const addWordIfNew = (wordLetters) => {
-        if (wordLetters.length > 1) {
-            const wordString = wordLetters.map(l => (l.letterData.letter === '' ? l.letterData.assignedLetter : l.letterData.letter)).join('');
-            if (!addedWordStrings.has(wordString)) {
-                addedWordStrings.add(wordString);
-                formedWordObjects.push({ wordString, letters: wordLetters });
-            }
-        }
-    };
-
-    const mainWord = getFullWordLetters(actualPlacedLetters, currentBoard);
-    addWordIfNew(mainWord);
-
-    actualPlacedLetters.forEach(pLetter => {
-        const { x, y } = pLetter;
-
-        const horizontalCrossWord = getSequenceInDirection(x, y, currentBoard, 0, 1);
-        addWordIfNew(horizontalCrossWord);
-
-        const verticalCrossWord = getSequenceInDirection(x, y, currentBoard, 1, 0);
-        addWordIfNew(verticalCrossWord);
-    });
-
-    return formedWordObjects;
-  };
-
-  const calculateWordScore = (wordLetters, boardAtStartOfTurn) => {
-    let wordScore = 0;
-    let wordMultiplier = 1;
-
-    wordLetters.forEach(letterObj => {
-      const { x, y, letterData } = letterObj;
-      const bonusType = bonusSquares[`${x},${y}`];
-      let letterValue = (letterData.letter === '' ? (LETTER_VALUES[letterData.assignedLetter] || 0) : (LETTER_VALUES[letterData.letter] || 0));
-
-      const isNewLetter = boardAtStartOfTurn[x][y] === null;
-
-      if (isNewLetter) {
-        if (bonusType === BONUS_TYPES.DOUBLE_LETTER) {
-          letterValue *= 2;
-        } else if (bonusType === BONUS_TYPES.TRIPLE_LETTER) {
-          letterValue *= 3;
-        } else if (bonusType === BONUS_TYPES.DOUBLE_WORD || bonusType === BONUS_TYPES.START_SQUARE) {
-          wordMultiplier *= 2;
-        } else if (bonusType === BONUS_TYPES.TRIPLE_WORD) {
-          wordMultiplier *= 3;
-        }
-      }
-      wordScore += letterValue;
-    });
-
-    wordScore *= wordMultiplier;
-    return wordScore;
-  };
-
-  const getRackPoints = (rack) => {
-    return rack.reduce((sum, letter) => {
-        if (!letter) return sum;
-        return sum + (letter.letter === '' ? 0 : (LETTER_VALUES[letter.letter] || 0));
-    }, 0);
-  };
-
-  const calculateFinalScores = (endingPlayerIndex, finalRackLetters) => {
-    let finalScores = [...playerScores];
-    let totalOpponentRackPoints = 0;
-
-    for (let i = 0; i < playerScores.length; i++) {
-        const rack = (i === endingPlayerIndex) ? finalRackLetters : playerRacks[i];
-        const pointsOnRack = getRackPoints(rack);
-        finalScores[i] -= pointsOnRack;
-
-        if (i !== endingPlayerIndex) {
-            totalOpponentRackPoints += pointsOnRack;
-        }
-    }
-
-    if (endingPlayerIndex !== null) {
-        finalScores[endingPlayerIndex] += totalOpponentRackPoints;
-    }
-
-    socket.emit('playerAction', {
-        type: 'updateGameState',
-        payload: {
-            ...getCurrentGameState(),
-            playerScores: finalScores,
-            isGameOver: true,
-        }
-    });
-    alert(`Hra skončila! Konečné skóre: Hráč 1: ${finalScores[0]}, Hráč 2: ${finalScores[1]}`);
-  };
-
-  const getCurrentGameState = () => {
-    return {
-      letterBag,
-      playerRacks,
-      board,
-      boardAtStartOfTurn,
-      isFirstTurn,
-      playerScores,
-      currentPlayerIndex,
-      exchangeZoneLetters,
-      hasPlacedOnBoardThisTurn,
-      hasMovedToExchangeZoneThisTurn,
-      consecutivePasses,
-      isGameOver,
-      isBagEmpty,
-    };
-  };
-
 
   const confirmTurn = () => {
     if (isGameOver || myPlayerIndex === null || currentPlayerIndex !== myPlayerIndex) {
@@ -573,19 +248,7 @@ function App() {
         return;
     }
 
-
-    const actualPlacedLetters = [];
-    for (let r = 0; r < 15; r++) {
-      for (let c = 0; c < 15; c++) {
-        if (board[r][c] && !boardAtStartOfTurn[r][c]) {
-          actualPlacedLetters.push({
-            letterData: board[r][c],
-            x: r,
-            y: c,
-          });
-        }
-      }
-    }
+    const actualPlacedLetters = getPlacedLettersDuringCurrentTurn(board, boardAtStartOfTurn);
 
     if (actualPlacedLetters.length === 0) {
       alert("Najprv polož aspoň jedno písmeno na dosku!");
@@ -695,65 +358,48 @@ function App() {
       newRackForCurrentPlayer.push(newLetters[newLetterIndex]);
       newLetterIndex++;
     }
-    while (newRackForCurrentPlayer.length < 7) newRackForCurrentPlayer.push(null);
-    newRackForCurrentPlayer = newRackForCurrentPlayer.slice(0, 7);
+    while (newRackForCurrentPlayer.length < RACK_SIZE) newRackForCurrentPlayer.push(null);
+    newRackForCurrentPlayer = newRackForCurrentPlayer.slice(0, RACK_SIZE);
 
     const finalRackAfterPlay = newRackForCurrentPlayer.filter(l => l !== null);
 
     if (currentBagEmpty && finalRackAfterPlay.length === 0) {
-        let finalScores = [...newScores];
-        let totalOpponentRackPoints = 0;
-
-        for (let i = 0; i < playerScores.length; i++) {
-            const rack = (i === currentPlayerIndex) ? newRackForCurrentPlayer : playerRacks[i];
-            const pointsOnRack = getRackPoints(rack);
-            finalScores[i] -= pointsOnRack;
-
-            if (i !== currentPlayerIndex) {
-                totalOpponentRackPoints += pointsOnRack;
-            }
-        }
-        finalScores[currentPlayerIndex] += totalOpponentRackPoints;
-
-        socket.emit('playerAction', {
-            type: 'updateGameState',
-            payload: {
-                letterBag: updatedBagAfterTurn,
-                playerRacks: playerRacks.map((rack, idx) => idx === currentPlayerIndex ? newRackForCurrentPlayer : rack),
-                board: board,
-                boardAtStartOfTurn: newBoardAtStartOfTurn,
-                isFirstTurn: false,
-                playerScores: finalScores,
-                currentPlayerIndex: currentPlayerIndex,
-                exchangeZoneLetters: [],
-                hasPlacedOnBoardThisTurn: false,
-                hasMovedToExchangeZoneThisTurn: false,
-                consecutivePasses: 0,
-                isGameOver: true,
-                isBagEmpty: currentBagEmpty,
-            }
-        });
-        alert(`Hra skončila! Konečné skóre: Hráč 1: ${finalScores[0]}, Hráč 2: ${finalScores[1]}`);
-        return;
-    }
-
-    socket.emit('playerAction', {
-        type: 'updateGameState',
-        payload: {
+        const finalScores = calculateFinalScores(currentPlayerIndex, newRackForCurrentPlayer, playerScores, playerRacks);
+        sendPlayerAction(socket, 'updateGameState', {
+            ...gameState,
             letterBag: updatedBagAfterTurn,
             playerRacks: playerRacks.map((rack, idx) => idx === currentPlayerIndex ? newRackForCurrentPlayer : rack),
             board: board,
             boardAtStartOfTurn: newBoardAtStartOfTurn,
             isFirstTurn: false,
-            playerScores: newScores,
-            currentPlayerIndex: (currentPlayerIndex === 0 ? 1 : 0),
+            playerScores: finalScores,
+            currentPlayerIndex: currentPlayerIndex,
             exchangeZoneLetters: [],
             hasPlacedOnBoardThisTurn: false,
             hasMovedToExchangeZoneThisTurn: false,
             consecutivePasses: 0,
-            isGameOver: false,
+            isGameOver: true,
             isBagEmpty: currentBagEmpty,
-        }
+        });
+        alert(`Hra skončila! Konečné skóre: Hráč 1: ${finalScores[0]}, Hráč 2: ${finalScores[1]}`);
+        return;
+    }
+
+    sendPlayerAction(socket, 'updateGameState', {
+        ...gameState,
+        letterBag: updatedBagAfterTurn,
+        playerRacks: playerRacks.map((rack, idx) => idx === currentPlayerIndex ? newRackForCurrentPlayer : rack),
+        board: board,
+        boardAtStartOfTurn: newBoardAtStartOfTurn,
+        isFirstTurn: false,
+        playerScores: newScores,
+        currentPlayerIndex: (currentPlayerIndex === 0 ? 1 : 0),
+        exchangeZoneLetters: [],
+        hasPlacedOnBoardThisTurn: false,
+        hasMovedToExchangeZoneThisTurn: false,
+        consecutivePasses: 0,
+        isGameOver: false,
+        isBagEmpty: currentBagEmpty,
     });
   };
 
@@ -780,8 +426,8 @@ function App() {
         return;
     }
 
-    if (letterBag.length < exchangeZoneLetters.length) {
-      alert("Vo vrecúšku nie je dostatok písmen na výmenu!");
+    if (letterBag.length < RACK_SIZE) { // Minimálne 7 písmen na výmenu
+      alert("Vo vrecúšku nie je dostatok písmen na výmenu (potrebných je aspoň 7)!");
       return;
     }
 
@@ -794,49 +440,40 @@ function App() {
       const j = Math.floor(Math.random() * (i + 1));
       [updatedBag[i], updatedBag[j]] = [updatedBag[j], updatedBag[i]];
     }
-
-    // NOVÁ LOGIKA: Konštrukcia newRack pre aktuálneho hráča
+    
     let newRack = [...playerRacks[currentPlayerIndex]];
     let newLetterIndex = 0;
-    // Najprv odstránime písmená, ktoré boli vymenené z racku (sú už vo exchangeZoneLetters)
-    // Tieto písmená už boli odstránené z rackLetters v moveLetter, keď boli presunuté do ExchangeZone.
-    // Teraz len vložíme nové písmená na prázdne miesta.
     for (let i = 0; i < newRack.length; i++) {
-      // Ak je slot prázdny a máme nové písmená na pridanie
       if (newRack[i] === null && newLetterIndex < newLettersForRack.length) {
         newRack[i] = newLettersForRack[newLetterIndex];
         newLetterIndex++;
       } else if (exchangeZoneLetters.some(l => l.id === newRack[i]?.id)) {
-        // Ak písmeno v racku je jedno z tých, ktoré sa vymieňajú, nastavíme ho na null
-        newRack[i] = null;
+        newRack[i] = null; // Odstránime písmeno, ktoré bolo presunuté do výmennej zóny
       }
     }
-    // Ak zostali nejaké nové písmená, pridáme ich na koniec
     while (newLetterIndex < newLettersForRack.length) {
       newRack.push(newLettersForRack[newLetterIndex]);
       newLetterIndex++;
     }
-    while (newRack.length < 7) newRack.push(null); // Doplníme null, ak je menej ako 7
-    newRack = newRack.slice(0, 7); // Orezanie na 7
+    while (newRack.length < RACK_SIZE) newRack.push(null);
+    newRack = newRack.slice(0, RACK_SIZE);
 
 
-    socket.emit('playerAction', {
-        type: 'updateGameState',
-        payload: {
-            letterBag: updatedBag,
-            playerRacks: playerRacks.map((rack, idx) => idx === currentPlayerIndex ? newRack : rack), // Používame newRack
-            board: board,
-            boardAtStartOfTurn: boardAtStartOfTurn,
-            isFirstTurn: isFirstTurn,
-            playerScores: playerScores,
-            currentPlayerIndex: (currentPlayerIndex === 0 ? 1 : 0),
-            exchangeZoneLetters: [],
-            hasPlacedOnBoardThisTurn: false,
-            hasMovedToExchangeZoneThisTurn: false,
-            consecutivePasses: 0,
-            isGameOver: false,
-            isBagEmpty: currentBagEmpty,
-        }
+    sendPlayerAction(socket, 'updateGameState', {
+        ...gameState,
+        letterBag: updatedBag,
+        playerRacks: playerRacks.map((rack, idx) => idx === currentPlayerIndex ? newRack : rack),
+        board: board,
+        boardAtStartOfTurn: boardAtStartOfTurn,
+        isFirstTurn: isFirstTurn,
+        playerScores: playerScores,
+        currentPlayerIndex: (currentPlayerIndex === 0 ? 1 : 0),
+        exchangeZoneLetters: [],
+        hasPlacedOnBoardThisTurn: false,
+        hasMovedToExchangeZoneThisTurn: false,
+        consecutivePasses: 0,
+        isGameOver: false,
+        isBagEmpty: currentBagEmpty,
     });
   };
 
@@ -865,16 +502,13 @@ function App() {
 
     const newConsecutivePasses = consecutivePasses + 1;
     
-    socket.emit('playerAction', {
-        type: 'updateGameState',
-        payload: {
-            ...getCurrentGameState(),
-            currentPlayerIndex: (currentPlayerIndex === 0 ? 1 : 0),
-            hasPlacedOnBoardThisTurn: false,
-            hasMovedToExchangeZoneThisTurn: false,
-            consecutivePasses: newConsecutivePasses,
-            isGameOver: (newConsecutivePasses >= 4),
-        }
+    sendPlayerAction(socket, 'updateGameState', {
+        ...gameState,
+        currentPlayerIndex: (currentPlayerIndex === 0 ? 1 : 0),
+        hasPlacedOnBoardThisTurn: false,
+        hasMovedToExchangeZoneThisTurn: false,
+        consecutivePasses: newConsecutivePasses,
+        isGameOver: (newConsecutivePasses >= 4),
     });
 
     if (newConsecutivePasses >= 4) {
@@ -885,10 +519,8 @@ function App() {
   };
 
   const handleSendChatMessage = () => {
-    if (newChatMessage.trim() !== '' && socket) {
-      socket.emit('chatMessage', newChatMessage);
-      setNewChatMessage('');
-    }
+    sendChatMessage(socket, newChatMessage);
+    setNewChatMessage('');
   };
 
 
@@ -960,7 +592,7 @@ function App() {
                 <button
                   className="exchange-letters-button"
                   onClick={handleExchangeLetters}
-                  disabled={isGameOver || letterBag.length < 7 || showLetterSelectionModal || myPlayerIndex === null || currentPlayerIndex !== myPlayerIndex}
+                  disabled={isGameOver || letterBag.length < RACK_SIZE || showLetterSelectionModal || myPlayerIndex === null || currentPlayerIndex !== myPlayerIndex}
                 >
                   Vymeniť písmená ({exchangeZoneLetters.length})
                 </button>
@@ -1024,14 +656,11 @@ function App() {
                   currentPlayersRack.push({ ...jokerLetter, assignedLetter: null });
                 }
                 
-                socket.emit('playerAction', {
-                  type: 'updateGameState',
-                  payload: {
-                    ...getCurrentGameState(),
-                    board: newBoard,
-                    playerRacks: playerRacks.map((rack, idx) => idx === myPlayerIndex ? currentPlayersRack : rack),
-                    hasPlacedOnBoardThisTurn: getPlacedLettersDuringCurrentTurn(newBoard, boardAtStartOfTurn).length > 0,
-                  }
+                sendPlayerAction(socket, 'updateGameState', {
+                  ...gameState,
+                  board: newBoard,
+                  playerRacks: playerRacks.map((rack, idx) => idx === myPlayerIndex ? currentPlayersRack : rack),
+                  hasPlacedOnBoardThisTurn: getPlacedLettersDuringCurrentTurn(newBoard, boardAtStartOfTurn).length > 0,
                 });
               }
               setShowLetterSelectionModal(false);
