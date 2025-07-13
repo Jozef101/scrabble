@@ -64,3 +64,31 @@ button:disabled {
     opacity: 0.5;
     cursor: not-allowed;
 }
+.player-racks-container {
+    display: flex;
+    justify-content: space-around;
+    /* Rozloží racky rovnomerne */
+    width: 100%;
+    max-width: 900px;
+    /* Prispôsobte podľa potreby */
+    margin: 20px auto;
+    /* Medzera hore/dole a centrovanie */
+    flex-wrap: wrap;
+    /* Pre responzívnosť na menších obrazovkách */
+}
+
+.player-rack-section {
+    text-align: center;
+    margin: 10px;
+    padding: 10px;
+    background-color: #e0f2f7;
+    /* Svetlomodré pozadie pre sekciu racku */
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.player-rack-section h3 {
+    margin-top: 0;
+    color: #2196F3;
+    /* Modrá farba pre nadpis hráča */
+}

@@ -14,7 +14,11 @@ import './styles/App.css';
 
 function App() {
   const [letterBag, setLetterBag] = useState(() => createLetterBag());
-  const [rackLetters, setRackLetters] = useState(Array(7).fill(null));
+  // ZMENA: rackLetters je teraz pole polí pre každého hráča
+  const [playerRacks, setPlayerRacks] = useState([
+    Array(7).fill(null), // Rack pre hráča 0
+    Array(7).fill(null)  // Rack pre hráča 1
+  ]);
   const [board, setBoard] = useState(
     Array(15).fill(null).map(() => Array(15).fill(null))
   );
@@ -58,9 +62,16 @@ function App() {
   };
 
   useEffect(() => {
-    const { drawnLetters, remainingBag } = drawLetters(letterBag, 7);
-    setRackLetters(drawnLetters);
-    setLetterBag(remainingBag);
+    let currentBag = [...letterBag];
+    const newPlayerRacks = [[], []];
+
+    for (let i = 0; i < 2; i++) { // Pre každého z 2 hráčov
+      const { drawnLetters, remainingBag } = drawLetters(currentBag, 7);
+      newPlayerRacks[i] = drawnLetters;
+      currentBag = remainingBag;
+    }
+    setPlayerRacks(newPlayerRacks);
+    setLetterBag(currentBag);
     setBoardAtStartOfTurn(Array(15).fill(null).map(() => Array(15).fill(null)));
   }, []);
 
@@ -82,7 +93,7 @@ function App() {
       return;
     }
 
-    let newRackLetters = [...rackLetters];
+    let newPlayerRacks = playerRacks.map(rack => [...rack]);
     let newBoard = board.map(row => [...row]);
     let newExchangeZoneLetters = [...exchangeZoneLetters];
 
@@ -91,55 +102,57 @@ function App() {
       return;
     }
 
+    // ZMENA: Logika presunu z racku na rack (preskupovanie) pre konkrétneho hráča
     if (source.type === 'rack' && target.type === 'rack') {
+      // Kontrola, či sa presúva v rámci racku aktuálneho hráča
+      if (source.playerIndex !== currentPlayerIndex) {
+        console.log("Nemôžeš presúvať písmená z racku iného hráča.");
+        return;
+      }
+
       const fromIndex = source.index;
       const toIndex = target.index;
 
-      if (fromIndex === toIndex) return;
+      // Ak je cieľový slot prázdny, jednoducho presunieme
+      if (newPlayerRacks[currentPlayerIndex][toIndex] === null) {
+        newPlayerRacks[currentPlayerIndex][toIndex] = newPlayerRacks[currentPlayerIndex][fromIndex];
+        newPlayerRacks[currentPlayerIndex][fromIndex] = null;
+      } else {
+        // Ak je cieľový slot obsadený, vykonáme preskupenie (splice)
+        const [movedLetter] = newPlayerRacks[currentPlayerIndex].splice(fromIndex, 1);
+        newPlayerRacks[currentPlayerIndex].splice(toIndex, 0, movedLetter);
+      }
 
-      const [movedLetter] = newRackLetters.splice(fromIndex, 1);
-      newRackLetters.splice(toIndex, 0, movedLetter);
+      // Doplnenie null slotov a orezanie na 7
+      newPlayerRacks[currentPlayerIndex] = newPlayerRacks[currentPlayerIndex].filter(l => l !== undefined && l !== null);
+      while (newPlayerRacks[currentPlayerIndex].length < 7) { newPlayerRacks[currentPlayerIndex].push(null); }
+      while (newPlayerRacks[currentPlayerIndex].length > 7) { newPlayerRacks[currentPlayerIndex].pop(); }
 
-      newRackLetters = newRackLetters.filter(l => l !== undefined);
-      while (newRackLetters.length < 7) { newRackLetters.push(null); }
-      while (newRackLetters.length > 7) { newRackLetters.pop(); }
-
-      setRackLetters(newRackLetters);
+      setPlayerRacks(newPlayerRacks);
       return;
     }
-
-    // Tieto kontroly sú presunuté do confirmTurn a handleExchangeLetters
-    // if (target.type === 'board' && hasMovedToExchangeZoneThisTurn) {
-    //     alert("Nemôžeš položiť písmená na dosku, ak si už presunul(a) písmeno do výmennej zóny v tomto ťahu!");
-    //     return;
-    // }
-    // if (target.type === 'exchangeZone' && hasPlacedOnBoardThisTurn) {
-    //     alert("Nemôžeš presunúť písmená do výmennej zóny, ak si už položil(a) písmeno na dosku v tomto ťahu!");
-    //     return;
-    // }
 
     let letterToMove = null;
 
     // --- Odstránenie písmena zo zdroja a príprava letterToMove ---
     if (source.type === 'board') {
-      // Získame skutočný objekt písmena z dosky a vytvoríme HLBOKÚ KÓPIU
       letterToMove = { ...newBoard[source.x][source.y] };
-      newBoard[source.x][source.y] = null; // Vymažeme pôvodné miesto na doske
-      // Ak je to žolík presúvajúci sa Z dosky, resetujeme mu priradené písmeno
+      newBoard[source.x][source.y] = null;
       if (letterToMove && letterToMove.letter === '') {
         letterToMove.assignedLetter = null;
       }
     } else if (source.type === 'rack') {
-      // Získame skutočný objekt písmena z racku a vytvoríme HLBOKÚ KÓPIU
-      letterToMove = { ...newRackLetters[source.index] };
-      newRackLetters[source.index] = null; // Vymažeme pôvodné miesto na racku
+      if (source.playerIndex !== currentPlayerIndex) {
+        console.log("Nemôžeš presúvať písmená z racku iného hráča.");
+        return;
+      }
+      letterToMove = { ...newPlayerRacks[currentPlayerIndex][source.index] };
+      newPlayerRacks[currentPlayerIndex][source.index] = null;
     } else if (source.type === 'exchangeZone') {
-      // Nájdeme písmeno v poli výmennej zóny a vytvoríme HLBOKÚ KÓPIU
       const indexInExchangeZone = newExchangeZoneLetters.findIndex(l => l.id === letterData.id);
       if (indexInExchangeZone !== -1) {
         letterToMove = { ...newExchangeZoneLetters[indexInExchangeZone] };
-        newExchangeZoneLetters.splice(indexInExchangeZone, 1); // Odstránime ho z výmennej zóny
-        // Ak je to žolík presúvajúci sa Z výmennej zóny, resetujeme mu priradené písmeno
+        newExchangeZoneLetters.splice(indexInExchangeZone, 1);
         if (letterToMove && letterToMove.letter === '') {
           letterToMove.assignedLetter = null;
         }
@@ -149,7 +162,6 @@ function App() {
       }
     }
 
-    // Zabezpečíme, že máme platné písmeno na presun
     if (!letterToMove || letterToMove.id === undefined) {
         console.warn("Nepodarilo sa nájsť platné písmeno na presun alebo chýba ID.");
         return;
@@ -157,10 +169,14 @@ function App() {
 
     // --- Umiestnenie písmena na cieľové miesto ---
     if (target.type === 'rack') {
-      newRackLetters[target.index] = letterToMove;
+      // ZMENA: Umiestnenie na rack aktuálneho hráča
+      if (target.playerIndex !== currentPlayerIndex) {
+        console.log("Nemôžeš presúvať písmená na rack iného hráča.");
+        return;
+      }
+      newPlayerRacks[currentPlayerIndex][target.index] = letterToMove;
     } else if (target.type === 'board') {
       newBoard[target.x][target.y] = letterToMove;
-      // Ak je žolík položený NA dosku, zobrazíme modálne okno
       if (letterToMove.letter === '') {
         setJokerTileCoords({ x: target.x, y: target.y });
         setShowLetterSelectionModal(true);
@@ -169,11 +185,10 @@ function App() {
         newExchangeZoneLetters.push(letterToMove);
     }
 
-    setRackLetters(newRackLetters);
+    setPlayerRacks(newPlayerRacks);
     setBoard(newBoard);
     setExchangeZoneLetters(newExchangeZoneLetters);
 
-    // --- Aktualizácia flagov na základe aktuálneho stavu ---
     const currentPlacedOnBoard = getPlacedLettersDuringCurrentTurn(newBoard, boardAtStartOfTurn);
     setHasPlacedOnBoardThisTurn(currentPlacedOnBoard.length > 0);
     setHasMovedToExchangeZoneThisTurn(newExchangeZoneLetters.length > 0);
@@ -385,7 +400,7 @@ function App() {
     let totalOpponentRackPoints = 0;
 
     for (let i = 0; i < playerScores.length; i++) {
-        const rack = (i === endingPlayerIndex) ? finalRackLetters : rackLetters;
+        const rack = (i === endingPlayerIndex) ? finalRackLetters : playerRacks[i];
         const pointsOnRack = getRackPoints(rack);
         finalScores[i] -= pointsOnRack;
 
@@ -526,34 +541,42 @@ function App() {
     const { drawnLetters: newLetters, remainingBag: updatedBagAfterTurn } = drawLetters(letterBag, numToDraw);
     setLetterBag(updatedBagAfterTurn);
 
-    let tempRack = [...rackLetters];
-    let newRack = [];
+    let tempRack = [...playerRacks[currentPlayerIndex]];
+    let newRackForCurrentPlayer = [];
     let newLetterIndex = 0;
 
     for (let i = 0; i < tempRack.length; i++) {
       if (tempRack[i] === null && newLetterIndex < newLetters.length) {
-        newRack.push(newLetters[newLetterIndex]);
+        newRackForCurrentPlayer.push(newLetters[newLetterIndex]);
         newLetterIndex++;
       } else {
-        newRack.push(tempRack[i]);
+        newRackForCurrentPlayer.push(tempRack[i]);
       }
     }
     while(newLetterIndex < newLetters.length) {
-      newRack.push(newLetters[newLetterIndex]);
+      newRackForCurrentPlayer.push(newLetters[newLetterIndex]);
       newLetterIndex++;
     }
-    while (newRack.length < 7) newRack.push(null);
-    newRack = newRack.slice(0, 7);
+    while (newRackForCurrentPlayer.length < 7) newRackForCurrentPlayer.push(null);
+    newRackForCurrentPlayer = newRackForCurrentPlayer.slice(0, 7);
 
-    const finalRackAfterPlay = newRack.filter(l => l !== null);
+    const finalRackAfterPlay = newRackForCurrentPlayer.filter(l => l !== null);
 
     if (isBagEmpty && finalRackAfterPlay.length === 0) {
-        setRackLetters(newRack);
-        calculateFinalScores(currentPlayerIndex, newRack);
+        setPlayerRacks(prevPlayerRacks => {
+          const updatedPlayerRacks = [...prevPlayerRacks];
+          updatedPlayerRacks[currentPlayerIndex] = newRackForCurrentPlayer;
+          return updatedPlayerRacks;
+        });
+        calculateFinalScores(currentPlayerIndex, newRackForCurrentPlayer);
         return;
     }
 
-    setRackLetters(newRack);
+    setPlayerRacks(prevPlayerRacks => {
+      const updatedPlayerRacks = [...prevPlayerRacks];
+      updatedPlayerRacks[currentPlayerIndex] = newRackForCurrentPlayer;
+      return updatedPlayerRacks;
+    });
     setIsFirstTurn(false);
     
     setCurrentPlayerIndex(prevIndex => (prevIndex === 0 ? 1 : 0));
@@ -603,7 +626,7 @@ function App() {
     
     setLetterBag(updatedBag);
 
-    let newRack = [...rackLetters];
+    let newRack = [...playerRacks[currentPlayerIndex]];
     let newLetterIndex = 0;
     for (let i = 0; i < newRack.length; i++) {
       if (newRack[i] === null && newLetterIndex < newLettersForRack.length) {
@@ -620,7 +643,11 @@ function App() {
     while (newRack.length < 7) newRack.push(null);
     newRack = newRack.slice(0, 7);
 
-    setRackLetters(newRack);
+    setPlayerRacks(prevPlayerRacks => {
+      const updatedPlayerRacks = [...prevPlayerRacks];
+      updatedPlayerRacks[currentPlayerIndex] = newRack;
+      return updatedPlayerRacks;
+    });
     setExchangeZoneLetters([]);
 
     alert(`Vymenil si ${numToDraw} písmen.`);
@@ -679,9 +706,19 @@ function App() {
         {isGameOver && <h2 className="game-over-message">Hra skončila!</h2>}
         <Scoreboard playerScores={playerScores} currentPlayerIndex={currentPlayerIndex} isGameOver={isGameOver} />
         <Board board={board} moveLetter={moveLetter} boardAtStartOfTurn={boardAtStartOfTurn} />
-        <PlayerRack letters={rackLetters} moveLetter={moveLetter} />
         <LetterBag remainingLettersCount={letterBag.length} />
 
+        <div className="player-racks-container">
+          <div className="player-rack-section">
+            <h3>Hráč 1 Rack:</h3>
+            <PlayerRack letters={playerRacks[0]} moveLetter={moveLetter} playerIndex={0} />
+          </div>
+          <div className="player-rack-section">
+            <h3>Hráč 2 Rack:</h3>
+            <PlayerRack letters={playerRacks[1]} moveLetter={moveLetter} playerIndex={1} />
+          </div>
+        </div>
+        
         <ExchangeZone
           lettersInZone={exchangeZoneLetters}
           moveLetter={moveLetter}
@@ -721,16 +758,18 @@ function App() {
                   const { x, y } = jokerTileCoords;
                   const jokerLetter = newBoard[x][y];
                   newBoard[x][y] = null;
-                  const firstEmptyRackSlot = rackLetters.findIndex(l => l === null);
+                  const currentPlayersRack = [...playerRacks[currentPlayerIndex]];
+                  const firstEmptyRackSlot = currentPlayersRack.findIndex(l => l === null);
                   if (firstEmptyRackSlot !== -1) {
-                    setRackLetters(prevRack => {
-                      const updatedRack = [...prevRack];
-                      updatedRack[firstEmptyRackSlot] = { ...jokerLetter, assignedLetter: null };
-                      return updatedRack;
-                    });
+                    currentPlayersRack[firstEmptyRackSlot] = { ...jokerLetter, assignedLetter: null };
                   } else {
-                    setRackLetters(prevRack => [...prevRack, { ...jokerLetter, assignedLetter: null }]);
+                    currentPlayersRack.push({ ...jokerLetter, assignedLetter: null });
                   }
+                  setPlayerRacks(prevPlayerRacks => {
+                    const updatedPlayerRacks = [...prevPlayerRacks];
+                    updatedPlayerRacks[currentPlayerIndex] = currentPlayersRack;
+                    return updatedPlayerRacks;
+                  });
                   return newBoard;
                 });
               }
