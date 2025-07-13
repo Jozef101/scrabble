@@ -1,22 +1,22 @@
 .app-container {
-    display: flex;
+display: flex;
     flex-direction: column;
     align-items: center;
     padding: 20px;
     background-color: #f4f4f4;
-    min-height: 100vh;
+min-height: 100vh;
     /* Zabezpečí, že kontajner zaberá celú výšku obrazovky */
     font-family: 'Inter', sans-serif;
     /* Použitie fontu Inter */
 }
 
 h1 {
-    color: #333;
+color: #333;
     margin-bottom: 20px;
 }
 
 .game-over-message {
-    color: #d32f2f;
+color: #d32f2f;
     /* Červená farba */
     font-size: 2em;
     margin-bottom: 20px;
@@ -24,7 +24,7 @@ h1 {
 }
 
 .scoreboard-container {
-    display: flex;
+display: flex;
     justify-content: space-around;
     width: 100%;
     max-width: 600px;
@@ -32,32 +32,33 @@ h1 {
     background-color: #fff;
     padding: 15px;
     border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
+
 .player-score {
-    text-align: center;
+text-align: center;
     font-size: 1.2em;
     font-weight: bold;
-padding: 5px 10px;
+    padding: 5px 10px;
     border-radius: 5px;
 }
 
 .current-player {
-    background-color: #e0f2f7;
+background-color: #e0f2f7;
     /* Svetlomodrá pre aktuálneho hráča */
     border: 1px solid #2196F3;
 }
 
-/* Nový kontajner pre dosku a stojany */
+/* Nový kontajner pre dosku a pravý panel (stojany, výmenná zóna, ovládacie prvky) */
 .game-area-container {
-    display: flex;
-    flex-direction: column;
+display: flex;
+flex-direction: column;
     /* Predvolene pre menšie obrazovky */
     align-items: center;
-    gap: 20px;
-    /* Medzera medzi doskou a stojanmi */
+gap: 20px;
+    /* Medzera medzi doskou a pravým panelom */
     width: 100%;
-    max-width: 1200px;
+max-width: 1200px;
     /* Maximálna šírka pre celé rozloženie */
 }
 
@@ -65,7 +66,7 @@ padding: 5px 10px;
 
     /* Pre väčšie obrazovky (desktop) */
     .game-area-container {
-        flex-direction: row;
+    flex-direction: row;
         /* Usporiadanie vedľa seba */
         justify-content: center;
         /* Centrovanie obsahu */
@@ -74,16 +75,30 @@ padding: 5px 10px;
     }
 }
 
+/* Nový štýl pre pravý panel */
+.right-panel-content {
+    display: flex;
+    flex-direction: column;
+    /* Usporiadanie elementov v stĺpci */
+    gap: 20px;
+    /* Medzera medzi stojanmi, výmennou zónou a ovládacími prvkami */
+    align-items: center;
+    /* Centrovanie obsahu v paneli */
+    width: 100%;
+    /* Zaberá celú šírku v stĺpci */
+    max-width: 400px;
+    /* Maximálna šírka pre pravý panel */
+}
 .board-container {
-    display: grid;
-    grid-template-columns: repeat(15, 40px);
+display: grid;
+grid-template-columns: repeat(15, 40px);
     /* 15 stĺpcov po 40px */
     grid-template-rows: repeat(15, 40px);
     /* 15 riadkov po 40px */
     border: 5px solid #8B4513;
     /* Hnedý okraj dosky */
     box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
-    margin-bottom: 20px;
+margin-bottom: 20px;
     /* Medzera pod doskou */
 }
 
@@ -121,18 +136,20 @@ color: #2196F3;
 }
 
 .letter-bag-container {
-    margin-top: 20px;
+margin-top: 20px;
+    /* Adjust margin as it's now outside game-area-container */
     padding: 15px;
     background-color: #fff;
     border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     text-align: center;
 }
 
 .exchange-zone-container {
-    border: 2px dashed #ccc;
+border: 2px dashed #ccc;
     padding: 15px;
-    margin-top: 20px;
+margin-top: 0;
+    /* Odstránime top margin, je to teraz súčasťou flex gap v right-panel-content */
     border-radius: 8px;
     background-color: #f9f9f9;
     min-height: 80px;
@@ -141,52 +158,55 @@ color: #2196F3;
     align-items: center;
     justify-content: center;
     gap: 5px;
-    width: 100%;
-    max-width: 600px;
+width: 100%;
+    /* Zabezpečí, že zaberá celú šírku rodiča */
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .exchange-zone-container p {
-    color: #666;
+color: #666;
     font-style: italic;
 }
 
 .game-controls {
-    margin-top: 20px;
+margin-top: 0;
+    /* Odstránime top margin, je to teraz súčasťou flex gap v right-panel-content */
     display: flex;
     gap: 15px;
     flex-wrap: wrap;
     justify-content: center;
+width: 100%;
+    /* Zabezpečí, že zaberá celú šírku rodiča */
 }
 
 .game-controls button {
-    padding: 10px 20px;
+padding: 10px 20px;
     font-size: 1em;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    background-color: #2196F3;
+background-color: #2196F3;
     /* Modrá */
     color: white;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
     transition: background-color 0.3s ease, transform 0.1s ease;
 }
 
 .game-controls button:hover {
-    background-color: #1976D2;
+background-color: #1976D2;
     /* Tmavšia modrá */
     transform: translateY(-1px);
 }
 
 .game-controls button:disabled {
-    background-color: #cccccc;
+background-color: #cccccc;
     cursor: not-allowed;
     box-shadow: none;
 }
 
 /* Modálne okno pre výber písmena žolíka */
 .modal-overlay {
-    position: fixed;
+position: fixed;
     top: 0;
     left: 0;
     right: 0;
@@ -199,7 +219,7 @@ color: #2196F3;
 }
 
 .modal-content {
-    background: white;
+background: white;
     padding: 30px;
     border-radius: 10px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
@@ -208,12 +228,12 @@ color: #2196F3;
 }
 
 .modal-content h2 {
-    margin-top: 0;
+margin-top: 0;
     color: #333;
 }
 
 .letter-options {
-    display: flex;
+display: flex;
     flex-wrap: wrap;
     justify-content: center;
     gap: 10px;
@@ -221,7 +241,7 @@ color: #2196F3;
 }
 
 .letter-option-button {
-    padding: 10px 15px;
+padding: 10px 15px;
     font-size: 1.2em;
     border: 1px solid #ccc;
     border-radius: 5px;
@@ -231,13 +251,13 @@ color: #2196F3;
 }
 
 .letter-option-button:hover {
-    background-color: #e0e0e0;
+background-color: #e0e0e0;
 }
 
 .modal-close-button {
-    margin-top: 20px;
+margin-top: 20px;
     padding: 8px 15px;
-    background-color: #f44336;
+background-color: #f44336;
     /* Červená */
     color: white;
     border: none;

@@ -705,52 +705,55 @@ function App() {
         <h1>Scrabble</h1>
         {isGameOver && <h2 className="game-over-message">Hra skončila!</h2>}
         <Scoreboard playerScores={playerScores} currentPlayerIndex={currentPlayerIndex} isGameOver={isGameOver} />
-        <LetterBag remainingLettersCount={letterBag.length} /> {/* Posunuté vyššie */}
+        <LetterBag remainingLettersCount={letterBag.length} />
 
-        {/* Nový kontajner pre dosku a stojany, ktorý bude používať flexbox */}
+        {/* Nový kontajner pre dosku a pravý panel (stojany, výmenná zóna, ovládacie prvky) */}
         <div className="game-area-container">
           <Board board={board} moveLetter={moveLetter} boardAtStartOfTurn={boardAtStartOfTurn} />
           
-          <div className="player-racks-container">
-            <div className="player-rack-section">
-              <h3>Hráč 1 Rack:</h3>
-              <PlayerRack letters={playerRacks[0]} moveLetter={moveLetter} playerIndex={0} />
+          {/* Nový kontajner pre stojany, výmennú zónu a ovládacie prvky */}
+          <div className="right-panel-content">
+            <div className="player-racks-container">
+              <div className="player-rack-section">
+                <h3>Hráč 1 Rack:</h3>
+                <PlayerRack letters={playerRacks[0]} moveLetter={moveLetter} playerIndex={0} />
+              </div>
+              <div className="player-rack-section">
+                <h3>Hráč 2 Rack:</h3>
+                <PlayerRack letters={playerRacks[1]} moveLetter={moveLetter} playerIndex={1} />
+              </div>
             </div>
-            <div className="player-rack-section">
-              <h3>Hráč 2 Rack:</h3>
-              <PlayerRack letters={playerRacks[1]} moveLetter={moveLetter} playerIndex={1} />
-            </div>
-          </div>
-        </div>
-        
-        <ExchangeZone
-          lettersInZone={exchangeZoneLetters}
-          moveLetter={moveLetter}
-        />
+            
+            <ExchangeZone
+              lettersInZone={exchangeZoneLetters}
+              moveLetter={moveLetter}
+            />
 
-        <div className="game-controls">
-          <button
-            className="confirm-turn-button"
-            onClick={confirmTurn}
-            disabled={isGameOver || showLetterSelectionModal}
-          >
-            Potvrdiť ťah
-          </button>
-          <button
-            className="exchange-letters-button"
-            onClick={handleExchangeLetters}
-            disabled={isGameOver || letterBag.length < 7 || showLetterSelectionModal}
-          >
-            Vymeniť písmená ({exchangeZoneLetters.length})
-          </button>
-          <button
-            className="pass-turn-button"
-            onClick={handlePassTurn}
-            disabled={isGameOver || showLetterSelectionModal}
-          >
-            Pass
-          </button>
-        </div>
+            <div className="game-controls">
+              <button
+                className="confirm-turn-button"
+                onClick={confirmTurn}
+                disabled={isGameOver || showLetterSelectionModal}
+              >
+                Potvrdiť ťah
+              </button>
+              <button
+                className="exchange-letters-button"
+                onClick={handleExchangeLetters}
+                disabled={isGameOver || letterBag.length < 7 || showLetterSelectionModal}
+              >
+                Vymeniť písmená ({exchangeZoneLetters.length})
+              </button>
+              <button
+                className="pass-turn-button"
+                onClick={handlePassTurn}
+                disabled={isGameOver || showLetterSelectionModal}
+              >
+                Pass
+              </button>
+            </div>
+          </div> {/* Koniec .right-panel-content */}
+        </div> {/* Koniec .game-area-container */}
 
         {showLetterSelectionModal && (
           <LetterSelectionModal
