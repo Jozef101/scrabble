@@ -103,89 +103,55 @@ io.on('connection', (socket) => {
 
     // Pripojenie hráča k hre
     socket.on('joinGame', () => {
-        // Ak už sú dvaja hráči a tento hráč nie je jedným z nich, odmietneme pripojenie
-        if (game.players.length >= 2 && !game.players.some(p => p.id === socket.id)) {
-            socket.emit('gameError', 'Hra je už plná.');
-            console.log(`Klient ${socket.id} sa nemohol pripojiť, hra je plná.`);
-            return;
-        }
+        // Kontrola, či sa hráč už pripojil (pri rekonexii)
+        let existingPlayer = game.players.find(p => p.id === socket.id);
+        let playerIndex;
 
-        // Ak sa hráč už pripojil, nepridávame ho znova
-        if (game.players.some(p => p.id === socket.id)) {
-            console.log(`Klient ${socket.id} sa už pripojil, posielam aktuálny stav.`);
-            if (game.gameState) { // Ak už hra beží, pošleme aktuálny stav
-                socket.emit('gameStateUpdate', game.gameState);
-            } else { // Ak sa znovu pripojí, ale hra ešte nezačala (napr. reset), pošleme default stav
-                socket.emit('gameStateUpdate', {
-                    playerRacks: [Array(7).fill(null), Array(7).fill(null)],
-                    board: Array(15).fill(null).map(() => Array(15).fill(null)),
-                    letterBag: [],
-                    playerScores: [0, 0],
-                    currentPlayerIndex: 0,
-                    boardAtStartOfTurn: Array(15).fill(null).map(() => Array(15).fill(null)),
-                    isFirstTurn: true,
-                    isBagEmpty: true,
-                    exchangeZoneLetters: [],
-                    hasPlacedOnBoardThisTurn: false,
-                    hasMovedToExchangeZoneThisTurn: false,
-                    consecutivePasses: 0,
-                    isGameOver: false,
-                });
+        if (existingPlayer) {
+            playerIndex = existingPlayer.playerIndex;
+            console.log(`Klient ${socket.id} sa znovu pripojil ako Hráč ${playerIndex + 1}.`);
+            socket.playerIndex = playerIndex; // Znovu priradíme playerIndex do socketu
+        } else {
+            // Ak už sú dvaja hráči a nie je to rekonexia, odmietneme
+            if (game.players.length >= 2) {
+                socket.emit('gameError', 'Hra je už plná.');
+                console.log(`Klient ${socket.id} sa nemohol pripojiť, hra je plná.`);
+                return;
             }
-            socket.emit('chatHistory', game.chatMessages);
-            return;
+            // Priradenie nového indexu hráča (0 alebo 1)
+            playerIndex = game.players.length;
+            game.players.push({ id: socket.id, playerIndex: playerIndex });
+            socket.playerIndex = playerIndex; // Uložíme index hráča do socketu
+            console.log(`Klient ${socket.id} sa pripojil ako Hráč ${playerIndex + 1}.`);
         }
-
-        // Priradenie indexu hráča (0 alebo 1)
-        const playerIndex = game.players.length;
-        game.players.push({ id: socket.id, playerIndex: playerIndex });
-        socket.playerIndex = playerIndex; // Uložíme index hráča do socketu pre jednoduchší prístup
-
-        console.log(`Klient ${socket.id} sa pripojil ako Hráč ${playerIndex + 1}. Aktuálni hráči: ${game.players.length}`);
 
         // Oznámime klientovi jeho playerIndex
         socket.emit('playerAssigned', playerIndex);
 
-        // Ak sú pripojení dvaja hráči a hra ešte nezačala, inicializujeme ju
+        // Pošleme históriu chatu vždy
+        socket.emit('chatHistory', game.chatMessages);
+
+        // Logika pre spustenie/pokračovanie hry
         if (game.players.length === 2 && !game.isGameStarted) {
+            // Dvaja hráči pripojení a hra ešte nezačala, inicializujeme ju
             console.log('Dvaja hráči pripojení, inicializujem hru!');
             game.isGameStarted = true;
             initializeGame(); // Inicializujeme herný stav na serveri
             io.emit('gameStateUpdate', game.gameState); // Pošleme počiatočný stav všetkým
-        } else if (game.players.length < 2 && !game.isGameStarted) {
-            // ODSTRÁNENÉ: ...game.gameState, ktoré mohlo byť null
-            // Ak je pripojený len jeden hráč, pošleme mu defaultný stav s prázdnymi rackmi a informáciu, že čaká
-            socket.emit('gameStateUpdate', {
-                playerRacks: [Array(7).fill(null), Array(7).fill(null)], // Prázdne racky pre oboch hráčov
-                board: Array(15).fill(null).map(() => Array(15).fill(null)),
-                letterBag: [], // Prázdne vrecúško
-                playerScores: [0, 0],
-                currentPlayerIndex: 0,
-                boardAtStartOfTurn: Array(15).fill(null).map(() => Array(15).fill(null)),
-                isFirstTurn: true,
-                isBagEmpty: true, // Vrecúško je prázdne, kým sa nenaťahajú písmená
-                exchangeZoneLetters: [],
-                hasPlacedOnBoardThisTurn: false,
-                hasMovedToExchangeZoneThisTurn: false,
-                consecutivePasses: 0,
-                isGameOver: false,
-            });
-            socket.emit('gameError', 'Čaká sa na druhého hráča...');
-        } else if (game.players.length === 2 && game.isGameStarted) {
-             // Ak sa pripojí druhý hráč (alebo sa znovu pripojí), pošleme mu aktuálny stav
-            io.emit('gameStateUpdate', game.gameState);
+        } else if (game.isGameStarted && game.gameState) {
+            // Hra už beží, pošleme aktuálny stav pripájajúcemu sa (alebo znovu pripájajúcemu sa) hráčovi
+            socket.emit('gameStateUpdate', game.gameState);
+        } else {
+            // Pripojený len jeden hráč, alebo hra ešte nezačala a čaká sa na druhého
+            console.log(`Čaká sa na druhého hráča. Aktuálni hráči: ${game.players.length}`);
+            // Neposielame plný herný stav, len informáciu o čakaní
+            io.emit('waitingForPlayers', 'Čaká sa na druhého hráča...'); // Nový event pre klienta
         }
-        
-        socket.emit('chatHistory', game.chatMessages);
     });
 
     // Klient posiela akciu (ťah, výmena, pass)
     socket.on('playerAction', (action) => {
         // Overenie, či je na ťahu správny hráč
-        // Ak je akcia 'updateGameState', znamená to, že frontend posiela celý stav
-        // V reálnej hre by ste tu spracovali konkrétne akcie (položenie písmena, výmena, pass)
-        // a validovali ich na serveri, nie len prijímali celý stav.
-        // Pre tento príklad jednoduchosti, akceptujeme celý stav.
         if (!game.isGameStarted || game.players[game.gameState.currentPlayerIndex]?.id !== socket.id) {
             socket.emit('gameError', 'Nie je váš ťah alebo hra ešte nezačala.');
             return;
@@ -216,21 +182,18 @@ io.on('connection', (socket) => {
         // Odstránime hráča z poľa
         game.players = game.players.filter(player => player.id !== socket.id);
 
-        // Ak sa odpojí jeden z dvoch hráčov, hra sa "resetuje"
+        // Ak sa odpojí jeden z dvoch hráčov, alebo posledný hráč
         if (game.isGameStarted && game.players.length < 2) {
             console.log('Hra bola prerušená, resetujem stav.');
             game.gameState = null; // Resetujeme stav hry
             game.isGameStarted = false;
             game.chatMessages = []; // Vyčistíme chat
             io.emit('gameReset', 'Jeden z hráčov sa odpojil. Hra bola resetovaná.');
-        }
-
-        // Ak sa odpojí posledný hráč, vyčistíme úplne stav
-        if (game.players.length === 0) {
+        } else if (game.players.length === 0) {
+            console.log('Všetci hráči odpojení, herný stav vyčistený.');
             game.gameState = null;
             game.isGameStarted = false;
             game.chatMessages = [];
-            console.log('Všetci hráči odpojení, herný stav vyčistený.');
         }
     });
 });
@@ -262,6 +225,4 @@ function initializeGame() {
 // Spustenie servera
 server.listen(PORT, () => {
     console.log(`Server beží na porte ${PORT}`);
-    // Pri štarte servera nebudeme inicializovať hru, počkáme na pripojenie dvoch hráčov.
-    // initializeGame(); // Túto riadku sme presunuli do logiky 'joinGame'
 });

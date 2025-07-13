@@ -26,6 +26,7 @@ export const setupSocketListeners = (socket, setConnectionStatus, setMyPlayerInd
             consecutivePasses: 0,
             isGameOver: false,
             isBagEmpty: false,
+            hasInitialGameStateReceived: false, // Resetujeme aj toto
         });
         setMyPlayerIndex(null);
         setChatMessages([]);
@@ -39,16 +40,40 @@ export const setupSocketListeners = (socket, setConnectionStatus, setMyPlayerInd
 
     socket.on('gameStateUpdate', (serverGameState) => {
         console.log('Prijatá aktualizácia stavu hry:', serverGameState);
-        // Používame funkciu setGameState, ktorá aktualizuje všetky stavy naraz
-        setGameState(serverGameState);
+        setGameState(prevState => ({
+            ...prevState,
+            ...serverGameState,
+            hasInitialGameStateReceived: true // Teraz vieme, že máme kompletný stav
+        }));
     });
 
     socket.on('gameError', (message) => {
         alert(`Chyba hry: ${message}`);
         console.error('Chyba hry:', message);
-        // Pri chybe predpokladáme, že stav nie je pripravený
         setGameState(prevState => ({ ...prevState, hasInitialGameStateReceived: false }));
     });
+
+    // Nový poslucháč pre stav čakania
+    socket.on('waitingForPlayers', (message) => {
+        console.log(`Čakám na hráčov: ${message}`);
+        // Resetujeme stav hry len natoľko, aby sa zobrazila správa o čakaní
+        setGameState(prevState => ({
+            ...prevState,
+            letterBag: [],
+            playerRacks: [Array(7).fill(null), Array(7).fill(null)],
+            board: Array(15).fill(null).map(() => Array(15).fill(null)),
+            boardAtStartOfTurn: Array(15).fill(null).map(() => Array(15).fill(null)),
+            playerScores: [0, 0],
+            exchangeZoneLetters: [],
+            hasPlacedOnBoardThisTurn: false,
+            hasMovedToExchangeZoneThisTurn: false,
+            consecutivePasses: 0,
+            isGameOver: false,
+            isBagEmpty: false,
+            hasInitialGameStateReceived: false, // Dôležité: nastaviť na false
+        }));
+    });
+
 
     socket.on('gameReset', (message) => {
         alert(`Hra bola resetovaná: ${message}`);
@@ -68,8 +93,9 @@ export const setupSocketListeners = (socket, setConnectionStatus, setMyPlayerInd
             consecutivePasses: 0,
             isGameOver: false,
             isBagEmpty: false,
+            hasInitialGameStateReceived: false, // Po resete potrebujeme znova inicializovať
         });
-        setMyPlayerIndex(null); // Znovu si vyžiadame playerIndex
+        setMyPlayerIndex(null);
         setChatMessages([]);
         socket.emit('joinGame'); // Znovu sa pokúsime pripojiť k hre
     });

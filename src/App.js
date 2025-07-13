@@ -50,7 +50,7 @@ function App() {
     consecutivePasses: 0,
     isGameOver: false,
     isBagEmpty: false,
-    hasInitialGameStateReceived: false, // Nový stav pre sledovanie počiatočného stavu
+    hasInitialGameStateReceived: false, // Ponechať toto ako počiatočný stav
   });
 
   const [showLetterSelectionModal, setShowLetterSelectionModal] = useState(false);
@@ -76,7 +76,8 @@ function App() {
       setConnectionStatus,
       setMyPlayerIndex,
       (updatedState) => {
-        setGameState(prevState => ({ ...prevState, ...updatedState, hasInitialGameStateReceived: true }));
+        // Tu už len jednoducho aktualizujeme stav
+        setGameState(updatedState);
       },
       setChatMessages
     );
@@ -106,7 +107,7 @@ function App() {
     consecutivePasses,
     isGameOver,
     isBagEmpty,
-    hasInitialGameStateReceived,
+    hasInitialGameStateReceived, // Toto je teraz riadené serverom a socketHandlers
   } = gameState;
 
   // Tento useEffect zabezpečí, že herná oblasť sa zobrazí až po priradení hráča
