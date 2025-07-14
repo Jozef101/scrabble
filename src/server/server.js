@@ -28,14 +28,18 @@ const PORT = process.env.PORT || 4000;
 // V plnej implementácii by toto bolo v databáze
 // ====================================================================
 let game = {
-    players: [], // Pole objektov hráčov: [{ id: socket.id, playerIndex: 0 }, { id: socket.id, playerIndex: 1 }]
+    // Používame pevné sloty pre hráčov, aby sme zabezpečili konzistentné indexy
+    // game.players[0] pre Hráča 0, game.players[1] pre Hráča 1
+    players: [null, null], // null znamená voľný slot, objekt { id: socket.id, playerIndex: X } znamená obsadený
+    playerSockets: {}, // Mapa pre rýchly prístup k objektom socketov podľa ich ID
     gameState: null, // Bude obsahovať celý stav hry (board, racks, bag, scores, currentPlayerIndex)
     gameId: 'scrabble-game-1', // Jednoduché ID pre jednu hru
-    chatMessages: [], // Pole pre chatové správy
+    // chatMessages: [], // Odstránené, ak nechceme chat históriu
+    // gameLogHistory: [], // Odstránené, ak nechceme herný denník
     isGameStarted: false,
 };
 
-// Pomocná funkcia na vytvorenie vrecúška s písmenami (musí byť tu, lebo server spravuje bag)
+// Pomocná funkcia na vytvorenie vrecúška s písmenami
 const LETTER_VALUES = {
     'A': 1, 'Á': 4, 'Ä': 10, 'B': 4, 'C': 4, 'Č': 5, 'D': 2, 'Ď': 8, 'E': 1, 'É': 7,
     'F': 8, 'G': 8, 'H': 4, 'I': 1, 'Í': 5, 'J': 3, 'K': 2, 'L': 2, 'Ľ': 7, 'Ĺ': 10,
@@ -70,6 +74,7 @@ function createLetterBag() {
             bag.push({ id: `letter-${idCounter++}`, letter: item.letter, value: LETTER_VALUES[item.letter] });
         }
     });
+    // Zamiešame vrecúško
     for (let i = bag.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [bag[i], bag[j]] = [bag[j], bag[i]];
@@ -79,12 +84,12 @@ function createLetterBag() {
 
 function drawLetters(currentBag, numToDraw) {
     const drawn = [];
-    const tempBag = [...currentBag];
+    const tempBag = [...currentBag]; // Pracujeme s kópiou vrecúška
     let bagEmpty = false;
 
     for (let i = 0; i < numToDraw; i++) {
         if (tempBag.length > 0) {
-            drawn.push(tempBag.pop());
+            drawn.push(tempBag.pop()); // Odoberieme písmeno z konca (ako z vrchu kopy)
         } else {
             console.warn("Vrecúško je prázdne, nedá sa ťahať viac písmen.");
             bagEmpty = true;
@@ -103,36 +108,45 @@ io.on('connection', (socket) => {
 
     // Pripojenie hráča k hre
     socket.on('joinGame', () => {
-        // Kontrola, či sa hráč už pripojil (pri rekonexii)
-        let existingPlayer = game.players.find(p => p.id === socket.id);
-        let playerIndex;
+        let playerIndex = -1; // Predvolená hodnota, ktorá signalizuje, že hráč nebol priradený
 
-        if (existingPlayer) {
-            playerIndex = existingPlayer.playerIndex;
-            console.log(`Klient ${socket.id} sa znovu pripojil ako Hráč ${playerIndex + 1}.`);
-            socket.playerIndex = playerIndex; // Znovu priradíme playerIndex do socketu
+        // 1. Skontrolujeme, či sa klient už pripojil (rekonexia)
+        if (game.players[0] && game.players[0].id === socket.id) {
+            playerIndex = 0;
+            console.log(`Klient ${socket.id} sa znovu pripojil ako Hráč 1.`);
+        } else if (game.players[1] && game.players[1].id === socket.id) {
+            playerIndex = 1;
+            console.log(`Klient ${socket.id} sa znovu pripojil ako Hráč 2.`);
         } else {
-            // Ak už sú dvaja hráči a nie je to rekonexia, odmietneme
-            if (game.players.length >= 2) {
+            // 2. Ak nie je rekonexia, priradíme nový slot, ak je k dispozícii
+            if (game.players[0] === null) {
+                playerIndex = 0;
+                console.log(`Klient ${socket.id} sa pripojil ako Hráč 1.`);
+            } else if (game.players[1] === null) {
+                playerIndex = 1;
+                console.log(`Klient ${socket.id} sa pripojil ako Hráč 2.`);
+            } else {
+                // 3. Ak sú oba sloty obsadené a nie je to rekonexia, hra je plná
                 socket.emit('gameError', 'Hra je už plná.');
                 console.log(`Klient ${socket.id} sa nemohol pripojiť, hra je plná.`);
                 return;
             }
-            // Priradenie nového indexu hráča (0 alebo 1)
-            playerIndex = game.players.length;
-            game.players.push({ id: socket.id, playerIndex: playerIndex });
-            socket.playerIndex = playerIndex; // Uložíme index hráča do socketu
-            console.log(`Klient ${socket.id} sa pripojil ako Hráč ${playerIndex + 1}.`);
         }
 
-        // Oznámime klientovi jeho playerIndex
+        // Uložíme informácie o hráčovi do príslušného slotu
+        game.players[playerIndex] = { id: socket.id, playerIndex: playerIndex };
+        game.playerSockets[socket.id] = socket; // Uložíme referenciu na socket
+        socket.playerIndex = playerIndex; // Priradíme playerIndex priamo k objektu socketu pre jednoduchší prístup
+
+        // Oznámime klientovi jeho priradený playerIndex
         socket.emit('playerAssigned', playerIndex);
 
-        // Pošleme históriu chatu vždy
-        socket.emit('chatHistory', game.chatMessages);
+        // Debug: Skontrolujte aktuálny stav game.players po priradení
+        console.log("Aktuálny stav game.players:", game.players.map(p => p ? `Hráč ${p.playerIndex + 1} (${p.id})` : 'Voľný'));
 
         // Logika pre spustenie/pokračovanie hry
-        if (game.players.length === 2 && !game.isGameStarted) {
+        const activePlayersCount = game.players.filter(p => p !== null).length;
+        if (activePlayersCount === 2 && !game.isGameStarted) {
             // Dvaja hráči pripojení a hra ešte nezačala, inicializujeme ju
             console.log('Dvaja hráči pripojení, inicializujem hru!');
             game.isGameStarted = true;
@@ -143,7 +157,7 @@ io.on('connection', (socket) => {
             socket.emit('gameStateUpdate', game.gameState);
         } else {
             // Pripojený len jeden hráč, alebo hra ešte nezačala a čaká sa na druhého
-            console.log(`Čaká sa na druhého hráča. Aktuálni hráči: ${game.players.length}`);
+            console.log(`Čaká sa na druhého hráča. Aktuálni hráči: ${activePlayersCount}`);
             // Neposielame plný herný stav, len informáciu o čakaní
             io.emit('waitingForPlayers', 'Čaká sa na druhého hráča...'); // Nový event pre klienta
         }
@@ -152,57 +166,79 @@ io.on('connection', (socket) => {
     // Klient posiela akciu (ťah, výmena, pass)
     socket.on('playerAction', (action) => {
         // Overenie, či je na ťahu správny hráč
-        if (!game.isGameStarted || game.players[game.gameState.currentPlayerIndex]?.id !== socket.id) {
-            socket.emit('gameError', 'Nie je váš ťah alebo hra ešte nezačala.');
+        // Akcia updateGameState a assignJoker môže prísť aj mimo ťahu pre UI synchronizáciu
+        if (game.gameState && action.type !== 'updateGameState' && action.type !== 'assignJoker' && (game.gameState.currentPlayerIndex !== socket.playerIndex)) {
+            socket.emit('gameError', 'Nie je váš ťah!');
+            console.warn(`Hráč ${socket.playerIndex + 1} sa pokúsil o akciu ${action.type}, ale nie je na ťahu.`);
             return;
         }
 
         console.log(`Akcia od Hráča ${socket.playerIndex + 1}: ${action.type}`);
 
-        if (action.type === 'updateGameState') {
-            game.gameState = action.payload; // Celý stav hry
-            io.emit('gameStateUpdate', game.gameState); // Pošleme aktualizovaný stav všetkým
-        } else {
-            console.warn(`Neznámy typ akcie: ${action.type}`);
+        switch (action.type) {
+            case 'updateGameState':
+                // Klient posiela celý aktuálny stav. Server by mal ideálne validovať a aktualizovať len povolené časti.
+                // Pre jednoduchosť testovania prijmeme celý payload.
+                if (game.gameState) {
+                    game.gameState = { ...game.gameState, ...action.payload };
+                    io.emit('gameStateUpdate', game.gameState);
+                }
+                break;
+            // Prípadné ďalšie typy akcií (confirmTurn, exchangeLetters, passTurn, assignJoker)
+            // by mali byť spracované tu na serveri s plnou validáciou a aktualizáciou game.gameState
+            // a následným io.emit('gameStateUpdate', game.gameState);
+            // Ak tieto akcie posiela klient ako 'updateGameState' s rôznymi payloadmi,
+            // potom by server mal parsovať 'payload' a podľa toho aktualizovať.
+            // Váš App.js posiela updateGameState pre všetky akcie, takže to takto necháme.
+            default:
+                console.warn(`Neznámy typ akcie: ${action.type}`);
+                break;
         }
     });
 
-    // Klient posiela chatovú správu
+    // Klient posiela chatovú správu (táto časť je zakomentovaná, ak nechceme chat)
+    /*
     socket.on('chatMessage', (message) => {
         const fullMessage = { senderId: socket.id, senderIndex: socket.playerIndex, text: message, timestamp: Date.now() };
         game.chatMessages.push(fullMessage);
-        // Odošleme správu všetkým klientom
         io.emit('receiveChatMessage', fullMessage);
-        console.log(`Chat správa od ${socket.id}: ${message}`);
+        console.log(`Chat správa od Hráča ${socket.playerIndex + 1}: ${message}`);
     });
+    */
 
     // Odpojenie klienta
     socket.on('disconnect', () => {
         console.log(`Klient odpojený: ${socket.id}`);
-        // Odstránime hráča z poľa
-        game.players = game.players.filter(player => player.id !== socket.id);
+        const disconnectedPlayerIndex = socket.playerIndex;
 
-        // Ak sa odpojí jeden z dvoch hráčov, alebo posledný hráč
-        if (game.isGameStarted && game.players.length < 2) {
-            console.log('Hra bola prerušená, resetujem stav.');
-            game.gameState = null; // Resetujeme stav hry
-            game.isGameStarted = false;
-            game.chatMessages = []; // Vyčistíme chat
-            io.emit('gameReset', 'Jeden z hráčov sa odpojil. Hra bola resetovaná.');
-        } else if (game.players.length === 0) {
-            console.log('Všetci hráči odpojení, herný stav vyčistený.');
-            game.gameState = null;
-            game.isGameStarted = false;
-            game.chatMessages = [];
+        // Vyčistíme slot odpojeného hráča
+        if (disconnectedPlayerIndex !== undefined && game.players[disconnectedPlayerIndex]?.id === socket.id) {
+            game.players[disconnectedPlayerIndex] = null;
+            delete game.playerSockets[socket.id]; // Odstránime referenciu na socket
+            console.log(`Hráč ${disconnectedPlayerIndex + 1} (${socket.id}) bol odstránený zo slotu.`);
         }
+
+        const activePlayersCount = game.players.filter(p => p !== null).length;
+        // Ak hra prebiehala a teraz je menej ako 2 aktívni hráči, resetujeme hru
+        if (game.isGameStarted && activePlayersCount < 2) {
+            console.log('Hra bola prerušená, resetujem stav.');
+            resetGame(); // Použijeme novú funkciu na reset
+            io.emit('gameReset', 'Jeden z hráčov sa odpojil. Hra bola resetovaná.');
+        } else if (activePlayersCount === 0) {
+            // Ak sa odpojí posledný hráč, vyčistíme úplne stav
+            console.log('Všetci hráči odpojení, herný stav vyčistený.');
+            resetGame(); // Použijeme novú funkciu na reset
+        }
+        // Debug: Skontrolujte aktuálny stav game.players po odpojení
+        console.log("Aktuálny stav game.players po odpojení:", game.players.map(p => p ? `Hráč ${p.playerIndex + 1} (${p.id})` : 'Voľný'));
     });
 });
 
 // Funkcia na inicializáciu stavu hry
 function initializeGame() {
     const initialBag = createLetterBag();
-    const { drawnLetters: player0Rack, remainingBag: bagAfterP0, bagEmpty: p0BagEmpty } = drawLetters(initialBag, 7);
-    const { drawnLetters: player1Rack, remainingBag: finalBag, bagEmpty: p1BagEmpty } = drawLetters(bagAfterP0, 7);
+    const { drawnLetters: player0Rack, remainingBag: bagAfterP0 } = drawLetters(initialBag, 7);
+    const { drawnLetters: player1Rack, remainingBag: finalBag } = drawLetters(bagAfterP0, 7);
 
     game.gameState = {
         playerRacks: [player0Rack, player1Rack],
@@ -212,7 +248,7 @@ function initializeGame() {
         currentPlayerIndex: 0,
         boardAtStartOfTurn: Array(15).fill(null).map(() => Array(15).fill(null)),
         isFirstTurn: true,
-        isBagEmpty: p0BagEmpty || p1BagEmpty, // Ak bolo vrecúško prázdne už pri ťahaní
+        isBagEmpty: finalBag.length === 0, // Skutočný stav, či je vrecúško prázdne
         exchangeZoneLetters: [],
         hasPlacedOnBoardThisTurn: false,
         hasMovedToExchangeZoneThisTurn: false,
@@ -220,6 +256,22 @@ function initializeGame() {
         isGameOver: false,
     };
     console.log("Počiatočný herný stav inicializovaný na serveri.");
+    console.log("Rack Hráča 1:", game.gameState.playerRacks[0].map(l => l.letter));
+    console.log("Rack Hráča 2:", game.gameState.playerRacks[1].map(l => l.letter));
+}
+
+// NOVÁ FUNKCIA: Resetuje herný stav na počiatočné hodnoty
+function resetGame() {
+    game = {
+        players: [null, null], // Reset na prázdne sloty
+        playerSockets: {}, // Vyčistíme referencie na sockety
+        gameState: null,
+        gameId: 'scrabble-game-1',
+        // chatMessages: [], // Odstránené
+        // gameLogHistory: [], // Odstránené
+        isGameStarted: false,
+    };
+    console.log("Herný stav bol resetovaný.");
 }
 
 // Spustenie servera
