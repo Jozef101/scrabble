@@ -3,7 +3,7 @@ import '../styles/LetterSelectionModal.css';
 
 function LetterSelectionModal({ onSelectLetter, onClose }) {
   // Abeceda pre výber písmen
-  const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+  const alphabet = 'AÁÄBCČDĎEÉFGHIÍJKLĹĽMNŇOÓÔPRŔSŠTŤUÚVXYÝZŽ'.split('');
 
   return (
     <div className="modal-overlay">
