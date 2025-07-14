@@ -22,10 +22,11 @@ import {
   isConnected,
   getAllWordsInTurn,
   calculateWordScore,
-  getRackPoints,
+  getRackPoints, // Táto funkcia sa tu už nepoužíva priamo, ale je dobré ju mať importovanú, ak ju používate inde
   calculateFinalScores,
-  createLetterBag // Importujeme aj createLetterBag pre počiatočné nastavenie
+  createLetterBag // Importujeme aj createLetterBag pre počiatočné nastavenie - aj keď ho riadi server, pre pochopenie ho tu ponecháme
 } from './utils/gameLogic';
+// Dôležitá zmena: sendPlayerAction musí teraz posielať gameId
 import { setupSocketListeners, sendChatMessage, sendPlayerAction } from './utils/socketHandlers';
 import { SERVER_URL, BOARD_SIZE, RACK_SIZE } from './utils/constants'; // Importujeme konštanty
 
@@ -33,6 +34,13 @@ import { LETTER_VALUES } from './utils/LettersDistribution'; // Stále potrebuje
 import { bonusSquares, BONUS_TYPES } from './utils/boardUtils'; // Stále potrebujeme pre zobrazenie bonusov
 import slovakWordsArray from './data/slovakWords.json';
 import './styles/App.css';
+
+// ====================================================================
+// KLÚČOVÁ ZMENA: Definovanie ID hry, ku ktorej sa klient pripojí.
+// V reálnej aplikácii by to mohlo pochádzať z URL parametrov,
+// z inputu používateľa alebo by ho vygeneroval server.
+// ====================================================================
+const GAME_ID_TO_JOIN = 'default-scrabble-game'; // Použijeme rovnaké ID ako na serveri pre jednoduchosť
 
 function App() {
   // Stav hry, ktorý bude aktualizovaný zo servera
@@ -50,7 +58,7 @@ function App() {
     consecutivePasses: 0,
     isGameOver: false,
     isBagEmpty: false,
-    hasInitialGameStateReceived: false, // Ponechať toto ako počiatočný stav
+    hasInitialGameStateReceived: false, // Toto je teraz riadené serverom a socketHandlers
   });
 
   const [showLetterSelectionModal, setShowLetterSelectionModal] = useState(false);
@@ -70,22 +78,52 @@ function App() {
     const newSocket = io(SERVER_URL);
     setSocket(newSocket);
 
+    // Kľúčová zmena: Po pripojení ihneď pošleme serveru 'joinGame' s naším GAME_ID_TO_JOIN
+    newSocket.on('connect', () => {
+      console.log(`Pripojený k serveru, posielam joinGame pre ID: ${GAME_ID_TO_JOIN}`);
+      newSocket.emit('joinGame', GAME_ID_TO_JOIN); // Pošleme ID hry
+    });
+
     // Používame setupSocketListeners z nového súboru
     setupSocketListeners(
-      newSocket,
-      setConnectionStatus,
-      setMyPlayerIndex,
-      (updatedState) => {
-        // Tu už len jednoducho aktualizujeme stav
-        setGameState(updatedState);
-      },
-      setChatMessages
-    );
+  newSocket,
+  setConnectionStatus,
+  setMyPlayerIndex,
+  (updatedState) => {
+    setGameState(updatedState);
+  },
+  setChatMessages,
+  GAME_ID_TO_JOIN // <--- Pridávame gameId sem!
+);
+
+    // Pridáme poslucháča na 'gameReset'
+    newSocket.on('gameReset', (message) => {
+        alert(message);
+        // Resetujeme stav hry na počiatočný (prázdny) a čakáme na nový stav zo servera
+        setGameState({
+            letterBag: [],
+            playerRacks: Array(2).fill(null).map(() => Array(RACK_SIZE).fill(null)),
+            board: Array(BOARD_SIZE).fill(null).map(() => Array(BOARD_SIZE).fill(null)),
+            boardAtStartOfTurn: Array(BOARD_SIZE).fill(null).map(() => Array(BOARD_SIZE).fill(null)),
+            isFirstTurn: true,
+            playerScores: [0, 0],
+            currentPlayerIndex: 0,
+            exchangeZoneLetters: [],
+            hasPlacedOnBoardThisTurn: false,
+            hasMovedToExchangeZoneThisTurn: false,
+            consecutivePasses: 0,
+            isGameOver: false,
+            isBagEmpty: false,
+            hasInitialGameStateReceived: false, // Po resete očakávame nový inicializačný stav
+        });
+        setMyPlayerIndex(null); // Resetujeme aj priradeného hráča
+    });
+
 
     return () => {
       newSocket.disconnect();
     };
-  }, []);
+  }, []); // [] zabezpečí, že sa spustí len raz pri mountovaní komponentu
 
   // Effect pre posúvanie chatu
   useEffect(() => {
@@ -151,7 +189,8 @@ function App() {
       while (newPlayerRacks[myPlayerIndex].length < RACK_SIZE) { newPlayerRacks[myPlayerIndex].push(null); }
       while (newPlayerRacks[myPlayerIndex].length > RACK_SIZE) { newPlayerRacks[myPlayerIndex].pop(); }
 
-      sendPlayerAction(socket, 'updateGameState', {
+      // Kľúčová zmena: Posielame GAME_ID_TO_JOIN aj s akciou
+      sendPlayerAction(socket, GAME_ID_TO_JOIN, 'updateGameState', {
         ...gameState, // Posielame celý aktuálny stav
         playerRacks: newPlayerRacks,
       });
@@ -208,8 +247,8 @@ function App() {
         newExchangeZoneLetters.push(letterToMove);
     }
 
-    // Posielame aktualizovaný stav na server
-    sendPlayerAction(socket, 'updateGameState', {
+    // Kľúčová zmena: Posielame GAME_ID_TO_JOIN aj s akciou
+    sendPlayerAction(socket, GAME_ID_TO_JOIN, 'updateGameState', {
       ...gameState, // Posielame celý aktuálny stav
       playerRacks: newPlayerRacks,
       board: newBoard,
@@ -226,7 +265,8 @@ function App() {
       if (newBoard[x][y] && newBoard[x][y].letter === '') {
         newBoard[x][y] = { ...newBoard[x][y], assignedLetter: selectedLetter };
       }
-      sendPlayerAction(socket, 'updateGameState', {
+      // Kľúčová zmena: Posielame GAME_ID_TO_JOIN aj s akciou
+      sendPlayerAction(socket, GAME_ID_TO_JOIN, 'updateGameState', {
         ...gameState,
         board: newBoard,
       });
@@ -311,7 +351,7 @@ function App() {
 
     const invalidWords = allFormedWords.filter(wordObj => {
         const wordString = wordObj.wordString.toUpperCase();
-        if (wordString.length > 5) {
+        if (wordString.length > 5) { // Slovak scrabble max word length is often defined as 5 for dictionary.
             return false;
         }
         return !validWordsSet.current.has(wordString);
@@ -347,26 +387,36 @@ function App() {
     let newRackForCurrentPlayer = [];
     let newLetterIndex = 0;
 
-    for (let i = 0; i < tempRack.length; i++) {
-      if (tempRack[i] === null && newLetterIndex < newLetters.length) {
-        newRackForCurrentPlayer.push(newLetters[newLetterIndex]);
-        newLetterIndex++;
-      } else {
-        newRackForCurrentPlayer.push(tempRack[i]);
-      }
+    // Pridajte už existujúce písmená, ktoré neboli použité v ťahu
+    tempRack.forEach(letter => {
+        // Skontrolujte, či písmeno nie je v `actualPlacedLetters`
+        const isLetterPlaced = actualPlacedLetters.some(placed => placed.letterData.id === letter?.id);
+        if (letter !== null && !isLetterPlaced) {
+            newRackForCurrentPlayer.push(letter);
+        }
+    });
+
+    // Teraz pridajte nové písmená
+    newLetters.forEach(letter => {
+        if (newRackForCurrentPlayer.length < RACK_SIZE) {
+            newRackForCurrentPlayer.push(letter);
+        }
+    });
+
+    // Doplnenie null hodnôt na RACK_SIZE
+    while (newRackForCurrentPlayer.length < RACK_SIZE) {
+        newRackForCurrentPlayer.push(null);
     }
-    while(newLetterIndex < newLetters.length) {
-      newRackForCurrentPlayer.push(newLetters[newLetterIndex]);
-      newLetterIndex++;
-    }
-    while (newRackForCurrentPlayer.length < RACK_SIZE) newRackForCurrentPlayer.push(null);
+    // Orezanie, ak je náhodou viac ako RACK_SIZE (nemalo by sa stať pri správnej logike)
     newRackForCurrentPlayer = newRackForCurrentPlayer.slice(0, RACK_SIZE);
+
 
     const finalRackAfterPlay = newRackForCurrentPlayer.filter(l => l !== null);
 
     if (currentBagEmpty && finalRackAfterPlay.length === 0) {
         const finalScores = calculateFinalScores(currentPlayerIndex, newRackForCurrentPlayer, playerScores, playerRacks);
-        sendPlayerAction(socket, 'updateGameState', {
+        // Kľúčová zmena: Posielame GAME_ID_TO_JOIN aj s akciou
+        sendPlayerAction(socket, GAME_ID_TO_JOIN, 'updateGameState', {
             ...gameState,
             letterBag: updatedBagAfterTurn,
             playerRacks: playerRacks.map((rack, idx) => idx === currentPlayerIndex ? newRackForCurrentPlayer : rack),
@@ -374,7 +424,7 @@ function App() {
             boardAtStartOfTurn: newBoardAtStartOfTurn,
             isFirstTurn: false,
             playerScores: finalScores,
-            currentPlayerIndex: currentPlayerIndex,
+            currentPlayerIndex: currentPlayerIndex, // Zostáva rovnaký, hra skončila
             exchangeZoneLetters: [],
             hasPlacedOnBoardThisTurn: false,
             hasMovedToExchangeZoneThisTurn: false,
@@ -386,7 +436,8 @@ function App() {
         return;
     }
 
-    sendPlayerAction(socket, 'updateGameState', {
+    // Kľúčová zmena: Posielame GAME_ID_TO_JOIN aj s akciou
+    sendPlayerAction(socket, GAME_ID_TO_JOIN, 'updateGameState', {
         ...gameState,
         letterBag: updatedBagAfterTurn,
         playerRacks: playerRacks.map((rack, idx) => idx === currentPlayerIndex ? newRackForCurrentPlayer : rack),
@@ -394,7 +445,7 @@ function App() {
         boardAtStartOfTurn: newBoardAtStartOfTurn,
         isFirstTurn: false,
         playerScores: newScores,
-        currentPlayerIndex: (currentPlayerIndex === 0 ? 1 : 0),
+        currentPlayerIndex: (currentPlayerIndex === 0 ? 1 : 0), // Prepneme hráča
         exchangeZoneLetters: [],
         hasPlacedOnBoardThisTurn: false,
         hasMovedToExchangeZoneThisTurn: false,
@@ -427,8 +478,8 @@ function App() {
         return;
     }
 
-    if (letterBag.length < RACK_SIZE) { // Minimálne 7 písmen na výmenu
-      alert("Vo vrecúšku nie je dostatok písmen na výmenu (potrebných je aspoň 7)!");
+    if (letterBag.length < exchangeZoneLetters.length) { // Musí byť dostatok písmen na výmenu
+      alert(`Vo vrecúšku nie je dostatok písmen na výmenu (potrebných je ${exchangeZoneLetters.length}, k dispozícii ${letterBag.length})!`);
       return;
     }
 
@@ -437,42 +488,45 @@ function App() {
     
     let updatedBag = [...bagAfterDraw, ...exchangeZoneLetters];
     
+    // Zamiešame vrátené písmená do vrecúška
     for (let i = updatedBag.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [updatedBag[i], updatedBag[j]] = [updatedBag[j], updatedBag[i]];
     }
     
     let newRack = [...playerRacks[currentPlayerIndex]];
-    let newLetterIndex = 0;
-    for (let i = 0; i < newRack.length; i++) {
-      if (newRack[i] === null && newLetterIndex < newLettersForRack.length) {
-        newRack[i] = newLettersForRack[newLetterIndex];
-        newLetterIndex++;
-      } else if (exchangeZoneLetters.some(l => l.id === newRack[i]?.id)) {
-        newRack[i] = null; // Odstránime písmeno, ktoré bolo presunuté do výmennej zóny
-      }
+    let lettersToKeepInRack = newRack.filter(letter => 
+        letter !== null && !exchangeZoneLetters.some(exchanged => exchanged.id === letter.id)
+    );
+
+    // Pridáme nové písmená
+    newLettersForRack.forEach(newLetter => {
+        if (lettersToKeepInRack.length < RACK_SIZE) {
+            lettersToKeepInRack.push(newLetter);
+        }
+    });
+
+    // Doplníme null hodnoty, aby bol rack plný (RACK_SIZE)
+    while (lettersToKeepInRack.length < RACK_SIZE) {
+        lettersToKeepInRack.push(null);
     }
-    while (newLetterIndex < newLettersForRack.length) {
-      newRack.push(newLettersForRack[newLetterIndex]);
-      newLetterIndex++;
-    }
-    while (newRack.length < RACK_SIZE) newRack.push(null);
-    newRack = newRack.slice(0, RACK_SIZE);
+    newRack = lettersToKeepInRack.slice(0, RACK_SIZE); // Zabezpečíme správnu veľkosť
 
 
-    sendPlayerAction(socket, 'updateGameState', {
+    // Kľúčová zmena: Posielame GAME_ID_TO_JOIN aj s akciou
+    sendPlayerAction(socket, GAME_ID_TO_JOIN, 'updateGameState', {
         ...gameState,
         letterBag: updatedBag,
         playerRacks: playerRacks.map((rack, idx) => idx === currentPlayerIndex ? newRack : rack),
-        board: board,
-        boardAtStartOfTurn: boardAtStartOfTurn,
-        isFirstTurn: isFirstTurn,
-        playerScores: playerScores,
-        currentPlayerIndex: (currentPlayerIndex === 0 ? 1 : 0),
-        exchangeZoneLetters: [],
+        board: board, // Board sa nemení pri výmene písmen
+        boardAtStartOfTurn: boardAtStartOfTurn, // Rovnako ani boardAtStartOfTurn
+        isFirstTurn: isFirstTurn, // Nezmenené
+        playerScores: playerScores, // Skóre sa pri výmene nemení
+        currentPlayerIndex: (currentPlayerIndex === 0 ? 1 : 0), // Prepneme hráča
+        exchangeZoneLetters: [], // Vyprázdnime výmennú zónu
         hasPlacedOnBoardThisTurn: false,
         hasMovedToExchangeZoneThisTurn: false,
-        consecutivePasses: 0,
+        consecutivePasses: 0, // Resetujeme passy
         isGameOver: false,
         isBagEmpty: currentBagEmpty,
     });
@@ -503,13 +557,14 @@ function App() {
 
     const newConsecutivePasses = consecutivePasses + 1;
     
-    sendPlayerAction(socket, 'updateGameState', {
+    // Kľúčová zmena: Posielame GAME_ID_TO_JOIN aj s akciou
+    sendPlayerAction(socket, GAME_ID_TO_JOIN, 'updateGameState', {
         ...gameState,
-        currentPlayerIndex: (currentPlayerIndex === 0 ? 1 : 0),
+        currentPlayerIndex: (currentPlayerIndex === 0 ? 1 : 0), // Prepneme hráča
         hasPlacedOnBoardThisTurn: false,
         hasMovedToExchangeZoneThisTurn: false,
         consecutivePasses: newConsecutivePasses,
-        isGameOver: (newConsecutivePasses >= 4),
+        isGameOver: (newConsecutivePasses >= 4), // Hra končí po 4 po sebe idúcich pasoch
     });
 
     if (newConsecutivePasses >= 4) {
@@ -520,7 +575,8 @@ function App() {
   };
 
   const handleSendChatMessage = () => {
-    sendChatMessage(socket, newChatMessage);
+    // Kľúčová zmena: Posielame GAME_ID_TO_JOIN aj s chat správou
+    sendChatMessage(socket, GAME_ID_TO_JOIN, newChatMessage);
     setNewChatMessage('');
   };
 
@@ -529,7 +585,7 @@ function App() {
     <DndProvider backend={HTML5Backend}>
       <div className="app-container">
         <div className="game-header">
-          <h1>Scrabble</h1>
+          <h1>Scrabble (Hra ID: {GAME_ID_TO_JOIN})</h1> {/* Zobrazíme ID hry */}
           <div className="connection-status">
             Stav pripojenia: <span className={connectionStatus === 'Pripojený' ? 'connected' : 'disconnected'}>{connectionStatus}</span>
             {myPlayerIndex !== null && ` | Si Hráč ${myPlayerIndex + 1}`}
@@ -593,7 +649,7 @@ function App() {
                 <button
                   className="exchange-letters-button"
                   onClick={handleExchangeLetters}
-                  disabled={isGameOver || letterBag.length < RACK_SIZE || showLetterSelectionModal || myPlayerIndex === null || currentPlayerIndex !== myPlayerIndex}
+                  disabled={isGameOver || letterBag.length < exchangeZoneLetters.length || showLetterSelectionModal || myPlayerIndex === null || currentPlayerIndex !== myPlayerIndex}
                 >
                   Vymeniť písmená ({exchangeZoneLetters.length})
                 </button>
@@ -609,8 +665,8 @@ function App() {
           </div>
         ) : (
           <div className="waiting-message">
-            <p>Čaká sa na pripojenie hráčov...</p>
-            <p>Uistite sa, že máte otvorené dve karty prehliadača.</p>
+            <p>Čaká sa na pripojenie hráčov k hre ID: **{GAME_ID_TO_JOIN}**...</p>
+            <p>Uistite sa, že máte otvorené dve karty prehliadača, obe s touto URL.</p>
           </div>
         )}
 
@@ -647,17 +703,18 @@ function App() {
                 const newBoard = board.map(row => [...row]);
                 const { x, y } = jokerTileCoords;
                 const jokerLetter = newBoard[x][y];
-                newBoard[x][y] = null;
+                newBoard[x][y] = null; // Odstránime žolíka z dosky
 
                 const currentPlayersRack = [...playerRacks[myPlayerIndex]];
                 const firstEmptyRackSlot = currentPlayersRack.findIndex(l => l === null);
                 if (firstEmptyRackSlot !== -1) {
-                  currentPlayersRack[firstEmptyRackSlot] = { ...jokerLetter, assignedLetter: null };
+                  currentPlayersRack[firstEmptyRackSlot] = { ...jokerLetter, assignedLetter: null }; // Vrátime žolíka späť do racku
                 } else {
                   currentPlayersRack.push({ ...jokerLetter, assignedLetter: null });
                 }
                 
-                sendPlayerAction(socket, 'updateGameState', {
+                // Kľúčová zmena: Posielame GAME_ID_TO_JOIN aj s akciou
+                sendPlayerAction(socket, GAME_ID_TO_JOIN, 'updateGameState', {
                   ...gameState,
                   board: newBoard,
                   playerRacks: playerRacks.map((rack, idx) => idx === myPlayerIndex ? currentPlayersRack : rack),
