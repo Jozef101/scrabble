@@ -115,11 +115,17 @@ export const setupSocketListeners = (socket, setConnectionStatus, setMyPlayerInd
 };
 
 // Funkcia na odosielanie chatových správ
-// Teraz prijíma gameId
 export const sendChatMessage = (socket, gameId, message) => {
-    if (message.trim() !== '') {
-        // Posielame gameId spolu so správou
-        socket.emit('chatMessage', { gameId, message });
+    if (socket && socket.connected && message.trim() !== '') { // Pridal som kontrolu socket.socket.connected
+        console.log(`Odosielam chat správu pre hru ${gameId}: ${message}`);
+        // KĽÚČOVÁ ZMENA: Posielame 'playerAction' event, aby server správne reagoval
+        socket.emit('playerAction', { 
+            gameId: gameId, 
+            type: 'chatMessage', // Typ akcie je 'chatMessage'
+            payload: message     // Obsah správy je v payload
+        });
+    } else {
+        console.warn('Socket nie je pripojený alebo správa je prázdna, správu nemožno odoslať.');
     }
 };
 
