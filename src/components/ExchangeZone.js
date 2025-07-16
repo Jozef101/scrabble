@@ -12,8 +12,8 @@ function ExchangeZone({ lettersInZone, moveLetter, myPlayerIndex, currentPlayerI
       if (myPlayerIndex === null || currentPlayerIndex !== myPlayerIndex) {
         return false;
       }
-      // Povoliť drop iba ak sa presúva z racku
-      return item.source.type === 'rack';
+      // Povoliť drop ak sa presúva z racku alebo z hracej dosky
+      return item.source.type === 'rack' || item.source.type === 'board';
     },
     drop: (item, monitor) => {
       if (monitor.didDrop()) {
