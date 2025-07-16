@@ -1,18 +1,26 @@
+// src/components/PlayerRack.js
 import React from 'react';
-import RackSlot from './RackSlot'; // Importujeme nový komponent
+import RackSlot from './RackSlot';
 import '../styles/PlayerRack.css';
 
-function PlayerRack({ letters, moveLetter, playerIndex }) {
+// Pridávame myPlayerIndex a currentPlayerIndex ako prop
+function PlayerRack({ letters, moveLetter, playerIndex, myPlayerIndex, currentPlayerIndex }) {
+  // Určíme, či je tento PlayerRack vlastný rack aktuálneho hráča
+  const isMyRack = playerIndex === myPlayerIndex;
+  const isCurrentPlayerTurnRack = playerIndex === currentPlayerIndex; // Pre vizuálne zvýraznenie racku na ťahu
+
   return (
-    // Premenovaný názov triedy, aby nedochádzalo ku kolízii s App.css
-    <div className="individual-player-rack-container">
+    <div className={`individual-player-rack-container ${isCurrentPlayerTurnRack ? 'current-turn-rack' : ''}`}>
       {letters.map((letter, index) => (
         <RackSlot
-          key={index} // Používame index ako key, pretože poradie sa mení
+          key={letter ? letter.id : `empty-${playerIndex}-${index}`} // Lepšie kľúče pre stabilitu
           letter={letter}
           index={index}
-          playerIndex={playerIndex}
+          playerIndex={playerIndex} // Toto je playerIndex RACKU (0 alebo 1)
           moveLetter={moveLetter}
+          isMyRack={isMyRack} // Posielame informáciu, či je to môj rack
+          myPlayerIndex={myPlayerIndex} // Posielame aj myPlayerIndex pre logiku dropu v RackSlot
+          currentPlayerIndex={currentPlayerIndex} // Posielame aj currentPlayerIndex pre logiku dragu/viditeľnosti v Letter komponente
         />
       ))}
     </div>

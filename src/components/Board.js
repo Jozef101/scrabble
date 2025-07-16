@@ -3,8 +3,8 @@ import React from 'react';
 import Tile from './Tile';
 import '../styles/Board.css';
 
-// Board teraz prijíma aj boardAtStartOfTurn
-function Board({ board, moveLetter, boardAtStartOfTurn }) { // PRIDANÉ boardAtStartOfTurn
+// Board teraz prijíma aj boardAtStartOfTurn, myPlayerIndex a currentPlayerIndex
+function Board({ board, moveLetter, boardAtStartOfTurn, myPlayerIndex, currentPlayerIndex }) {
   return (
     <div className="board">
       {board.map((row, rowIndex) => (
@@ -16,7 +16,9 @@ function Board({ board, moveLetter, boardAtStartOfTurn }) { // PRIDANÉ boardAtS
               y={colIndex}
               letter={tileData}
               moveLetter={moveLetter}
-              boardAtStartOfTurn={boardAtStartOfTurn} // PRIDANÉ PROP
+              boardAtStartOfTurn={boardAtStartOfTurn}
+              myPlayerIndex={myPlayerIndex}     // PRIDANÉ PROP
+              currentPlayerIndex={currentPlayerIndex} // PRIDANÉ PROP
             />
           ))}
         </div>

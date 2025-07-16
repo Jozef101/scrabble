@@ -1,35 +1,42 @@
+// src/components/RackSlot.js
 import React from 'react';
 import { useDrop } from 'react-dnd';
 import Letter from './Letter';
-import '../styles/RackSlot.css'; // Nový CSS súbor pre RackSlot
+import '../styles/RackSlot.css';
 
-function RackSlot({ letter, index, playerIndex, moveLetter }) {
+// Pridávame isMyRack, myPlayerIndex, currentPlayerIndex ako prop
+function RackSlot({ letter, index, playerIndex, moveLetter, isMyRack, myPlayerIndex, currentPlayerIndex }) {
   const [{ isOver, canDrop }, drop] = useDrop({
     accept: 'LETTER',
     canDrop: (item) => {
-      // Ak je slot prázdny, vždy je možné naň položiť písmeno
+      // Môžeš dropnúť len na svoj vlastný rack
+      if (!isMyRack) return false;
+
+      // Môžeš dropnúť na prázdny slot
       if (letter === null) return true;
 
       // Ak slot nie je prázdny, je možné naň položiť písmeno len ak sa presúva
-      // z rovnakého stojana (pre preusporiadanie) a nie je to to isté písmeno
-      return item.source.type === 'rack' && item.source.playerIndex === playerIndex && item.letterData.id !== letter.id;
+      // z rovnakého stojana (pre preusporiadanie) a nie je to to isté písmeno.
+      return item.source.type === 'rack' && item.source.playerIndex === myPlayerIndex && item.letterData.id !== letter.id;
     },
     drop: (item, monitor) => {
-      if (monitor.didDrop()) {
-        return;
+      // Ak drop nebol spracovaný inou drop zónou (napr. Board)
+      if (!monitor.didDrop()) {
+        const target = { type: 'rack', index, playerIndex: myPlayerIndex };
+
+        moveLetter(item.letterData, item.source, target);
       }
-
-      // Cieľový index je index tohto slotu
-      const target = { type: 'rack', index, playerIndex };
-
-      // Zavoláme moveLetter s presnými informáciami o zdroji a cieli
-      moveLetter(item.letterData, item.source, target);
     },
     collect: (monitor) => ({
       isOver: monitor.isOver(),
       canDrop: monitor.canDrop(),
     }),
   });
+
+  // KĽÚČOVÁ ZMENA: Logika pre isDraggable a isVisible
+  const isCurrentPlayerTurn = (currentPlayerIndex === myPlayerIndex);
+  const shouldBeDraggable = isMyRack && isCurrentPlayerTurn; // Iba vlastné písmená, keď je tvoj ťah
+  const shouldBeVisible = isMyRack; // Vlastné písmená sú vždy viditeľné, súperove nie
 
   // Triedy pre zvýraznenie drop zóny
   const dropHighlightClass = isOver && canDrop ? 'rack-slot-highlight-can-drop' : (isOver ? 'rack-slot-highlight' : '');
@@ -42,10 +49,12 @@ function RackSlot({ letter, index, playerIndex, moveLetter }) {
           letter={letter.letter}
           value={letter.value}
           assignedLetter={letter.assignedLetter}
-          source={{ type: 'rack', index, playerIndex }} // Pridaný playerIndex do zdroja
-          isDraggable={true} // Písmená na racku sú vždy draggable
+          source={{ type: 'rack', index, playerIndex }}
+          isDraggable={shouldBeDraggable} // Posielame vypočítanú hodnotu
+          isVisible={shouldBeVisible}   // Posielame vypočítanú hodnotu
         />
       ) : (
+        // Ak je slot prázdny, zobraz empty-rack-slot. Toto sa zobrazí pre oba racky.
         <div className="empty-rack-slot"></div>
       )}
     </div>

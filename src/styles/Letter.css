@@ -1,6 +1,7 @@
+/* src/styles/Letter.css */
 .letter-tile {
   width: 40px;
-    height: 40px;
+  height: 40px;
   background-color: #ffe0b2;
     /* Svetlooranžová/krémová */
     border: 1px solid #d7a07c;
@@ -12,7 +13,7 @@
   font-size: 24px;
   font-weight: bold;
   color: #333;
-    cursor: grab;
+  cursor: grab;
     position: relative;
     box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
     transition: transform 0.1s ease-in-out, box-shadow 0.1s ease-in-out;
@@ -24,12 +25,12 @@
 
 .letter-tile:hover {
   transform: translateY(-2px);
-    box-shadow: 3px 3px 7px rgba(0, 0, 0, 0.3);
+  box-shadow: 3px 3px 7px rgba(0, 0, 0, 0.3);
 }
 
 .letter-tile.dragging {
   opacity: 0.5;
-    cursor: grabbing;
+  cursor: grabbing;
 }
 
 .main-letter {
@@ -39,7 +40,7 @@
 
 .letter-value {
   position: absolute;
-    bottom: 2px;
+  bottom: 2px;
     right: 4px;
   font-size: 10px;
   font-weight: normal;
@@ -53,4 +54,20 @@
 
 .joker-assigned-color {
   color: #ff69b4;
+}
+/* KĽÚČOVÁ ZMENA: Nový štýl pre skryté písmeno */
+.hidden-letter-tile {
+  background-color: #888;
+  /* Šedá farba pre skryté písmeno */
+  border: 1px solid #666;
+  color: transparent;
+  /* Skryje text */
+  text-shadow: none;
+  /* Odstráni prípadné tiene textu */
+  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+  /* Jemný 3D efekt */
+  cursor: default;
+  /* Zmení kurzor, aby naznačoval, že nie je interaktívny */
+  pointer-events: none;
+  /* Zabezpečí, že sa naň nedá klikať/ťahať */
 }
