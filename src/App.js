@@ -194,15 +194,13 @@ function App() {
 
       // KLÚČOVÁ ZMENA pre optimistickú aktualizáciu:
       // Okamžite aktualizujeme lokálny stav
-      setGameState(prevState => ({
-        ...prevState,
+      const updatedStateForRackMove = {
+        ...gameState,
         playerRacks: newPlayerRacks,
-      }));
+      };
+      setGameState(updatedStateForRackMove);
 
-      sendPlayerAction(socket, GAME_ID_TO_JOIN, 'updateGameState', {
-        ...gameState, // Posielame pôvodný gameState, ale s upraveným playerRacks
-        playerRacks: newPlayerRacks,
-      });
+      sendPlayerAction(socket, GAME_ID_TO_JOIN, 'updateGameState', updatedStateForRackMove);
       return;
     }
 
@@ -285,24 +283,21 @@ function App() {
     }
 
     // KLÚČOVÁ ZMENA pre optimistickú aktualizáciu:
-    // Okamžite aktualizujeme lokálny stav
-    setGameState(prevState => ({
-      ...prevState,
+    // Vytvoríme kompletný nový stav na základe aktuálneho gameState a vykonaných zmien
+    const updatedStateForServer = {
+      ...gameState,
       playerRacks: newPlayerRacks,
       board: newBoard,
       exchangeZoneLetters: newExchangeZoneLetters,
       hasPlacedOnBoardThisTurn: getPlacedLettersDuringCurrentTurn(newBoard, boardAtStartOfTurn).length > 0,
       hasMovedToExchangeZoneThisTurn: newExchangeZoneLetters.length > 0,
-    }));
+    };
 
-    sendPlayerAction(socket, GAME_ID_TO_JOIN, 'updateGameState', {
-      ...gameState, // Posielame pôvodný gameState, ale s upravenými časťami
-      playerRacks: newPlayerRacks,
-      board: newBoard,
-      exchangeZoneLetters: newExchangeZoneLetters,
-      hasPlacedOnBoardThisTurn: getPlacedLettersDuringCurrentTurn(newBoard, boardAtStartOfTurn).length > 0,
-      hasMovedToExchangeZoneThisTurn: newExchangeZoneLetters.length > 0,
-    });
+    // Okamžite aktualizujeme lokálny stav
+    setGameState(updatedStateForServer);
+
+    // Posielame presne ten istý stav na server
+    sendPlayerAction(socket, GAME_ID_TO_JOIN, 'updateGameState', updatedStateForServer);
   };
 
   const assignLetterToJoker = (selectedLetter) => {
@@ -312,11 +307,15 @@ function App() {
       if (newBoard[x][y] && newBoard[x][y].letter === '') {
         newBoard[x][y] = { ...newBoard[x][y], assignedLetter: selectedLetter };
       }
-      // Kľúčová zmena: Posielame GAME_ID_TO_JOIN aj s akciou
-      sendPlayerAction(socket, GAME_ID_TO_JOIN, 'updateGameState', {
+      // KLÚČOVÁ ZMENA pre optimistickú aktualizáciu:
+      const updatedStateForJoker = {
         ...gameState,
         board: newBoard,
-      });
+      };
+      setGameState(updatedStateForJoker);
+
+      // Kľúčová zmena: Posielame GAME_ID_TO_JOIN aj s akciou
+      sendPlayerAction(socket, GAME_ID_TO_JOIN, 'updateGameState', updatedStateForJoker);
     }
     setShowLetterSelectionModal(false);
     setJokerTileCoords(null);
@@ -382,7 +381,7 @@ function App() {
         alert("Položené písmená sa musia spájať s existujúcimi písmenami na doske (alebo použiť existujúce písmeno ako súčasť slova)!");
       }
       return;
-    }
+      }
 
     for (const letter of actualPlacedLetters) {
       if (boardAtStartOfTurn[letter.x][letter.y] !== null) {
@@ -462,8 +461,8 @@ function App() {
 
     if (currentBagEmpty && finalRackAfterPlay.length === 0) {
       const finalScores = calculateFinalScores(currentPlayerIndex, newRackForCurrentPlayer, playerScores, playerRacks);
-      // Kľúčová zmena: Posielame GAME_ID_TO_JOIN aj s akciou
-      sendPlayerAction(socket, GAME_ID_TO_JOIN, 'updateGameState', {
+      // KLÚČOVÁ ZMENA pre optimistickú aktualizáciu:
+      const updatedStateForGameOver = {
         ...gameState,
         letterBag: updatedBagAfterTurn,
         playerRacks: playerRacks.map((rack, idx) => idx === currentPlayerIndex ? newRackForCurrentPlayer : rack),
@@ -478,13 +477,15 @@ function App() {
         consecutivePasses: 0,
         isGameOver: true,
         isBagEmpty: currentBagEmpty,
-      });
+      };
+      setGameState(updatedStateForGameOver);
+      sendPlayerAction(socket, GAME_ID_TO_JOIN, 'updateGameState', updatedStateForGameOver);
       alert(`Hra skončila! Konečné skóre: Hráč 1: ${finalScores[0]}, Hráč 2: ${finalScores[1]}`);
       return;
     }
 
-    // Kľúčová zmena: Posielame GAME_ID_TO_JOIN aj s akciou
-    sendPlayerAction(socket, GAME_ID_TO_JOIN, 'updateGameState', {
+    // KLÚČOVÁ ZMENA pre optimistickú aktualizáciu:
+    const updatedStateForTurnConfirm = {
       ...gameState,
       letterBag: updatedBagAfterTurn,
       playerRacks: playerRacks.map((rack, idx) => idx === currentPlayerIndex ? newRackForCurrentPlayer : rack),
@@ -499,7 +500,9 @@ function App() {
       consecutivePasses: 0,
       isGameOver: false,
       isBagEmpty: currentBagEmpty,
-    });
+    };
+    setGameState(updatedStateForTurnConfirm);
+    sendPlayerAction(socket, GAME_ID_TO_JOIN, 'updateGameState', updatedStateForTurnConfirm);
   };
 
   const handleExchangeLetters = () => {
@@ -560,8 +563,8 @@ function App() {
     newRack = lettersToKeepInRack.slice(0, RACK_SIZE); // Zabezpečíme správnu veľkosť
 
 
-    // Kľúčová zmena: Posielame GAME_ID_TO_JOIN aj s akciou
-    sendPlayerAction(socket, GAME_ID_TO_JOIN, 'updateGameState', {
+    // KLÚČOVÁ ZMENA pre optimistickú aktualizáciu:
+    const updatedStateForExchange = {
       ...gameState,
       letterBag: updatedBag,
       playerRacks: playerRacks.map((rack, idx) => idx === currentPlayerIndex ? newRack : rack),
@@ -576,7 +579,11 @@ function App() {
       consecutivePasses: 0, // Resetujeme passy
       isGameOver: false,
       isBagEmpty: currentBagEmpty,
-    });
+    };
+    setGameState(updatedStateForExchange);
+
+    // Kľúčová zmena: Posielame GAME_ID_TO_JOIN aj s akciou
+    sendPlayerAction(socket, GAME_ID_TO_JOIN, 'updateGameState', updatedStateForExchange);
   };
 
   const handlePassTurn = () => {
@@ -604,15 +611,19 @@ function App() {
 
     const newConsecutivePasses = consecutivePasses + 1;
 
-    // Kľúčová zmena: Posielame GAME_ID_TO_JOIN aj s akciou
-    sendPlayerAction(socket, GAME_ID_TO_JOIN, 'updateGameState', {
+    // KLÚČOVÁ ZMENA pre optimistickú aktualizáciu:
+    const updatedStateForPass = {
       ...gameState,
       currentPlayerIndex: (currentPlayerIndex === 0 ? 1 : 0), // Prepneme hráča
       hasPlacedOnBoardThisTurn: false,
       hasMovedToExchangeZoneThisTurn: false,
       consecutivePasses: newConsecutivePasses,
       isGameOver: (newConsecutivePasses >= 4), // Hra končí po 4 po sebe idúcich pasoch
-    });
+    };
+    setGameState(updatedStateForPass);
+
+    // Kľúčová zmena: Posielame GAME_ID_TO_JOIN aj s akciou
+    sendPlayerAction(socket, GAME_ID_TO_JOIN, 'updateGameState', updatedStateForPass);
 
     if (newConsecutivePasses >= 4) {
       alert("Hra skončila! Obaja hráči pasovali dvakrát po sebe.");
@@ -771,21 +782,16 @@ function App() {
                 }
 
                 // KLÚČOVÁ ZMENA pre optimistickú aktualizáciu:
-                // Okamžite aktualizujeme lokálny stav
-                setGameState(prevState => ({
-                  ...prevState,
+                const updatedStateForJokerClose = {
+                  ...gameState,
                   board: newBoard,
                   playerRacks: playerRacks.map((rack, idx) => idx === myPlayerIndex ? currentPlayersRack : rack),
                   hasPlacedOnBoardThisTurn: getPlacedLettersDuringCurrentTurn(newBoard, boardAtStartOfTurn).length > 0,
-                }));
+                };
+                setGameState(updatedStateForJokerClose);
 
                 // Posielame akciu na server
-                sendPlayerAction(socket, GAME_ID_TO_JOIN, 'updateGameState', {
-                  ...gameState, // Posielame pôvodný gameState, ale s upravenými časťami
-                  board: newBoard,
-                  playerRacks: playerRacks.map((rack, idx) => idx === myPlayerIndex ? currentPlayersRack : rack),
-                  hasPlacedOnBoardThisTurn: getPlacedLettersDuringCurrentTurn(newBoard, boardAtStartOfTurn).length > 0,
-                });
+                sendPlayerAction(socket, GAME_ID_TO_JOIN, 'updateGameState', updatedStateForJokerClose);
               }
               setShowLetterSelectionModal(false);
               setJokerTileCoords(null);
