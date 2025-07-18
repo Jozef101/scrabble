@@ -21,13 +21,12 @@ function Tile({ x, y, letter, moveLetter, boardAtStartOfTurn, myPlayerIndex, cur
       // Môžeš dropnúť na políčko, ak je prázdne
       if (letter === null) return true;
       
-      // Ak políčko nie je prázdne, môžeš naň dropnúť len ak presúvaš
+      // Ak políčko nie je prázdne, môžeš naň položiť písmeno len ak presúvaš
       // to ISTÉ písmeno Z TOHTO ISTÉHO POLÍČKA (napr. na zmenu žolíka alebo vrátenie na rack)
       // A len ak je to tvoj ťah
       const isDroppingSameLetterFromSameSpot = item.source.type === 'board' && item.source.x === x && item.source.y === y;
       
       // Ak sa pokúšaš dropnúť písmeno z racku na obsadené políčko, ktoré nie je tvoje pôvodné, nie je to povolené.
-      // Toto by nemalo byť potrebné v canDrop, ale pre istotu
       if (item.source.type === 'rack' && letter !== null) return false;
 
       // Ak sa pokúšaš dropnúť na obsadené políčko, ktoré NIE JE tvoje pôvodné, nie je to povolené.
@@ -69,6 +68,17 @@ function Tile({ x, y, letter, moveLetter, boardAtStartOfTurn, myPlayerIndex, cur
   // Trieda pre "zamknuté" písmená na doske, ktoré nie sú novopoložené a nedajú sa ťahať
   const lockedClass = !canTileBeDragged && letter !== null ? 'tile-locked' : '';
 
+  // Funkcia, ktorá sa zavolá pri pravom kliknutí na písmeno
+  const handleLetterRightClick = (letterData, source) => {
+    // Kontrolujeme, či je to písmeno, ktoré bolo položené v tomto ťahu
+    // a či je to môj ťah
+    if (canTileBeDragged) { // canTileBeDragged už zahŕňa kontrolu novopoloženého písmena a aktuálneho ťahu
+      // Zavoláme moveLetter, aby sa písmeno presunulo z dosky na rack
+      moveLetter(letterData, source, { type: 'rack', playerIndex: myPlayerIndex });
+    } else {
+      console.log("Písmeno nie je novopoložené alebo nie je tvoj ťah, nedá sa vrátiť.");
+    }
+  };
 
   return (
     <div
@@ -84,6 +94,7 @@ function Tile({ x, y, letter, moveLetter, boardAtStartOfTurn, myPlayerIndex, cur
           source={{ type: 'board', x, y }}
           isDraggable={canTileBeDragged} // Posielame vypočítanú hodnotu
           isVisible={true} // KĽÚČOVÁ ZMENA: Písmená na doske sú VŽDY viditeľné
+          onRightClick={handleLetterRightClick} // Posielame handler na pravé kliknutie
         />
       )}
       {!letter && bonusType && (
