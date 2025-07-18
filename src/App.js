@@ -162,6 +162,7 @@ function App() {
 
   // NOVÁ FUNKCIA: Spracovanie ťuknutia na písmeno
   const handleTapLetter = (letterData, source) => {
+    console.log('handleTapLetter called:', { letterData, source }); // DEBUG LOG
     if (isGameOver || myPlayerIndex === null) {
       console.log("Nemôžeš presúvať písmená (hra skončila alebo nie si pripojený).");
       setSelectedLetter(null); // Zrušíme výber
@@ -194,8 +195,9 @@ function App() {
     // Ak nie je žiadne písmeno vybrané a ťukneme na písmeno na vlastnom stojane, vyberieme ho
     if (source.type === 'rack' && source.playerIndex === myPlayerIndex) {
       setSelectedLetter({ letterData, source });
-    } else if (source.type === 'board' && boardAtStartOfTurn[source.x][source.y] === null && currentPlayerIndex === myPlayerIndex) {
-      // Ak ťukneme na písmeno na doske, ktoré nie je zamknuté a je náš ťah, vyberieme ho
+    } else if (source.type === 'board' && currentPlayerIndex === myPlayerIndex) { // ZMENA: Odstránená kontrola boardAtStartOfTurn
+      // Ak ťukneme na písmeno na doske a je náš ťah, vyberieme ho (aj keď je zamknuté)
+      console.log('Attempting to select board letter:', { letterData, source, isMyTurn: currentPlayerIndex === myPlayerIndex }); // DEBUG LOG
       setSelectedLetter({ letterData, source });
     } else if (source.type === 'exchangeZone' && currentPlayerIndex === myPlayerIndex) {
       // Ak ťukneme na písmeno vo výmennej zóne a je náš ťah, vyberieme ho
@@ -584,6 +586,9 @@ function App() {
               boardAtStartOfTurn={boardAtStartOfTurn}
               myPlayerIndex={myPlayerIndex}
               currentPlayerIndex={currentPlayerIndex}
+              selectedLetter={selectedLetter} // NOVÉ: Posielame vybrané písmeno
+              onTapSlot={handleTapSlot} // NOVÉ: Posielame handler pre ťuknutie na slot
+              onTapLetter={handleTapLetter} // NOVÉ: Posielame handler pre ťuknutie na písmeno
             />
 
             <div className="right-panel-content">
@@ -596,6 +601,9 @@ function App() {
                     playerIndex={0}
                     myPlayerIndex={myPlayerIndex}
                     currentPlayerIndex={currentPlayerIndex}
+                    selectedLetter={selectedLetter} // NOVÉ: Posielame vybrané písmeno
+                    onTapLetter={handleTapLetter} // NOVÉ: Posielame handler pre ťuknutie na písmeno
+                    onTapSlot={handleTapSlot} // NOVÉ: Posielame handler pre ťuknutie na slot
                   />
                 </div>
                 <div className="player-rack-section">
@@ -606,6 +614,9 @@ function App() {
                     playerIndex={1}
                     myPlayerIndex={myPlayerIndex}
                     currentPlayerIndex={currentPlayerIndex}
+                    selectedLetter={selectedLetter} // NOVÉ: Posielame vybrané písmeno
+                    onTapLetter={handleTapLetter} // NOVÉ: Posielame handler pre ťuknutie na písmeno
+                    onTapSlot={handleTapSlot} // NOVÉ: Posielame handler pre ťuknutie na slot
                   />
                 </div>
               </div>
@@ -615,6 +626,9 @@ function App() {
                 moveLetter={moveLetter}
                 myPlayerIndex={myPlayerIndex}
                 currentPlayerIndex={currentPlayerIndex}
+                selectedLetter={selectedLetter} // NOVÉ: Posielame vybrané písmeno
+                onTapLetter={handleTapLetter} // NOVÉ: Posielame handler pre ťuknutie na písmeno
+                onTapSlot={handleTapSlot} // NOVÉ: Posielame handler pre ťuknutie na slot
               />
 
               <div className="game-controls">

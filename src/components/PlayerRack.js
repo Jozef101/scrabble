@@ -3,8 +3,8 @@ import React from 'react';
 import RackSlot from './RackSlot';
 import '../styles/PlayerRack.css';
 
-// Pridávame myPlayerIndex a currentPlayerIndex ako prop
-function PlayerRack({ letters, moveLetter, playerIndex, myPlayerIndex, currentPlayerIndex }) {
+// Pridávame myPlayerIndex, currentPlayerIndex, selectedLetter, onTapLetter, onTapSlot ako prop
+function PlayerRack({ letters, moveLetter, playerIndex, myPlayerIndex, currentPlayerIndex, selectedLetter, onTapLetter, onTapSlot }) {
   // Určíme, či je tento PlayerRack vlastný rack aktuálneho hráča
   const isMyRack = playerIndex === myPlayerIndex;
   const isCurrentPlayerTurnRack = playerIndex === currentPlayerIndex; // Pre vizuálne zvýraznenie racku na ťahu
@@ -21,6 +21,9 @@ function PlayerRack({ letters, moveLetter, playerIndex, myPlayerIndex, currentPl
           isMyRack={isMyRack} // Posielame informáciu, či je to môj rack
           myPlayerIndex={myPlayerIndex} // Posielame aj myPlayerIndex pre logiku dropu v RackSlot
           currentPlayerIndex={currentPlayerIndex} // Posielame aj currentPlayerIndex pre logiku dragu/viditeľnosti v Letter komponente
+          selectedLetter={selectedLetter} // NOVÉ: Posielame vybrané písmeno
+          onTapLetter={onTapLetter} // NOVÉ: Posielame handler pre ťuknutie na písmeno
+          onTapSlot={onTapSlot} // NOVÉ: Posielame handler pre ťuknutie na slot
         />
       ))}
     </div>

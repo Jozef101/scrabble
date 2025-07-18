@@ -4,8 +4,8 @@ import { useDrop } from 'react-dnd';
 import Letter from './Letter';
 import '../styles/RackSlot.css';
 
-// Pridávame isMyRack, myPlayerIndex, currentPlayerIndex ako prop
-function RackSlot({ letter, index, playerIndex, moveLetter, isMyRack, myPlayerIndex, currentPlayerIndex }) {
+// Pridávame isMyRack, myPlayerIndex, currentPlayerIndex, selectedLetter, onTapLetter, onTapSlot ako prop
+function RackSlot({ letter, index, playerIndex, moveLetter, isMyRack, myPlayerIndex, currentPlayerIndex, selectedLetter, onTapLetter, onTapSlot }) {
   const [{ isOver, canDrop }, drop] = useDrop({
     accept: 'LETTER',
     canDrop: (item) => {
@@ -33,16 +33,23 @@ function RackSlot({ letter, index, playerIndex, moveLetter, isMyRack, myPlayerIn
     }),
   });
 
-  // KĽÚČOVÁ ZMENA: Logika pre isDraggable a isVisible
-  // const isCurrentPlayerTurn = (currentPlayerIndex === myPlayerIndex);
-  const shouldBeDraggable = isMyRack; //Iba vlastné písmená
+  // Logika pre isDraggable a isVisible
+  const shouldBeDraggable = isMyRack; // Iba vlastné písmená
   const shouldBeVisible = isMyRack; // Vlastné písmená sú vždy viditeľné, súperove nie
 
   // Triedy pre zvýraznenie drop zóny
   const dropHighlightClass = isOver && canDrop ? 'rack-slot-highlight-can-drop' : (isOver ? 'rack-slot-highlight' : '');
 
+  // NOVÉ: Handler pre ťuknutie na slot
+  const handleSlotClick = () => {
+    if (onTapSlot && letter === null) { // Ak je slot prázdny, voláme onTapSlot
+      onTapSlot({ type: 'rack', index, playerIndex: myPlayerIndex });
+    }
+    // Ak slot obsahuje písmeno, kliknutie sa spracuje v komponente Letter
+  };
+
   return (
-    <div ref={drop} className={`rack-slot ${dropHighlightClass}`}>
+    <div ref={drop} className={`rack-slot ${dropHighlightClass}`} onClick={handleSlotClick}> {/* NOVÉ: onClick handler */}
       {letter ? (
         <Letter
           id={letter.id}
@@ -51,7 +58,9 @@ function RackSlot({ letter, index, playerIndex, moveLetter, isMyRack, myPlayerIn
           assignedLetter={letter.assignedLetter}
           source={{ type: 'rack', index, playerIndex }}
           isDraggable={shouldBeDraggable} // Posielame vypočítanú hodnotu
-          isVisible={shouldBeVisible}   // Posielame vypočítanú hodnotu
+          isVisible={shouldBeVisible}    // Posielame vypočítanú hodnotu
+          selectedLetter={selectedLetter} // NOVÉ: Posielame vybrané písmeno
+          onTapLetter={onTapLetter}     // NOVÉ: Posielame handler pre ťuknutie na písmeno
         />
       ) : (
         // Ak je slot prázdny, zobraz empty-rack-slot. Toto sa zobrazí pre oba racky.

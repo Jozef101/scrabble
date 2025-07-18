@@ -5,11 +5,11 @@ import Letter from './Letter';
 import { getBonusType, BONUS_TYPES } from '../utils/boardUtils';
 import '../styles/Tile.css';
 
-// Tile teraz prijíma aj myPlayerIndex a currentPlayerIndex
-function Tile({ x, y, letter, moveLetter, boardAtStartOfTurn, myPlayerIndex, currentPlayerIndex }) {
+// Tile teraz prijíma aj myPlayerIndex, currentPlayerIndex, selectedLetter, onTapLetter, onTapSlot
+function Tile({ x, y, letter, moveLetter, boardAtStartOfTurn, myPlayerIndex, currentPlayerIndex, selectedLetter, onTapLetter, onTapSlot }) {
   const bonusType = getBonusType(x, y);
 
-  // KĽÚČOVÁ ZMENA: isDraggable logika pre písmená na doske
+  // isDraggable logika pre písmená na doske
   // Písmeno je ťahateľné, len ak:
   // 1. Je aktuálne na ťahu hráč (currentPlayerIndex === myPlayerIndex)
   // 2. A písmeno nebolo na doske na začiatku ťahu (tzn. bolo položené v tomto ťahu)
@@ -80,10 +80,19 @@ function Tile({ x, y, letter, moveLetter, boardAtStartOfTurn, myPlayerIndex, cur
     }
   };
 
+  // NOVÉ: Handler pre ťuknutie na políčko
+  const handleTileClick = () => {
+    if (onTapSlot && letter === null) { // Ak je políčko prázdne, voláme onTapSlot
+      onTapSlot({ type: 'board', x, y });
+    }
+    // Ak políčko obsahuje písmeno, kliknutie sa spracuje v komponente Letter
+  };
+
   return (
     <div
       ref={drop}
       className={`tile ${dropHighlightClass} ${hasLetterClass} ${bonusClass} ${startSquareClass} ${lockedClass}`}
+      onClick={handleTileClick} // NOVÉ: onClick handler
     >
       {letter && (
         <Letter
@@ -93,8 +102,10 @@ function Tile({ x, y, letter, moveLetter, boardAtStartOfTurn, myPlayerIndex, cur
           assignedLetter={letter.assignedLetter}
           source={{ type: 'board', x, y }}
           isDraggable={canTileBeDragged} // Posielame vypočítanú hodnotu
-          isVisible={true} // KĽÚČOVÁ ZMENA: Písmená na doske sú VŽDY viditeľné
+          isVisible={true} // Písmená na doske sú VŽDY viditeľné
           onRightClick={handleLetterRightClick} // Posielame handler na pravé kliknutie
+          selectedLetter={selectedLetter} // NOVÉ: Posielame vybrané písmeno
+          onTapLetter={onTapLetter}     // NOVÉ: Posielame handler pre ťuknutie na písmeno
         />
       )}
       {!letter && bonusType && (

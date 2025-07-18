@@ -71,3 +71,10 @@
   pointer-events: none;
   /* Zabezpečí, že sa naň nedá klikať/ťahať */
 }
+/* NOVÝ ŠTÝL: Pre vybrané písmeno */
+.selected-letter-tile {
+  border: 2px solid #007bff;
+  /* Modrý okraj pre vybrané písmeno */
+  box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
+  /* Jemný tieň */
+}

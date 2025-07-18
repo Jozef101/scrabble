@@ -3,14 +3,14 @@ import React from 'react';
 import { useDrag } from 'react-dnd';
 import '../styles/Letter.css';
 
-// Pridávame nový prop `onRightClick`
-function Letter({ id, letter, value, assignedLetter, source, isDraggable = true, isVisible = true, onRightClick }) {
-    // KLÚČOVÁ ZMENA: Určíme originalRackIndex, ak zdrojom je rack
+// Pridávame nový prop `onRightClick`, `selectedLetter` a `onTapLetter`
+function Letter({ id, letter, value, assignedLetter, source, isDraggable = true, isVisible = true, onRightClick, selectedLetter, onTapLetter }) {
+    // Určíme originalRackIndex, ak zdrojom je rack
     const originalRackIndex = source.type === 'rack' ? source.index : undefined;
 
     const [{ isDragging }, drag] = useDrag({
         type: 'LETTER',
-        // KLÚČOVÁ ZMENA: Pridávame originalRackIndex do item.letterData
+        // Pridávame originalRackIndex do item.letterData
         item: { letterData: { id, letter, value, assignedLetter, originalRackIndex }, source },
         canDrag: isDraggable, // isDraggable stále kontroluje, či sa dá ťahať
         collect: (monitor) => ({
@@ -18,7 +18,7 @@ function Letter({ id, letter, value, assignedLetter, source, isDraggable = true,
         }),
     });
 
-    // KĽÚČOVÁ ZMENA: Ak písmeno nie je viditeľné, renderujeme len skrytý vizuálny zástupca.
+    // Ak písmeno nie je viditeľné, renderujeme len skrytý vizuálny zástupca.
     // Toto sa použije pre súperov rack.
     if (!isVisible) {
         return (
@@ -51,12 +51,23 @@ function Letter({ id, letter, value, assignedLetter, source, isDraggable = true,
         }
     };
 
+    // NOVÉ: Kontrola, či je toto písmeno aktuálne vybrané pre tap-to-move
+    const isSelected = selectedLetter && selectedLetter.letterData.id === id;
+    const selectedClass = isSelected ? 'selected-letter-tile' : '';
+
     return (
         <div
             ref={drag} // ref={drag} sa aplikuje len, ak je isVisible true (tzn. nie je to skrytý kameň)
-            className={`letter-tile ${dragClass} ${jokerClass}`}
+            className={`letter-tile ${dragClass} ${jokerClass} ${selectedClass}`} // Pridávame selectedClass
             style={{ opacity: isDragging ? 0.5 : 1 }}
             onContextMenu={handleContextMenu} // Pridávame event listener pre pravé tlačidlo myši
+            onClick={() => {
+                console.log('Letter clicked:', { id, letter, source }); // DEBUG LOG
+                console.log('onTapLetter prop in Letter.js:', onTapLetter); // NEW DEBUG LOG
+                if (onTapLetter) {
+                    onTapLetter({ id, letter, value, assignedLetter, originalRackIndex }, source);
+                }
+            }} // NOVÉ: Handler pre ťuknutie
         >
             <span className={`main-letter ${jokerAssignedColorClass}`}>{displayLetter}</span>
             <span className="letter-value">{value}</span>

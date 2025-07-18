@@ -4,7 +4,8 @@ import { useDrop } from 'react-dnd';
 import Letter from './Letter';
 import '../styles/ExchangeZone.css';
 
-function ExchangeZone({ lettersInZone, moveLetter, myPlayerIndex, currentPlayerIndex }) { // PRIDANÉ myPlayerIndex, currentPlayerIndex
+// Pridávame selectedLetter, onTapLetter, onTapSlot ako prop
+function ExchangeZone({ lettersInZone, moveLetter, myPlayerIndex, currentPlayerIndex, selectedLetter, onTapLetter, onTapSlot }) {
   const [{ isOver, canDrop: dropAllowed }, drop] = useDrop({ // Premenované canDrop na dropAllowed
     accept: 'LETTER',
     canDrop: (item) => {
@@ -29,8 +30,16 @@ function ExchangeZone({ lettersInZone, moveLetter, myPlayerIndex, currentPlayerI
 
   const highlightClass = isOver && dropAllowed ? 'exchange-zone-highlight' : ''; // Používame dropAllowed
 
+  // NOVÉ: Handler pre ťuknutie na prázdnu zónu výmeny
+  const handleExchangeZoneClick = () => {
+    if (onTapSlot && lettersInZone.length === 0) { // Ak je zóna prázdna, voláme onTapSlot
+      onTapSlot({ type: 'exchangeZone' });
+    }
+    // Ak zóna obsahuje písmená, kliknutie na ne sa spracuje v komponente Letter
+  };
+
   return (
-    <div ref={drop} className={`exchange-zone-container ${highlightClass}`}>
+    <div ref={drop} className={`exchange-zone-container ${highlightClass}`} onClick={handleExchangeZoneClick}> {/* NOVÉ: onClick handler */}
       <h3>Písmená na výmenu:</h3>
       <div className="exchange-zone-slots">
         {lettersInZone.length === 0 ? (
@@ -46,6 +55,8 @@ function ExchangeZone({ lettersInZone, moveLetter, myPlayerIndex, currentPlayerI
               source={{ type: 'exchangeZone' }}
               // Písmená vo výmennej zóne sú draggable len ak je na ťahu aktuálny hráč
               isDraggable={myPlayerIndex !== null && currentPlayerIndex === myPlayerIndex}
+              selectedLetter={selectedLetter} // NOVÉ: Posielame vybrané písmeno
+              onTapLetter={onTapLetter}     // NOVÉ: Posielame handler pre ťuknutie na písmeno
             />
           ))
         )}
