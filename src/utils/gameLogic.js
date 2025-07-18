@@ -255,34 +255,67 @@ export function isConnected(currentPlacedLetters, currentBoard, isFirstTurn, all
  */
 export function getAllWordsInTurn(actualPlacedLetters, currentBoard) {
     const formedWordObjects = [];
-    const addedWordStrings = new Set();
+    // removed: const addedWordStrings = new Set(); // Už nepotrebné, ak počítame duplicitné slová
 
-    const addWordIfNew = (wordLetters) => {
+    const addWordIfValid = (wordLetters) => { // Premenované pre jasnosť
+        // Slovo musí mať aspoň 2 písmená, aby bolo považované za platné Scrabble slovo
         if (wordLetters.length > 1) {
             const wordString = wordLetters.map(l => (l.letterData.letter === '' ? l.letterData.assignedLetter : l.letterData.letter)).join('');
-            if (!addedWordStrings.has(wordString)) {
-                addedWordStrings.add(wordString);
-                formedWordObjects.push({ wordString, letters: wordLetters });
-            }
+            // Nie je potrebné kontrolovať addedWordStrings, pretože chceme započítať všetky vytvorené slová
+            formedWordObjects.push({ wordString, letters: wordLetters });
         }
     };
 
     // Získanie hlavného slova
     const mainWord = getFullWordLetters(actualPlacedLetters, currentBoard);
-    addWordIfNew(mainWord);
+    // Skontrolujeme, či mainWord obsahuje aspoň jedno novo položené písmeno
+    const mainWordContainsNewLetter = mainWord.some(letter => 
+        actualPlacedLetters.some(pLetter => pLetter.x === letter.x && pLetter.y === letter.y)
+    );
+    if (mainWordContainsNewLetter) { // Pridáme hlavné slovo, len ak bolo novovytvorené položeným písmenom
+        addWordIfValid(mainWord);
+    }
+    
 
     // Získanie krížových slov pre každé novo položené písmeno
     actualPlacedLetters.forEach(pLetter => {
         const { x, y } = pLetter;
 
+        // Horizontálne krížové slovo (ak existuje a nie je totožné s hlavným slovom, pokiaľ ide o pozíciu)
         const horizontalCrossWord = getSequenceInDirection(x, y, currentBoard, 0, 1);
-        addWordIfNew(horizontalCrossWord);
+        if (horizontalCrossWord.length > 1) { // Krížové slovo musí mať viac ako 1 písmeno
+            addWordIfValid(horizontalCrossWord);
+        }
 
+        // Vertikálne krížové slovo (ak existuje a nie je totožné s hlavným slovom, pokiaľ ide o pozíciu)
         const verticalCrossWord = getSequenceInDirection(x, y, currentBoard, 1, 0);
-        addWordIfNew(verticalCrossWord);
+        if (verticalCrossWord.length > 1) { // Krížové slovo musí mať viac ako 1 písmeno
+            addWordIfValid(verticalCrossWord);
+        }
     });
 
-    return formedWordObjects;
+    // Filtrujeme potenciálne duplicitné slová, ktoré sú však na rovnakom mieste a v rovnakom smere.
+    // Napr. ak je "EX" horizontálne hlavné slovo, a zároveň sa generuje ako horizontálne krížové slovo z E alebo X.
+    // Aby sme predišli zdvojeniu, budeme porovnávať nielen reťazec, ale aj súradnice všetkých písmen v slove.
+    const uniqueWordObjects = [];
+    const addedWordPositions = new Set(); // Set pre ukladanie unikátnych identifikátorov (napr. "wordString_x1y1_x2y2...")
+
+    formedWordObjects.forEach(wordObj => {
+        // Vytvoríme unikátny identifikátor pre slovo na základe jeho písmen a ich súradníc
+        // Sortovanie zabezpečí, že poradie písmen pri rekonštrukcii stringu je konzistentné
+        const sortedLetters = [...wordObj.letters].sort((a, b) => {
+            if (a.x === b.x) return a.y - b.y;
+            return a.x - b.x;
+        });
+        const identifier = sortedLetters.map(l => `${l.x},${l.y}`).join('_');
+        
+        if (!addedWordPositions.has(identifier)) {
+            addedWordPositions.add(identifier);
+            uniqueWordObjects.push(wordObj);
+        }
+    });
+
+    return uniqueWordObjects;
 }
 
 /**
