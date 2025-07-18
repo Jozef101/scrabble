@@ -145,6 +145,13 @@ export const moveLetter = ({
                 console.log("Nemôžeš umiestniť písmeno na dosku, keď nie je tvoj ťah.");
                 return prevState;
             }
+            // NOVÁ KONTROLA: Ak je cieľové políčko na doske už obsadené, zabránime presunu
+            if (newBoard[target.x][target.y] !== null) {
+                console.log("Cieľové políčko na doske je už obsadené, nemôžeš tam položiť písmeno.");
+                alert("Cieľové políčko na doske je už obsadené!"); // Pridáme aj alert pre používateľa
+                return prevState; // Vrátime pôvodný stav
+            }
+
             // Keď umiestňujeme písmeno na dosku, explicitne uložíme originalRackIndex
             newBoard[target.x][target.y] = { ...letterToMove, originalRackIndex: letterData.originalRackIndex };
             if (letterToMove.letter === '') {
