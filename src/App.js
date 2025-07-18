@@ -154,7 +154,7 @@ function App() {
 
 
   const moveLetter = (letterData, source, target) => {
-    if (isGameOver || myPlayerIndex === null || currentPlayerIndex !== myPlayerIndex) {
+    if (isGameOver || myPlayerIndex === null) {
       console.log("Nemôžeš presúvať písmená (hra skončila, nie si pripojený alebo nie je tvoj ťah).");
       return;
     }
@@ -265,6 +265,10 @@ function App() {
         }
 
       } else if (target.type === 'board') {
+        if(currentPlayerIndex !== myPlayerIndex) {
+          console.log("Nemôžeš umiestniť písmeno na dosku, keď nie je tvoj ťah.");
+          return prevState;
+        }
         // Keď umiestňujeme písmeno na dosku, explicitne uložíme originalRackIndex
         newBoard[target.x][target.y] = { ...letterToMove, originalRackIndex: letterData.originalRackIndex };
         if (letterToMove.letter === '') {

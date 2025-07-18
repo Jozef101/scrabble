@@ -34,8 +34,8 @@ function RackSlot({ letter, index, playerIndex, moveLetter, isMyRack, myPlayerIn
   });
 
   // KĽÚČOVÁ ZMENA: Logika pre isDraggable a isVisible
-  const isCurrentPlayerTurn = (currentPlayerIndex === myPlayerIndex);
-  const shouldBeDraggable = isMyRack && isCurrentPlayerTurn; // Iba vlastné písmená, keď je tvoj ťah
+  // const isCurrentPlayerTurn = (currentPlayerIndex === myPlayerIndex);
+  const shouldBeDraggable = isMyRack; //Iba vlastné písmená
   const shouldBeVisible = isMyRack; // Vlastné písmená sú vždy viditeľné, súperove nie
 
   // Triedy pre zvýraznenie drop zóny
