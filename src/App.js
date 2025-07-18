@@ -192,8 +192,15 @@ function App() {
       while (newPlayerRacks[myPlayerIndex].length < RACK_SIZE) { newPlayerRacks[myPlayerIndex].push(null); }
       while (newPlayerRacks[myPlayerIndex].length > RACK_SIZE) { newPlayerRacks[myPlayerIndex].pop(); }
 
+      // KLÚČOVÁ ZMENA pre optimistickú aktualizáciu:
+      // Okamžite aktualizujeme lokálny stav
+      setGameState(prevState => ({
+        ...prevState,
+        playerRacks: newPlayerRacks,
+      }));
+
       sendPlayerAction(socket, GAME_ID_TO_JOIN, 'updateGameState', {
-        ...gameState,
+        ...gameState, // Posielame pôvodný gameState, ale s upraveným playerRacks
         playerRacks: newPlayerRacks,
       });
       return;
@@ -277,16 +284,19 @@ function App() {
         newExchangeZoneLetters.push(letterToMove);
     }
 
-    // KLÚČOVÁ ZMENA: ODSTRÁNILI SME TÚTO GENERALIZOVANÚ NORMALIZÁCIU RACKU.
-    // Spôsobovala, že sa prázdne sloty vždy presunuli na koniec.
-    // Normalizácia pre presun v rámci racku je už ošetrená v bloku "Rack to Rack".
-    // newPlayerRacks[myPlayerIndex] = newPlayerRacks[myPlayerIndex].filter(l => l !== undefined && l !== null);
-    // while (newPlayerRacks[myPlayerIndex].length < RACK_SIZE) { newPlayerRacks[myPlayerIndex].push(null); }
-    // while (newPlayerRacks[myPlayerIndex].length > RACK_SIZE) { newPlayerRacks[myPlayerIndex].pop(); }
-
+    // KLÚČOVÁ ZMENA pre optimistickú aktualizáciu:
+    // Okamžite aktualizujeme lokálny stav
+    setGameState(prevState => ({
+      ...prevState,
+      playerRacks: newPlayerRacks,
+      board: newBoard,
+      exchangeZoneLetters: newExchangeZoneLetters,
+      hasPlacedOnBoardThisTurn: getPlacedLettersDuringCurrentTurn(newBoard, boardAtStartOfTurn).length > 0,
+      hasMovedToExchangeZoneThisTurn: newExchangeZoneLetters.length > 0,
+    }));
 
     sendPlayerAction(socket, GAME_ID_TO_JOIN, 'updateGameState', {
-      ...gameState,
+      ...gameState, // Posielame pôvodný gameState, ale s upravenými časťami
       playerRacks: newPlayerRacks,
       board: newBoard,
       exchangeZoneLetters: newExchangeZoneLetters,
@@ -743,16 +753,35 @@ function App() {
                 newBoard[x][y] = null; // Odstránime žolíka z dosky
 
                 const currentPlayersRack = [...playerRacks[myPlayerIndex]];
-                const firstEmptyRackSlot = currentPlayersRack.findIndex(l => l === null);
-                if (firstEmptyRackSlot !== -1) {
-                  currentPlayersRack[firstEmptyRackSlot] = { ...jokerLetter, assignedLetter: null }; // Vrátime žolíka späť do racku
+                let targetIndex = -1;
+
+                // Pokúsime sa vrátiť na originalRackIndex
+                if (jokerLetter.originalRackIndex !== undefined && currentPlayersRack[jokerLetter.originalRackIndex] === null) {
+                    targetIndex = jokerLetter.originalRackIndex;
                 } else {
+                    // Inak nájdeme prvý voľný slot
+                    targetIndex = currentPlayersRack.findIndex(l => l === null);
+                }
+
+                if (targetIndex !== -1) {
+                  currentPlayersRack[targetIndex] = { ...jokerLetter, assignedLetter: null }; // Vrátime žolíka späť do racku
+                } else {
+                  // Ak nie je voľný slot (nemalo by sa stať, ak je rack plný, už by sme vrátili skôr)
                   currentPlayersRack.push({ ...jokerLetter, assignedLetter: null });
                 }
 
-                // Kľúčová zmena: Posielame GAME_ID_TO_JOIN aj s akciou
+                // KLÚČOVÁ ZMENA pre optimistickú aktualizáciu:
+                // Okamžite aktualizujeme lokálny stav
+                setGameState(prevState => ({
+                  ...prevState,
+                  board: newBoard,
+                  playerRacks: playerRacks.map((rack, idx) => idx === myPlayerIndex ? currentPlayersRack : rack),
+                  hasPlacedOnBoardThisTurn: getPlacedLettersDuringCurrentTurn(newBoard, boardAtStartOfTurn).length > 0,
+                }));
+
+                // Posielame akciu na server
                 sendPlayerAction(socket, GAME_ID_TO_JOIN, 'updateGameState', {
-                  ...gameState,
+                  ...gameState, // Posielame pôvodný gameState, ale s upravenými časťami
                   board: newBoard,
                   playerRacks: playerRacks.map((rack, idx) => idx === myPlayerIndex ? currentPlayersRack : rack),
                   hasPlacedOnBoardThisTurn: getPlacedLettersDuringCurrentTurn(newBoard, boardAtStartOfTurn).length > 0,
