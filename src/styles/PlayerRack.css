@@ -1,19 +1,41 @@
+/* src/styles/PlayerRack.css */
 .individual-player-rack-container {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  border: 2px solid #555;
-  border-radius: 10px;
-  padding: 10px;
-  background-color: #a0a0a0;
-  min-width: 300px;
-  height: 60px;
-  box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.3);
-  margin-top: 10px;
+    display: flex;
+      flex-direction: row;
+      /* Zabezpečí vodorovné usporiadanie pre desktop */
+      align-items: center;
+        justify-content: center;
+        border: 2px solid #555;
+        border-radius: 10px;
+        padding: 10px;
+        background-color: #a0a0a0;
+        min-width: 300px;
+      /* Pôvodná pevná šírka pre desktop */
+      height: 60px;
+      /* Pôvodná pevná výška pre desktop */
+      box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.3);
+        margin-top: 10px;
+    /* Vlastnosti ako flex-wrap, width, max-width budú definované len v media query pre mobily */
 }
 
 .individual-player-rack-container.current-turn-rack {
-  border: 3px solid #00AA00;
-  box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
+    border: 3px solid #00AA00;
+      box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
+}
+/* Responzívne úpravy pre PlayerRack - APLIKUJÚ SA LEN NA MOBILOCH */
+@media (max-width: 768px) {
+  .individual-player-rack-container {
+    width: 95%;
+    /* Rack zaberie 95% šírky viewportu na mobiloch */
+    height: auto;
+    /* Výška sa prispôsobí obsahu */
+    flex-wrap: wrap;
+    /* Umožní zalomenie slotov na mobiloch */
+    min-width: auto;
+    /* Zruší pevnú minimálnu šírku pre mobily */
+    padding: 5px;
+    /* Menší padding na mobiloch */
+    margin-top: 5px;
+    /* Menší margin na mobiloch */
+  }
 }

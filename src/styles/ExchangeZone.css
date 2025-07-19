@@ -1,3 +1,4 @@
+/* src/styles/ExchangeZone.css */
 .exchange-zone-container {
   border: 2px dashed #999;
   border-radius: 8px;
@@ -38,4 +39,38 @@
   color: #777;
   font-style: italic;
   font-size: 14px;
+}
+/* NOVÉ: Základné štýly pre písmená vo výmennej zóne (pre desktop) */
+.exchange-zone-slots .letter-tile {
+  width: 40px;
+  /* Pevná šírka pre desktop, aby zodpovedala tile/rack slotu */
+  height: 40px;
+  /* Pevná výška pre desktop */
+  aspect-ratio: 1 / 1;
+  /* Zabezpečí štvorcový tvar na desktope */
+  flex-shrink: 0;
+  /* Zabráni zmenšovaniu na desktope */
+  flex-grow: 0;
+  /* Zabráni roztiahnutiu na desktope */
+}
+
+
+/* Responzívne úpravy pre písmená vo výmennej zóne - APLIKUJÚ SA LEN NA MOBILOCH */
+@media (max-width: 768px) {
+  .exchange-zone-slots .letter-tile {
+    height: auto;
+    /* Výška sa prispôsobí vďaka aspect-ratio */
+    aspect-ratio: 1 / 1;
+    /* Zabezpečí, že slot bude vždy štvorcový */
+    flex-grow: 0;
+    flex-shrink: 0;
+    margin: 0 1px;
+    /* Malé medzery ako v racku */
+  }
+
+  /* Ak je potrebné upraviť gap v exchange-zone-slots na mobiloch, môžeme to urobiť tu */
+  .exchange-zone-slots {
+    gap: 2px;
+    /* Zmenšíme medzeru na mobiloch, aby sa zmestilo viac písmen */
+  }
 }

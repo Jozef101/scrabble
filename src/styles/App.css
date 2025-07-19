@@ -1,12 +1,29 @@
 /* src/styles/App.css */
+/* KĽÚČOVÁ ZMENA: Zabezpečíme scrollovanie na úrovni celého dokumentu */
+body,
+html {
+    height: 100%;
+    /* Zabezpečí, že body a html zaberajú celú výšku viewportu */
+    overflow-y: auto;
+    /* Povolenie vertikálneho scrollovania, ak obsah presahuje výšku */
+    overflow-x: hidden;
+    /* Zabráni horizontálnemu scrollovaniu */
+    margin: 0;
+    padding: 0;
+}
 .app-container {
-display: flex;
+    display: flex;
     flex-direction: column;
     align-items: center;
     padding: 20px;
     background-color: #f4f4f4;
-    min-height: 100vh;
-font-family: 'Inter', sans-serif;
+    /* min-height: 100vh; */
+        /* ODSTRÁNENÉ: Necháme výšku, aby sa prispôsobila obsahu */
+        font-family: 'Inter', sans-serif;
+    box-sizing: border-box;
+        /* Zabezpečí, že padding je zahrnutý vo výpočte šírky/výšky */
+        /* NOVÉ: Pridáme min-height: 100% pre flexbox, aby sa rozťahoval, ak je obsah menší ako obrazovka */
+        min-height: 100%;
 }
 
 .game-header {
@@ -19,8 +36,8 @@ font-family: 'Inter', sans-serif;
 }
 
 h1 {
-color: #333;
-margin: 0;
+    color: #333;
+        margin: 0;
 }
 
 .connection-status {
@@ -31,23 +48,23 @@ margin: 0;
 
 .connection-status .connected {
     color: #28a745;
-    /* Zelená */
+        /* Zelená */
 }
 
 .connection-status .disconnected {
     color: #dc3545;
-    /* Červená */
+        /* Červená */
 }
 
 .game-over-message {
-color: #d32f2f;
-font-size: 2em;
+    color: #d32f2f;
+        font-size: 2em;
     margin-bottom: 20px;
     text-align: center;
 }
 
 .scoreboard-container {
-display: flex;
+    display: flex;
     justify-content: space-around;
     width: 100%;
     max-width: 600px;
@@ -55,100 +72,100 @@ display: flex;
     background-color: #fff;
     padding: 15px;
     border-radius: 8px;
-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     flex-wrap: wrap;
         /* Aby sa správa o víťazovi zmestila */
 }
 
 .player-score {
-text-align: center;
+    text-align: center;
     font-size: 1.2em;
     font-weight: bold;
     padding: 5px 10px;
     border-radius: 5px;
-flex: 1;
+    flex: 1;
     margin: 5px;
 }
 
 .active-player {
     /* Trieda pre aktívneho hráča */
     background-color: #e0f2f7;
-border: 1px solid #2196F3;
+    border: 1px solid #2196F3;
 }
 
 .game-area-container {
-display: flex;
+    display: flex;
     flex-direction: column;
-align-items: center;
+    align-items: center;
     gap: 20px;
-width: 100%;
+    width: 100%;
     max-width: 1200px;
 }
 
 @media (min-width: 1024px) {
-.game-area-container {
-    flex-direction: row;
-    justify-content: center;
-    align-items: flex-start;
-}
+    .game-area-container {
+            flex-direction: row;
+            justify-content: center;
+            align-items: flex-start;
+        }
 }
 
 .right-panel-content {
-display: flex;
+    display: flex;
     flex-direction: column;
-gap: 20px;
-align-items: center;
-width: 100%;
-max-width: 400px;
+    gap: 20px;
+        align-items: center;
+        width: 100%;
+        max-width: 400px;
 }
 
 .board-container {
-display: grid;
+    display: grid;
     grid-template-columns: repeat(15, 40px);
-grid-template-rows: repeat(15, 40px);
-border: 5px solid #8B4513;
-box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
+    grid-template-rows: repeat(15, 40px);
+        border: 5px solid #8B4513;
+        box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
     margin-bottom: 20px;
 }
 
 .player-racks-container {
-display: flex;
+    display: flex;
     flex-direction: column;
-gap: 20px;
-align-items: center;
-width: 100%;
-max-width: 400px;
+    gap: 20px;
+        align-items: center;
+        width: 100%;
+        max-width: 400px;
 }
 
 .player-rack-section {
-text-align: center;
+    text-align: center;
     margin: 0;
-padding: 10px;
+    padding: 10px;
     background-color: #e0f2f7;
-border-radius: 8px;
-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     width: 100%;
 }
 
 .player-rack-section h3 {
-margin-top: 0;
+    margin-top: 0;
     color: #2196F3;
 }
 
 .letter-bag-container {
-margin-top: 20px;
-padding: 15px;
+    margin-top: 20px;
+        padding: 15px;
     background-color: #fff;
     border-radius: 8px;
-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     text-align: center;
 }
 
 .exchange-zone-container {
-border: 2px dashed #ccc;
+    border: 2px dashed #ccc;
     padding: 15px;
     margin-top: 0;
-border-radius: 8px;
+    border-radius: 8px;
     background-color: #f9f9f9;
     min-height: 80px;
     display: flex;
@@ -157,17 +174,17 @@ border-radius: 8px;
     justify-content: center;
     gap: 5px;
     width: 100%;
-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .exchange-zone-container p {
-color: #666;
+    color: #666;
     font-style: italic;
 }
 
 .game-controls {
-margin-top: 0;
-display: flex;
+    margin-top: 0;
+        display: flex;
     gap: 15px;
     flex-wrap: wrap;
     justify-content: center;
@@ -175,31 +192,31 @@ display: flex;
 }
 
 .game-controls button {
-padding: 10px 20px;
+    padding: 10px 20px;
     font-size: 1em;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     background-color: #2196F3;
-color: white;
-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    color: white;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
     transition: background-color 0.3s ease, transform 0.1s ease;
 }
 
 .game-controls button:hover {
-background-color: #1976D2;
-transform: translateY(-1px);
+    background-color: #1976D2;
+        transform: translateY(-1px);
 }
 
 .game-controls button:disabled {
-background-color: #cccccc;
+    background-color: #cccccc;
     cursor: not-allowed;
     box-shadow: none;
 }
 
 /* Modálne okno pre výber písmena žolíka */
 .modal-overlay {
-position: fixed;
+    position: fixed;
     top: 0;
     left: 0;
     right: 0;
@@ -212,7 +229,7 @@ position: fixed;
 }
 
 .modal-content {
-background: white;
+    background: white;
     padding: 30px;
     border-radius: 10px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
@@ -221,12 +238,12 @@ background: white;
 }
 
 .modal-content h2 {
-margin-top: 0;
+    margin-top: 0;
     color: #333;
 }
 
 .letter-options {
-display: flex;
+    display: flex;
     flex-wrap: wrap;
     justify-content: center;
     gap: 10px;
@@ -234,7 +251,7 @@ display: flex;
 }
 
 .letter-option-button {
-padding: 10px 15px;
+    padding: 10px 15px;
     font-size: 1.2em;
     border: 1px solid #ccc;
     border-radius: 5px;
@@ -244,14 +261,14 @@ padding: 10px 15px;
 }
 
 .letter-option-button:hover {
-background-color: #e0e0e0;
+    background-color: #e0e0e0;
 }
 
 .modal-close-button {
-margin-top: 20px;
+    margin-top: 20px;
     padding: 8px 15px;
     background-color: #f44336;
-color: white;
+    color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
@@ -338,7 +355,7 @@ color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-transition: background-color 0.2s ease;
+    transition: background-color 0.2s ease;
 }
 
 .chat-input button:hover {

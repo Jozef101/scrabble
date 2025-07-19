@@ -1,13 +1,31 @@
+/* src/styles/Board.css */
 .board {
-  display: grid;
-  grid-template-columns: repeat(15, 40px); /* 15 stĺpcov po 40px */
-  grid-template-rows: repeat(15, 40px);    /* 15 riadkov po 40px */
-  border: 2px solid #555;
-  background-color: #a0a0a0; /* Farba pozadia dosky */
-  width: 600px; /* 15 * 40px = 600px */
-  height: 600px; /* 15 * 40px = 600px */
+    display: grid;
+    /* Dynamicky vytvorí 15 stĺpcov, každý s veľkosťou 1fr (fractional unit). */
+      /* minmax zabezpečí, že stĺpec bude mať minimálnu veľkosť 20px a maximálnu 1fr, */
+      /* čo pomôže pri veľmi malých obrazovkách, aby sa políčka nezmenšili príliš. */
+      grid-template-columns: repeat(15, minmax(20px, 1fr));
+      grid-template-rows: repeat(15, minmax(20px, 1fr));
+      background-color: #a0a0a0;
+      /* Farba pozadia dosky */
+      border: 2px solid #555;
+      box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
+      
+        /* KĽÚČOVÉ ZMENY PRE RESPONZÍVNOSŤ: */
+        width: 95vw;
+        /* Doska zaberie 95% šírky viewportu na mobiloch */
+        max-width: 600px;
+        /* Obmedzenie maximálnej šírky pre väčšie obrazovky (napr. desktop), aby nebola príliš obrovská */
+        aspect-ratio: 1 / 1;
+        /* Udrží dosku štvorcovú bez ohľadu na šírku */
+      
+        box-sizing: border-box;
+        /* Zabezpečí, že padding a border sú súčasťou celkovej šírky/výšky */
+        overflow: hidden;
+        /* Zabezpečí, že nič nepretečie */
 }
 
-.board-row {
-  display: contents; /* Umožňuje priamemu potomkovi (Tile) byť v grid layoutu rodiča */
-}
+/* .board-row už nie je potrebný, keďže .board je teraz CSS Grid kontajner */
+/* .board-row {
+  display: contents;
+} */

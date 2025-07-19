@@ -1,36 +1,59 @@
+/* src/styles/RackSlot.css */
 .rack-slot {
-  width: 40px;
-    /* Šírka pre slot na písmeno */
-    height: 40px;
-    /* Výška pre slot na písmeno */
-    margin: 0 2px;
-    /* Malá medzera medzi slotmi */
-    background-color: #888;
-    /* Farba prázdneho slotu */
+    width: 40px;
+      /* Šírka pre slot na písmeno (predvolené pre desktop) */
+        height: 40px;
+      /* Výška pre slot na písmeno (predvolené pre desktop) */
+        margin: 0 2px;
+        /* Malá medzera medzi slotmi */
+        background-color: #888;
+        /* Farba prázdneho slotu */
     border-radius: 5px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  /* Pridáme transition pre plynulé zvýraznenie */
+    display: flex;
+      justify-content: center;
+      align-items: center;
     transition: border-color 0.3s ease, box-shadow 0.3s ease;
-  }
-  
-  .empty-rack-slot {
+}
+
+.empty-rack-slot {
     width: 100%;
     height: 100%;
     border: 1px dashed #666;
     border-radius: 5px;
-  }
-  
-  /* Triedy pre zvýraznenie jednotlivých slotov */
-  .rack-slot-highlight-can-drop {
+}
+
+/* Triedy pre zvýraznenie jednotlivých slotov */
+.rack-slot-highlight-can-drop {
     border: 2px solid #4CAF50;
-    /* Zelená pre možný drop */
+      /* Zelená pre možný drop */
     box-shadow: 0 0 10px rgba(76, 175, 80, 0.7);
 }
 
 .rack-slot-highlight {
-  border: 2px solid #f44336;
-    /* Červená pre neplatný drop */
+    border: 2px solid #f44336;
+      /* Červená pre neplatný drop */
     box-shadow: 0 0 10px rgba(244, 67, 54, 0.7);
+}
+/* Responzívne úpravy pre RackSlot - APLIKUJÚ SA LEN NA MOBILOCH */
+@media (max-width: 768px) {
+  .rack-slot {
+    /* KĽÚČOVÁ ZMENA: Upravíme výpočet šírky, aby zohľadňoval padding rodiča (.individual-player-rack-container) */
+    /* Rack má 7 slotov. Rodič (.individual-player-rack-container) má na mobiloch padding: 5px; (spolu 10px horizontálne). */
+    /* Medzi 7 slotmi je 6 medzier. Každý slot má margin: 0 1px;, čo znamená 1px naľavo a 1px napravo, teda 2px medzera medzi slotmi. */
+    /* Celková šírka dostupná pre sloty je (95vw - 10px padding - 12px medzery). */
+    width: calc((100% - 10px - 12px) / 7);
+    height: auto;
+    /* Výška sa prispôsobí vďaka aspect-ratio */
+    aspect-ratio: 1 / 1;
+    /* Zabezpečí, že slot bude vždy štvorcový */
+    flex-grow: 0;
+    /* Zrušíme flex-grow, aby sa neprispôsobovali zvyšnému priestoru */
+    flex-shrink: 0;
+    /* Zrušíme flex-shrink, aby sa nezmenšovali pod vypočítanú veľkosť */
+    margin: 0 1px;
+    /* Menšie medzery na mobiloch */
+    max-width: none;
+    /* Odstránime max-width/height, keďže width/height sú už nastavené explicitne */
+    max-height: none;
+  }
 }
