@@ -32,7 +32,7 @@ function ExchangeZone({ lettersInZone, moveLetter, myPlayerIndex, currentPlayerI
 
   // NOVÉ: Handler pre ťuknutie na prázdnu zónu výmeny
   const handleExchangeZoneClick = () => {
-    if (onTapSlot && lettersInZone.length === 0) { // Ak je zóna prázdna, voláme onTapSlot
+    if (onTapSlot) {
       onTapSlot({ type: 'exchangeZone' });
     }
     // Ak zóna obsahuje písmená, kliknutie na ne sa spracuje v komponente Letter
