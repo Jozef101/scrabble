@@ -68,10 +68,10 @@ export const moveLetter = ({
                 newPlayerRacks[myPlayerIndex].splice(toIndex, 0, movedLetter);
             }
 
-            // Normalizácia racku po preusporiadaní
-            newPlayerRacks[myPlayerIndex] = newPlayerRacks[myPlayerIndex].filter(l => l !== undefined && l !== null);
-            while (newPlayerRacks[myPlayerIndex].length < RACK_SIZE) { newPlayerRacks[myPlayerIndex].push(null); }
-            while (newPlayerRacks[myPlayerIndex].length > RACK_SIZE) { newPlayerRacks[myPlayerIndex].pop(); }
+            // ODSTRÁNENÁ NORMALIZÁCIA RACKU:
+            // newPlayerRacks[myPlayerIndex] = newPlayerRacks[myPlayerIndex].filter(l => l !== undefined && l !== null);
+            // while (newPlayerRacks[myPlayerIndex].length < RACK_SIZE) { newPlayerRacks[myPlayerIndex].push(null); }
+            // while (newPlayerRacks[myPlayerIndex].length > RACK_SIZE) { newPlayerRacks[myPlayerIndex].pop(); }
 
             stateToUpdateAndSend = { // Zachytíme stav, ktorý sa odošle
                 ...prevState,
@@ -125,7 +125,7 @@ export const moveLetter = ({
 
             let targetRack = newPlayerRacks[myPlayerIndex];
 
-            // KĽÚČOVÁ ZMENA: Prioritizujeme cieľový slot, na ktorý používateľ ťukol/pretiahol, ak je prázdny.
+            // Prioritizujeme cieľový slot, na ktorý používateľ ťukol/pretiahol, ak je prázdny.
             if (target.index !== undefined && targetRack[target.index] === null) {
                 targetRack[target.index] = letterToMove;
             }
