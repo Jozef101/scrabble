@@ -58,10 +58,12 @@ export const moveLetter = ({
             const fromIndex = source.index;
             const toIndex = target.index;
 
+            // Ak je cieľový slot prázdny, jednoducho presunieme
             if (newPlayerRacks[myPlayerIndex][toIndex] === null) {
                 newPlayerRacks[myPlayerIndex][toIndex] = newPlayerRacks[myPlayerIndex][fromIndex];
                 newPlayerRacks[myPlayerIndex][fromIndex] = null;
             } else {
+                // Ak je cieľový slot obsadený, vykonáme výmenu
                 const [movedLetter] = newPlayerRacks[myPlayerIndex].splice(fromIndex, 1);
                 newPlayerRacks[myPlayerIndex].splice(toIndex, 0, movedLetter);
             }
@@ -121,22 +123,27 @@ export const moveLetter = ({
                 return prevState;
             }
 
-            let targetIndex = -1;
-            // Pokúsime sa vrátiť písmeno na pôvodnú pozíciu v racku
-            // Ak letterToMove.originalRackIndex existuje A slot na tejto pozícii je prázdny
-            if (letterToMove.originalRackIndex !== undefined && newPlayerRacks[myPlayerIndex][letterToMove.originalRackIndex] === null) {
-                targetIndex = letterToMove.originalRackIndex;
-            } else {
-                // Ak pôvodná pozícia nie je k dispozícii alebo nebola zaznamenaná, nájdeme prvý voľný slot
-                targetIndex = newPlayerRacks[myPlayerIndex].findIndex(l => l === null);
-            }
+            let targetRack = newPlayerRacks[myPlayerIndex];
 
-            if (targetIndex !== -1) {
-                newPlayerRacks[myPlayerIndex][targetIndex] = letterToMove;
-            } else {
-                console.warn("Rack je plný, písmeno sa nedá vrátiť (rollback by bol potrebný).");
-                alert("Rack je plný, písmeno sa nedá vrátiť.");
-                return prevState;
+            // KĽÚČOVÁ ZMENA: Prioritizujeme cieľový slot, na ktorý používateľ ťukol/pretiahol, ak je prázdny.
+            if (target.index !== undefined && targetRack[target.index] === null) {
+                targetRack[target.index] = letterToMove;
+            }
+            // Ak cieľový slot nie je prázdny, alebo target.index nie je definovaný,
+            // pokúsime sa vrátiť písmeno na jeho pôvodnú pozíciu (ak je voľná).
+            else if (letterToMove.originalRackIndex !== undefined && targetRack[letterToMove.originalRackIndex] === null) {
+                targetRack[letterToMove.originalRackIndex] = letterToMove;
+            }
+            // Ak ani pôvodná pozícia nie je voľná, nájdeme prvý voľný slot.
+            else {
+                const firstEmptyIndex = targetRack.findIndex(l => l === null);
+                if (firstEmptyIndex !== -1) {
+                    targetRack[firstEmptyIndex] = letterToMove;
+                } else {
+                    console.warn("Rack je plný, písmeno sa nedá vrátiť (rollback by bol potrebný).");
+                    alert("Rack je plný, písmeno sa nedá vrátiť.");
+                    return prevState; // Vrátime pôvodný stav
+                }
             }
 
         } else if (target.type === 'board') {
