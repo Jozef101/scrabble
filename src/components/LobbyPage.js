@@ -1,4 +1,5 @@
 // src/components/LobbyPage.js
+/* global __app_id */
 import React, { useState, useEffect } from 'react';
 import { collection, addDoc, query, orderBy, onSnapshot, doc, updateDoc, arrayUnion, arrayRemove, getDoc } from 'firebase/firestore';
 import '../styles/LobbyPage.css'; // Nový štýlový súbor pre LobbyPage
