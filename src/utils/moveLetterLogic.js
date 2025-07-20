@@ -21,7 +21,7 @@ import { sendPlayerAction } from './socketHandlers'; // Predpokladáme, že send
  * @param {object} target - Objekt popisujúci cieľ presunu (type: 'rack' | 'board' | 'exchangeZone', index | x, y, playerIndex).
  */
 export const moveLetter = ({
-    gameState,
+    gameState, // Používame gameState z closure, ale pre aktuálny stav je lepšie použiť prevState v setGameState
     setGameState,
     myPlayerIndex,
     setJokerTileCoords,
@@ -68,10 +68,8 @@ export const moveLetter = ({
                 newPlayerRacks[myPlayerIndex].splice(toIndex, 0, movedLetter);
             }
 
-            // ODSTRÁNENÁ NORMALIZÁCIA RACKU:
-            // newPlayerRacks[myPlayerIndex] = newPlayerRacks[myPlayerIndex].filter(l => l !== undefined && l !== null);
-            // while (newPlayerRacks[myPlayerIndex].length < RACK_SIZE) { newPlayerRacks[myPlayerIndex].push(null); }
-            // while (newPlayerRacks[myPlayerIndex].length > RACK_SIZE) { newPlayerRacks[myPlayerIndex].pop(); }
+            // Normalizácia racku po preusporiadaní bola odstránená v predchádzajúcom kroku.
+            // Písmená ostávajú na svojich pozíciách.
 
             stateToUpdateAndSend = { // Zachytíme stav, ktorý sa odošle
                 ...prevState,
@@ -181,13 +179,9 @@ export const moveLetter = ({
         return stateToUpdateAndSend; // Vrátime nový stav pre React
     });
 
-    // Odošleme akciu na server iba vtedy, ak bol stav úspešne aktualizovaný (t.j. nebol vrátený pôvodný stav kvôli neplatnému ťahu)
-    // Aplikujeme logiku, že rack-to-rack presuny mimo ťahu sa neposielajú na server.
-    // Ak stateToUpdateAndSend nie je null (t.j. došlo k platnej zmene stavu)
-    // A ak je to ťah aktuálneho hráča, alebo ak ide o rack-to-rack presun, ktorý sa má poslať.
-    // V tejto verzii sa rack-to-rack presuny mimo ťahu NEPOSIELAJÚ na server.
-    // Iba ak je to ťah aktuálneho hráča, posielame update.
-    if (stateToUpdateAndSend && gameState.currentPlayerIndex === myPlayerIndex) {
+    // KĽÚČOVÁ ZMENA: Odošleme akciu na server vždy, keď dôjde k platnej zmene stavu.
+    // Server bude zodpovedný za validáciu, či je ťah povolený pre daného hráča.
+    if (stateToUpdateAndSend) { // Odstránená podmienka currentPlayerIndex === myPlayerIndex
         sendPlayerAction(socket, gameIdToJoin, 'updateGameState', stateToUpdateAndSend);
     }
 };
