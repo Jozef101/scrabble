@@ -226,22 +226,21 @@ function App() {
 
   const assignLetterToJoker = (selectedLetter) => {
     if (jokerTileCoords) {
-      let stateToUpdateAndSend = null;
+      // KĽÚČOVÁ ZMENA: Presúvame sendPlayerAction dovnútra setGameState callbacku
       setGameState(prevState => {
         const newBoard = prevState.board.map(row => [...row]);
         const { x, y } = jokerTileCoords;
         if (newBoard[x][y] && newBoard[x][y].letter === '') {
           newBoard[x][y] = { ...newBoard[x][y], assignedLetter: selectedLetter };
         }
-        stateToUpdateAndSend = {
+        const updatedState = { // Používame const pre stav, ktorý sa vracia
           ...prevState,
           board: newBoard,
         };
-        return stateToUpdateAndSend;
+        sendPlayerAction(socket, GAME_ID_TO_JOIN, 'updateGameState', updatedState); // Voláme sendPlayerAction tu
+        return updatedState; // Vrátime aktualizovaný stav
       });
-      if (stateToUpdateAndSend) {
-        sendPlayerAction(socket, GAME_ID_TO_JOIN, 'updateGameState', stateToUpdateAndSend);
-      }
+      // stateToUpdateAndSend už nie je potrebný mimo setGameState
     }
     setShowLetterSelectionModal(false);
     setJokerTileCoords(null);
@@ -693,7 +692,6 @@ function App() {
             onSelectLetter={assignLetterToJoker}
             onClose={() => {
               if (jokerTileCoords) {
-                let stateToUpdateAndSend = null;
                 setGameState(prevState => {
                   const newBoard = prevState.board.map(row => [...row]);
                   const { x, y } = jokerTileCoords;
@@ -717,17 +715,15 @@ function App() {
                     currentPlayersRack.push({ ...jokerLetter, assignedLetter: null });
                   }
 
-                  stateToUpdateAndSend = {
+                  const updatedState = {
                     ...prevState,
                     board: newBoard,
                     playerRacks: prevState.playerRacks.map((rack, idx) => idx === myPlayerIndex ? currentPlayersRack : rack),
                     hasPlacedOnBoardThisTurn: getPlacedLettersDuringCurrentTurn(newBoard, prevState.boardAtStartOfTurn).length > 0,
                   };
-                  return stateToUpdateAndSend;
+                  sendPlayerAction(socket, GAME_ID_TO_JOIN, 'updateGameState', updatedState); // Voláme sendPlayerAction tu
+                  return updatedState;
                 });
-                if (stateToUpdateAndSend) {
-                  sendPlayerAction(socket, GAME_ID_TO_JOIN, 'updateGameState', stateToUpdateAndSend);
-                }
               }
               setShowLetterSelectionModal(false);
               setJokerTileCoords(null);
