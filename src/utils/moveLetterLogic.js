@@ -35,8 +35,8 @@ export const moveLetter = ({
         return;
     }
 
-    let stateToUpdateAndSend = null; // Bude obsahovať stav na odoslanie, ak je povolené
-
+    // KĽÚČOVÁ ZMENA: stateToUpdateAndSend už nie je definovaný mimo setGameState,
+    // ale je priamo vrátený z neho a následne použitý vo vnútri.
     setGameState(prevState => {
         let newPlayerRacks = prevState.playerRacks.map(rack => [...rack]);
         let newBoard = prevState.board.map(row => [...row]);
@@ -71,11 +71,12 @@ export const moveLetter = ({
             // Normalizácia racku po preusporiadaní bola odstránená v predchádzajúcom kroku.
             // Písmená ostávajú na svojich pozíciách.
 
-            stateToUpdateAndSend = { // Zachytíme stav, ktorý sa odošle
+            const updatedState = { // Zachytíme stav, ktorý sa odošle
                 ...prevState,
                 playerRacks: newPlayerRacks,
             };
-            return stateToUpdateAndSend; // Vrátime nový stav pre React
+            sendPlayerAction(socket, gameIdToJoin, 'updateGameState', updatedState); // KĽÚČOVÁ ZMENA: Voláme sendPlayerAction tu
+            return updatedState; // Vrátime nový stav pre React
         }
 
         let letterToMove = null;
@@ -168,7 +169,7 @@ export const moveLetter = ({
         }
 
         // Vytvoríme kompletný nový stav na základe predchádzajúceho stavu a vykonaných zmien
-        stateToUpdateAndSend = {
+        const updatedState = {
             ...prevState,
             playerRacks: newPlayerRacks,
             board: newBoard,
@@ -176,12 +177,7 @@ export const moveLetter = ({
             hasPlacedOnBoardThisTurn: getPlacedLettersDuringCurrentTurn(newBoard, prevState.boardAtStartOfTurn).length > 0,
             hasMovedToExchangeZoneThisTurn: newExchangeZoneLetters.length > 0,
         };
-        return stateToUpdateAndSend; // Vrátime nový stav pre React
+        sendPlayerAction(socket, gameIdToJoin, 'updateGameState', updatedState); // KĽÚČOVÁ ZMENA: Voláme sendPlayerAction tu
+        return updatedState; // Vrátime nový stav pre React
     });
-
-    // KĽÚČOVÁ ZMENA: Odošleme akciu na server vždy, keď dôjde k platnej zmene stavu.
-    // Server bude zodpovedný za validáciu, či je ťah povolený pre daného hráča.
-    if (stateToUpdateAndSend) { // Odstránená podmienka currentPlayerIndex === myPlayerIndex
-        sendPlayerAction(socket, gameIdToJoin, 'updateGameState', stateToUpdateAndSend);
-    }
 };
