@@ -40,7 +40,7 @@ function RackSlot({ letter, index, playerIndex, moveLetter, isMyRack, myPlayerIn
   // Triedy pre zvýraznenie drop zóny
   const dropHighlightClass = isOver && canDrop ? 'rack-slot-highlight-can-drop' : (isOver ? 'rack-slot-highlight' : '');
 
-  // NOVÉ: Handler pre ťuknutie na slot
+  // Handler pre ťuknutie na slot
   const handleSlotClick = () => {
     if (onTapSlot && letter === null) { // Ak je slot prázdny, voláme onTapSlot
       onTapSlot({ type: 'rack', index, playerIndex: myPlayerIndex });
@@ -48,8 +48,19 @@ function RackSlot({ letter, index, playerIndex, moveLetter, isMyRack, myPlayerIn
     // Ak slot obsahuje písmeno, kliknutie sa spracuje v komponente Letter
   };
 
+  // NOVÉ: Handler pre pravé kliknutie na písmeno v racku
+  const handleLetterRightClick = (letterData, source) => {
+    // Ak je to môj rack a je môj ťah
+    if (isMyRack && currentPlayerIndex === myPlayerIndex) {
+      // Presunieme písmeno do výmennej zóny
+      moveLetter(letterData, source, { type: 'exchangeZone' });
+    } else {
+      console.log("Nemôžeš presunúť písmeno do výmennej zóny (nie je tvoj rack alebo nie je tvoj ťah).");
+    }
+  };
+
   return (
-    <div ref={drop} className={`rack-slot ${dropHighlightClass}`} onClick={handleSlotClick}> {/* NOVÉ: onClick handler */}
+    <div ref={drop} className={`rack-slot ${dropHighlightClass}`} onClick={handleSlotClick}>
       {letter ? (
         <Letter
           id={letter.id}
@@ -61,6 +72,7 @@ function RackSlot({ letter, index, playerIndex, moveLetter, isMyRack, myPlayerIn
           isVisible={shouldBeVisible}    // Posielame vypočítanú hodnotu
           selectedLetter={selectedLetter} // NOVÉ: Posielame vybrané písmeno
           onTapLetter={onTapLetter}     // NOVÉ: Posielame handler pre ťuknutie na písmeno
+          onRightClick={handleLetterRightClick} // <--- PRIDANÉ: Posielame handler na pravé kliknutie
         />
       ) : (
         // Ak je slot prázdny, zobraz empty-rack-slot. Toto sa zobrazí pre oba racky.

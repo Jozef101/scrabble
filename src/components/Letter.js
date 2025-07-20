@@ -61,7 +61,8 @@ function Letter({ id, letter, value, assignedLetter, source, isDraggable = true,
             className={`letter-tile ${dragClass} ${jokerClass} ${selectedClass}`} // Pridávame selectedClass
             style={{ opacity: isDragging ? 0.5 : 1 }}
             onContextMenu={handleContextMenu} // Pridávame event listener pre pravé tlačidlo myši
-            onClick={() => {
+            onClick={(e) => { // KĽÚČOVÁ ZMENA: Pridávame 'e' a e.stopPropagation()
+                e.stopPropagation(); // Zastaví šírenie udalosti kliknutia na rodičovské elementy
                 console.log('Letter clicked:', { id, letter, source }); // DEBUG LOG
                 console.log('onTapLetter prop in Letter.js:', onTapLetter); // NEW DEBUG LOG
                 if (onTapLetter) {
