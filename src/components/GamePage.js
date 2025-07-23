@@ -40,6 +40,9 @@ import { moveLetter as importedMoveLetter } from '../utils/moveLetterLogic';
  * @param {function} props.onGoToLobby - Callback funkcia na návrat do lobby.
  */
 function GamePage({ gameId, userId, onGoToLobby }) {
+  // Debug log pre userId prop na začiatku renderu komponentu
+  console.log('GamePage: userId prop value at render:', userId);
+
   // Stav hry, ktorý bude aktualizovaný zo servera
   const [gameState, setGameState] = useState({
     letterBag: [],
@@ -72,16 +75,58 @@ function GamePage({ gameId, userId, onGoToLobby }) {
 
   const [selectedLetter, setSelectedLetter] = useState(null);
 
-  // Effect pre Socket.IO pripojenie a poslucháčov
+  // Ref na sledovanie, či bola udalosť joinGame už odoslaná pre aktuálnu kombináciu gameId a userId
+  const hasJoinedGameRef = useRef(false);
+
+  // Effect pre inicializáciu Socket.IO pripojenia a nastavenie poslucháčov
   useEffect(() => {
     const newSocket = io(SERVER_URL);
     setSocket(newSocket);
 
-    newSocket.on('connect', () => {
-      console.log(`Pripojený k serveru, posielam joinGame pre ID: ${gameId}`);
-      newSocket.emit('joinGame', gameId);
+    // Poslucháč pre udalosť 'connect'
+    const handleConnect = () => {
+      setConnectionStatus('Pripojený');
+      console.log('GamePage: Socket connected. Now checking userId and gameId to emit joinGame.');
+      // Emitujeme 'joinGame' AŽ KEĎ je socket pripojený A userId je k dispozícii
+      if (userId && gameId && !hasJoinedGameRef.current) {
+        console.log(`GamePage: Emitting joinGame from handleConnect for ID: ${gameId}, User ID: ${userId}`);
+        newSocket.emit('joinGame', { gameId: gameId, userId: userId });
+        hasJoinedGameRef.current = true; // Označíme, že udalosť bola odoslaná
+      } else if (!userId) {
+        console.warn('GamePage: Socket connected, but userId is not available yet. Cannot emit joinGame from handleConnect.');
+      }
+    };
+
+    newSocket.on('connect', handleConnect);
+
+    // Poslucháč pre udalosť 'disconnect'
+    newSocket.on('disconnect', () => {
+      setConnectionStatus('Odpojený');
+      console.log('GamePage: Odpojený od servera Socket.IO.');
+      // Pri odpojení servera alebo hráča resetujeme stav hry
+      setGameState({
+        letterBag: [],
+        playerRacks: Array(2).fill(null).map(() => Array(RACK_SIZE).fill(null)),
+        board: Array(BOARD_SIZE).fill(null).map(() => Array(BOARD_SIZE).fill(null)),
+        boardAtStartOfTurn: Array(BOARD_SIZE).fill(null).map(() => Array(BOARD_SIZE).fill(null)),
+        isFirstTurn: true,
+        playerScores: [0, 0],
+        currentPlayerIndex: 0,
+        exchangeZoneLetters: [],
+        hasPlacedOnBoardThisTurn: false,
+        hasMovedToExchangeZoneThisTurn: false,
+        consecutivePasses: 0,
+        isGameOver: false,
+        isBagEmpty: false,
+        hasInitialGameStateReceived: false, // Resetujeme aj toto
+      });
+      setMyPlayerIndex(null);
+      setChatMessages([]);
+      hasJoinedGameRef.current = false; // Reset pre opätovné pripojenie
     });
 
+    // Nastavenie základných poslucháčov socketu
+    // setupSocketListeners už neposiela 'joinGame' na 'connect'
     setupSocketListeners(
       newSocket,
       setConnectionStatus,
@@ -89,10 +134,11 @@ function GamePage({ gameId, userId, onGoToLobby }) {
       (updatedState) => {
         setGameState(updatedState);
       },
-      setChatMessages,
-      gameId
+      setChatMessages
+      // KLÚČOVÁ ZMENA: Odstránený `gameId` ako posledný argument, už nie je potrebný
     );
 
+    // Poslucháč pre udalosť 'gameReset' zo servera
     newSocket.on('gameReset', (message) => {
       alert(message);
       setGameState({
@@ -109,20 +155,29 @@ function GamePage({ gameId, userId, onGoToLobby }) {
         consecutivePasses: 0,
         isGameOver: false,
         isBagEmpty: false,
-        hasInitialGameStateReceived: false,
+        hasInitialGameStateReceived: false, // Po resete potrebujeme znova inicializovať
       });
       setMyPlayerIndex(null);
+      hasJoinedGameRef.current = false; // Reset pre opätovné pripojenie
+      // Po resete sa automaticky spustí 'connect' event a znova sa pokúsi o joinGame
     });
 
+    // Cleanup funkcia pre odpojenie socketu a odstránenie poslucháčov
     return () => {
+      newSocket.off('connect', handleConnect);
+      newSocket.off('disconnect'); // Odstránime aj poslucháča disconnect
+      newSocket.off('gameReset'); // Odstránime aj poslucháča gameReset
       newSocket.disconnect();
+      hasJoinedGameRef.current = false;
     };
-  }, [gameId]); // Závisí od gameId, takže sa pripojí k správnej hre
+  }, [gameId, userId]); // Závislosti pre tento useEffect sú gameId a userId, aby sa znova spustil, ak sa zmenia
 
+  // Effect pre posúvanie chatu na koniec
   useEffect(() => {
     chatMessagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [chatMessages]);
 
+  // Destrukturujeme stav hry pre jednoduchší prístup
   const {
     letterBag,
     playerRacks,
@@ -140,8 +195,10 @@ function GamePage({ gameId, userId, onGoToLobby }) {
     hasInitialGameStateReceived,
   } = gameState;
 
+  // Podmienka pre renderovanie hernej plochy (až po priradení hráča a prijatí počiatočného stavu)
   const isGameReadyToRender = myPlayerIndex !== null && hasInitialGameStateReceived;
 
+  // Funkcia pre presúvanie písmen
   const moveLetter = importedMoveLetter({
     gameState,
     setGameState,
@@ -152,6 +209,7 @@ function GamePage({ gameId, userId, onGoToLobby }) {
     gameIdToJoin: gameId, // Používame prop gameId
   });
 
+  // Handlery pre ťuknutie na písmeno a slot (pre mobilné zariadenia a alternatívne ovládanie)
   const handleTapLetter = (letterData, source) => {
     console.log('handleTapLetter called:', { letterData, source });
     if (isGameOver || myPlayerIndex === null) {
@@ -202,6 +260,7 @@ function GamePage({ gameId, userId, onGoToLobby }) {
     }
   };
 
+  // Funkcia pre priradenie písmena žolíkovi
   const assignLetterToJoker = (selectedLetter) => {
     if (jokerTileCoords) {
       setGameState(prevState => {
@@ -222,6 +281,7 @@ function GamePage({ gameId, userId, onGoToLobby }) {
     setJokerTileCoords(null);
   };
 
+  // Funkcia pre potvrdenie ťahu
   const confirmTurn = () => {
     if (isGameOver || myPlayerIndex === null || currentPlayerIndex !== myPlayerIndex) {
       alert("Hra skončila, nie si pripojený alebo nie je tvoj ťah!");
@@ -364,7 +424,7 @@ function GamePage({ gameId, userId, onGoToLobby }) {
         boardAtStartOfTurn: newBoardAtStartOfTurn,
         isFirstTurn: false,
         playerScores: finalScores,
-        currentPlayerIndex: currentPlayerIndex,
+        currentPlayerIndex: currentPlayerIndex, // Zostáva rovnaký, hra skončila
         exchangeZoneLetters: [],
         hasPlacedOnBoardThisTurn: false,
         hasMovedToExchangeZoneThisTurn: false,
@@ -384,7 +444,7 @@ function GamePage({ gameId, userId, onGoToLobby }) {
       boardAtStartOfTurn: newBoardAtStartOfTurn,
       isFirstTurn: false,
       playerScores: newScores,
-      currentPlayerIndex: (currentPlayerIndex === 0 ? 1 : 0),
+      currentPlayerIndex: (currentPlayerIndex === 0 ? 1 : 0), // Prepneme hráča
       exchangeZoneLetters: [],
       hasPlacedOnBoardThisTurn: false,
       hasMovedToExchangeZoneThisTurn: false,
@@ -453,15 +513,15 @@ function GamePage({ gameId, userId, onGoToLobby }) {
       ...gameState,
       letterBag: updatedBag,
       playerRacks: playerRacks.map((rack, idx) => idx === currentPlayerIndex ? newRack : rack),
-      board: board,
-      boardAtStartOfTurn: boardAtStartOfTurn,
-      isFirstTurn: isFirstTurn,
-      playerScores: playerScores,
-      currentPlayerIndex: (currentPlayerIndex === 0 ? 1 : 0),
-      exchangeZoneLetters: [],
+      board: board, // Board sa nemení pri výmene písmen
+      boardAtStartOfTurn: boardAtStartOfTurn, // Rovnako ani boardAtStartOfTurn
+      isFirstTurn: isFirstTurn, // Nezmenené
+      playerScores: playerScores, // Skóre sa pri výmene nemení
+      currentPlayerIndex: (currentPlayerIndex === 0 ? 1 : 0), // Prepneme hráča
+      exchangeZoneLetters: [], // Vyprázdnime výmennú zónu
       hasPlacedOnBoardThisTurn: false,
       hasMovedToExchangeZoneThisTurn: false,
-      consecutivePasses: 0,
+      consecutivePasses: 0, // Resetujeme passy
       isGameOver: false,
       isBagEmpty: currentBagEmpty,
     });
@@ -494,11 +554,11 @@ function GamePage({ gameId, userId, onGoToLobby }) {
 
     sendPlayerAction(socket, gameId, 'updateGameState', { // Používame prop gameId
       ...gameState,
-      currentPlayerIndex: (currentPlayerIndex === 0 ? 1 : 0),
+      currentPlayerIndex: (currentPlayerIndex === 0 ? 1 : 0), // Prepneme hráča
       hasPlacedOnBoardThisTurn: false,
       hasMovedToExchangeZoneThisTurn: false,
       consecutivePasses: newConsecutivePasses,
-      isGameOver: (newConsecutivePasses >= 4),
+      isGameOver: (newConsecutivePasses >= 4), // Hra končí po 4 po sebe idúcich pasoch
     });
 
     if (newConsecutivePasses >= 4) {
@@ -539,8 +599,8 @@ function GamePage({ gameId, userId, onGoToLobby }) {
               myPlayerIndex={myPlayerIndex}
               currentPlayerIndex={currentPlayerIndex}
               selectedLetter={selectedLetter}
-              onTapSlot={handleTapSlot}
               onTapLetter={handleTapLetter}
+              onTapSlot={handleTapSlot}
             />
 
             <div className="right-panel-content">

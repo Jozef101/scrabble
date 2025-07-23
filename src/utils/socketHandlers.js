@@ -1,12 +1,13 @@
 // src/utils/socketHandlers.js
+import { BOARD_SIZE, RACK_SIZE } from './constants'; // Importujeme konštanty
 
 // Funkcia na nastavenie Socket.IO poslucháčov
-export const setupSocketListeners = (socket, setConnectionStatus, setMyPlayerIndex, setGameState, setChatMessages, GAME_ID_TO_JOIN) => {
+export const setupSocketListeners = (socket, setConnectionStatus, setMyPlayerIndex, setGameState, setChatMessages) => {
     socket.on('connect', () => {
         setConnectionStatus('Pripojený');
         console.log('Pripojený k serveru Socket.IO.');
-        // Po pripojení sa pokúsime pripojiť k SPECIFICKEJ hre pomocou ID
-        socket.emit('joinGame', GAME_ID_TO_JOIN); 
+        // KLÚČOVÁ ZMENA: Odstránené volanie socket.emit('joinGame') odtiaľto.
+        // Túto zodpovednosť teraz preberá GamePage.js, aby sa zabezpečilo, že userId je vždy prítomné.
     });
 
     socket.on('disconnect', () => {
@@ -15,9 +16,9 @@ export const setupSocketListeners = (socket, setConnectionStatus, setMyPlayerInd
         // Pri odpojení servera alebo hráča resetujeme stav hry
         setGameState({
             letterBag: [],
-            playerRacks: Array(7).fill(null).map(() => Array(7).fill(null)), // Používame RACK_SIZE z constants, ak je to možné
-            board: Array(15).fill(null).map(() => Array(15).fill(null)), // Používame BOARD_SIZE z constants, ak je to možné
-            boardAtStartOfTurn: Array(15).fill(null).map(() => Array(15).fill(null)),
+            playerRacks: Array(2).fill(null).map(() => Array(RACK_SIZE).fill(null)), // Používame RACK_SIZE
+            board: Array(BOARD_SIZE).fill(null).map(() => Array(BOARD_SIZE).fill(null)), // Používame BOARD_SIZE
+            boardAtStartOfTurn: Array(BOARD_SIZE).fill(null).map(() => Array(BOARD_SIZE).fill(null)),
             isFirstTurn: true,
             playerScores: [0, 0],
             currentPlayerIndex: 0,
@@ -40,7 +41,12 @@ export const setupSocketListeners = (socket, setConnectionStatus, setMyPlayerInd
     });
 
     socket.on('gameStateUpdate', (serverGameState) => {
-        console.log('Prijatá aktualizácia stavu hry:', serverGameState);
+        console.log('Prijatá aktualizácia stavu hry (RAW):', serverGameState);
+        // KĽÚČOVÁ ZMENA: Pridávame kontrolu pre serverGameState pred aktualizáciou stavu
+        if (!serverGameState || typeof serverGameState !== 'object') {
+            console.warn("Prijatý neplatný (undefined, null alebo nie objekt) stav hry zo servera cez Socket.IO. Preskakujem aktualizáciu v socketHandlers.");
+            return; // Preskočíme aktualizáciu, ak je stav neplatný
+        }
         setGameState(prevState => ({
             ...prevState,
             ...serverGameState,
@@ -51,8 +57,6 @@ export const setupSocketListeners = (socket, setConnectionStatus, setMyPlayerInd
     socket.on('gameError', (message) => {
         alert(`Chyba hry: ${message}`);
         console.error('Chyba hry:', message);
-        // Pri chybe by sme mohli chcieť resetovať stav alebo zobraziť špecifickú správu.
-        // Ponechávam tvoju pôvodnú logiku, ktorá nastaví hasInitialGameStateReceived na false.
         setGameState(prevState => ({ ...prevState, hasInitialGameStateReceived: false }));
     });
 
@@ -64,9 +68,9 @@ export const setupSocketListeners = (socket, setConnectionStatus, setMyPlayerInd
         setGameState(prevState => ({
             ...prevState,
             letterBag: [],
-            playerRacks: Array(7).fill(null).map(() => Array(7).fill(null)),
-            board: Array(15).fill(null).map(() => Array(15).fill(null)),
-            boardAtStartOfTurn: Array(15).fill(null).map(() => Array(15).fill(null)),
+            playerRacks: Array(2).fill(null).map(() => Array(RACK_SIZE).fill(null)),
+            board: Array(BOARD_SIZE).fill(null).map(() => Array(BOARD_SIZE).fill(null)),
+            boardAtStartOfTurn: Array(BOARD_SIZE).fill(null).map(() => Array(BOARD_SIZE).fill(null)),
             playerScores: [0, 0],
             exchangeZoneLetters: [],
             hasPlacedOnBoardThisTurn: false,
@@ -85,9 +89,9 @@ export const setupSocketListeners = (socket, setConnectionStatus, setMyPlayerInd
         // Resetujeme stav klienta na počiatočný
         setGameState({
             letterBag: [],
-            playerRacks: Array(7).fill(null).map(() => Array(7).fill(null)),
-            board: Array(15).fill(null).map(() => Array(15).fill(null)),
-            boardAtStartOfTurn: Array(15).fill(null).map(() => Array(15).fill(null)),
+            playerRacks: Array(2).fill(null).map(() => Array(RACK_SIZE).fill(null)),
+            board: Array(BOARD_SIZE).fill(null).map(() => Array(BOARD_SIZE).fill(null)),
+            boardAtStartOfTurn: Array(BOARD_SIZE).fill(null).map(() => Array(BOARD_SIZE).fill(null)),
             isFirstTurn: true,
             playerScores: [0, 0],
             currentPlayerIndex: 0,
@@ -101,8 +105,8 @@ export const setupSocketListeners = (socket, setConnectionStatus, setMyPlayerInd
         });
         setMyPlayerIndex(null);
         setChatMessages([]);
-        // Znovu sa pokúsime pripojiť k hre po resete s pôvodným gameId
-        socket.emit('joinGame', GAME_ID_TO_JOIN); 
+        // KLÚČOVÁ ZMENA: Odstránené volanie socket.emit('joinGame') odtiaľto.
+        // Túto zodpovednosť teraz preberá GamePage.js, aby sa zabezpečilo, že userId je vždy prítomné.
     });
 
     socket.on('receiveChatMessage', (message) => {
@@ -116,13 +120,13 @@ export const setupSocketListeners = (socket, setConnectionStatus, setMyPlayerInd
 
 // Funkcia na odosielanie chatových správ
 export const sendChatMessage = (socket, gameId, message) => {
-    if (socket && socket.connected && message.trim() !== '') { // Pridal som kontrolu socket.socket.connected
+    if (socket && socket.connected && message.trim() !== '') {
         console.log(`Odosielam chat správu pre hru ${gameId}: ${message}`);
         // KĽÚČOVÁ ZMENA: Posielame 'playerAction' event, aby server správne reagoval
-        socket.emit('playerAction', { 
-            gameId: gameId, 
+        socket.emit('playerAction', {
+            gameId: gameId,
             type: 'chatMessage', // Typ akcie je 'chatMessage'
-            payload: message     // Obsah správy je v payload
+            payload: message    // Obsah správy je v payload
         });
     } else {
         console.warn('Socket nie je pripojený alebo správa je prázdna, správu nemožno odoslať.');
@@ -132,6 +136,10 @@ export const sendChatMessage = (socket, gameId, message) => {
 // Funkcia na odosielanie akcií hráča
 // Teraz prijíma gameId
 export const sendPlayerAction = (socket, gameId, actionType, payload) => {
-    // Posielame gameId spolu s typom akcie a dátami
-    socket.emit('playerAction', { gameId, type: actionType, payload });
+    if (socket && socket.connected) {
+        // Posielame gameId spolu s typom akcie a dátami
+        socket.emit('playerAction', { gameId, type: actionType, payload });
+    } else {
+        console.warn('Socket nie je pripojený, akcia nemôže byť odoslaná.');
+    }
 };

@@ -1,6 +1,7 @@
 // src/components/AuthPage.js
 import React from 'react';
 import { getAuth, signInAnonymously } from 'firebase/auth';
+import '../styles/AuthPage.css'; // Importuj štýly pre AuthPage
 
 /**
  * Komponent pre autentifikáciu používateľa.

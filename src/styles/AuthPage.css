@@ -1,0 +1,144 @@
+/* src/styles/AuthPage.css */
+
+.auth-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh; /* Zabezpečí, že zaberie celú výšku viewportu */
+    background-color: #f0f2f5; /* Svetlé pozadie */
+    font-family: 'Inter', sans-serif;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.auth-container h2 {
+    color: #333;
+    margin-bottom: 30px;
+    font-size: 2.2em;
+    text-align: center;
+}
+
+.auth-form {
+    background-color: #ffffff;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+    max-width: 400px; /* Obmedzenie šírky formulára */
+    box-sizing: border-box;
+}
+
+.auth-input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1em;
+    box-sizing: border-box;
+}
+
+.auth-input:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+}
+
+.auth-button {
+    width: 100%;
+    padding: 12px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1.1em;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.auth-button:hover {
+    background-color: #0056b3;
+    transform: translateY(-1px);
+}
+
+.auth-button:active {
+    transform: translateY(0);
+}
+
+.auth-separator {
+    text-align: center;
+    margin: 15px 0;
+    color: #888;
+    font-size: 0.9em;
+    position: relative;
+}
+
+.auth-separator::before,
+.auth-separator::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 40%;
+    height: 1px;
+    background-color: #eee;
+}
+
+.auth-separator::before {
+    left: 0;
+}
+
+.auth-separator::after {
+    right: 0;
+}
+
+.google-button {
+    background-color: #db4437; /* Google červená */
+}
+
+.google-button:hover {
+    background-color: #c0392b;
+}
+
+.auth-toggle {
+    margin-top: 20px;
+    font-size: 0.9em;
+    color: #555;
+}
+
+.toggle-link {
+    color: #007bff;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.toggle-link:hover {
+    color: #0056b3;
+}
+
+.error-message {
+    color: #dc3545; /* Červená pre chyby */
+    margin-bottom: 15px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.success-message {
+    color: #28a745; /* Zelená pre úspech */
+    margin-bottom: 15px;
+    text-align: center;
+    font-weight: bold;
+}
+
+/* Responzívne úpravy */
+@media (max-width: 600px) {
+    .auth-form {
+        padding: 25px;
+    }
+    .auth-container h2 {
+        font-size: 1.8em;
+    }
+}
