@@ -1,51 +1,39 @@
 // src/components/GamePage.js
-/* global __app_id */ // Pridané pre ESLint
 import React, { useState, useEffect, useRef } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import io from 'socket.io-client';
 
-import Board from './Board';
-import PlayerRack from './PlayerRack';
-import LetterBag from './LetterBag';
-import Scoreboard from './Scoreboard';
-import ExchangeZone from './ExchangeZone';
-import LetterSelectionModal from './LetterSelectionModal';
-
+// Importy pre hernú logiku
+import { BOARD_SIZE, RACK_SIZE, SERVER_URL } from '../utils/constants';
+import { setupSocketListeners, sendPlayerAction, sendChatMessage } from '../utils/socketHandlers';
 import {
-  drawLetters, // Still used for client-side validation logic, but server will execute
-  getPlacedLettersDuringCurrentTurn, // Still used for client-side validation
-  isStraightLine, // Still used for client-side validation
-  getFullWordLetters, // Still used for client-side validation
-  areLettersContiguous, // Still used for client-side validation
-  isConnected, // Still used for client-side validation
-  getAllWordsInTurn, // Still used for client-side validation
-  calculateWordScore, // Still used for client-side validation
-  calculateFinalScores, // Still used for client-side validation
+  createLetterBag, // Importujeme, ak sa niekedy bude inicializovať na klientovi
+  drawLetters,
+  getPlacedLettersDuringCurrentTurn,
+  isStraightLine,
+  getAllWordsInTurn,
+  areLettersContiguous,
+  isConnected,
+  calculateWordScore,
+  calculateFinalScores,
+  getFullWordLetters, // KĽÚČOVÁ ZMENA: Importujeme getFullWordLetters
 } from '../utils/gameLogic';
-import { setupSocketListeners, sendChatMessage, sendPlayerAction } from '../utils/socketHandlers';
-import { SERVER_URL, BOARD_SIZE, RACK_SIZE } from '../utils/constants';
+import slovakWordsArray from '../data/slovakWords.json'; // UISTITE SA, ŽE TENTO SÚBOR EXISTUJE V src/utils/
 
-import slovakWordsArray from '../data/slovakWords.json';
-import '../styles/App.css'; // Používame App.css pre základné štýly
-import '../styles/GamePage.css'; // Nový súbor pre špecifické štýly GamePage
+// Import komponentov UI
+import Board from '../components/Board';
+import PlayerRack from '../components/PlayerRack';
+import Scoreboard from '../components/Scoreboard';
+import LetterBag from '../components/LetterBag';
+import ExchangeZone from '../components/ExchangeZone';
+import LetterSelectionModal from '../components/LetterSelectionModal';
 
+// Import funkcie pre presúvanie písmen
 import { moveLetter as importedMoveLetter } from '../utils/moveLetterLogic';
 
-// ====================================================================
-// KLÚČOVÁ ZMENA: Definovanie appId s fallback hodnotou pre lokálny vývoj
-// ====================================================================
-const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+import '../styles/GamePage.css'; // Štýly pre GamePage
 
-/**
- * Komponent, ktorý obsahuje celú logiku a UI hry Scrabble.
- *
- * @param {object} props - Vlastnosti komponentu.
- * @param {string} props.gameId - ID hry, ku ktorej sa pripájame.
- * @param {string} props.userId - ID aktuálneho používateľa z Firebase.
- * @param {function} props.onGoToLobby - Callback funkcia na návrat do lobby.
- * @param {object} props.db - Inštancia Firestore databázy. (Už sa nepoužíva priamo na načítanie stavu hry)
- */
 function GamePage({ gameId, userId, onGoToLobby, db }) { // Ponechávame db prop, ak by sa v budúcnosti použila
   // Debug log pre userId prop na začiatku renderu komponentu
   console.log('GamePage: userId prop value at render:', userId);
@@ -392,7 +380,7 @@ function GamePage({ gameId, userId, onGoToLobby, db }) { // Ponechávame db prop
 
     const invalidWords = allFormedWords.filter(wordObj => {
       const wordString = wordObj.wordString.toUpperCase();
-      if (wordString.length > 5) {
+      if (wordString.length > 5) { // Skontrolujeme len krátke slová (do 5 písmen)
         return false;
       }
       return !validWordsSet.current.has(wordString);
@@ -586,20 +574,26 @@ function GamePage({ gameId, userId, onGoToLobby, db }) { // Ponechávame db prop
 
     const newConsecutivePasses = consecutivePasses + 1;
 
+    let updatedPlayerScores = [...playerScores];
+    let isGameOverCondition = (newConsecutivePasses >= 4);
+
+    if (isGameOverCondition) {
+      updatedPlayerScores = calculateFinalScores(null, [], playerScores, playerRacks);
+      alert("Hra skončila! Obaja hráči pasovali dvakrát po sebe. Konečné skóre bolo upravené o zostávajúce písmená.");
+      console.log("DEBUG: Final Scores after consecutive passes:", updatedPlayerScores);
+    } else {
+      alert("Ťah bol prenesený na ďalšieho hráča.");
+    }
+
     sendPlayerAction(socket, gameId, 'updateGameState', { // Používame prop gameId
       ...gameState,
+      playerScores: updatedPlayerScores, // Použijeme aktualizované skóre
       currentPlayerIndex: (currentPlayerIndex === 0 ? 1 : 0), // Prepneme hráča
       hasPlacedOnBoardThisTurn: false,
       hasMovedToExchangeZoneThisTurn: false,
       consecutivePasses: newConsecutivePasses,
-      isGameOver: (newConsecutivePasses >= 4), // Hra končí po 4 po sebe idúcich pasoch
+      isGameOver: isGameOverCondition,
     });
-
-    if (newConsecutivePasses >= 4) {
-      alert("Hra skončila! Obaja hráči pasovali dvakrát po sebe.");
-    } else {
-      alert("Ťah bol prenesený na ďalšieho hráča.");
-    }
   };
 
   const handleSendChatMessage = () => {
@@ -786,5 +780,4 @@ function GamePage({ gameId, userId, onGoToLobby, db }) { // Ponechávame db prop
     </DndProvider>
   );
 }
-
 export default GamePage;

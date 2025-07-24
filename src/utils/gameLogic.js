@@ -370,27 +370,21 @@ export function getRackPoints(rack) {
 /**
  * Vypočíta konečné skóre na konci hry.
  * @param {number} endingPlayerIndex Index hráča, ktorý ukončil hru.
- * @param {Array<Object|null>} finalRackLetters Rack hráča, ktorý ukončil hru.
+ * @param {Array<Object|null>} finalRackLetters Rack hráča, ktorý ukončil hru (mal by byť prázdny, ak ukončil hru).
  * @param {Array<number>} playerScores Aktuálne skóre hráčov.
  * @param {Array<Array<Object|null>>} playerRacks Racky všetkých hráčov.
  * @returns {Array<number>} Konečné skóre hráčov.
  */
 export function calculateFinalScores(endingPlayerIndex, finalRackLetters, playerScores, playerRacks) {
     let finalScores = [...playerScores];
-    let totalOpponentRackPoints = 0;
+    console.log('Konečné skóre pred úpravou: ', finalRackLetters);
+    console.log('Konečné skóre pred úpravou: ', playerRacks);
+    // Removed: let totalOpponentRackPoints = 0; // Túto premennú už nepotrebujeme
 
     for (let i = 0; i < playerScores.length; i++) {
         const rack = (i === endingPlayerIndex) ? finalRackLetters : playerRacks[i];
-        const pointsOnRack = getRackPoints(rack);
+        const pointsOnRack = getRackPoints(rack);        
         finalScores[i] -= pointsOnRack;
-
-        if (i !== endingPlayerIndex) {
-            totalOpponentRackPoints += pointsOnRack;
-        }
-    }
-
-    if (endingPlayerIndex !== null) {
-        finalScores[endingPlayerIndex] += totalOpponentRackPoints;
     }
     return finalScores;
 }
