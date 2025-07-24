@@ -1,4 +1,5 @@
 // src/components/GamePage.js
+/* global __app_id */ // Pridané pre ESLint
 import React, { useState, useEffect, useRef } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
@@ -12,15 +13,15 @@ import ExchangeZone from './ExchangeZone';
 import LetterSelectionModal from './LetterSelectionModal';
 
 import {
-  drawLetters,
-  getPlacedLettersDuringCurrentTurn,
-  isStraightLine,
-  getFullWordLetters,
-  areLettersContiguous,
-  isConnected,
-  getAllWordsInTurn,
-  calculateWordScore,
-  calculateFinalScores,
+  drawLetters, // Still used for client-side validation logic, but server will execute
+  getPlacedLettersDuringCurrentTurn, // Still used for client-side validation
+  isStraightLine, // Still used for client-side validation
+  getFullWordLetters, // Still used for client-side validation
+  areLettersContiguous, // Still used for client-side validation
+  isConnected, // Still used for client-side validation
+  getAllWordsInTurn, // Still used for client-side validation
+  calculateWordScore, // Still used for client-side validation
+  calculateFinalScores, // Still used for client-side validation
 } from '../utils/gameLogic';
 import { setupSocketListeners, sendChatMessage, sendPlayerAction } from '../utils/socketHandlers';
 import { SERVER_URL, BOARD_SIZE, RACK_SIZE } from '../utils/constants';
@@ -31,6 +32,11 @@ import '../styles/GamePage.css'; // Nový súbor pre špecifické štýly GamePa
 
 import { moveLetter as importedMoveLetter } from '../utils/moveLetterLogic';
 
+// ====================================================================
+// KLÚČOVÁ ZMENA: Definovanie appId s fallback hodnotou pre lokálny vývoj
+// ====================================================================
+const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+
 /**
  * Komponent, ktorý obsahuje celú logiku a UI hry Scrabble.
  *
@@ -38,8 +44,9 @@ import { moveLetter as importedMoveLetter } from '../utils/moveLetterLogic';
  * @param {string} props.gameId - ID hry, ku ktorej sa pripájame.
  * @param {string} props.userId - ID aktuálneho používateľa z Firebase.
  * @param {function} props.onGoToLobby - Callback funkcia na návrat do lobby.
+ * @param {object} props.db - Inštancia Firestore databázy. (Už sa nepoužíva priamo na načítanie stavu hry)
  */
-function GamePage({ gameId, userId, onGoToLobby }) {
+function GamePage({ gameId, userId, onGoToLobby, db }) { // Ponechávame db prop, ak by sa v budúcnosti použila
   // Debug log pre userId prop na začiatku renderu komponentu
   console.log('GamePage: userId prop value at render:', userId);
 
@@ -58,7 +65,7 @@ function GamePage({ gameId, userId, onGoToLobby }) {
     consecutivePasses: 0,
     isGameOver: false,
     isBagEmpty: false,
-    hasInitialGameStateReceived: false,
+    hasInitialGameStateReceived: false, // Predvolene false, kým sa nenačíta/inicializuje
   });
 
   const [showLetterSelectionModal, setShowLetterSelectionModal] = useState(false);
@@ -74,6 +81,9 @@ function GamePage({ gameId, userId, onGoToLobby }) {
   const validWordsSet = useRef(new Set(slovakWordsArray.map(word => word.toUpperCase())));
 
   const [selectedLetter, setSelectedLetter] = useState(null);
+
+  // NOVÉ: Stav pre zobrazenie prekryvnej vrstvy "Čaká sa na druhého hráča"
+  const [waitingForSecondPlayer, setWaitingForSecondPlayer] = useState(true);
 
   // Ref na sledovanie, či bola udalosť joinGame už odoslaná pre aktuálnu kombináciu gameId a userId
   const hasJoinedGameRef = useRef(false);
@@ -123,19 +133,17 @@ function GamePage({ gameId, userId, onGoToLobby }) {
       setMyPlayerIndex(null);
       setChatMessages([]);
       hasJoinedGameRef.current = false; // Reset pre opätovné pripojenie
+      setWaitingForSecondPlayer(true); // NOVÉ: Reset na true pri odpojení
     });
 
     // Nastavenie základných poslucháčov socketu
-    // setupSocketListeners už neposiela 'joinGame' na 'connect'
     setupSocketListeners(
       newSocket,
       setConnectionStatus,
       setMyPlayerIndex,
-      (updatedState) => {
-        setGameState(updatedState);
-      },
-      setChatMessages
-      // KLÚČOVÁ ZMENA: Odstránený `gameId` ako posledný argument, už nie je potrebný
+      setGameState, // Priamo odovzdávame setGameState
+      setChatMessages,
+      setWaitingForSecondPlayer // NOVÉ: Pass the setter for waiting state
     );
 
     // Poslucháč pre udalosť 'gameReset' zo servera
@@ -159,7 +167,7 @@ function GamePage({ gameId, userId, onGoToLobby }) {
       });
       setMyPlayerIndex(null);
       hasJoinedGameRef.current = false; // Reset pre opätovné pripojenie
-      // Po resete sa automaticky spustí 'connect' event a znova sa pokúsi o joinGame
+      setWaitingForSecondPlayer(true); // NOVÉ: Reset na true pri resete hry
     });
 
     // Cleanup funkcia pre odpojenie socketu a odstránenie poslucháčov
@@ -167,6 +175,9 @@ function GamePage({ gameId, userId, onGoToLobby }) {
       newSocket.off('connect', handleConnect);
       newSocket.off('disconnect'); // Odstránime aj poslucháča disconnect
       newSocket.off('gameReset'); // Odstránime aj poslucháča gameReset
+      // NOVÉ: Odstránime aj poslucháčov pre waitingForPlayers a gameStarted
+      newSocket.off('waitingForPlayers');
+      newSocket.off('gameStarted');
       newSocket.disconnect();
       hasJoinedGameRef.current = false;
     };
@@ -195,8 +206,11 @@ function GamePage({ gameId, userId, onGoToLobby }) {
     hasInitialGameStateReceived,
   } = gameState;
 
-  // Podmienka pre renderovanie hernej plochy (až po priradení hráča a prijatí počiatočného stavu)
-  const isGameReadyToRender = myPlayerIndex !== null && hasInitialGameStateReceived;
+  // KĽÚČOVÁ ZMENA: Podmienka pre renderovanie hernej plochy (až po priradení hráča)
+  // hasInitialGameStateReceived už nie je súčasťou tejto podmienky, ale je aktualizovaný
+  // v gameStateUpdate, aby sa zabezpečila správna logika hry.
+  const isGameReadyToRender = myPlayerIndex !== null;
+
 
   // Funkcia pre presúvanie písmen
   const moveLetter = importedMoveLetter({
@@ -212,8 +226,22 @@ function GamePage({ gameId, userId, onGoToLobby }) {
   // Handlery pre ťuknutie na písmeno a slot (pre mobilné zariadenia a alternatívne ovládanie)
   const handleTapLetter = (letterData, source) => {
     console.log('handleTapLetter called:', { letterData, source });
-    if (isGameOver || myPlayerIndex === null) {
-      console.log("Nemôžeš presúvať písmená (hra skončila alebo nie si pripojený).");
+    if (isGameOver || myPlayerIndex === null) { // Pridaná kontrola ťahu
+      console.log("Nemôžeš presúvať písmená (hra skončila, nie si pripojený alebo nie je tvoj ťah).");
+      setSelectedLetter(null);
+      return;
+    }
+
+    // NOVÁ KONTROLA: Ak sa snažíš presunúť zamknuté písmeno z dosky
+    if (source.type === 'board' && boardAtStartOfTurn[source.x][source.y] !== null) {
+      console.log("Nemôžeš presunúť zamknuté písmeno z dosky.");
+      setSelectedLetter(null); // Zrušíme výber, ak sa nedá presunúť
+      return;
+    }
+
+    // Pridaná kontrola pre drag-and-drop z racku iného hráča
+    if (source.type === 'rack' && source.playerIndex !== myPlayerIndex) {
+      console.log("Nemôžeš presúvať písmená z racku iného hráča.");
       setSelectedLetter(null);
       return;
     }
@@ -224,20 +252,25 @@ function GamePage({ gameId, userId, onGoToLobby }) {
         return;
       }
 
+      // If tapping on a different letter, move the selected one to the tapped one's position
+      // This is an in-rack reordering, so source and target are both 'rack'
       if (selectedLetter.source.type === 'rack' && source.type === 'rack' && selectedLetter.source.playerIndex === source.playerIndex) {
-        moveLetter(selectedLetter.letterData, selectedLetter.source, source);
+        moveLetter(selectedLetter.letterData, selectedLetter.source, source); // source here is the target slot for reordering
         setSelectedLetter(null);
         return;
       }
 
-      moveLetter(selectedLetter.letterData, selectedLetter.source, source);
+      // If selected letter is from rack and tapped on board/exchange zone
+      moveLetter(selectedLetter.letterData, selectedLetter.source, source); // source here is the target slot
       setSelectedLetter(null);
       return;
     }
 
+    // If no letter is selected, select the tapped one
     if (source.type === 'rack' && source.playerIndex === myPlayerIndex) {
       setSelectedLetter({ letterData, source });
-    } else if (source.type === 'board' && currentPlayerIndex === myPlayerIndex) {
+    } else if (source.type === 'board' && currentPlayerIndex === myPlayerIndex && boardAtStartOfTurn[source.x][source.y] === null) {
+      // Only allow selecting letters placed in current turn on board
       console.log('Attempting to select board letter:', { letterData, source, isMyTurn: currentPlayerIndex === myPlayerIndex });
       setSelectedLetter({ letterData, source });
     } else if (source.type === 'exchangeZone' && currentPlayerIndex === myPlayerIndex) {
@@ -246,8 +279,17 @@ function GamePage({ gameId, userId, onGoToLobby }) {
   };
 
   const handleTapSlot = (target) => {
-    if (isGameOver || myPlayerIndex === null) {
-      console.log("Nemôžeš presúvať písmená (hra skončila alebo nie si pripojený).");
+    // KĽÚČOVÁ ZMENA: Overenia pred volaním moveLetter
+    if (isGameOver || myPlayerIndex === null) { // Pridaná kontrola ťahu
+      console.log("Nemôžeš presúvať písmená (hra skončila alebo nie si pripojený alebo nie je tvoj ťah).");
+      setSelectedLetter(null);
+      return;
+    }
+
+    // NOVÁ KONTROLA: Ak je cieľové políčko na doske už obsadené, zabránime presunu
+    if (target.type === 'board' && board[target.x][target.y] !== null) {
+      console.log("Cieľové políčko na doske je už obsadené, nemôžeš tam položiť písmeno.");
+      alert("Cieľové políčko na doske je už obsadené!"); // Pridáme aj alert pre používateľa
       setSelectedLetter(null);
       return;
     }
@@ -263,25 +305,17 @@ function GamePage({ gameId, userId, onGoToLobby }) {
   // Funkcia pre priradenie písmena žolíkovi
   const assignLetterToJoker = (selectedLetter) => {
     if (jokerTileCoords) {
-      setGameState(prevState => {
-        const newBoard = prevState.board.map(row => [...row]);
-        const { x, y } = jokerTileCoords;
-        if (newBoard[x][y] && newBoard[x][y].letter === '') {
-          newBoard[x][y] = { ...newBoard[x][y], assignedLetter: selectedLetter };
-        }
-        const updatedState = {
-          ...prevState,
-          board: newBoard,
-        };
-        sendPlayerAction(socket, gameId, 'updateGameState', updatedState); // Používame prop gameId
-        return updatedState;
+      // KĽÚČOVÁ ZMENA: Posielame akciu na server, server aktualizuje stav
+      sendPlayerAction(socket, gameId, 'assignJoker', {
+        x: jokerTileCoords.x,
+        y: jokerTileCoords.y,
+        assignedLetter: selectedLetter,
       });
     }
     setShowLetterSelectionModal(false);
     setJokerTileCoords(null);
   };
 
-  // Funkcia pre potvrdenie ťahu
   const confirmTurn = () => {
     if (isGameOver || myPlayerIndex === null || currentPlayerIndex !== myPlayerIndex) {
       alert("Hra skončila, nie si pripojený alebo nie je tvoj ťah!");
@@ -590,52 +624,19 @@ function GamePage({ gameId, userId, onGoToLobby }) {
         <Scoreboard playerScores={playerScores} currentPlayerIndex={currentPlayerIndex} isGameOver={isGameOver} />
         <LetterBag remainingLettersCount={letterBag.length} />
 
+        {/* KĽÚČOVÁ ZMENA: Renderujeme hernú oblasť, ak je hráč priradený */}
         {isGameReadyToRender ? (
-          <div className="game-area-container">
-            <Board
-              board={board}
-              moveLetter={moveLetter}
-              boardAtStartOfTurn={boardAtStartOfTurn}
-              myPlayerIndex={myPlayerIndex}
-              currentPlayerIndex={currentPlayerIndex}
-              selectedLetter={selectedLetter}
-              onTapLetter={handleTapLetter}
-              onTapSlot={handleTapSlot}
-            />
-
-            <div className="right-panel-content">
-              <div className="player-racks-container">
-                <div className="player-rack-section">
-                  <h3>Hráč 1 Rack:</h3>
-                  <PlayerRack
-                    letters={playerRacks[0]}
-                    moveLetter={moveLetter}
-                    playerIndex={0}
-                    myPlayerIndex={myPlayerIndex}
-                    currentPlayerIndex={currentPlayerIndex}
-                    selectedLetter={selectedLetter}
-                    onTapLetter={handleTapLetter}
-                    onTapSlot={handleTapSlot}
-                  />
-                </div>
-                <div className="player-rack-section">
-                  <h3>Hráč 2 Rack:</h3>
-                  <PlayerRack
-                    letters={playerRacks[1]}
-                    moveLetter={moveLetter}
-                    playerIndex={1}
-                    myPlayerIndex={myPlayerIndex}
-                    currentPlayerIndex={currentPlayerIndex}
-                    selectedLetter={selectedLetter}
-                    onTapLetter={handleTapLetter}
-                    onTapSlot={handleTapSlot}
-                  />
-                </div>
+          <> {/* Použijeme Fragment pre zoskupenie viacerých elementov */}
+            {waitingForSecondPlayer && (
+              <div className="second-player-status-message"> {/* Nová trieda pre štýlovanie */}
+                <p>Druhý hráč nie je pri stole.</p>
               </div>
-
-              <ExchangeZone
-                lettersInZone={exchangeZoneLetters}
+            )}
+            <div className="game-area-container">
+              <Board
+                board={board}
                 moveLetter={moveLetter}
+                boardAtStartOfTurn={boardAtStartOfTurn}
                 myPlayerIndex={myPlayerIndex}
                 currentPlayerIndex={currentPlayerIndex}
                 selectedLetter={selectedLetter}
@@ -643,35 +644,75 @@ function GamePage({ gameId, userId, onGoToLobby }) {
                 onTapSlot={handleTapSlot}
               />
 
-              <div className="game-controls">
-                <button
-                  className="confirm-turn-button"
-                  onClick={confirmTurn}
-                  disabled={isGameOver || showLetterSelectionModal || myPlayerIndex === null || currentPlayerIndex !== myPlayerIndex}
-                >
-                  Potvrdiť ťah
-                </button>
-                <button
-                  className="exchange-letters-button"
-                  onClick={handleExchangeLetters}
-                  disabled={isGameOver || letterBag.length < exchangeZoneLetters.length || showLetterSelectionModal || myPlayerIndex === null || currentPlayerIndex !== myPlayerIndex}
-                >
-                  Vymeniť písmená ({exchangeZoneLetters.length})
-                </button>
-                <button
-                  className="pass-turn-button"
-                  onClick={handlePassTurn}
-                  disabled={isGameOver || showLetterSelectionModal || myPlayerIndex === null || currentPlayerIndex !== myPlayerIndex}
-                >
-                  Pass
-                </button>
+              <div className="right-panel-content">
+                <div className="player-racks-container">
+                  <div className="player-rack-section">
+                    <h3>Hráč 1 Rack:</h3>
+                    <PlayerRack
+                      letters={playerRacks[0]}
+                      moveLetter={moveLetter}
+                      playerIndex={0}
+                      myPlayerIndex={myPlayerIndex}
+                      currentPlayerIndex={currentPlayerIndex}
+                      selectedLetter={selectedLetter}
+                      onTapLetter={handleTapLetter}
+                      onTapSlot={handleTapSlot}
+                    />
+                  </div>
+                  <div className="player-rack-section">
+                    <h3>Hráč 2 Rack:</h3>
+                    <PlayerRack
+                      letters={playerRacks[1]}
+                      moveLetter={moveLetter}
+                      playerIndex={1}
+                      myPlayerIndex={myPlayerIndex}
+                      currentPlayerIndex={currentPlayerIndex}
+                      selectedLetter={selectedLetter}
+                      onTapLetter={handleTapLetter}
+                      onTapSlot={handleTapSlot}
+                    />
+                  </div>
+                </div>
+
+                <ExchangeZone
+                  lettersInZone={exchangeZoneLetters}
+                  moveLetter={moveLetter}
+                  myPlayerIndex={myPlayerIndex}
+                  currentPlayerIndex={currentPlayerIndex}
+                  selectedLetter={selectedLetter}
+                  onTapLetter={handleTapLetter}
+                  onTapSlot={handleTapSlot}
+                />
+
+                <div className="game-controls">
+                  <button
+                    className="confirm-turn-button"
+                    onClick={confirmTurn}
+                    disabled={isGameOver || showLetterSelectionModal || myPlayerIndex === null || currentPlayerIndex !== myPlayerIndex}
+                  >
+                    Potvrdiť ťah
+                  </button>
+                  <button
+                    className="exchange-letters-button"
+                    onClick={handleExchangeLetters}
+                    disabled={isGameOver || letterBag.length < exchangeZoneLetters.length || showLetterSelectionModal || myPlayerIndex === null || currentPlayerIndex !== myPlayerIndex}
+                  >
+                    Vymeniť písmená ({exchangeZoneLetters.length})
+                  </button>
+                  <button
+                    className="pass-turn-button"
+                    onClick={handlePassTurn}
+                    disabled={isGameOver || showLetterSelectionModal || myPlayerIndex === null || currentPlayerIndex !== myPlayerIndex}
+                  >
+                    Pass
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
+          </>
         ) : (
-          <div className="waiting-message">
-            <p>Čaká sa na pripojenie hráčov k hre ID: **{gameId}**...</p>
-            <p>Uistite sa, že máte otvorené dve karty prehliadača, obe s touto URL.</p>
+          <div className="waiting-message"> {/* Ak hráč ešte nie je priradený, zobrazí sa jednoduchá správa */}
+            <p>Pripájam sa k hre ID: **{gameId}**...</p>
           </div>
         )}
 

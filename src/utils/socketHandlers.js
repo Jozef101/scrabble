@@ -2,7 +2,7 @@
 import { BOARD_SIZE, RACK_SIZE } from './constants'; // Importujeme konštanty
 
 // Funkcia na nastavenie Socket.IO poslucháčov
-export const setupSocketListeners = (socket, setConnectionStatus, setMyPlayerIndex, setGameState, setChatMessages) => {
+export const setupSocketListeners = (socket, setConnectionStatus, setMyPlayerIndex, setGameState, setChatMessages, setWaitingForSecondPlayer) => { // NOVÉ: Pridaný setWaitingForSecondPlayer
     socket.on('connect', () => {
         setConnectionStatus('Pripojený');
         console.log('Pripojený k serveru Socket.IO.');
@@ -32,6 +32,7 @@ export const setupSocketListeners = (socket, setConnectionStatus, setMyPlayerInd
         });
         setMyPlayerIndex(null);
         setChatMessages([]);
+        setWaitingForSecondPlayer(true); // NOVÉ: Reset na true pri odpojení
     });
 
     socket.on('playerAssigned', (playerIndex) => {
@@ -57,29 +58,22 @@ export const setupSocketListeners = (socket, setConnectionStatus, setMyPlayerInd
     socket.on('gameError', (message) => {
         alert(`Chyba hry: ${message}`);
         console.error('Chyba hry:', message);
-        setGameState(prevState => ({ ...prevState, hasInitialGameStateReceived: false }));
+        // KLÚČOVÁ ZMENA: Odstránené setGameState(prevState => ({ ...prevState, hasInitialGameStateReceived: false }));
+        // Tento reset by mal byť spracovaný v GamePage.js na základe disconnect alebo gameReset.
     });
 
     // Nový poslucháč pre stav čakania
     socket.on('waitingForPlayers', (message) => {
         console.log(`Čakám na hráčov: ${message}`);
-        // Resetujeme stav hry len natoľko, aby sa zobrazila správa o čakaní
-        // Používame rovnaké defaultné hodnoty ako pri disconnect
-        setGameState(prevState => ({
-            ...prevState,
-            letterBag: [],
-            playerRacks: Array(2).fill(null).map(() => Array(RACK_SIZE).fill(null)),
-            board: Array(BOARD_SIZE).fill(null).map(() => Array(BOARD_SIZE).fill(null)),
-            boardAtStartOfTurn: Array(BOARD_SIZE).fill(null).map(() => Array(BOARD_SIZE).fill(null)),
-            playerScores: [0, 0],
-            exchangeZoneLetters: [],
-            hasPlacedOnBoardThisTurn: false,
-            hasMovedToExchangeZoneThisTurn: false,
-            consecutivePasses: 0,
-            isGameOver: false,
-            isBagEmpty: false,
-            hasInitialGameStateReceived: false, // Dôležité: nastaviť na false
-        }));
+        // KĽÚČOVÁ ZMENA: Už neresetujeme celý gameState ani hasInitialGameStateReceived.
+        // Iba nastavíme stav pre zobrazenie prekryvnej vrstvy.
+        setWaitingForSecondPlayer(true);
+    });
+
+    // NOVÉ: Poslucháč pre udalosť 'gameStarted' zo servera
+    socket.on('gameStarted', () => {
+        console.log("Server message (game started): Hra začala!");
+        setWaitingForSecondPlayer(false); // NOVÉ: Zruší stav čakania
     });
 
 
@@ -105,8 +99,7 @@ export const setupSocketListeners = (socket, setConnectionStatus, setMyPlayerInd
         });
         setMyPlayerIndex(null);
         setChatMessages([]);
-        // KLÚČOVÁ ZMENA: Odstránené volanie socket.emit('joinGame') odtiaľto.
-        // Túto zodpovednosť teraz preberá GamePage.js, aby sa zabezpečilo, že userId je vždy prítomné.
+        setWaitingForSecondPlayer(true); // NOVÉ: Reset na true pri resete hry
     });
 
     socket.on('receiveChatMessage', (message) => {
@@ -136,7 +129,7 @@ export const sendChatMessage = (socket, gameId, message) => {
 // Funkcia na odosielanie akcií hráča
 // Teraz prijíma gameId
 export const sendPlayerAction = (socket, gameId, actionType, payload) => {
-    if (socket && socket.connected) {
+    if (socket && socket.connected) { // Pridaná kontrola, či je socket pripojený
         // Posielame gameId spolu s typom akcie a dátami
         socket.emit('playerAction', { gameId, type: actionType, payload });
     } else {
