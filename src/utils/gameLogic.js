@@ -206,6 +206,59 @@ export function areLettersContiguous(allWordLetters) {
 }
 
 /**
+ * KĽÚČOVÁ NOVÁ FUNKCIA: Skontroluje, či novo položené písmená (a prípadné existujúce medzi nimi)
+ * tvoria súvislý blok bez prázdnych medzier na hracej doske.
+ * Táto funkcia rieši problém, kde `isStraightLine` len kontroluje, či sú písmená v riadku/stĺpci,
+ * ale nie či sú súvislé na doske.
+ * @param {Array<Object>} placedLetters Pole novo položených písmen s ich súradnicami.
+ * @param {Array<Array<Object|null>>} boardState Aktuálny stav hracej dosky.
+ * @returns {boolean} True, ak novo položené písmená tvoria súvislý blok, inak False.
+ */
+export function arePlacedLettersContiguousOnBoard(placedLetters, boardState) {
+    if (placedLetters.length <= 1) {
+        return true; // Jedno písmeno alebo žiadne písmená sú vždy súvislé samé so sebou.
+    }
+
+    // Predpokladáme, že isStraightLine už prešla, takže všetky písmená sú v jednom riadku alebo stĺpci.
+    const isHorizontal = placedLetters.every(l => l.x === placedLetters[0].x);
+
+    let minCoord, maxCoord;
+    if (isHorizontal) {
+        // Nájdenie minimálnej a maximálnej Y-súradnice medzi položenými písmenami
+        minCoord = Math.min(...placedLetters.map(l => l.y));
+        maxCoord = Math.max(...placedLetters.map(l => l.y));
+        const row = placedLetters[0].x; // Všetky písmená sú v rovnakom riadku
+
+        // Prejdeme všetky políčka v rozsahu od minCoord do maxCoord
+        for (let y = minCoord; y <= maxCoord; y++) {
+            // Skontrolujeme, či je políčko prázdne (null)
+            // A zároveň, či na tomto políčku NIE JE jedno z novo položených písmen.
+            // Ak je políčko prázdne a nie je to políčko, na ktoré sme práve položili písmeno,
+            // znamená to medzeru.
+            const isCellOccupiedByPlacedLetter = placedLetters.some(pl => pl.x === row && pl.y === y);
+            if (boardState[row][y] === null && !isCellOccupiedByPlacedLetter) {
+                return false; // Nájdená prázdna medzera v rozsahu novo položených písmen
+            }
+        }
+    } else { // Vertikálne
+        // Nájdenie minimálnej a maximálnej X-súradnice medzi položenými písmenami
+        minCoord = Math.min(...placedLetters.map(l => l.x));
+        maxCoord = Math.max(...placedLetters.map(l => l.x));
+        const col = placedLetters[0].y; // Všetky písmená sú v rovnakom stĺpci
+
+        // Prejdeme všetky políčka v rozsahu od minCoord do maxCoord
+        for (let x = minCoord; x <= maxCoord; x++) {
+            const isCellOccupiedByPlacedLetter = placedLetters.some(pl => pl.x === x && pl.y === col);
+            if (boardState[x][col] === null && !isCellOccupiedByPlacedLetter) {
+                return false; // Nájdená prázdna medzera v rozsahu novo položených písmen
+            }
+        }
+    }
+    return true;
+}
+
+
+/**
  * Skontroluje, či sú novo položené písmená pripojené k existujúcim písmenám na doske.
  * V prípade prvého ťahu skontroluje, či pokrývajú stredové políčko.
  * @param {Array<Object>} currentPlacedLetters Pole novo položených písmen.
@@ -377,14 +430,13 @@ export function getRackPoints(rack) {
  */
 export function calculateFinalScores(endingPlayerIndex, finalRackLetters, playerScores, playerRacks) {
     let finalScores = [...playerScores];
-    console.log('Konečné skóre pred úpravou: ', finalRackLetters);
-    console.log('Konečné skóre pred úpravou: ', playerRacks);
-    // Removed: let totalOpponentRackPoints = 0; // Túto premennú už nepotrebujeme
 
     for (let i = 0; i < playerScores.length; i++) {
         const rack = (i === endingPlayerIndex) ? finalRackLetters : playerRacks[i];
-        const pointsOnRack = getRackPoints(rack);        
+        const pointsOnRack = getRackPoints(rack);
+        
         finalScores[i] -= pointsOnRack;
     }
+
     return finalScores;
 }

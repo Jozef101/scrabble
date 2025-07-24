@@ -8,16 +8,17 @@ import io from 'socket.io-client';
 import { BOARD_SIZE, RACK_SIZE, SERVER_URL } from '../utils/constants';
 import { setupSocketListeners, sendPlayerAction, sendChatMessage } from '../utils/socketHandlers';
 import {
-  createLetterBag, // Importujeme, ak sa niekedy bude inicializovať na klientovi
+  // createLetterBag, // Odstránené, pretože sa nepoužíva priamo na klientovi
   drawLetters,
   getPlacedLettersDuringCurrentTurn,
   isStraightLine,
   getAllWordsInTurn,
-  areLettersContiguous,
+  areLettersContiguous, // Použijeme túto funkciu na kontrolu súvislosti novo položených písmen
   isConnected,
   calculateWordScore,
   calculateFinalScores,
-  getFullWordLetters, // KĽÚČOVÁ ZMENA: Importujeme getFullWordLetters
+  getFullWordLetters,
+  arePlacedLettersContiguousOnBoard, // Táto funkcia kontroluje medzery na doske (aj s existujúcimi písmenami)
 } from '../utils/gameLogic';
 import slovakWordsArray from '../data/slovakWords.json'; // UISTITE SA, ŽE TENTO SÚBOR EXISTUJE V src/utils/
 
@@ -337,6 +338,20 @@ function GamePage({ gameId, userId, onGoToLobby, db }) { // Ponechávame db prop
       return;
     }
 
+    // KĽÚČOVÁ ZMENA: Nová kontrola pre súvislosť novo položených písmen medzi sebou.
+    // Táto kontrola zabezpečuje, že napr. "P E S _ A K O" nebude platné.
+    if (!areLettersContiguous(actualPlacedLetters)) {
+        alert("Položené písmená musia tvoriť súvislý blok bez medzier medzi sebou!");
+        return;
+    }
+
+    // Pôvodná kontrola pre medzery na doske (ak sú medzi novo položenými písmenami existujúce písmená)
+    if (actualPlacedLetters.length > 1 && !arePlacedLettersContiguousOnBoard(actualPlacedLetters, board)) {
+        alert("Položené písmená nesmú mať prázdnu medzeru na doske v rámci slova!");
+        return;
+    }
+
+
     const allFormedWords = getAllWordsInTurn(actualPlacedLetters, board);
 
     console.log("DEBUG: All Formed Words (before validation):", allFormedWords.map(w => ({ word: w.wordString, letters: w.letters.map(l => (l.letterData.letter === '' ? l.letterData.assignedLetter : l.letterData.letter)) })));
@@ -346,6 +361,7 @@ function GamePage({ gameId, userId, onGoToLobby, db }) { // Ponechávame db prop
       return;
     }
 
+    // Kontrola súvislosti pre každé vytvorené slovo (vrátane existujúcich písmen)
     for (const wordObj of allFormedWords) {
       console.log(`DEBUG: Checking contiguity for word: "${wordObj.wordString}"`);
       console.log("DEBUG: Letters for contiguity check:", wordObj.letters.map(l => ({ letter: (l.letterData.letter === '' ? l.letterData.assignedLetter : l.letterData.letter), x: l.x, y: l.y })));
@@ -578,9 +594,11 @@ function GamePage({ gameId, userId, onGoToLobby, db }) { // Ponechávame db prop
     let isGameOverCondition = (newConsecutivePasses >= 4);
 
     if (isGameOverCondition) {
+      // KLÚČOVÁ ZMENA: Vypočítame konečné skóre, keď hra skončí kvôli pasom
+      // endingPlayerIndex je null, pretože žiadny hráč nevyprázdnil rack
+      // finalRackLetters je prázdne pole, pretože neboli položené žiadne písmená
       updatedPlayerScores = calculateFinalScores(null, [], playerScores, playerRacks);
       alert("Hra skončila! Obaja hráči pasovali dvakrát po sebe. Konečné skóre bolo upravené o zostávajúce písmená.");
-      console.log("DEBUG: Final Scores after consecutive passes:", updatedPlayerScores);
     } else {
       alert("Ťah bol prenesený na ďalšieho hráča.");
     }
