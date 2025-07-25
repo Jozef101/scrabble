@@ -206,7 +206,53 @@ export function areLettersContiguous(allWordLetters) {
 }
 
 /**
- * KĽÚČOVÁ NOVÁ FUNKCIA: Skontroluje, či novo položené písmená (a prípadné existujúce medzi nimi)
+ * NOVÁ FUNKCIA: Skontroluje, či slovo vytvorené z daných písmen je súvislé na doske.
+ * Táto funkcia umožňuje, aby existujúce písmená na doske premostili medzery
+ * medzi písmenami v danom zozname (napr. A_B je validné, ak _ je obsadené existujúcim písmenom).
+ * @param {Array<object>} letters Zoznam písmen tvoriacich slovo (môže obsahovať novo položené aj existujúce).
+ * @param {Array<Array<object|null>>} board Aktuálny stav dosky.
+ * @returns {boolean} True, ak je slovo súvislé na doske, inak False.
+ */
+export const isWordContiguousOnBoard = (letters, board) => {
+    if (letters.length <= 1) return true;
+
+    // Zabezpečíme, že sú v priamke (horizontálne alebo vertikálne)
+    const isHorizontal = letters.every(l => l.x === letters[0].x);
+    const isVertical = letters.every(l => l.y === letters[0].y);
+
+    if (!isHorizontal && !isVertical) {
+        return false; // Nie sú v priamke
+    }
+
+    // Zoradíme písmená podľa ich pozície
+    const sortedLetters = [...letters].sort((a, b) => {
+        if (isHorizontal) return a.y - b.y;
+        return a.x - b.x;
+    });
+
+    const fixedCoord = isHorizontal ? sortedLetters[0].x : sortedLetters[0].y;
+    const startCoord = isHorizontal ? sortedLetters[0].y : sortedLetters[0].x;
+    const endCoord = isHorizontal ? sortedLetters[sortedLetters.length - 1].y : sortedLetters[sortedLetters.length - 1].x;
+
+    // Skontrolujeme, či sú všetky políčka v rozsahu slova obsadené nejakým písmenom (novým alebo existujúcim)
+    for (let i = startCoord; i <= endCoord; i++) {
+        let boardLetter = null;
+        if (isHorizontal) {
+            boardLetter = board[fixedCoord][i];
+        } else {
+            boardLetter = board[i][fixedCoord];
+        }
+
+        if (boardLetter === null) {
+            return false; // Našla sa prázdna diera v rámci slova
+        }
+    }
+    return true;
+};
+
+
+/**
+ * Skontroluje, či novo položené písmená (a prípadné existujúce medzi nimi)
  * tvoria súvislý blok bez prázdnych medzier na hracej doske.
  * Táto funkcia rieši problém, kde `isStraightLine` len kontroluje, či sú písmená v riadku/stĺpci,
  * ale nie či sú súvislé na doske.
