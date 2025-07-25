@@ -31,7 +31,7 @@ export const setupSocketListeners = (socket, setConnectionStatus, setMyPlayerInd
             hasInitialGameStateReceived: false, // Resetujeme aj toto
         });
         setMyPlayerIndex(null);
-        setChatMessages([]);
+        // setChatMessages([]);
         setWaitingForSecondPlayer(true); // NOVÉ: Reset na true pri odpojení
     });
 
@@ -98,7 +98,7 @@ export const setupSocketListeners = (socket, setConnectionStatus, setMyPlayerInd
             hasInitialGameStateReceived: false, // Po resete potrebujeme znova inicializovať
         });
         setMyPlayerIndex(null);
-        setChatMessages([]);
+        // setChatMessages([]);
         setWaitingForSecondPlayer(true); // NOVÉ: Reset na true pri resete hry
     });
 
@@ -107,7 +107,9 @@ export const setupSocketListeners = (socket, setConnectionStatus, setMyPlayerInd
     });
 
     socket.on('chatHistory', (history) => {
+        console.log('socketHandlers: chatHistory event received, history length:', history.length);
         setChatMessages(history);
+        console.log('socketHandlers: Chat history applied to state.');
     });
 };
 
@@ -115,7 +117,6 @@ export const setupSocketListeners = (socket, setConnectionStatus, setMyPlayerInd
 export const sendChatMessage = (socket, gameId, message) => {
     if (socket && socket.connected && message.trim() !== '') {
         console.log(`Odosielam chat správu pre hru ${gameId}: ${message}`);
-        // KĽÚČOVÁ ZMENA: Posielame 'playerAction' event, aby server správne reagoval
         socket.emit('playerAction', {
             gameId: gameId,
             type: 'chatMessage', // Typ akcie je 'chatMessage'

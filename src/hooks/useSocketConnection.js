@@ -37,7 +37,7 @@ function useSocketConnection(gameId, userId) {
       console.log('useSocketConnection: Odpojený od servera Socket.IO.');
       // Reset relevant states on disconnect
       setMyPlayerIndex(null);
-      setChatMessages([]);
+    //   setChatMessages([]);
       hasJoinedGameRef.current = false;
       setWaitingForSecondPlayer(true);
     });
