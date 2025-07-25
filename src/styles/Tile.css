@@ -93,3 +93,10 @@
     box-shadow: 0 0 8px lightgreen;
     background-color: rgba(144, 238, 144, 0.3);
 }
+
+.highlighted-tile {
+    background-color: #ffeb3b; /* Svetložltá farba */
+    border: 2px solid #ffc107; /* Oranžový okraj */
+    box-shadow: 0 0 10px rgba(255, 193, 7, 0.7); /* Jemný tieň */
+    transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}

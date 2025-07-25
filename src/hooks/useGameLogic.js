@@ -33,6 +33,7 @@ function useGameLogic(socket, gameId, myPlayerIndex, slovakWordsArray) {
     isGameOver: false,
     isBagEmpty: false,
     hasInitialGameStateReceived: false,
+    highlihtedLetters: [],
   });
 
   const [showLetterSelectionModal, setShowLetterSelectionModal] = useState(false);
@@ -45,6 +46,7 @@ function useGameLogic(socket, gameId, myPlayerIndex, slovakWordsArray) {
     if (!socket) return;
     const handleGameStateUpdate = (newGameState) => {
       console.log('useGameLogic: Received gameStateUpdate:', newGameState);
+      console.log('useGameLogic: Received highlightedLetters:', newGameState.highlightedLetters);
       setGameState(newGameState);
     };
     socket.on('gameStateUpdate', handleGameStateUpdate);
@@ -221,6 +223,7 @@ function useGameLogic(socket, gameId, myPlayerIndex, slovakWordsArray) {
     newRackForCurrentPlayer = newRackForCurrentPlayer.slice(0, RACK_SIZE);
 
     const finalRackAfterPlay = newRackForCurrentPlayer.filter(l => l !== null);
+    const newHighlightedLetters = actualPlacedLetters.map(letter => ({ x: letter.x, y: letter.y }));
 
     let updatedGameState;
     if (currentBagEmpty && finalRackAfterPlay.length === 0) {
@@ -240,6 +243,7 @@ function useGameLogic(socket, gameId, myPlayerIndex, slovakWordsArray) {
         consecutivePasses: 0,
         isGameOver: true,
         isBagEmpty: currentBagEmpty,
+        highlightedLetters: newHighlightedLetters, // Reset highlighted letters at the end of the game
       };
       alert(`Hra skončila! Konečné skóre: Hráč 1: ${finalScores[0]}, Hráč 2: ${finalScores[1]}`);
     } else {
@@ -258,6 +262,7 @@ function useGameLogic(socket, gameId, myPlayerIndex, slovakWordsArray) {
         consecutivePasses: 0,
         isGameOver: false,
         isBagEmpty: currentBagEmpty,
+        highlightedLetters: newHighlightedLetters, // Aktualizujeme zvýraznené písmená
       };
     }
     sendPlayerAction(socket, gameId, 'updateGameState', updatedGameState);
@@ -333,6 +338,7 @@ function useGameLogic(socket, gameId, myPlayerIndex, slovakWordsArray) {
       consecutivePasses: 0,
       isGameOver: false,
       isBagEmpty: currentBagEmpty,
+        highlightedLetters: [], // Vyčistíme zvýraznené písmená pri výmene
     };
     sendPlayerAction(socket, gameId, 'updateGameState', updatedGameState);
   }, [gameState, myPlayerIndex, socket, gameId]);
@@ -380,6 +386,7 @@ function useGameLogic(socket, gameId, myPlayerIndex, slovakWordsArray) {
       hasMovedToExchangeZoneThisTurn: false,
       consecutivePasses: newConsecutivePasses,
       isGameOver: isGameOverCondition,
+      highlightedLetters: [], // Vyčistíme zvýraznené písmená pri prechode ťahu
     };
     sendPlayerAction(socket, gameId, 'updateGameState', updatedGameState);
   }, [gameState, myPlayerIndex, socket, gameId]);

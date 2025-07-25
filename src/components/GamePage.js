@@ -130,6 +130,7 @@ function GamePage({ gameId, userId, onGoToLobby, db }) {
                 selectedLetter={selectedLetter}
                 onTapLetter={handleTapLetter}
                 onTapSlot={handleTapSlot}
+                highlightedLetters={gameState.highlightedLetters} // NOVÉ: Posielame zvýraznené písmená
               />
 
               <div className="right-panel-content">

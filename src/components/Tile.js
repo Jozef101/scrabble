@@ -6,7 +6,7 @@ import { getBonusType, BONUS_TYPES } from '../utils/boardUtils';
 import '../styles/Tile.css';
 
 // Tile teraz prijíma aj myPlayerIndex, currentPlayerIndex, selectedLetter, onTapLetter, onTapSlot
-function Tile({ x, y, letter, moveLetter, boardAtStartOfTurn, myPlayerIndex, currentPlayerIndex, selectedLetter, onTapLetter, onTapSlot }) {
+function Tile({ x, y, letter, moveLetter, boardAtStartOfTurn, myPlayerIndex, currentPlayerIndex, selectedLetter, onTapLetter, onTapSlot, isHighlighted }) {
   const bonusType = getBonusType(x, y);
 
   // isDraggable logika pre písmená na doske
@@ -67,6 +67,7 @@ function Tile({ x, y, letter, moveLetter, boardAtStartOfTurn, myPlayerIndex, cur
   const startSquareClass = bonusType === BONUS_TYPES.START_SQUARE ? 'tile-start-square' : '';
   // Trieda pre "zamknuté" písmená na doske, ktoré nie sú novopoložené a nedajú sa ťahať
   const lockedClass = !canTileBeDragged && letter !== null ? 'tile-locked' : '';
+  const highlightedClass = isHighlighted ? 'highlighted-tile' : '';
 
   // Funkcia, ktorá sa zavolá pri pravom kliknutí na písmeno
   const handleLetterRightClick = (letterData, source) => {
@@ -91,7 +92,7 @@ function Tile({ x, y, letter, moveLetter, boardAtStartOfTurn, myPlayerIndex, cur
   return (
     <div
       ref={drop}
-      className={`tile ${dropHighlightClass} ${hasLetterClass} ${bonusClass} ${startSquareClass} ${lockedClass}`}
+      className={`tile ${dropHighlightClass} ${hasLetterClass} ${bonusClass} ${startSquareClass} ${lockedClass} ${highlightedClass}`}
       onClick={handleTileClick} // NOVÉ: onClick handler
     >
       {letter && (
