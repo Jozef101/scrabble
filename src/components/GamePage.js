@@ -12,6 +12,7 @@ import slovakWordsArray from '../data/slovakWords.json'; // UISTITE SA, ŽE TENT
 import useSocketConnection from '../hooks/useSocketConnection';
 import useGameLogic from '../hooks/useGameLogic';
 import useTapToMove from '../hooks/useTapToMove';
+import ChatWindow from '../components/ChatWindow';
 
 // Import komponentov UI
 import Board from '../components/Board';
@@ -203,30 +204,13 @@ function GamePage({ gameId, userId, onGoToLobby, db }) {
           </div>
         )}
 
-        <div className="chat-container">
-          <h3>Chat</h3>
-          <div className="chat-messages">
-            {chatMessages.map((msg, index) => (
-              <div key={index} className={`chat-message ${msg.senderIndex === myPlayerIndex ? 'my-message' : 'other-message'}`}>
-                <strong>Hráč {msg.senderIndex + 1}:</strong> {msg.text}
-              </div>
-            ))}
-            <div ref={chatMessagesEndRef} />
-          </div>
-          <div className="chat-input">
-            <input
-              type="text"
-              value={newChatMessage}
-              onChange={(e) => setNewChatMessage(e.target.value)}
-              onKeyPress={(e) => {
-                if (e.key === 'Enter') handleSendChatMessage();
-              }}
-              placeholder="Napíš správu..."
-              disabled={myPlayerIndex === null}
-            />
-            <button onClick={handleSendChatMessage} disabled={myPlayerIndex === null}>Odoslať</button>
-          </div>
-        </div>
+        <ChatWindow
+        chatMessages={chatMessages}
+        newChatMessage={newChatMessage}
+        myPlayerIndex={myPlayerIndex}
+        handleSendChatMessage={handleSendChatMessage}
+        setNewChatMessage={setNewChatMessage}
+      />
 
         {showLetterSelectionModal && (
           <LetterSelectionModal
