@@ -1,175 +1,250 @@
-/* src/styles/LobbyPage.css */
-
-.lobby-container {
+/* Všeobecné štýly pre telo a základné nastavenia */
+body {
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+    /* Použitie fontu Inter */
+    background-color: #f0f2f5;
+    /* Veľmi svetlé šedé pozadie */
+    color: #333;
+    /* Tmavá farba textu pre dobrú čitateľnosť */
     display: flex;
     flex-direction: column;
-    align-items: center;
-    padding: 20px;
-    background-color: #f5f5f5;
+        /* Zmenené na stĺpec, aby sa obsah ukladal vertikálne */
+        justify-content: flex-start;
+        /* Zarovnanie obsahu na začiatok stĺpca (hore) */
+        align-items: center;
+        /* Zachovanie horizontálneho centrovania */
     min-height: 100vh;
-    box-sizing: border-box;
+    padding: 20px 15px;
+        /* Pridané padding-top pre zabezpečenie priestoru na vrchu, a horizontálne odsadenie */
+        box-sizing: border-box;
+        /* Zabezpečí, že padding nepridáva k šírke/výške */
+        overflow-y: auto;
+        /* Povoliť posúvanie, ak obsah presahuje výšku obrazovky */
+    }
+    
+    /* Kontajner pre celú lobby stránku */
+    .lobby-container {
+        background-color: #ffffff;
+        /* Čisté biele pozadie */
+        padding: 30px;
+        /* Menšie odsadenie */
+        border-radius: 10px;
+        /* Jemne zaoblené rohy */
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.06);
+        /* Jemný, moderný tieň */
     width: 100%;
-    max-width: 800px; /* Obmedzenie šírky pre lepšiu čitateľnosť */
-    margin: 0 auto; /* Centrovanie */
+    max-width: 650px;
+        /* Menšia maximálna šírka */
+        text-align: center;
+        border: 1px solid #e0e0e0;
+        /* Veľmi jemný okraj */
 }
 
 .lobby-container h2 {
-    color: #333;
-    margin-bottom: 20px;
-    font-size: 2em;
+    font-size: 2.2rem;
+        /* Menší nadpis */
+        color: #2c3e50;
+        /* Tmavšia farba pre nadpis */
+        margin-bottom: 25px;
+        /* Menší spodný okraj */
+        font-weight: 700;
+        /* Tučnejší nadpis */
 }
 
-.create-game-section,
-.available-games-section {
-    background-color: #e0e0e0;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+/* Sekcia pre vytvorenie hry */
+.create-game-section {
+    margin-bottom: 30px;
+    /* Menší spodný okraj */
     padding: 20px;
+    /* Menšie odsadenie */
+    background-color: #f9f9f9;
+    /* Veľmi svetlé pozadie sekcie */
+    border-radius: 8px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.04);
+        /* Jemný tieň */
+        border: 1px solid #f0f0f0;
+}
+
+.create-game-section h3 {
+    font-size: 1.7rem;
+    /* Menší nadpis */
+    color: #34495e;
     margin-bottom: 20px;
-    width: 100%;
-    box-sizing: border-box;
-}
-
-.create-game-section h3,
-.available-games-section h3 {
-    color: #555;
-    margin-top: 0;
-    margin-bottom: 15px;
-    font-size: 1.5em;
-    border-bottom: 1px solid #ccc;
-    padding-bottom: 10px;
-}
-
-.game-name-input {
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    margin-right: 10px;
-    width: calc(100% - 120px); /* Prispôsobenie šírky */
-    box-sizing: border-box;
+    /* Menší spodný okraj */
+    font-weight: 600;
 }
 
 .create-game-button {
-    background-color: #28a745;
+    background-color: #007bff;
+        /* Primárna modrá farba */
     color: white;
-    padding: 10px 15px;
+    padding: 12px 25px;
+        /* Menšie odsadenie */
     border: none;
-    border-radius: 5px;
+    border-radius: 6px;
+        /* Menšie zaoblenie */
+        font-size: 1.1rem;
+        /* Menšia veľkosť písma */
     cursor: pointer;
-    font-size: 1em;
-    transition: background-color 0.2s ease;
+    box-shadow: 0 3px 10px rgba(0, 123, 255, 0.15);
+        /* Jemný modrý tieň */
+        font-weight: 600;
 }
 
 .create-game-button:hover {
-    background-color: #218838;
+    background-color: #0056b3;
+        /* Tmavší odtieň pri hoveri */
 }
 
-.error-message {
-    color: #dc3545;
-    margin-top: 10px;
-    font-weight: bold;
+/* Sekcia pre dostupné hry */
+.available-games-section {
+    padding: 20px;
+    /* Menšie odsadenie */
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.04);
+    border: 1px solid #f0f0f0;
+}
+
+.available-games-section h3 {
+    font-size: 1.7rem;
+    /* Menší nadpis */
+    color: #34495e;
+    margin-bottom: 20px;
+    /* Menší spodný okraj */
+    font-weight: 600;
 }
 
 .games-list {
     list-style: none;
     padding: 0;
-    width: 100%;
+    margin: 0;
+        max-height: 350px;
+        /* Menšia obmedzená výška pre zoznam hier */
+        overflow-y: auto;
+        /* Scrollbar, ak je viac hier */
+        border-top: 1px solid #e0e0e0;
+        padding-top: 15px;
+        /* Menšie odsadenie */
 }
 
 .game-item {
+    background-color: #ffffff;
+        /* Biele pozadie pre jednotlivé položky hry */
+        margin-bottom: 10px;
+        /* Menší spodný okraj */
+        padding: 15px;
+        /* Menšie odsadenie */
+        border-radius: 8px;
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 0;
-    border-bottom: 1px dashed #ccc;
-}
-
-.game-item:last-child {
-    border-bottom: none;
+    flex-direction: column;
+        /* Pre mobilné zobrazenie */
+        align-items: flex-start;
+        /* Zarovnanie obsahu */
+        gap: 10px;
+        /* Menšia medzera medzi prvkami */
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+        /* Jemný tieň */
+        border: 1px solid #e9e9e9;
 }
 
 .game-item span {
-    flex-grow: 1;
-    margin-right: 10px;
-    color: #333;
+    font-size: 1rem;
+        /* Menšia veľkosť písma */
+        color: #555;
+        flex-grow: 1;
+        /* Zabezpečí, že text zaberie dostupný priestor */
+        text-align: left;
+        font-weight: 500;
 }
 
+/* Tlačidlá v zozname hier */
 .join-game-button,
 .leave-game-button {
-    padding: 8px 12px;
+    padding: 10px 20px;
+        /* Menšie odsadenie */
     border: none;
-    border-radius: 5px;
+    border-radius: 6px;
+        /* Menšie zaoblenie */
+        font-size: 0.95rem;
+        /* Menšia veľkosť písma */
     cursor: pointer;
-    font-size: 0.9em;
-    transition: background-color 0.2s ease;
-    margin-left: 5px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+        white-space: nowrap;
+        /* Zabraňuje zalomeniu textu tlačidla */
+        font-weight: 600;
 }
 
 .join-game-button {
-    background-color: #007bff;
+    background-color: #28a745;
+        /* Zelená farba pre pripojenie */
     color: white;
 }
 
 .join-game-button:hover:not(:disabled) {
-    background-color: #0056b3;
+    background-color: #218838;
 }
 
 .join-game-button:disabled {
     background-color: #cccccc;
+        /* Svetlo sivá farba pre disabled */
+        color: #666;
     cursor: not-allowed;
+    opacity: 0.8;
+        box-shadow: none;
 }
 
 .join-game-button.active {
-    background-color: #17a2b8; /* Iná farba pre "Pokračovať v hre" */
+    background-color: #6c757d;
+        /* Tmavšia šedá pre "Pokračovať v hre" */
+        color: white;
+    }
+    
+    .join-game-button.active:hover {
+        background-color: #5a6268;
 }
 
 .leave-game-button {
     background-color: #dc3545;
+        /* Červená farba pre opustenie */
     color: white;
+    margin-left: 8px;
+        /* Menšia medzera od tlačidla pripojenia */
 }
 
 .leave-game-button:hover {
     background-color: #c82333;
 }
 
-.lobby-note {
-    font-size: 0.85em;
-    color: #777;
-    margin-top: 20px;
-    text-align: center;
+/* Správy o chybách */
+.error-message {
+    color: #dc3545;
+    /* Červená pre chyby */
+    margin-top: 10px;
+    /* Menší horný okraj */
+    font-weight: 600;
+    background-color: #f8d7da;
+    /* Veľmi svetlé červené pozadie pre chybu */
+    border: 1px solid #f5c6cb;
+    padding: 10px;
+    /* Menšie odsadenie */
+    border-radius: 5px;
+    font-size: 0.9rem;
+    /* Menšia veľkosť písma */
 }
 
-/* Responzívne úpravy */
-@media (max-width: 600px) {
-    .create-game-section,
-    .available-games-section {
-        padding: 15px;
-    }
-
-    .game-name-input {
-        width: 100%;
-        margin-right: 0;
-        margin-bottom: 10px;
-    }
-
-    .create-game-button {
-        width: 100%;
-    }
-
+/* Responzívne úpravy pre menšie obrazovky */
+@media (min-width: 768px) {
     .game-item {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 5px;
+        flex-direction: row;
+            /* Na väčších obrazovkách vedľa seba */
+            align-items: center;
+            justify-content: space-between;
+            /* Rozloženie priestoru */
     }
 
     .game-item span {
-        margin-right: 0;
-    }
-
-    .join-game-button,
-    .leave-game-button {
-        width: 100%;
-        margin-left: 0;
-        margin-top: 5px;
+        text-align: left;
     }
 }

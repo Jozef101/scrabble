@@ -17,24 +17,7 @@ import { RACK_SIZE } from '../utils/constants';
 import { moveLetter as importedMoveLetter } from '../utils/moveLetterLogic';
 import { sendPlayerAction } from '../utils/socketHandlers';
 
-function useGameLogic(socket, gameId, myPlayerIndex, slovakWordsArray) {
-  const [gameState, setGameState] = useState({
-    letterBag: [],
-    playerRacks: Array(2).fill(null).map(() => Array(RACK_SIZE).fill(null)),
-    board: Array(15).fill(null).map(() => Array(15).fill(null)),
-    boardAtStartOfTurn: Array(15).fill(null).map(() => Array(15).fill(null)),
-    isFirstTurn: true,
-    playerScores: [0, 0],
-    currentPlayerIndex: 0,
-    exchangeZoneLetters: [],
-    hasPlacedOnBoardThisTurn: false,
-    hasMovedToExchangeZoneThisTurn: false,
-    consecutivePasses: 0,
-    isGameOver: false,
-    isBagEmpty: false,
-    hasInitialGameStateReceived: false,
-    highlihtedLetters: [],
-  });
+function useGameLogic(socket, gameId, myPlayerIndex, slovakWordsArray, gameState, setGameState) {
 
   const [showLetterSelectionModal, setShowLetterSelectionModal] = useState(false);
   const [jokerTileCoords, setJokerTileCoords] = useState(null);
@@ -53,7 +36,7 @@ function useGameLogic(socket, gameId, myPlayerIndex, slovakWordsArray) {
     return () => {
       socket.off('gameStateUpdate', handleGameStateUpdate);
     };
-  }, [socket]);
+  }, [socket, setGameState]);
 
   // Memoizovaná funkcia moveLetter
   const moveLetter = useCallback((letterData, source, target) => {

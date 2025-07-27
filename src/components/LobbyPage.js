@@ -18,7 +18,6 @@ const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
  * @param {object} props.db - Inštancia Firestore databázy.
  */
 function LobbyPage({ userId, onStartGame, db }) {
-    const [gameName, setGameName] = useState('');
     const [games, setGames] = useState([]);
     const [error, setError] = useState('');
 
@@ -52,10 +51,6 @@ function LobbyPage({ userId, onStartGame, db }) {
     }, [db, userId]); // Závisí od db a userId
 
     const handleCreateGame = async () => {
-        if (!gameName.trim()) {
-            setError("Názov hry nemôže byť prázdny.");
-            return;
-        }
         if (!userId) {
             setError("Nie si prihlásený. Skús sa znova prihlásiť.");
             return;
@@ -65,13 +60,12 @@ function LobbyPage({ userId, onStartGame, db }) {
             // Používame lokálne definované 'appId'
             const gamesCollectionRef = collection(db, `artifacts/${appId}/public/data/games`);
             await addDoc(gamesCollectionRef, {
-                name: gameName,
+                name: `Hra od ${userId.substring(0, 8)}`,
                 players: [{ id: userId, playerIndex: 0 }], // Prvý hráč je vždy tvorca hry
                 status: 'waiting', // 'waiting', 'in-progress', 'finished'
                 createdAt: new Date(),
                 // Ďalšie počiatočné stavy hry môžu byť tu alebo inicializované na serveri
             });
-            setGameName('');
             setError('');
         } catch (e) {
             console.error("Chyba pri vytváraní hry:", e);
@@ -150,13 +144,6 @@ function LobbyPage({ userId, onStartGame, db }) {
 
             <div className="create-game-section">
                 <h3>Vytvoriť novú hru</h3>
-                <input
-                    type="text"
-                    placeholder="Názov hry"
-                    value={gameName}
-                    onChange={(e) => setGameName(e.target.value)}
-                    className="game-name-input"
-                />
                 <button onClick={handleCreateGame} className="create-game-button">
                     Vytvoriť hru
                 </button>

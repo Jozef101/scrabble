@@ -1,5 +1,5 @@
 // src/components/GamePage.js
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 
@@ -31,17 +31,29 @@ function GamePage({ gameId, userId, onGoToLobby, db }) {
   // Debug log pre userId prop na začiatku renderu komponentu
   console.log('GamePage: userId prop value at render:', userId);
 
+  const [gameState, setGameState] = useState({
+    letterBag: [],
+    playerRacks: [[], []],
+    board: Array(15).fill(Array(15).fill(null)), // Predvolený prázdny stav dosky
+    boardAtStartOfTurn: Array(15).fill(Array(15).fill(null)),
+    playerScores: [0, 0],
+    currentPlayerIndex: 0,
+    exchangeZoneLetters: [],
+    isGameOver: false,
+    highlightedLetters: [],
+    // Pridajte akékoľvek ďalšie kľúčové vlastnosti gameState, ktoré očakávate
+  });
+
   // 1. Hook pre pripojenie Socket.IO a chat
   const {
     socket,
     myPlayerIndex,
     connectionStatus,
     chatMessages,
-    // setChatMessages, // ODSTRÁNENÉ: setChatMessages je použité v useSocketConnection, nie priamo tu
     newChatMessage,
     setNewChatMessage,
     waitingForSecondPlayer,
-  } = useSocketConnection(gameId, userId);
+  } = useSocketConnection(gameId, userId, setGameState);
 
   // Ref pre posúvanie chatu
   const chatMessagesEndRef = useRef(null);
@@ -50,9 +62,7 @@ function GamePage({ gameId, userId, onGoToLobby, db }) {
   }, [chatMessages]);
 
   // 2. Hook pre hlavnú hernú logiku a stav
-  const {
-    gameState,
-    setGameState, // Potrebné pre moveLetterLogic
+  const {// Potrebné pre moveLetterLogic
     showLetterSelectionModal,
     setShowLetterSelectionModal,
     jokerTileCoords,
@@ -62,7 +72,7 @@ function GamePage({ gameId, userId, onGoToLobby, db }) {
     confirmTurn,
     handleExchangeLetters,
     handlePassTurn,
-  } = useGameLogic(socket, gameId, myPlayerIndex, slovakWordsArray);
+  } = useGameLogic(socket, gameId, myPlayerIndex, slovakWordsArray, gameState, setGameState);
 
   // 3. Hook pre logiku ťuknutia na písmeno/slot
   const {
