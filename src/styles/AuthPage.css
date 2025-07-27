@@ -27,11 +27,23 @@
     display: flex;
     flex-direction: column;
     gap: 15px;
+        /* Toto sa aplikuje na medzery medzi prvkami vo formulári */
     width: 100%;
     max-width: 400px; /* Obmedzenie šírky formulára */
     box-sizing: border-box;
 }
 
+.auth-form-group {
+    /* Nová trieda pre skupiny inputov a labelov */
+    margin-bottom: 15px;
+    /* Odsadenie pod každou skupinou */
+}
+
+/* ZMENA: Odsadenie pod poľom pre heslo */
+.auth-form-group:last-of-type {
+    margin-bottom: 25px;
+    /* Väčšie odsadenie pod poslednou skupinou (heslo) */
+}
 .auth-input {
     width: 100%;
     padding: 12px;
@@ -49,19 +61,14 @@
 
 .auth-button {
     width: 100%;
-    padding: 12px;
-    background-color: #007bff;
-    color: white;
     border: none;
     border-radius: 5px;
-    font-size: 1.1em;
     cursor: pointer;
     transition: background-color 0.2s ease, transform 0.1s ease;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .auth-button:hover {
-    background-color: #0056b3;
     transform: translateY(-1px);
 }
 
@@ -69,6 +76,36 @@
     transform: translateY(0);
 }
 
+/* VÝRAZNEJŠIE ZMENY: Špecifické štýly pre primárne tlačidlo (Prihlásiť/Zaregistrovať) */
+.auth-button-primary {
+    background-color: #007bff;
+    color: white;
+    padding: 6px;
+    /* Ešte menšie vertikálne odsadenie na 6px */
+    font-size: 0.85em;
+    /* Ešte menšia veľkosť písma na 0.85em */
+}
+
+.auth-button-primary:hover {
+    background-color: #0056b3;
+}
+
+/* VÝRAZNEJŠIE ZMENY: Špecifické štýly pre sekundárne tlačidlo (Prepínanie režimu) */
+.auth-button-secondary {
+    background-color: #6c757d;
+    /* Iná farba pre sekundárne tlačidlo */
+    color: white;
+    padding: 6px;
+    /* Ešte menšie vertikálne odsadenie na 6px */
+    font-size: 0.85em;
+    /* Ešte menšia veľkosť písma na 0.85em */
+    margin-top: 10px;
+    /* Ponecháme medzeru medzi tlačidlami */
+}
+
+.auth-button-secondary:hover {
+    background-color: #5a6268;
+}
 .auth-separator {
     text-align: center;
     margin: 15px 0;
@@ -95,14 +132,6 @@
     right: 0;
 }
 
-.google-button {
-    background-color: #db4437; /* Google červená */
-}
-
-.google-button:hover {
-    background-color: #c0392b;
-}
-
 .auth-toggle {
     margin-top: 20px;
     font-size: 0.9em;
@@ -119,7 +148,7 @@
     color: #0056b3;
 }
 
-.error-message {
+.auth-error-message {
     color: #dc3545; /* Červená pre chyby */
     margin-bottom: 15px;
     text-align: center;
@@ -141,4 +170,12 @@
     .auth-container h2 {
         font-size: 1.8em;
     }
+        /* VÝRAZNEJŠIA ZMENA: Zabezpečí, že tlačidlá budú menšie aj na mobiloch */
+        .auth-button-primary,
+        .auth-button-secondary {
+            padding: 4px;
+            /* Ešte menšie odsadenie pre mobil na 4px */
+            font-size: 0.75em;
+            /* Ešte menšie písmo pre mobil na 0.75em */
+        }
 }

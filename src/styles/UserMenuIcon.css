@@ -1,0 +1,116 @@
+/* src/components/UserMenuIcon.css */
+
+/* Štýly pre kontajner ikony používateľa */
+.user-icon-container {
+    position: absolute; /* Absolútne umiestnenie vzhľadom na rodiča s position: relative */
+    top: 20px; /* Odsadenie od vrchu */
+    right: 20px; /* Odsadenie od pravej strany */
+    z-index: 1000; /* Zabezpečí, že bude nad ostatnými prvkami */
+    background-color: #ffffff; /* Biele pozadie */
+    border-radius: 50%; /* Kruhový tvar */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Jemný tieň */
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px; /* Šírka ikony */
+    height: 50px; /* Výška ikony */
+    padding: 5px; /* Vnútorné odsadenie */
+}
+
+.user-icon-container:hover {
+    transform: translateY(-2px); /* Jemný posun pri hoveri */
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15); /* Výraznejší tieň pri hoveri */
+}
+
+/* Štýly pre samotné tlačidlo ikony (vo vnútri kontajnera) */
+.user-icon-button {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    display: flex; /* Pre centrovanie SVG */
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+}
+
+/* Štýlovanie SVG ikony vo vnútri tlačidla */
+.user-icon-button svg {
+    width: 28px; /* Väčšia ikona */
+    height: 28px;
+    color: #555; /* Farba ikony */
+}
+
+/* Štýly pre rozbaľovacie menu */
+.user-menu-dropdown {
+    position: absolute;
+    top: 60px; /* Pod ikonkou (50px výška ikony + 10px medzera) */
+    right: 0;
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    min-width: 180px; /* Minimálna šírka menu */
+    z-index: 1001; /* Vyšší z-index ako ikona */
+    padding: 10px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.user-menu-dropdown button {
+    background: none;
+    border: none;
+    padding: 10px 15px;
+    text-align: left;
+    width: 100%;
+    cursor: pointer;
+    font-size: 1rem;
+    color: #333;
+    transition: background-color 0.2s ease;
+    border-radius: 4px; /* Jemné zaoblenie tlačidiel v dropdown */
+}
+
+.user-menu-dropdown button:hover {
+    background-color: #f0f0f0; /* Svetlé pozadie pri hoveri */
+}
+
+/* Zaoblenie rohov pre prvé a posledné tlačidlo v dropdown menu */
+.user-menu-dropdown button:first-child {
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+}
+
+.user-menu-dropdown button:last-child {
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+}
+
+/* Responzívne štýly pre menšie obrazovky */
+@media (max-width: 768px) {
+    .user-icon-container {
+        top: 10px;
+        right: 10px;
+        width: 40px;
+        height: 40px;
+    }
+
+    .user-icon-button svg {
+        width: 24px;
+        height: 24px;
+    }
+
+    .user-menu-dropdown {
+        top: 50px;
+        right: 10px;
+        min-width: 150px;
+    }
+
+    .user-menu-dropdown button {
+        font-size: 0.9rem;
+        padding: 8px 12px;
+    }
+}

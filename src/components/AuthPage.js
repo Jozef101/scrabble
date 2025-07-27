@@ -1,113 +1,125 @@
+// src/components/AuthPage.js
 import React, { useState } from 'react';
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
+import '../styles/AuthPage.css'; // Import štýlov pre AuthPage
 
-const AuthPage = ({ auth }) => {
+/**
+ * Komponent pre autentifikáciu používateľa.
+ * Umožňuje prihlásenie alebo registráciu pomocou e-mailu a hesla.
+ *
+ * @param {object} props - Vlastnosti komponentu.
+ * @param {object} props.auth - Firebase Auth inštancia.
+ */
+function AuthPage({ auth }) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [isRegistering, setIsRegistering] = useState(true); // true pre registráciu, false pre prihlásenie
-    const [error, setError] = useState('');
-    const [isLoading, setIsLoading] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
+    const [isRegistering, setIsRegistering] = useState(false); // Nový stav pre prepínanie medzi prihlásením a registráciou
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        setError('');
-        setIsLoading(true);
-
+    // Funkcia na prihlásenie používateľa
+    const handleLogin = async () => {
+        setErrorMessage(''); // Vyčistiť predchádzajúce chyby
         try {
-            if (isRegistering) {
-                await createUserWithEmailAndPassword(auth, email, password);
-                console.log("Používateľ úspešne zaregistrovaný!");
-            } else {
-                await signInWithEmailAndPassword(auth, email, password);
-                console.log("Používateľ úspešne prihlásený!");
+            await signInWithEmailAndPassword(auth, email, password);
+            console.log("Prihlásenie úspešné pre:", email);
+            // Navigácia sa spracuje v App.js cez onAuthStateChanged
+        } catch (error) {
+            console.error("Chyba pri prihlasovaní:", error);
+            let message = "Chyba pri prihlasovaní. Skúste to znova.";
+            if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
+                message = "Nesprávny e-mail alebo heslo.";
+            } else if (error.code === 'auth/invalid-email') {
+                message = "Neplatný formát e-mailu.";
+            } else if (error.code === 'auth/invalid-credential') {
+                message = "Neplatné prihlasovacie údaje.";
             }
-        } catch (err) {
-            console.error("Chyba autentifikácie:", err);
-            let errorMessage = "Nastala neznáma chyba.";
-            switch (err.code) {
-                case 'auth/email-already-in-use':
-                    errorMessage = "Tento e-mail je už zaregistrovaný.";
-                    break;
-                case 'auth/invalid-email':
-                    errorMessage = "Neplatný formát e-mailu.";
-                    break;
-                case 'auth/weak-password':
-                    errorMessage = "Heslo je príliš slabé (min. 6 znakov).";
-                    break;
-                case 'auth/user-not-found':
-                case 'auth/wrong-password':
-                    errorMessage = "Nesprávny e-mail alebo heslo.";
-                    break;
-                case 'auth/missing-password':
-                    errorMessage = "Zadajte heslo.";
-                    break;
-                case 'auth/invalid-credential':
-                    errorMessage = "Neplatné prihlasovacie údaje.";
-                    break;
-                default:
-                    errorMessage = `Chyba: ${err.message}`;
+            setErrorMessage(message);
+        }
+    };
+
+    // Funkcia na registráciu nového používateľa
+    const handleRegister = async () => {
+        setErrorMessage(''); // Vyčistiť predchádzajúce chyby
+        try {
+            await createUserWithEmailAndPassword(auth, email, password);
+            console.log("Registrácia úspešná pre:", email);
+            // Navigácia sa spracuje v App.js cez onAuthStateChanged
+        } catch (error) {
+            console.error("Chyba pri registrácii:", error);
+            let message = "Chyba pri registrácii. Skúste to znova.";
+            if (error.code === 'auth/email-already-in-use') {
+                message = "Tento e-mail je už zaregistrovaný.";
+            } else if (error.code === 'auth/invalid-email') {
+                message = "Neplatný formát e-mailu.";
+            } else if (error.code === 'auth/weak-password') {
+                message = "Heslo je príliš slabé (min. 6 znakov).";
             }
-            setError(errorMessage);
-        } finally {
-            setIsLoading(false);
+            setErrorMessage(message);
+        }
+    };
+
+    // ZMENA: Nová funkcia pre spracovanie odoslania formulára
+    const handleSubmit = (e) => {
+        e.preventDefault(); // Zabráni predvolenému správaniu formulára (obnovenie stránky)
+        if (isRegistering) {
+            handleRegister();
+        } else {
+            handleLogin();
         }
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-purple-600 to-blue-500 flex items-center justify-center p-4 font-inter">
-            <div className="bg-white p-8 rounded-xl shadow-2xl w-full max-w-md text-center">
-                <h1 className="text-4xl font-bold text-gray-800 mb-6">
-                    {isRegistering ? 'Registrácia' : 'Prihlásenie'}
-                </h1>
+        <div className="auth-container">
+            <h2>Vitajte v Scrabble!</h2>
+            <p>Prosím, {isRegistering ? 'zaregistrujte sa' : 'prihláste sa'} pre pokračovanie.</p>
 
-                {error && (
-                    <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-md relative mb-4" role="alert">
-                        <span className="block sm:inline">{error}</span>
-                    </div>
-                )}
+            {/* ZMENA: Obalenie formulára do <form> elementu s onSubmit handlerom */}
+            <form onSubmit={handleSubmit} className="auth-form">
+                <div className="auth-form-group">
+                    <label htmlFor="email">E-mail:</label>
+                    <input
+                        type="email"
+                        id="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        placeholder="zadajte svoj e-mail"
+                        className="auth-input"
+                    />
+                </div>
+                <div className="auth-form-group">
+                    <label htmlFor="password">Heslo:</label>
+                    <input
+                        type="password"
+                        id="password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        placeholder="zadajte svoje heslo"
+                        className="auth-input"
+                    />
+                </div>
 
-                <form onSubmit={handleSubmit} className="space-y-5">
-                    <div>
-                        <input
-                            type="email"
-                            placeholder="E-mail"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            required
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 text-gray-800"
-                        />
-                    </div>
-                    <div>
-                        <input
-                            type="password"
-                            placeholder="Heslo"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            required
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 text-gray-800"
-                        />
-                    </div>
-                    <button
-                        type="submit"
-                        className="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-6 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
-                        disabled={isLoading}
-                    >
-                        {isLoading ? (isRegistering ? 'Registrujem...' : 'Prihlasujem...') : (isRegistering ? 'Zaregistrovať sa' : 'Prihlásiť sa')}
+                {errorMessage && <p className="auth-error-message">{errorMessage}</p>}
+
+                <div className="auth-buttons">
+                    {/* Tlačidlá sú stále typu "submit" implicitne, keď sú vo formulári,
+                        alebo môžete explicitne pridať type="submit" */}
+                    {isRegistering ? (
+                        <button type="submit" className="auth-button auth-button-primary">
+                            Zaregistrovať sa
+                        </button>
+                    ) : (
+                        <button type="submit" className="auth-button auth-button-primary">
+                            Prihlásiť sa
+                        </button>
+                    )}
+                    {/* Toto tlačidlo by nemalo byť typu "submit", aby nespúšťalo odoslanie formulára */}
+                    <button type="button" onClick={() => setIsRegistering(!isRegistering)} className="auth-button auth-button-secondary">
+                        {isRegistering ? 'Mám účet? Prihlásiť sa' : 'Nemám účet? Zaregistrovať sa'}
                     </button>
-                </form>
-
-                <p className="mt-6 text-gray-600">
-                    {isRegistering ? 'Už máte účet?' : 'Nemáte účet?'}
-                    <button
-                        onClick={() => setIsRegistering(!isRegistering)}
-                        className="ml-2 text-purple-600 hover:text-purple-800 font-semibold transition duration-300"
-                    >
-                        {isRegistering ? 'Prihláste sa' : 'Zaregistrujte sa'}
-                    </button>
-                </p>
-            </div>
+                </div>
+            </form> {/* Koniec form elementu */}
         </div>
     );
-};
+}
 
 export default AuthPage;

@@ -14,6 +14,7 @@ import { getFirestore } from 'firebase/firestore';
 import AuthPage from './components/AuthPage';
 import LobbyPage from './components/LobbyPage';
 import GamePage from './components/GamePage';
+import UserMenuIcon from './components/UserMenuIcon';
 
 import './styles/App.css'; // Základné štýly
 
@@ -50,11 +51,9 @@ console.log("Firestore DB inštancia v App.js:", db);
 function App() {
     const [userId, setUserId] = useState(null);
     const [isAuthReady, setIsAuthReady] = useState(false);
-    // const [currentPage, setCurrentPage] = useState('auth'); // <-- ODSTRÁNENÉ: Nahradené React Routerom
-    // const [currentGameId, setCurrentGameId] = useState(null); // <-- ODSTRÁNENÉ: Game ID bude z URL parametrov
 
-    const navigate = useNavigate(); // <-- PRIDANÉ: Hook pre navigáciu
-    const location = useLocation(); // <-- PRIDANÉ: Hook pre získanie aktuálnej cesty
+    const navigate = useNavigate();
+    const location = useLocation();
 
     // Effect pre Firebase Authentication
     useEffect(() => {
@@ -65,39 +64,14 @@ function App() {
                     await signInWithCustomToken(auth, initialAuthToken);
                     console.log("Prihlásený pomocou vlastného tokenu (Canvas).");
                 } else {
-                    // Používateľ sa musí prihlásiť/zaregistrovať cez AuthPage.
-                    console.log("Čakám na prihlásenie/registráciu používateľa.");
+                    // Ak nie je Canvas token, necháme AuthPage spracovať prihlásenie e-mailom/heslom.
+                    // Tu už nebudeme volať signInAnonymously.
+                    console.log("Žiadny Canvas token. Čakám na prihlásenie/registráciu používateľa cez AuthPage.");
                 }
             } catch (error) {
-                console.error("Chyba pri prihlasovaní do Firebase:", error);
-                let errorMessage = "Nastala neznáma chyba.";
-                switch (error.code) {
-                    case 'auth/email-already-in-use':
-                        errorMessage = "Tento e-mail je už zaregistrovaný.";
-                        break;
-                    case 'auth/invalid-email':
-                        errorMessage = "Neplatný formát e-mailu.";
-                        break;
-                    case 'auth/weak-password':
-                        errorMessage = "Heslo je príliš slabé (min. 6 znakov).";
-                        break;
-                    case 'auth/user-not-found':
-                    case 'auth/wrong-password':
-                        errorMessage = "Nesprávny e-mail alebo heslo.";
-                        break;
-                    case 'auth/missing-password':
-                        errorMessage = "Zadajte heslo.";
-                        break;
-                    case 'auth/invalid-credential':
-                        errorMessage = "Neplatné prihlasovacie údaje.";
-                        break;
-                    case 'auth/api-key-not-valid':
-                        errorMessage = "Neplatný API kľúč Firebase. Skontrolujte konfiguráciu Firebase.";
-                        break;
-                    default:
-                        errorMessage = `Chyba: ${error.message}`;
-                }
-                console.error("Firebase Auth Error:", errorMessage);
+                console.error("Chyba pri prihlasovaní do Firebase (z App.js):", error);
+                // Tu môžete zobraziť všeobecnú chybu, ak sa nepodarí prihlásiť cez Canvas token
+                // Konkrétnejšie chyby pre e-mail/heslo sa spracujú v AuthPage.
             }
         };
 
@@ -105,33 +79,34 @@ function App() {
             if (user) {
                 setUserId(user.uid);
                 console.log("Firebase User ID:", user.uid);
+                // Ak je používateľ prihlásený a nie je už na hernej stránke, presmeruj na lobby
                 if (!location.pathname.startsWith('/game/')) {
                     navigate('/lobby');
                 }
             } else {
                 setUserId(null);
                 console.log("Používateľ odhlásený z Firebase.");
-                // ZMENA: Presmeruj na autentifikačnú stránku, ak nie je už tam
+                // Presmeruj na autentifikačnú stránku, ak nie je už tam
                 if (location.pathname !== '/') {
                     navigate('/');
                 }
             }
-            setIsAuthReady(true);
+            setIsAuthReady(true); // Nastaví sa na true, keď je stav autentifikácie známy
         });
 
-        authenticateFirebase();
+        authenticateFirebase(); // Spustí počiatočnú autentifikáciu
 
-        return () => unsubscribe();
-    }, [auth, navigate, initialAuthToken]); // <-- PRIDANÉ: navigate do závislostí
+        return () => unsubscribe(); // Čistenie pri odpojení komponentu
+    }, [auth, navigate, initialAuthToken, location.pathname]); // Pridaná location.pathname do závislostí
 
     // Funkcia na spustenie hry (prechod z lobby na hernú stránku)
     const handleStartGame = (id) => {
-        navigate(`/game/${id}`); // <-- ZMENA: Navigácia na dynamickú cestu hry
+        navigate(`/game/${id}`);
     };
 
     // Funkcia na návrat do lobby z hry
     const handleGoToLobby = () => {
-        navigate('/lobby'); // <-- ZMENA: Navigácia späť do lobby
+        navigate('/lobby');
     };
 
     // Podmienené renderovanie na základe isAuthReady (pred Routami)
@@ -143,10 +118,12 @@ function App() {
         );
     }
 
-    // <-- ZMENA: Nahradené Routes a Route komponentami
     return (
-        <DndProvider backend={HTML5Backend}> {/* DndProvider je stále potrebný pre drag-and-drop */}
+        <DndProvider backend={HTML5Backend}>
             <div className="app-container">
+                {/* UserMenuIcon sa zobrazí len ak je userId (používateľ je prihlásený) */}
+                {userId && <UserMenuIcon userId={userId} auth={auth} />}
+
                 <Routes>
                     {/* Cesta pre autentifikačnú stránku */}
                     <Route path="/" element={<AuthPage auth={auth} />} />
@@ -184,10 +161,10 @@ function App() {
 
 // Pomocný komponent na získanie gameId z URL parametrov
 function GamePageWrapper({ userId, onGoToLobby }) {
-    const { gameId } = useParams(); // <-- PRIDANÉ: Získanie gameId z URL
+    const { gameId } = useParams();
     return (
         <GamePage
-            gameId={gameId} // <-- gameId sa teraz prenáša z URL
+            gameId={gameId}
             userId={userId}
             onGoToLobby={onGoToLobby}
         />
