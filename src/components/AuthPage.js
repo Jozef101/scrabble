@@ -1,6 +1,6 @@
 // src/components/AuthPage.js
 import React, { useState } from 'react';
-import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth'; // ZMENA: Pridaná sendEmailVerification
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
 import '../styles/AuthPage.css'; // Import štýlov pre AuthPage
 
 /**
@@ -14,17 +14,16 @@ function AuthPage({ auth }) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
-    const [successMessage, setSuccessMessage] = useState(''); // Nový stav pre úspešné správy
-    const [isRegistering, setIsRegistering] = useState(false); // Nový stav pre prepínanie medzi prihlásením a registráciou
+    const [successMessage, setSuccessMessage] = useState('');
+    const [isRegistering, setIsRegistering] = useState(false);
 
     // Funkcia na prihlásenie používateľa
     const handleLogin = async () => {
-        setErrorMessage(''); // Vyčistiť predchádzajúce chyby
-        setSuccessMessage(''); // Vyčistiť úspešné správy
+        setErrorMessage('');
+        setSuccessMessage('');
         try {
             await signInWithEmailAndPassword(auth, email, password);
             console.log("Prihlásenie úspešné pre:", email);
-            // Navigácia sa spracuje v App.js cez onAuthStateChanged
         } catch (error) {
             console.error("Chyba pri prihlasovaní:", error);
             let message = "Chyba pri prihlasovaní. Skúste to znova.";
@@ -41,21 +40,37 @@ function AuthPage({ auth }) {
 
     // Funkcia na registráciu nového používateľa
     const handleRegister = async () => {
-        setErrorMessage(''); // Vyčistiť predchádzajúce chyby
-        setSuccessMessage(''); // Vyčistiť úspešné správy
+        setErrorMessage('');
+        setSuccessMessage('');
         try {
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
             const user = userCredential.user;
 
-            // ZMENA: Odoslanie potvrdzovacieho e-mailu
-            await sendEmailVerification(user);
+            // ZMENA: Definícia actionCodeSettings s explicitnou URL
+            const actionCodeSettings = {
+                // DÔLEŽITÉ: Táto URL MUSÍ byť v zozname "Authorized domains" vo vašej Firebase konzole!
+                // Pre lokálne testovanie: 'http://localhost:3000/' (alebo váš port)
+                // Pre nasadenú aplikáciu: 'https://scrabble-3ba2d.web.app/' alebo 'https://skrebl.vercel.app/'
+                url: 'https://skrebl.vercel.app/', // <<-- NASTAVTE TÚTO URL PODĽA VAŠEJ APLIKÁCIE
+                handleCodeInApp: true, // Ak chcete spracovať overenie priamo v aplikácii (odporúčané)
+                // iOS a Android nastavenia môžete pridať, ak máte mobilné aplikácie
+                // iOS: {
+                //   bundleId: 'com.example.ios'
+                // },
+                // android: {
+                //   packageName: 'com.example.android',
+                //   installApp: true,
+                //   minimumVersion: '12'
+                // }
+            };
+
+            // ZMENA: Odoslanie potvrdzovacieho e-mailu s actionCodeSettings
+            await sendEmailVerification(user, actionCodeSettings);
 
             console.log("Registrácia úspešná pre:", email);
             setSuccessMessage("Registrácia úspešná! Skontrolujte si e-mail pre overenie účtu.");
-            // Po registrácii sa používateľ automaticky prihlási.
-            // Môžete ho presmerovať alebo zobraziť správu.
         } catch (error) {
-            console.error("Chyba pri registrácii:", error);
+            console.error("Chyba pri registrácii alebo odosielaní overovacieho e-mailu:", error); // ZMENA: Detailnejší log
             let message = "Chyba pri registrácii. Skúste to znova.";
             if (error.code === 'auth/email-already-in-use') {
                 message = "Tento e-mail je už zaregistrovaný.";
@@ -63,6 +78,8 @@ function AuthPage({ auth }) {
                 message = "Neplatný formát e-mailu.";
             } else if (error.code === 'auth/weak-password') {
                 message = "Heslo je príliš slabé (min. 6 znakov).";
+            } else if (error.code === 'auth/unauthorized-continue-uri') { // NOVINKA: Chybová správa pre URL
+                message = "Chyba pri odosielaní overovacieho e-mailu: Neplatná adresa pre presmerovanie. Skontrolujte nastavenia Firebase.";
             }
             setErrorMessage(message);
         }
@@ -70,7 +87,7 @@ function AuthPage({ auth }) {
 
     // Funkcia pre spracovanie odoslania formulára
     const handleSubmit = (e) => {
-        e.preventDefault(); // Zabráni predvolenému správaniu formulára (obnovenie stránky)
+        e.preventDefault();
         if (isRegistering) {
             handleRegister();
         } else {
@@ -108,7 +125,7 @@ function AuthPage({ auth }) {
                 </div>
 
                 {errorMessage && <p className="auth-error-message">{errorMessage}</p>}
-                {successMessage && <p className="success-message">{successMessage}</p>} {/* ZMENA: Zobrazenie úspešnej správy */}
+                {successMessage && <p className="success-message">{successMessage}</p>}
 
                 <div className="auth-buttons">
                     {isRegistering ? (
