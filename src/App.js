@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
-import { Routes, Route, useNavigate, useParams, useLocation } from 'react-router-dom'; // <-- PRIDANÉ: Routes, Route, useNavigate, useParams
+import { Routes, Route, useNavigate, useParams, useLocation } from 'react-router-dom';
 
 // Firebase Imports
 import { initializeApp } from 'firebase/app';
@@ -15,6 +15,7 @@ import AuthPage from './components/AuthPage';
 import LobbyPage from './components/LobbyPage';
 import GamePage from './components/GamePage';
 import UserMenuIcon from './components/UserMenuIcon';
+import EmailVerificationPage from './components/EmailVerificationPage'; // <-- NOVINKA: Import novej stránky
 
 import './styles/App.css'; // Základné štýly
 
@@ -60,18 +61,13 @@ function App() {
         const authenticateFirebase = async () => {
             try {
                 if (initialAuthToken) {
-                    // Ak je dostupný Canvas token, použijeme ho
                     await signInWithCustomToken(auth, initialAuthToken);
                     console.log("Prihlásený pomocou vlastného tokenu (Canvas).");
                 } else {
-                    // Ak nie je Canvas token, necháme AuthPage spracovať prihlásenie e-mailom/heslom.
-                    // Tu už nebudeme volať signInAnonymously.
                     console.log("Žiadny Canvas token. Čakám na prihlásenie/registráciu používateľa cez AuthPage.");
                 }
             } catch (error) {
                 console.error("Chyba pri prihlasovaní do Firebase (z App.js):", error);
-                // Tu môžete zobraziť všeobecnú chybu, ak sa nepodarí prihlásiť cez Canvas token
-                // Konkrétnejšie chyby pre e-mail/heslo sa spracujú v AuthPage.
             }
         };
 
@@ -79,9 +75,18 @@ function App() {
             if (user) {
                 setUserId(user.uid);
                 console.log("Firebase User ID:", user.uid);
-                // Ak je používateľ prihlásený a nie je už na hernej stránke, presmeruj na lobby
-                if (!location.pathname.startsWith('/game/')) {
-                    navigate('/lobby');
+
+                // ZMENA: Nová logika pre presmerovanie na základe overenia e-mailu
+                if (user.emailVerified) {
+                    // Ak je e-mail overený, presmeruj do lobby (ak nie je už v hre)
+                    if (!location.pathname.startsWith('/game/')) {
+                        navigate('/lobby');
+                    }
+                } else {
+                    // Ak e-mail NIE JE overený, presmeruj na stránku overenia e-mailu
+                    if (location.pathname !== '/verify-email') { // Zabráni nekonečnej slučke
+                        navigate('/verify-email');
+                    }
                 }
             } else {
                 setUserId(null);
@@ -91,13 +96,13 @@ function App() {
                     navigate('/');
                 }
             }
-            setIsAuthReady(true); // Nastaví sa na true, keď je stav autentifikácie známy
+            setIsAuthReady(true);
         });
 
-        authenticateFirebase(); // Spustí počiatočnú autentifikáciu
+        authenticateFirebase();
 
-        return () => unsubscribe(); // Čistenie pri odpojení komponentu
-    }, [auth, navigate, initialAuthToken, location.pathname]); // Pridaná location.pathname do závislostí
+        return () => unsubscribe();
+    }, [auth, navigate, initialAuthToken, location.pathname]);
 
     // Funkcia na spustenie hry (prechod z lobby na hernú stránku)
     const handleStartGame = (id) => {
@@ -121,12 +126,17 @@ function App() {
     return (
         <DndProvider backend={HTML5Backend}>
             <div className="app-container">
-                {/* UserMenuIcon sa zobrazí len ak je userId (používateľ je prihlásený) */}
                 {userId && <UserMenuIcon userId={userId} auth={auth} />}
 
                 <Routes>
                     {/* Cesta pre autentifikačnú stránku */}
                     <Route path="/" element={<AuthPage auth={auth} />} />
+
+                    {/* NOVINKA: Cesta pre stránku overenia e-mailu */}
+                    <Route
+                        path="/verify-email"
+                        element={<EmailVerificationPage auth={auth} userId={userId} />}
+                    />
 
                     {/* Cesta pre lobby stránku */}
                     <Route
