@@ -1,6 +1,6 @@
 // src/components/AuthPage.js
 import React, { useState } from 'react';
-import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth'; // ZMENA: Pridaná sendEmailVerification
 import '../styles/AuthPage.css'; // Import štýlov pre AuthPage
 
 /**
@@ -14,11 +14,13 @@ function AuthPage({ auth }) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
+    const [successMessage, setSuccessMessage] = useState(''); // Nový stav pre úspešné správy
     const [isRegistering, setIsRegistering] = useState(false); // Nový stav pre prepínanie medzi prihlásením a registráciou
 
     // Funkcia na prihlásenie používateľa
     const handleLogin = async () => {
         setErrorMessage(''); // Vyčistiť predchádzajúce chyby
+        setSuccessMessage(''); // Vyčistiť úspešné správy
         try {
             await signInWithEmailAndPassword(auth, email, password);
             console.log("Prihlásenie úspešné pre:", email);
@@ -40,10 +42,18 @@ function AuthPage({ auth }) {
     // Funkcia na registráciu nového používateľa
     const handleRegister = async () => {
         setErrorMessage(''); // Vyčistiť predchádzajúce chyby
+        setSuccessMessage(''); // Vyčistiť úspešné správy
         try {
-            await createUserWithEmailAndPassword(auth, email, password);
+            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+            const user = userCredential.user;
+
+            // ZMENA: Odoslanie potvrdzovacieho e-mailu
+            await sendEmailVerification(user);
+
             console.log("Registrácia úspešná pre:", email);
-            // Navigácia sa spracuje v App.js cez onAuthStateChanged
+            setSuccessMessage("Registrácia úspešná! Skontrolujte si e-mail pre overenie účtu.");
+            // Po registrácii sa používateľ automaticky prihlási.
+            // Môžete ho presmerovať alebo zobraziť správu.
         } catch (error) {
             console.error("Chyba pri registrácii:", error);
             let message = "Chyba pri registrácii. Skúste to znova.";
@@ -58,7 +68,7 @@ function AuthPage({ auth }) {
         }
     };
 
-    // ZMENA: Nová funkcia pre spracovanie odoslania formulára
+    // Funkcia pre spracovanie odoslania formulára
     const handleSubmit = (e) => {
         e.preventDefault(); // Zabráni predvolenému správaniu formulára (obnovenie stránky)
         if (isRegistering) {
@@ -73,7 +83,6 @@ function AuthPage({ auth }) {
             <h2>Vitajte v Scrabble!</h2>
             <p>Prosím, {isRegistering ? 'zaregistrujte sa' : 'prihláste sa'} pre pokračovanie.</p>
 
-            {/* ZMENA: Obalenie formulára do <form> elementu s onSubmit handlerom */}
             <form onSubmit={handleSubmit} className="auth-form">
                 <div className="auth-form-group">
                     <label htmlFor="email">E-mail:</label>
@@ -99,10 +108,9 @@ function AuthPage({ auth }) {
                 </div>
 
                 {errorMessage && <p className="auth-error-message">{errorMessage}</p>}
+                {successMessage && <p className="success-message">{successMessage}</p>} {/* ZMENA: Zobrazenie úspešnej správy */}
 
                 <div className="auth-buttons">
-                    {/* Tlačidlá sú stále typu "submit" implicitne, keď sú vo formulári,
-                        alebo môžete explicitne pridať type="submit" */}
                     {isRegistering ? (
                         <button type="submit" className="auth-button auth-button-primary">
                             Zaregistrovať sa
@@ -112,12 +120,11 @@ function AuthPage({ auth }) {
                             Prihlásiť sa
                         </button>
                     )}
-                    {/* Toto tlačidlo by nemalo byť typu "submit", aby nespúšťalo odoslanie formulára */}
                     <button type="button" onClick={() => setIsRegistering(!isRegistering)} className="auth-button auth-button-secondary">
                         {isRegistering ? 'Mám účet? Prihlásiť sa' : 'Nemám účet? Zaregistrovať sa'}
                     </button>
                 </div>
-            </form> {/* Koniec form elementu */}
+            </form>
         </div>
     );
 }
