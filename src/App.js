@@ -126,7 +126,7 @@ function App() {
     return (
         <DndProvider backend={HTML5Backend}>
             <div className="app-container">
-                {userId && <UserMenuIcon userId={userId} auth={auth} />}
+                {userId && location.pathname !== '/verify-email' && <UserMenuIcon userId={userId} auth={auth} />}
 
                 <Routes>
                     {/* Cesta pre autentifikačnú stránku */}
