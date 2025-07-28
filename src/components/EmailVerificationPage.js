@@ -49,7 +49,11 @@ function EmailVerificationPage({ auth, userId }) {
         setError(''); // Vyčistíme predchádzajúce chyby
 
         try {
-            await sendEmailVerification(auth.currentUser);
+            const actionCodeSettings = {
+                url: 'http://localhost:3000/', // Nastavte na port, na ktorom beží vaša React aplikácia pre lokálne testovanie
+                handleCodeInApp: true,
+            };
+            await sendEmailVerification(auth.currentUser, actionCodeSettings);
             setEmailSent(true);
             setResendCooldown(COOLDOWN_SECONDS); // Nastavíme časovač
             localStorage.setItem('lastEmailVerificationSent', Date.now().toString()); // Uložíme čas odoslania

@@ -7,7 +7,7 @@ import { Routes, Route, useNavigate, useParams, useLocation } from 'react-router
 
 // Firebase Imports
 import { initializeApp } from 'firebase/app';
-import { getAuth, signInWithCustomToken, onAuthStateChanged } from 'firebase/auth';
+import { getAuth, signInWithCustomToken, onAuthStateChanged, applyActionCode } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 
 // Import nových komponentov
@@ -103,6 +103,35 @@ function App() {
 
         return () => unsubscribe();
     }, [auth, navigate, initialAuthToken, location.pathname]);
+
+    // Effect pre spracovanie overovacieho odkazu z e-mailu
+    useEffect(() => {
+        const handleEmailVerificationLink = async () => {
+            const params = new URLSearchParams(location.search);
+            const oobCode = params.get('oobCode'); // Získať akčný kód z URL
+
+            if (oobCode) {
+                console.log("App.js: Nájdený oobCode v URL, pokúšam sa overiť e-mail...");
+                try {
+                    await applyActionCode(auth, oobCode);
+                    console.log("App.js: E-mail úspešne overený pomocou oobCode.");
+                    // Po úspešnom overení presmerujte na lobby a vyčistite URL
+                    alert('Váš e-mail bol úspešne overený! Môžete začať hrať.');
+                    navigate('/lobby', { replace: true }); // replace: true zabráni návratu na stránku s oobCode
+                } catch (error) {
+                    console.error("App.js: Chyba pri overovaní e-mailu pomocou oobCode:", error);
+                    // KLÚČOVÁ ZMENA: Zobraziť chybu používateľovi, len ak to NIE JE chyba, že e-mail je už overený alebo kód neplatný/vypršaný
+                    if (error.code !== 'auth/invalid-action-code' && error.code !== 'auth/expired-action-code') {
+                        alert(`Chyba pri overovaní e-mailu: ${error.message}. Skúste to znova alebo sa prihláste.`);
+                    }
+                    // Vždy presmerovať na prihlasovaciu stránku po akejkoľvek chybe overenia kódu
+                    navigate('/', { replace: true });
+                }
+            }
+        };
+
+        handleEmailVerificationLink();
+    }, [auth, location.search, navigate]); // Závislosti: auth, location.search (pre zmeny URL), navigate
 
     // Funkcia na spustenie hry (prechod z lobby na hernú stránku)
     const handleStartGame = (id) => {
