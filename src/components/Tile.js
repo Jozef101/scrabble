@@ -6,24 +6,19 @@ import { getBonusType, BONUS_TYPES } from '../utils/boardUtils';
 import '../styles/Tile.css';
 
 // Tile teraz prijíma aj myPlayerIndex, currentPlayerIndex, selectedLetter, onTapLetter, onTapSlot
-function Tile({ x, y, letter, moveLetter, boardAtStartOfTurn, myPlayerIndex, currentPlayerIndex, selectedLetter, onTapLetter, onTapSlot, isHighlighted, isActionInProgress }) { // KLÚČOVÁ ZMENA: Pridaný isActionInProgress
+function Tile({ x, y, letter, moveLetter, boardAtStartOfTurn, myPlayerIndex, currentPlayerIndex, selectedLetter, onTapLetter, onTapSlot, isHighlighted, isActionInProgress }) {
   const bonusType = getBonusType(x, y);
 
   // isDraggable logika pre písmená na doske
   // Písmeno je ťahateľné, len ak:
   // 1. Je aktuálne na ťahu hráč (currentPlayerIndex === myPlayerIndex)
   // 2. A písmeno nebolo na doske na začiatku ťahu (tzn. bolo položené v tomto ťahu)
-  // KLÚČOVÁ ZMENA: Písmeno nie je ťahateľné, ak prebieha akcia
-  const canTileBeDragged = letter !== null && (boardAtStartOfTurn[x][y] === null) && (myPlayerIndex === currentPlayerIndex) && !isActionInProgress;
+  // KLÚČOVÁ ZMENA: isActionInProgress ODSTRÁNENÉ z canTileBeDragged
+  const canTileBeDragged = letter !== null && (boardAtStartOfTurn[x][y] === null) && (myPlayerIndex === currentPlayerIndex);
 
   const [{ isOver, canDrop }, drop] = useDrop({
     accept: 'LETTER',
     canDrop: (item) => {
-      // KLÚČOVÁ ZMENA: Nemôžeš dropnúť, ak prebieha akcia
-      if (isActionInProgress) {
-        return false;
-      }
-
       // Môžeš dropnúť na políčko, ak je prázdne
       if (letter === null) return true;
       
@@ -45,12 +40,6 @@ function Tile({ x, y, letter, moveLetter, boardAtStartOfTurn, myPlayerIndex, cur
       return true;
     },
     drop: (item, monitor) => {
-      // KLÚČOVÁ ZMENA: Ak prebieha akcia, nedropuj
-      if (isActionInProgress) {
-        console.log("Akcia už prebieha, drop bol ignorovaný.");
-        return;
-      }
-
       // Ak drop nebol spracovaný inou drop zónou (napr. ExchangeZone alebo iným RackSlotom)
       if (!monitor.didDrop()) {
         if (letter !== null && !(item.source.type === 'board' && item.source.x === x && item.source.y === y)) {
@@ -83,7 +72,7 @@ function Tile({ x, y, letter, moveLetter, boardAtStartOfTurn, myPlayerIndex, cur
 
   // Funkcia, ktorá sa zavolá pri pravom kliknutí na písmeno
   const handleLetterRightClick = (letterData, source) => {
-    // KLÚČOVÁ ZMENA: Ak prebieha akcia, neumožníme pravé kliknutie
+    // KLÚČOVÁ ZMENA: isActionInProgress PONECHANÉ pre pravé kliknutie
     if (isActionInProgress) {
       console.log("Akcia už prebieha, pravé kliknutie bolo ignorované.");
       return;
@@ -101,12 +90,6 @@ function Tile({ x, y, letter, moveLetter, boardAtStartOfTurn, myPlayerIndex, cur
 
   // NOVÉ: Handler pre ťuknutie na políčko
   const handleTileClick = () => {
-    // KLÚČOVÁ ZMENA: Ak prebieha akcia, neumožníme ťuknutie
-    if (isActionInProgress) {
-      console.log("Akcia už prebieha, ťuknutie na políčko bolo ignorované.");
-      return;
-    }
-
     if (onTapSlot && letter === null) { // Ak je políčko prázdne, voláme onTapSlot
       onTapSlot({ type: 'board', x, y });
     }
@@ -131,7 +114,7 @@ function Tile({ x, y, letter, moveLetter, boardAtStartOfTurn, myPlayerIndex, cur
           onRightClick={handleLetterRightClick} // Posielame handler na pravé kliknutie
           selectedLetter={selectedLetter} // NOVÉ: Posielame vybrané písmeno
           onTapLetter={onTapLetter}     // NOVÉ: Posielame handler pre ťuknutie na písmeno
-          isActionInProgress={isActionInProgress} // KLÚČOVÁ ZMENA: Posielame isActionInProgress do Letter
+          isActionInProgress={isActionInProgress} // KLÚČOVÁ ZMENA: Posielame isActionInProgress do Letter (stále potrebné pre pravé kliknutie v Letter)
         />
       )}
       {!letter && bonusType && (

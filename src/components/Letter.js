@@ -4,7 +4,7 @@ import { useDrag } from 'react-dnd';
 import '../styles/Letter.css';
 
 // Pridávame nový prop `onRightClick`, `selectedLetter`, `onTapLetter` a `isActionInProgress`
-function Letter({ id, letter, value, assignedLetter, source, isDraggable = true, isVisible = true, onRightClick, selectedLetter, onTapLetter, isActionInProgress }) { // KLÚČOVÁ ZMENA: Pridaný isActionInProgress
+function Letter({ id, letter, value, assignedLetter, source, isDraggable = true, isVisible = true, onRightClick, selectedLetter, onTapLetter, isActionInProgress }) {
     // Určíme originalRackIndex, ak zdrojom je rack
     const originalRackIndex = source.type === 'rack' ? source.index : undefined;
 
@@ -12,8 +12,7 @@ function Letter({ id, letter, value, assignedLetter, source, isDraggable = true,
         type: 'LETTER',
         // Pridávame originalRackIndex do item.letterData
         item: { letterData: { id, letter, value, assignedLetter, originalRackIndex }, source },
-        // KLÚČOVÁ ZMENA: isDraggable je teraz závislé aj od isActionInProgress
-        canDrag: isDraggable && !isActionInProgress, 
+        canDrag: isDraggable, 
         collect: (monitor) => ({
             isDragging: monitor.isDragging(),
         }),
@@ -45,7 +44,6 @@ function Letter({ id, letter, value, assignedLetter, source, isDraggable = true,
     // Nová funkcia pre spracovanie pravého kliknutia
     const handleContextMenu = (e) => {
         e.preventDefault(); // Zabráni zobrazeniu predvoleného kontextového menu prehliadača
-        // KLÚČOVÁ ZMENA: Ak prebieha akcia, neumožníme pravé kliknutie
         if (isActionInProgress) {
             console.log("Akcia už prebieha, pravé kliknutie bolo ignorované.");
             return;
@@ -69,11 +67,6 @@ function Letter({ id, letter, value, assignedLetter, source, isDraggable = true,
             onContextMenu={handleContextMenu} // Pridávame event listener pre pravé tlačidlo myši
             onClick={(e) => { // KĽÚČOVÁ ZMENA: Pridávame 'e' a e.stopPropagation()
                 e.stopPropagation(); // Zastaví šírenie udalosti kliknutia na rodičovské elementy
-                // KLÚČOVÁ ZMENA: Ak prebieha akcia, neumožníme ťuknutie
-                if (isActionInProgress) {
-                    console.log("Akcia už prebieha, ťuknutie na písmeno bolo ignorované.");
-                    return;
-                }
                 console.log('Letter clicked:', { id, letter, source }); // DEBUG LOG
                 console.log('onTapLetter prop in Letter.js:', onTapLetter); // NEW DEBUG LOG
                 if (onTapLetter) {
