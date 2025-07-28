@@ -44,7 +44,7 @@ function RackSlot({ letter, index, playerIndex, moveLetter, isMyRack, myPlayerIn
 
   // Logika pre isDraggable a isVisible
   // KLÚČOVÁ ZMENA: isDraggable je teraz závislé aj od isActionInProgress
-  const shouldBeDraggable = isMyRack && !isActionInProgress; // Iba vlastné písmená a nie, ak prebieha akcia
+  const shouldBeDraggable = isMyRack; // Iba vlastné písmená
   const shouldBeVisible = isMyRack; // Vlastné písmená sú vždy viditeľné, súperove nie
 
   // Triedy pre zvýraznenie drop zóny
@@ -52,11 +52,6 @@ function RackSlot({ letter, index, playerIndex, moveLetter, isMyRack, myPlayerIn
 
   // Handler pre ťuknutie na slot
   const handleSlotClick = () => {
-    // KLÚČOVÁ ZMENA: Ak prebieha akcia, neumožníme ťuknutie
-    if (isActionInProgress) {
-      console.log("Akcia už prebieha, ťuknutie na slot bolo ignorované.");
-      return;
-    }
     if (onTapSlot && letter === null) { // Ak je slot prázdny, voláme onTapSlot
       onTapSlot({ type: 'rack', index, playerIndex: myPlayerIndex });
     }
