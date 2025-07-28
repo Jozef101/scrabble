@@ -107,9 +107,9 @@
 }
 /* Štýl pre skryté písmeno */
 .hidden-letter-tile {
-    background-color: #888;
-    border: 1px solid #666;
-      color: transparent;
+    background-color: #ffe0b2;
+      border: 1px solid #d7a07c;
+      /* color: transparent; */
     text-shadow: none;
     box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
     cursor: default;
