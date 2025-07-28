@@ -51,7 +51,7 @@ function AuthPage({ auth }) {
                 // DÔLEŽITÉ: Táto URL MUSÍ byť v zozname "Authorized domains" vo vašej Firebase konzole!
                 // Pre lokálne testovanie: 'http://localhost:3000/' (alebo váš port)
                 // Pre nasadenú aplikáciu: 'https://scrabble-3ba2d.web.app/' alebo 'https://skrebl.vercel.app/'
-                url: 'http://localhost:3000/', // <<-- NASTAVTE TÚTO URL PODĽA VAŠEJ APLIKÁCIE
+                url: 'https://skrebl.vercel.app/', // <<-- NASTAVTE TÚTO URL PODĽA VAŠEJ APLIKÁCIE
                 handleCodeInApp: true, // Ak chcete spracovať overenie priamo v aplikácii (odporúčané)
                 // iOS a Android nastavenia môžete pridať, ak máte mobilné aplikácie
                 // iOS: {
