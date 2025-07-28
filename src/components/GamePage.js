@@ -62,7 +62,9 @@ function GamePage({ gameId, userId, onGoToLobby, db }) {
   }, [chatMessages]);
 
   // 2. Hook pre hlavnú hernú logiku a stav
-  const {// Potrebné pre moveLetterLogic
+  const {
+    // KLÚČOVÁ ZMENA: Destrukturujeme isActionInProgress z useGameLogic
+    isActionInProgress,
     showLetterSelectionModal,
     setShowLetterSelectionModal,
     jokerTileCoords,
@@ -141,6 +143,7 @@ function GamePage({ gameId, userId, onGoToLobby, db }) {
                 onTapLetter={handleTapLetter}
                 onTapSlot={handleTapSlot}
                 highlightedLetters={gameState.highlightedLetters} // NOVÉ: Posielame zvýraznené písmená
+                isActionInProgress={isActionInProgress} // KLÚČOVÁ ZMENA: Posielame isActionInProgress
               />
 
               <div className="right-panel-content">
@@ -156,6 +159,7 @@ function GamePage({ gameId, userId, onGoToLobby, db }) {
                       selectedLetter={selectedLetter}
                       onTapLetter={handleTapLetter}
                       onTapSlot={handleTapSlot}
+                      isActionInProgress={isActionInProgress} // KLÚČOVÁ ZMENA: Posielame isActionInProgress
                     />
                   </div>
                   <div className="player-rack-section">
@@ -169,6 +173,7 @@ function GamePage({ gameId, userId, onGoToLobby, db }) {
                       selectedLetter={selectedLetter}
                       onTapLetter={handleTapLetter}
                       onTapSlot={handleTapSlot}
+                      isActionInProgress={isActionInProgress} // KLÚČOVÁ ZMENA: Posielame isActionInProgress
                     />
                   </div>
                 </div>
@@ -181,27 +186,31 @@ function GamePage({ gameId, userId, onGoToLobby, db }) {
                   selectedLetter={selectedLetter}
                   onTapLetter={handleTapLetter}
                   onTapSlot={handleTapSlot}
+                  isActionInProgress={isActionInProgress} // KLÚČOVÁ ZMENA: Posielame isActionInProgress
                 />
 
                 <div className="game-controls">
                   <button
                     className="confirm-turn-button"
                     onClick={confirmTurn}
-                    disabled={isGameOver || showLetterSelectionModal || myPlayerIndex === null || currentPlayerIndex !== myPlayerIndex}
+                    // KLÚČOVÁ ZMENA: Zakážeme tlačidlo, ak prebieha akcia
+                    disabled={isGameOver || showLetterSelectionModal || myPlayerIndex === null || currentPlayerIndex !== myPlayerIndex || isActionInProgress}
                   >
                     Potvrdiť ťah
                   </button>
                   <button
                     className="exchange-letters-button"
                     onClick={handleExchangeLetters}
-                    disabled={isGameOver || letterBag.length < exchangeZoneLetters.length || showLetterSelectionModal || myPlayerIndex === null || currentPlayerIndex !== myPlayerIndex}
+                    // KLÚČOVÁ ZMENA: Zakážeme tlačidlo, ak prebieha akcia
+                    disabled={isGameOver || letterBag.length < exchangeZoneLetters.length || showLetterSelectionModal || myPlayerIndex === null || currentPlayerIndex !== myPlayerIndex || isActionInProgress}
                   >
                     Vymeniť písmená ({exchangeZoneLetters.length})
                   </button>
                   <button
                     className="pass-turn-button"
                     onClick={handlePassTurn}
-                    disabled={isGameOver || showLetterSelectionModal || myPlayerIndex === null || currentPlayerIndex !== myPlayerIndex}
+                    // KLÚČOVÁ ZMENA: Zakážeme tlačidlo, ak prebieha akcia
+                    disabled={isGameOver || showLetterSelectionModal || myPlayerIndex === null || currentPlayerIndex !== myPlayerIndex || isActionInProgress}
                   >
                     Pass
                   </button>
@@ -216,12 +225,12 @@ function GamePage({ gameId, userId, onGoToLobby, db }) {
         )}
 
         <ChatWindow
-        chatMessages={chatMessages}
-        newChatMessage={newChatMessage}
-        myPlayerIndex={myPlayerIndex}
-        handleSendChatMessage={handleSendChatMessage}
-        setNewChatMessage={setNewChatMessage}
-      />
+          chatMessages={chatMessages}
+          newChatMessage={newChatMessage}
+          myPlayerIndex={myPlayerIndex}
+          handleSendChatMessage={handleSendChatMessage}
+          setNewChatMessage={setNewChatMessage}
+        />
 
         {showLetterSelectionModal && (
           <LetterSelectionModal
@@ -233,12 +242,12 @@ function GamePage({ gameId, userId, onGoToLobby, db }) {
                 // Získame písmeno žolíka z dosky
                 const currentJokerLetter = gameState.board[jokerTileCoords.x][jokerTileCoords.y];
                 if (currentJokerLetter) {
-                    // Zavoláme moveLetter, aby sa žolík presunul z dosky na stojan
-                    moveLetter(
-                        currentJokerLetter,
-                        { type: 'board', x: jokerTileCoords.x, y: jokerTileCoords.y },
-                        { type: 'rack', playerIndex: myPlayerIndex }
-                    );
+                  // Zavoláme moveLetter, aby sa žolík presunul z dosky na stojan
+                  moveLetter(
+                    currentJokerLetter,
+                    { type: 'board', x: jokerTileCoords.x, y: jokerTileCoords.y },
+                    { type: 'rack', playerIndex: myPlayerIndex }
+                  );
                 }
               }
               setShowLetterSelectionModal(false);

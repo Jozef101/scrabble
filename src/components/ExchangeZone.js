@@ -5,10 +5,14 @@ import Letter from './Letter';
 import '../styles/ExchangeZone.css';
 
 // Pridávame selectedLetter, onTapLetter, onTapSlot ako prop
-function ExchangeZone({ lettersInZone, moveLetter, myPlayerIndex, currentPlayerIndex, selectedLetter, onTapLetter, onTapSlot }) {
+function ExchangeZone({ lettersInZone, moveLetter, myPlayerIndex, currentPlayerIndex, selectedLetter, onTapLetter, onTapSlot, isActionInProgress }) { // KLÚČOVÁ ZMENA: Pridaný isActionInProgress
   const [{ isOver, canDrop: dropAllowed }, drop] = useDrop({ // Premenované canDrop na dropAllowed
     accept: 'LETTER',
     canDrop: (item) => {
+      // KLÚČOVÁ ZMENA: Nemôžeš dropnúť, ak prebieha akcia
+      if (isActionInProgress) {
+        return false;
+      }
       // Povoliť drop iba ak je na ťahu správny hráč
       if (myPlayerIndex === null || currentPlayerIndex !== myPlayerIndex) {
         return false;
@@ -17,6 +21,12 @@ function ExchangeZone({ lettersInZone, moveLetter, myPlayerIndex, currentPlayerI
       return item.source.type === 'rack' || item.source.type === 'board';
     },
     drop: (item, monitor) => {
+      // KLÚČOVÁ ZMENA: Ak prebieha akcia, nedropuj
+      if (isActionInProgress) {
+        console.log("Akcia už prebieha, drop bol ignorovaný.");
+        return;
+      }
+
       if (monitor.didDrop()) {
         return;
       }
@@ -32,6 +42,12 @@ function ExchangeZone({ lettersInZone, moveLetter, myPlayerIndex, currentPlayerI
 
   // NOVÉ: Handler pre ťuknutie na prázdnu zónu výmeny
   const handleExchangeZoneClick = () => {
+    // KLÚČOVÁ ZMENA: Ak prebieha akcia, neumožníme ťuknutie
+    if (isActionInProgress) {
+      console.log("Akcia už prebieha, ťuknutie na výmennú zónu bolo ignorované.");
+      return;
+    }
+
     if (onTapSlot) {
       onTapSlot({ type: 'exchangeZone' });
     }
@@ -54,9 +70,11 @@ function ExchangeZone({ lettersInZone, moveLetter, myPlayerIndex, currentPlayerI
               assignedLetter={letter.assignedLetter}
               source={{ type: 'exchangeZone' }}
               // Písmená vo výmennej zóne sú draggable len ak je na ťahu aktuálny hráč
-              isDraggable={myPlayerIndex !== null && currentPlayerIndex === myPlayerIndex}
+              // KLÚČOVÁ ZMENA: Písmená nie sú ťahateľné, ak prebieha akcia
+              isDraggable={myPlayerIndex !== null && currentPlayerIndex === myPlayerIndex && !isActionInProgress}
               selectedLetter={selectedLetter} // NOVÉ: Posielame vybrané písmeno
               onTapLetter={onTapLetter}     // NOVÉ: Posielame handler pre ťuknutie na písmeno
+              isActionInProgress={isActionInProgress} // KLÚČOVÁ ZMENA: Posielame isActionInProgress do Letter
             />
           ))
         )}

@@ -5,13 +5,12 @@ import {
   getPlacedLettersDuringCurrentTurn,
   isStraightLine,
   getAllWordsInTurn,
-  // areLettersContiguous, // ODSTRÁNENÉ: Používalo sa pre kontrolu novo položených písmen, ale je príliš reštriktívne pre krížové slová
   isConnected,
   calculateWordScore,
   calculateFinalScores,
   getFullWordLetters,
   arePlacedLettersContiguousOnBoard,
-  isWordContiguousOnBoard, // Používame pre kontrolu súvislosti celého slova
+  isWordContiguousOnBoard,
 } from '../utils/gameLogic';
 import { RACK_SIZE } from '../utils/constants';
 import { moveLetter as importedMoveLetter } from '../utils/moveLetterLogic';
@@ -21,6 +20,7 @@ function useGameLogic(socket, gameId, myPlayerIndex, slovakWordsArray, gameState
 
   const [showLetterSelectionModal, setShowLetterSelectionModal] = useState(false);
   const [jokerTileCoords, setJokerTileCoords] = useState(null);
+  const [isActionInProgress, setIsActionInProgress] = useState(false); // KLÚČOVÁ ZMENA: Nový stav pre sledovanie prebiehajúcej akcie
 
   const validWordsSet = useRef(new Set(slovakWordsArray.map(word => word.toUpperCase())));
 
@@ -31,6 +31,7 @@ function useGameLogic(socket, gameId, myPlayerIndex, slovakWordsArray, gameState
       console.log('useGameLogic: Received gameStateUpdate:', newGameState);
       console.log('useGameLogic: Received highlightedLetters:', newGameState.highlightedLetters);
       setGameState(newGameState);
+      setIsActionInProgress(false); // KLÚČOVÁ ZMENA: Vypneme indikátor akcie po prijatí aktualizácie zo servera
     };
     socket.on('gameStateUpdate', handleGameStateUpdate);
     return () => {
@@ -40,6 +41,12 @@ function useGameLogic(socket, gameId, myPlayerIndex, slovakWordsArray, gameState
 
   // Memoizovaná funkcia moveLetter
   const moveLetter = useCallback((letterData, source, target) => {
+    // KLÚČOVÁ ZMENA: Ak už prebieha akcia, neumožníme ďalšiu
+    if (isActionInProgress) {
+      console.log("Akcia už prebieha, počkajte prosím.");
+      return;
+    }
+    setIsActionInProgress(true); // KLÚČOVÁ ZMENA: Zapneme indikátor akcie pred jej odoslaním
     importedMoveLetter({
       gameState,
       setGameState,
@@ -49,10 +56,15 @@ function useGameLogic(socket, gameId, myPlayerIndex, slovakWordsArray, gameState
       socket,
       gameIdToJoin: gameId,
     })(letterData, source, target);
-  }, [gameState, setGameState, myPlayerIndex, setJokerTileCoords, setShowLetterSelectionModal, socket, gameId]);
-
+  }, [gameState, setGameState, myPlayerIndex, setJokerTileCoords, setShowLetterSelectionModal, socket, gameId, isActionInProgress]); // KLÚČOVÁ ZMENA: Pridaný isActionInProgress do závislostí
 
   const assignLetterToJoker = useCallback((selectedLetter) => {
+    // KLÚČOVÁ ZMENA: Ak už prebieha akcia, neumožníme ďalšiu
+    if (isActionInProgress) {
+      console.log("Akcia už prebieha, počkajte prosím.");
+      return;
+    }
+    setIsActionInProgress(true); // KLÚČOVÁ ZMENA: Zapneme indikátor akcie
     if (jokerTileCoords) {
       sendPlayerAction(socket, gameId, 'assignJoker', {
         x: jokerTileCoords.x,
@@ -62,11 +74,19 @@ function useGameLogic(socket, gameId, myPlayerIndex, slovakWordsArray, gameState
     }
     setShowLetterSelectionModal(false);
     setJokerTileCoords(null);
-  }, [jokerTileCoords, socket, gameId]);
+  }, [jokerTileCoords, socket, gameId, isActionInProgress]); // KLÚČOVÁ ZMENA: Pridaný isActionInProgress do závislostí
 
   const confirmTurn = useCallback(() => {
+    // KLÚČOVÁ ZMENA: Ak už prebieha akcia, neumožníme ďalšiu
+    if (isActionInProgress) {
+      console.log("Akcia už prebieha, počkajte prosím.");
+      return;
+    }
+    setIsActionInProgress(true); // KLÚČOVÁ ZMENA: Zapneme indikátor akcie
+
     if (gameState.isGameOver || myPlayerIndex === null || gameState.currentPlayerIndex !== myPlayerIndex) {
       alert("Hra skončila, nie si pripojený alebo nie je tvoj ťah!");
+      setIsActionInProgress(false); // Vypneme indikátor, ak je neplatná podmienka
       return;
     }
 
@@ -75,6 +95,7 @@ function useGameLogic(socket, gameId, myPlayerIndex, slovakWordsArray, gameState
 
     if (placedJokersWithoutAssignment.length > 0) {
       alert("Všetkým žolíkom na doske musí byť priradené písmeno!");
+      setIsActionInProgress(false);
       return;
     }
 
@@ -82,31 +103,25 @@ function useGameLogic(socket, gameId, myPlayerIndex, slovakWordsArray, gameState
 
     if (actualPlacedLetters.length === 0) {
       alert("Najprv polož aspoň jedno písmeno na dosku!");
+      setIsActionInProgress(false);
       return;
     }
 
     if (gameState.hasMovedToExchangeZoneThisTurn) {
       alert("Nemôžeš potvrdiť ťah na doske, ak si už presunul(a) písmeno do výmennej zóny v tomto ťahu!");
+      setIsActionInProgress(false);
       return;
     }
 
     if (!isStraightLine(actualPlacedLetters)) {
       alert("Písmená musia byť v jednom rade alebo stĺpci!");
+      setIsActionInProgress(false);
       return;
     }
 
-    // ODSTRÁNENÁ KONTROLA: Táto kontrola je príliš reštriktívna pre krížové slová,
-    // kde novo položené písmená nemusia byť súvislé medzi sebou, ak sú premostené existujúcimi.
-    // if (!areLettersContiguous(actualPlacedLetters)) {
-    //     alert("Položené písmená musia tvoriť súvislý blok bez medzier medzi sebou!");
-    //     return;
-    // }
-
-    // Táto kontrola zabezpečuje, že medzi novo položenými písmenami nie sú prázdne medzery.
-    // Ak napr. položíte 'P' a 'S' a medzi nimi je prázdne políčko, bude to neplatné.
-    // Táto kontrola je stále dôležitá pre priame umiestnenie viacerých písmen.
     if (actualPlacedLetters.length > 1 && !arePlacedLettersContiguousOnBoard(actualPlacedLetters, gameState.board)) {
         alert("Položené písmená nesmú mať prázdnu medzeru na doske v rámci slova!");
+        setIsActionInProgress(false);
         return;
     }
 
@@ -114,14 +129,14 @@ function useGameLogic(socket, gameId, myPlayerIndex, slovakWordsArray, gameState
 
     if (allFormedWords.length === 0) {
       alert("Nezistilo sa žiadne platné slovo. Skontroluj umiestnenie.");
+      setIsActionInProgress(false);
       return;
     }
 
-    // KĽÚČOVÁ ZMENA: Používame novú funkciu isWordContiguousOnBoard pre kontrolu súvislosti celého slova.
-    // Táto funkcia umožňuje, aby existujúce písmená na doske premostili medzery.
     for (const wordObj of allFormedWords) {
       if (!isWordContiguousOnBoard(wordObj.letters, gameState.board)) {
         alert(`Slovo "${wordObj.wordString}" nie je súvislé (žiadne diery)!`);
+        setIsActionInProgress(false);
         return;
       }
     }
@@ -133,34 +148,35 @@ function useGameLogic(socket, gameId, myPlayerIndex, slovakWordsArray, gameState
       } else {
         alert("Položené písmená sa musia spájať s existujúcimi písmenami na doske (alebo použiť existujúce písmeno ako súčasť slova)!");
       }
+      setIsActionInProgress(false);
       return;
     }
 
     for (const letter of actualPlacedLetters) {
       if (gameState.boardAtStartOfTurn[letter.x][letter.y] !== null) {
         alert("Nemôžeš položiť písmeno na už obsadené políčko!");
+        setIsActionInProgress(false);
         return;
       }
     }
 
     if (actualPlacedLetters.length === 1 && allFormedWords[0].wordString.length === 1 && !gameState.isFirstTurn) {
       alert("Musíš vytvoriť slovo spojením s existujúcimi písmenami.");
+      setIsActionInProgress(false);
       return;
     }
 
-    // KĽÚČOVÁ ZMENA: Ak je slovo dlhšie ako 5 písmen, je automaticky platné.
     const invalidWords = allFormedWords.filter(wordObj => {
       const wordString = wordObj.wordString.toUpperCase();
-      // Ak je dĺžka slova väčšia ako 5, považujeme ho za platné (nie je neplatné slovníkom)
       if (wordString.length > 5) {
-        return false; // Toto slovo NIE JE neplatné podľa slovníka
+        return false;
       }
-      // Inak skontrolujeme, či sa slovo nachádza v slovníku
       return !validWordsSet.current.has(wordString);
     });
 
     if (invalidWords.length > 0) {
       alert(`Neplatné slovo(á) nájdené: ${invalidWords.map(w => w.wordString).join(', ')}. Skontroluj slovník alebo dĺžku slova.`);
+      setIsActionInProgress(false);
       return;
     }
 
@@ -252,8 +268,16 @@ function useGameLogic(socket, gameId, myPlayerIndex, slovakWordsArray, gameState
   }, [gameState, myPlayerIndex, socket, gameId, validWordsSet]);
 
   const handleExchangeLetters = useCallback(() => {
+    // KLÚČOVÁ ZMENA: Ak už prebieha akcia, neumožníme ďalšiu
+    if (isActionInProgress) {
+      console.log("Akcia už prebieha, počkajte prosím.");
+      return;
+    }
+    setIsActionInProgress(true); // KLÚČOVÁ ZMENA: Zapneme indikátor akcie
+
     if (gameState.isGameOver || myPlayerIndex === null || gameState.currentPlayerIndex !== myPlayerIndex) {
       alert("Hra skončila, nie si pripojený alebo nie je tvoj ťah!");
+      setIsActionInProgress(false);
       return;
     }
 
@@ -262,20 +286,24 @@ function useGameLogic(socket, gameId, myPlayerIndex, slovakWordsArray, gameState
 
     if (placedJokersWithoutAssignment.length > 0) {
       alert("Všetkým žolíkom na doske musí byť priradené písmeno, aby si mohol(a) vymeniť písmená!");
+      setIsActionInProgress(false);
       return;
     }
 
     if (gameState.exchangeZoneLetters.length === 0) {
       alert("Najprv presuň písmená do výmennej zóny!");
+      setIsActionInProgress(false);
       return;
     }
     if (gameState.hasPlacedOnBoardThisTurn) {
       alert("Nemôžeš vymeniť písmená, ak si už položil(a) písmeno na dosku v tomto ťahu!");
+      setIsActionInProgress(false);
       return;
     }
 
     if (gameState.letterBag.length < gameState.exchangeZoneLetters.length) {
       alert(`Vo vrecúšku nie je dostatok písmen na výmenu (potrebných je ${gameState.exchangeZoneLetters.length}, k dispozícii ${gameState.letterBag.length})!`);
+      setIsActionInProgress(false);
       return;
     }
 
@@ -324,11 +352,19 @@ function useGameLogic(socket, gameId, myPlayerIndex, slovakWordsArray, gameState
         highlightedLetters: [], // Vyčistíme zvýraznené písmená pri výmene
     };
     sendPlayerAction(socket, gameId, 'updateGameState', updatedGameState);
-  }, [gameState, myPlayerIndex, socket, gameId]);
+  }, [gameState, myPlayerIndex, socket, gameId, isActionInProgress]); // KLÚČOVÁ ZMENA: Pridaný isActionInProgress do závislostí
 
   const handlePassTurn = useCallback(() => {
+    // KLÚČOVÁ ZMENA: Ak už prebieha akcia, neumožníme ďalšiu
+    if (isActionInProgress) {
+      console.log("Akcia už prebieha, počkajte prosím.");
+      return;
+    }
+    setIsActionInProgress(true); // KLÚČOVÁ ZMENA: Zapneme indikátor akcie
+
     if (gameState.isGameOver || myPlayerIndex === null || gameState.currentPlayerIndex !== myPlayerIndex) {
       alert("Hra skončila, nie si pripojený alebo nie je tvoj ťah!");
+      setIsActionInProgress(false);
       return;
     }
 
@@ -337,15 +373,18 @@ function useGameLogic(socket, gameId, myPlayerIndex, slovakWordsArray, gameState
 
     if (placedJokersWithoutAssignment.length > 0) {
       alert("Všetkým žolíkom na doske musí byť priradené písmeno, aby si mohol(a) prejsť ťah!");
+      setIsActionInProgress(false);
       return;
     }
 
     if (gameState.hasPlacedOnBoardThisTurn) {
       alert("Nemôžeš prejsť ťah, ak máš položené písmená na doske. Buď ich potvrď, alebo vráť na stojan.");
+      setIsActionInProgress(false);
       return;
     }
     if (gameState.hasMovedToExchangeZoneThisTurn) {
       alert("Nemôžeš prejsť ťah, ak máš písmená vo výmennej zóne. Buď ich vymeň, alebo vráť na stojan.");
+      setIsActionInProgress(false);
       return;
     }
 
@@ -372,7 +411,7 @@ function useGameLogic(socket, gameId, myPlayerIndex, slovakWordsArray, gameState
       highlightedLetters: [], // Vyčistíme zvýraznené písmená pri prechode ťahu
     };
     sendPlayerAction(socket, gameId, 'updateGameState', updatedGameState);
-  }, [gameState, myPlayerIndex, socket, gameId]);
+  }, [gameState, myPlayerIndex, socket, gameId, isActionInProgress]); // KLÚČOVÁ ZMENA: Pridaný isActionInProgress do závislostí
 
   return {
     gameState,
@@ -386,6 +425,7 @@ function useGameLogic(socket, gameId, myPlayerIndex, slovakWordsArray, gameState
     confirmTurn,
     handleExchangeLetters,
     handlePassTurn,
+    isActionInProgress, // KLÚČOVÁ ZMENA: Exportujeme nový stav
   };
 }
 
