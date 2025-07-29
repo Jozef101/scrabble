@@ -8,16 +8,16 @@ import { Routes, Route, useNavigate, useParams, useLocation } from 'react-router
 // Firebase Imports
 import { initializeApp } from 'firebase/app';
 import { getAuth, signInWithCustomToken, onAuthStateChanged, applyActionCode } from 'firebase/auth';
-import { getFirestore } from 'firebase/firestore';
+import { getFirestore, doc, getDoc } from 'firebase/firestore'; // Pridané importy doc, getDoc
 
 // Import nových komponentov
 import AuthPage from './components/AuthPage';
 import LobbyPage from './components/LobbyPage';
 import GamePage from './components/GamePage';
 import UserMenuIcon from './components/UserMenuIcon';
-import EmailVerificationPage from './components/EmailVerificationPage'; // <-- NOVINKA: Import novej stránky
+import EmailVerificationPage from './components/EmailVerificationPage';
 
-import './styles/App.css'; // Základné štýly
+import './styles/App.css';
 
 // ====================================================================
 // Firebase konfigurácia a inicializácia
@@ -52,6 +52,10 @@ console.log("Firestore DB inštancia v App.js:", db);
 function App() {
     const [userId, setUserId] = useState(null);
     const [isAuthReady, setIsAuthReady] = useState(false);
+    const [isEmailVerified, setIsEmailVerified] = useState(false);
+    const [currentUserEmail, setCurrentUserEmail] = useState(null);
+    const [currentUserNickname, setCurrentUserNickname] = useState(null); // Nový stav pre prezývku
+
 
     const navigate = useNavigate();
     const location = useLocation();
@@ -62,92 +66,131 @@ function App() {
             try {
                 if (initialAuthToken) {
                     await signInWithCustomToken(auth, initialAuthToken);
-                    console.log("Prihlásený pomocou vlastného tokenu (Canvas).");
+                    console.log("App.js: Prihlásený pomocou vlastného tokenu (Canvas).");
                 } else {
-                    console.log("Žiadny Canvas token. Čakám na prihlásenie/registráciu používateľa cez AuthPage.");
+                    console.log("App.js: Žiadny Canvas token. Čakám na prihlásenie/registráciu používateľa cez AuthPage.");
+                    if (!auth.currentUser && location.pathname !== '/' && location.pathname !== '/verify-email') {
+                        navigate('/');
+                    }
                 }
             } catch (error) {
-                console.error("Chyba pri prihlasovaní do Firebase (z App.js):", error);
+                console.error("App.js: Chyba pri prihlasovaní do Firebase (z App.js):", error);
+                if (location.pathname !== '/' && location.pathname !== '/verify-email') {
+                    navigate('/');
+                }
             }
         };
 
-        const unsubscribe = onAuthStateChanged(auth, (user) => {
+        const unsubscribe = onAuthStateChanged(auth, async (user) => {
+            console.log("App.js: onAuthStateChanged - Spustený.");
             if (user) {
                 setUserId(user.uid);
-                console.log("Firebase User ID:", user.uid);
+                setCurrentUserEmail(user.email);
+                console.log("App.js: Aktuálny používateľ:", user.uid, "Email:", user.email, "Email Verified (pred reload):", user.emailVerified);
 
-                // ZMENA: Nová logika pre presmerovanie na základe overenia e-mailu
+                try {
+                    await user.reload();
+                    console.log("App.js: Používateľské dáta prečítané znova.");
+
+                    // Načítanie prezývky používateľa z Firestore
+                    if (db) {
+                        const userDocRef = doc(db, 'users', user.uid);
+                        const userDocSnap = await getDoc(userDocRef);
+                        if (userDocSnap.exists()) {
+                            const userData = userDocSnap.data();
+                            setCurrentUserNickname(userData.nickname);
+                            console.log("App.js: Načítaná prezývka používateľa:", userData.nickname);
+                        } else {
+                            console.warn("App.js: Dokument používateľa pre ID", user.uid, "nebol nájdený. Prezývka nenastavená.");
+                            setCurrentUserNickname(null);
+                        }
+                    } else {
+                        console.warn("App.js: Firestore DB nie je inicializovaná pri načítaní prezývky používateľa.");
+                        setCurrentUserNickname(null);
+                    }
+
+                } catch (reloadError) {
+                    console.error("App.js: Chyba pri opätovnom načítaní používateľa alebo načítaní prezývky:", reloadError);
+                    setCurrentUserNickname(null); // Reset prezývky pri chybe
+                }
+
+                console.log("App.js: User emailVerified (po reload):", user.emailVerified);
+                setIsEmailVerified(user.emailVerified);
+
                 if (user.emailVerified) {
-                    // Ak je e-mail overený, presmeruj do lobby (ak nie je už v hre)
-                    if (!location.pathname.startsWith('/game/')) {
+                    console.log("App.js: E-mail je overený. Navigácia.");
+                    if (!location.pathname.startsWith('/game/') && location.pathname !== '/lobby') {
                         navigate('/lobby');
                     }
                 } else {
-                    // Ak e-mail NIE JE overený, presmeruj na stránku overenia e-mailu
-                    if (location.pathname !== '/verify-email') { // Zabráni nekonečnej slučke
+                    console.log("App.js: E-mail NIE JE overený. Navigácia na /verify-email.");
+                    if (location.pathname !== '/verify-email') {
                         navigate('/verify-email');
                     }
                 }
             } else {
                 setUserId(null);
-                console.log("Používateľ odhlásený z Firebase.");
-                // Presmeruj na autentifikačnú stránku, ak nie je už tam
+                setIsEmailVerified(false);
+                setCurrentUserEmail(null);
+                setCurrentUserNickname(null); // Reset prezývky pri odhlásení
+                console.log("App.js: Používateľ odhlásený z Firebase. Navigácia na /.");
                 if (location.pathname !== '/') {
                     navigate('/');
                 }
             }
             setIsAuthReady(true);
+            console.log("App.js: onAuthStateChanged - Dokončený.");
         });
 
         authenticateFirebase();
 
         return () => unsubscribe();
-    }, [auth, navigate, initialAuthToken, location.pathname]);
+    }, [auth, navigate, initialAuthToken, location.pathname, db]); // Pridané db do závislostí
 
     // Effect pre spracovanie overovacieho odkazu z e-mailu
     useEffect(() => {
         const handleEmailVerificationLink = async () => {
             const params = new URLSearchParams(location.search);
-            const oobCode = params.get('oobCode'); // Získať akčný kód z URL
+            const oobCode = params.get('oobCode');
+            const currentUser = auth.currentUser;
 
-            if (oobCode) {
+            if (oobCode && currentUser && !currentUser.emailVerified) {
                 console.log("App.js: Nájdený oobCode v URL, pokúšam sa overiť e-mail...");
                 try {
                     await applyActionCode(auth, oobCode);
                     console.log("App.js: E-mail úspešne overený pomocou oobCode.");
-                    // Po úspešnom overení presmerujte na lobby a vyčistite URL
                     alert('Váš e-mail bol úspešne overený! Môžete začať hrať.');
-                    navigate('/lobby', { replace: true }); // replace: true zabráni návratu na stránku s oobCode
+                    navigate('/lobby', { replace: true });
                 } catch (error) {
                     console.error("App.js: Chyba pri overovaní e-mailu pomocou oobCode:", error);
-                    // KLÚČOVÁ ZMENA: Zobraziť chybu používateľovi, len ak to NIE JE chyba, že e-mail je už overený alebo kód neplatný/vypršaný
-                    if (error.code !== 'auth/invalid-action-code' && error.code !== 'auth/expired-action-code') {
+                    if (error.code === 'auth/invalid-action-code' || error.code === 'auth/expired-action-code') {
+                        console.warn("App.js: Overovací odkaz už bol použitý alebo vypršal. Presmerovanie bez alertu.");
+                    } else {
                         alert(`Chyba pri overovaní e-mailu: ${error.message}. Skúste to znova alebo sa prihláste.`);
                     }
-                    // Vždy presmerovať na prihlasovaciu stránku po akejkoľvek chybe overenia kódu
                     navigate('/', { replace: true });
                 }
+            } else if (oobCode && currentUser && currentUser.emailVerified) {
+                console.log("App.js: OobCode nájdený, ale e-mail je už overený. Presmerovanie do lobby.");
+                navigate('/lobby', { replace: true });
             }
         };
 
         handleEmailVerificationLink();
-    }, [auth, location.search, navigate]); // Závislosti: auth, location.search (pre zmeny URL), navigate
+    }, [auth, location.search, navigate, isEmailVerified]);
 
-    // Funkcia na spustenie hry (prechod z lobby na hernú stránku)
     const handleStartGame = (id) => {
         navigate(`/game/${id}`);
     };
 
-    // Funkcia na návrat do lobby z hry
     const handleGoToLobby = () => {
         navigate('/lobby');
     };
 
-    // Podmienené renderovanie na základe isAuthReady (pred Routami)
     if (!isAuthReady) {
         return (
-            <div className="app-container">
-                <p>Načítavam autentifikáciu...</p>
+            <div className="app-container flex items-center justify-center min-h-screen bg-gray-100">
+                <p className="text-lg text-gray-700">Načítavam autentifikáciu...</p>
             </div>
         );
     }
@@ -158,28 +201,26 @@ function App() {
                 {userId && location.pathname !== '/verify-email' && <UserMenuIcon userId={userId} auth={auth} />}
 
                 <Routes>
-                    {/* Cesta pre autentifikačnú stránku */}
-                    <Route path="/" element={<AuthPage auth={auth} />} />
+                    <Route path="/" element={<AuthPage auth={auth} db={db} />} />
 
-                    {/* NOVINKA: Cesta pre stránku overenia e-mailu */}
                     <Route
                         path="/verify-email"
                         element={<EmailVerificationPage auth={auth} userId={userId} />}
                     />
 
-                    {/* Cesta pre lobby stránku */}
                     <Route
                         path="/lobby"
                         element={
                             <LobbyPage
                                 userId={userId}
+                                currentUserNickname={currentUserNickname} // KLÚČOVÁ ZMENA: Odovzdávame prezývku do LobbyPage
                                 onStartGame={handleStartGame}
                                 db={db}
+                                appId={appId} // KLÚČOVÁ ZMENA: Odovzdávame appId do LobbyPage
                             />
                         }
                     />
 
-                    {/* Cesta pre hernú stránku s dynamickým gameId */}
                     <Route
                         path="/game/:gameId"
                         element={
@@ -190,7 +231,6 @@ function App() {
                         }
                     />
 
-                    {/* 404 stránka pre neznáme cesty */}
                     <Route path="*" element={<h1>404: Stránka nenájdená</h1>} />
                 </Routes>
             </div>
@@ -198,7 +238,6 @@ function App() {
     );
 }
 
-// Pomocný komponent na získanie gameId z URL parametrov
 function GamePageWrapper({ userId, onGoToLobby }) {
     const { gameId } = useParams();
     return (

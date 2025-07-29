@@ -1,6 +1,8 @@
 // src/components/AuthPage.js
 import React, { useState } from 'react';
 import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
+// KLÚČOVÁ ZMENA: Importy pre Firestore
+import { doc, setDoc, runTransaction } from 'firebase/firestore';
 import '../styles/AuthPage.css'; // Import štýlov pre AuthPage
 
 /**
@@ -9,10 +11,12 @@ import '../styles/AuthPage.css'; // Import štýlov pre AuthPage
  *
  * @param {object} props - Vlastnosti komponentu.
  * @param {object} props.auth - Firebase Auth inštancia.
+ * @param {object} props.db - Inštancia Firebase Firestore. // KLÚČOVÁ ZMENA: Pridaný db prop
  */
-function AuthPage({ auth }) {
+function AuthPage({ auth, db }) { // KLÚČOVÁ ZMENA: Prijímame aj db ako prop
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [nickname, setNickname] = useState(''); // KLÚČOVÁ ZMENA: Stav pre prezývku
     const [errorMessage, setErrorMessage] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
     const [isRegistering, setIsRegistering] = useState(false);
@@ -42,35 +46,72 @@ function AuthPage({ auth }) {
     const handleRegister = async () => {
         setErrorMessage('');
         setSuccessMessage('');
+
+        // KLÚČOVÁ ZMENA: Validácia prezývky
+        if (!email || !password || !nickname) {
+            setErrorMessage("Vyplňte, prosím, všetky polia (E-mail, Heslo, Prezývka).");
+            return;
+        }
+
+        if (nickname.length < 3) {
+            setErrorMessage("Prezývka musí mať aspoň 3 znaky.");
+            return;
+        }
+
         try {
-            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-            const user = userCredential.user;
+            // KLÚČOVÁ ZMENA: Kontrola unikátnosti nickname-u pomocou transakcie
+            // Zabezpečíme, že `db` je definované pred použitím
+            if (!db) {
+                throw new Error("Firestore databáza nie je inicializovaná. Kontaktujte podporu.");
+            }
 
-            // ZMENA: Definícia actionCodeSettings s explicitnou URL
-            const actionCodeSettings = {
-                // DÔLEŽITÉ: Táto URL MUSÍ byť v zozname "Authorized domains" vo vašej Firebase konzole!
-                // Pre lokálne testovanie: 'http://localhost:3000/' (alebo váš port)
-                // Pre nasadenú aplikáciu: 'https://scrabble-3ba2d.web.app/' alebo 'https://skrebl.vercel.app/'
-                url: 'https://skrebl.vercel.app/', // <<-- NASTAVTE TÚTO URL PODĽA VAŠEJ APLIKÁCIE
-                handleCodeInApp: true, // Ak chcete spracovať overenie priamo v aplikácii (odporúčané)
-                // iOS a Android nastavenia môžete pridať, ak máte mobilné aplikácie
-                // iOS: {
-                //   bundleId: 'com.example.ios'
-                // },
-                // android: {
-                //   packageName: 'com.example.android',
-                //   installApp: true,
-                //   minimumVersion: '12'
-                // }
-            };
+            await runTransaction(db, async (transaction) => {
+                const nicknameDocRef = doc(db, 'nicknames', nickname.toLowerCase()); // Používame malými písmenami pre konzistentnosť
+                const nicknameDocSnap = await transaction.get(nicknameDocRef);
 
-            // ZMENA: Odoslanie potvrdzovacieho e-mailu s actionCodeSettings
-            await sendEmailVerification(user, actionCodeSettings);
+                if (nicknameDocSnap.exists()) {
+                    throw new Error("Prezývka je už obsadená. Zvoľte si inú.");
+                }
 
-            console.log("Registrácia úspešná pre:", email);
-            setSuccessMessage("Registrácia úspešná! Skontrolujte si e-mail pre overenie účtu.");
+                // Ak je nickname unikátny, pokračujeme s registráciou používateľa
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
+
+                // Uložíme nickname a userId do Firestore
+                const userDocRef = doc(db, 'users', user.uid);
+                transaction.set(userDocRef, {
+                    nickname: nickname,
+                    email: email, // Uložíme aj e-mail pre referenciu
+                    createdAt: new Date(),
+                    userId: user.uid // Uložíme aj userId pre ľahší prístup
+                });
+
+                // Zaznamenáme nickname ako obsadený
+                transaction.set(nicknameDocRef, {
+                    userId: user.uid,
+                    nickname: nickname,
+                    createdAt: new Date(),
+                });
+
+                // ZMENA: Definícia actionCodeSettings s explicitnou URL
+                const actionCodeSettings = {
+                    url: 'https://skrebl.vercel.app/verify-email', // <-- NASTAVTE TÚTO URL PODĽA VAŠEJ APLIKÁCIE
+                    handleCodeInApp: true,
+                };
+
+                // ZMENA: Odoslanie potvrdzovacieho e-mailu s actionCodeSettings
+                await sendEmailVerification(user, actionCodeSettings);
+
+                console.log("Registrácia úspešná pre:", email);
+                setSuccessMessage("Registrácia úspešná! Skontrolujte si e-mail pre overenie účtu.");
+                // Vyčistíme polia po úspešnej registrácii
+                setEmail('');
+                setPassword('');
+                setNickname('');
+            });
+
         } catch (error) {
-            console.error("Chyba pri registrácii alebo odosielaní overovacieho e-mailu:", error); // ZMENA: Detailnejší log
+            console.error("Chyba pri registrácii alebo odosielaní overovacieho e-mailu:", error);
             let message = "Chyba pri registrácii. Skúste to znova.";
             if (error.code === 'auth/email-already-in-use') {
                 message = "Tento e-mail je už zaregistrovaný.";
@@ -78,8 +119,10 @@ function AuthPage({ auth }) {
                 message = "Neplatný formát e-mailu.";
             } else if (error.code === 'auth/weak-password') {
                 message = "Heslo je príliš slabé (min. 6 znakov).";
-            } else if (error.code === 'auth/unauthorized-continue-uri') { // NOVINKA: Chybová správa pre URL
+            } else if (error.code === 'auth/unauthorized-continue-uri') {
                 message = "Chyba pri odosielaní overovacieho e-mailu: Neplatná adresa pre presmerovanie. Skontrolujte nastavenia Firebase.";
+            } else if (error.message.includes("Prezývka je už obsadená.")) { // KLÚČOVÁ ZMENA: Správa o obsadenej prezývke
+                message = error.message;
             }
             setErrorMessage(message);
         }
@@ -110,8 +153,24 @@ function AuthPage({ auth }) {
                         onChange={(e) => setEmail(e.target.value)}
                         placeholder="zadajte svoj e-mail"
                         className="auth-input"
+                        required
                     />
                 </div>
+                {isRegistering && ( // KLÚČOVÁ ZMENA: Zobrazí sa len pri registrácii
+                    <div className="auth-form-group">
+                        <label htmlFor="nickname">Prezývka:</label>
+                        <input
+                            type="text"
+                            id="nickname"
+                            value={nickname}
+                            onChange={(e) => setNickname(e.target.value)}
+                            placeholder="zadajte svoju prezývku"
+                            className="auth-input"
+                            required
+                            minLength="3"
+                        />
+                    </div>
+                )}
                 <div className="auth-form-group">
                     <label htmlFor="password">Heslo:</label>
                     <input
@@ -121,6 +180,7 @@ function AuthPage({ auth }) {
                         onChange={(e) => setPassword(e.target.value)}
                         placeholder="zadajte svoje heslo"
                         className="auth-input"
+                        required
                     />
                 </div>
 
@@ -137,7 +197,14 @@ function AuthPage({ auth }) {
                             Prihlásiť sa
                         </button>
                     )}
-                    <button type="button" onClick={() => setIsRegistering(!isRegistering)} className="auth-button auth-button-secondary">
+                    <button type="button" onClick={() => {
+                        setIsRegistering(!isRegistering);
+                        setErrorMessage(''); // Vyčistíme správy pri prepínaní
+                        setSuccessMessage('');
+                        setEmail(''); // Vyčistíme polia
+                        setPassword('');
+                        setNickname('');
+                    }} className="auth-button auth-button-secondary">
                         {isRegistering ? 'Mám účet? Prihlásiť sa' : 'Nemám účet? Zaregistrovať sa'}
                     </button>
                 </div>
