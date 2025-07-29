@@ -1,7 +1,18 @@
 // src/components/ChatWindow.jsx
 import React, { useRef, useEffect } from 'react';
 
-function ChatWindow({ chatMessages, newChatMessage, myPlayerIndex, handleSendChatMessage, setNewChatMessage }) {
+/**
+ * Komponent ChatWindow zobrazuje chatové správy a umožňuje odosielanie nových správ.
+ *
+ * @param {object} props - Vlastnosti komponentu.
+ * @param {Array<object>} props.chatMessages - Pole chatových správ. Každá správa by mala obsahovať senderIndex a text.
+ * @param {string} props.newChatMessage - Aktuálny text novej chatovej správy.
+ * @param {number} props.myPlayerIndex - Index aktuálneho používateľa.
+ * @param {function} props.handleSendChatMessage - Funkcia na odoslanie chatovej správy.
+ * @param {function} props.setNewChatMessage - Funkcia na nastavenie textu novej chatovej správy.
+ * @param {object} props.playerNicknames - Objekt s prezývkami hráčov, kde kľúč je playerIndex a hodnota je prezývka.
+ */
+function ChatWindow({ chatMessages, newChatMessage, myPlayerIndex, handleSendChatMessage, setNewChatMessage, playerNicknames }) {
   const chatMessagesEndRef = useRef(null);
 
   // Funkcia na automatické scrollovanie nadol, keď prídu nové správy
@@ -20,7 +31,8 @@ function ChatWindow({ chatMessages, newChatMessage, myPlayerIndex, handleSendCha
       <div className="chat-messages">
         {chatMessages.map((msg, index) => (
           <div key={index} className={`chat-message ${msg.senderIndex === myPlayerIndex ? 'my-message' : 'other-message'}`}>
-            <strong>Hráč {msg.senderIndex + 1}:</strong> {msg.text}
+            {/* KLÚČOVÁ ZMENA: Používame msg.senderNickname, ktoré je posielané zo servera */}
+            <strong>{msg.senderNickname || playerNicknames[msg.senderIndex] || `Hráč ${msg.senderIndex + 1}`}:</strong> {msg.text}
           </div>
         ))}
         <div ref={chatMessagesEndRef} />

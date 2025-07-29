@@ -3,12 +3,10 @@ import React, { useRef, useEffect, useState } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 
-// Importy pre hernú logiku (z gameLogic.js)
-// BOARD_SIZE a RACK_SIZE už nie sú priamo používané v GamePage.js po refaktorovaní
-// import { BOARD_SIZE, RACK_SIZE } from '../utils/constants'; // ODSTRÁNENÉ
-import slovakWordsArray from '../data/slovakWords.json'; // UISTITE SA, ŽE TENTO SÚBOR EXISTUJE V src/utils/
+// Importy pre hernú logiku
+import slovakWordsArray from '../data/slovakWords.json';
 
-// Import vlastných hookov pre refaktorovanú logiku
+// Import vlastných hookov
 import useSocketConnection from '../hooks/useSocketConnection';
 import useGameLogic from '../hooks/useGameLogic';
 import useTapToMove from '../hooks/useTapToMove';
@@ -22,29 +20,27 @@ import LetterBag from '../components/LetterBag';
 import ExchangeZone from '../components/ExchangeZone';
 import LetterSelectionModal from '../components/LetterSelectionModal';
 
-// KLÚČOVÁ ZMENA: Import sendPlayerAction
+// Import sendPlayerAction
 import { sendPlayerAction } from '../utils/socketHandlers';
 
-import '../styles/GamePage.css'; // Štýly pre GamePage
+import '../styles/GamePage.css';
 
 function GamePage({ gameId, userId, onGoToLobby, db }) {
-  // Debug log pre userId prop na začiatku renderu komponentu
   console.log('GamePage: userId prop value at render:', userId);
 
   const [gameState, setGameState] = useState({
     letterBag: [],
     playerRacks: [[], []],
-    board: Array(15).fill(Array(15).fill(null)), // Predvolený prázdny stav dosky
-    boardAtStartOfTurn: Array(15).fill(Array(15).fill(null)),
+    board: Array(15).fill(null).map(() => Array(15).fill(null)),
+    boardAtStartOfTurn: Array(15).fill(null).map(() => Array(15).fill(null)),
     playerScores: [0, 0],
     currentPlayerIndex: 0,
     exchangeZoneLetters: [],
     isGameOver: false,
     highlightedLetters: [],
-    // Pridajte akékoľvek ďalšie kľúčové vlastnosti gameState, ktoré očakávate
+    playerNicknames: {}, // Dôležité: Inicializujeme playerNicknames ako prázdny objekt
   });
 
-  // 1. Hook pre pripojenie Socket.IO a chat
   const {
     socket,
     myPlayerIndex,
@@ -55,55 +51,56 @@ function GamePage({ gameId, userId, onGoToLobby, db }) {
     waitingForSecondPlayer,
   } = useSocketConnection(gameId, userId, setGameState);
 
-  // Ref pre posúvanie chatu
   const chatMessagesEndRef = useRef(null);
   useEffect(() => {
     chatMessagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [chatMessages]);
 
-  // 2. Hook pre hlavnú hernú logiku a stav
   const {
-    // KLÚČOVÁ ZMENA: Destrukturujeme isActionInProgress z useGameLogic
     isActionInProgress,
     showLetterSelectionModal,
     setShowLetterSelectionModal,
     jokerTileCoords,
     setJokerTileCoords,
-    moveLetter, // Funkcia moveLetter vrátená z hooku
+    moveLetter,
     assignLetterToJoker,
     confirmTurn,
     handleExchangeLetters,
     handlePassTurn,
   } = useGameLogic(socket, gameId, myPlayerIndex, slovakWordsArray, gameState, setGameState);
 
-  // 3. Hook pre logiku ťuknutia na písmeno/slot
   const {
     selectedLetter,
     handleTapLetter,
     handleTapSlot,
   } = useTapToMove(moveLetter, gameState, myPlayerIndex);
 
-  // Destrukturujeme stav hry pre jednoduchší prístup
   const {
     letterBag,
     playerRacks,
     board,
     boardAtStartOfTurn,
-    // isFirstTurn, // ODSTRÁNENÉ: isFirstTurn je použité v useGameLogic, nie priamo tu
     playerScores,
     currentPlayerIndex,
     exchangeZoneLetters,
     isGameOver,
+    highlightedLetters,
+    playerNicknames, // Destrukturujeme playerNicknames zo stavu hry
   } = gameState;
 
-  // Podmienka pre renderovanie hernej plochy (až po priradení hráča)
+  // KLÚČOVÁ ZMENA: Debugovací výpis pre playerNicknames
+  useEffect(() => {
+    if (Object.keys(playerNicknames).length > 0) {
+      console.log('GamePage: Prijaté playerNicknames:', playerNicknames);
+    }
+  }, [playerNicknames]);
+
+
   const isGameReadyToRender = myPlayerIndex !== null;
 
-  // Handler pre odoslanie chat správy
-  // KLÚČOVÁ ZMENA: Používame sendPlayerAction namiesto priameho socket.emit('chatMessage')
   const handleSendChatMessage = () => {
     if (socket && gameId && newChatMessage.trim()) {
-      sendPlayerAction(socket, gameId, 'chatMessage', newChatMessage); // Používame sendPlayerAction
+      sendPlayerAction(socket, gameId, 'chatMessage', newChatMessage);
       setNewChatMessage('');
     }
   };
@@ -122,7 +119,13 @@ function GamePage({ gameId, userId, onGoToLobby, db }) {
         </div>
 
         {isGameOver && <h2 className="game-over-message">Hra skončila!</h2>}
-        <Scoreboard playerScores={playerScores} currentPlayerIndex={currentPlayerIndex} isGameOver={isGameOver} />
+        <Scoreboard
+          playerScores={playerScores}
+          currentPlayerIndex={currentPlayerIndex}
+          isGameOver={isGameOver}
+          playerNicknames={playerNicknames} // Odovzdávame playerNicknames
+          myPlayerIndex={myPlayerIndex}
+        />
         <LetterBag remainingLettersCount={letterBag.length} />
 
         {isGameReadyToRender ? (
@@ -142,14 +145,15 @@ function GamePage({ gameId, userId, onGoToLobby, db }) {
                 selectedLetter={selectedLetter}
                 onTapLetter={handleTapLetter}
                 onTapSlot={handleTapSlot}
-                highlightedLetters={gameState.highlightedLetters} // NOVÉ: Posielame zvýraznené písmená
-                isActionInProgress={isActionInProgress} // KLÚČOVÁ ZMENA: Posielame isActionInProgress
+                highlightedLetters={highlightedLetters}
+                isActionInProgress={isActionInProgress}
               />
 
               <div className="right-panel-content">
                 <div className="player-racks-container">
                   <div className="player-rack-section">
-                    <h3>Hráč 1 Rack:</h3>
+                    {/* KLÚČOVÁ ZMENA: Používame playerNicknames pre nadpis stojana */}
+                    <h3>{playerNicknames[0] || 'Hráč 1'} Rack:</h3>
                     <PlayerRack
                       letters={playerRacks[0]}
                       moveLetter={moveLetter}
@@ -159,11 +163,12 @@ function GamePage({ gameId, userId, onGoToLobby, db }) {
                       selectedLetter={selectedLetter}
                       onTapLetter={handleTapLetter}
                       onTapSlot={handleTapSlot}
-                      isActionInProgress={isActionInProgress} // KLÚČOVÁ ZMENA: Posielame isActionInProgress
+                      isActionInProgress={isActionInProgress}
                     />
                   </div>
                   <div className="player-rack-section">
-                    <h3>Hráč 2 Rack:</h3>
+                    {/* KLÚČOVÁ ZMENA: Používame playerNicknames pre nadpis stojana */}
+                    <h3>{playerNicknames[1] || 'Hráč 2'} Rack:</h3>
                     <PlayerRack
                       letters={playerRacks[1]}
                       moveLetter={moveLetter}
@@ -173,7 +178,7 @@ function GamePage({ gameId, userId, onGoToLobby, db }) {
                       selectedLetter={selectedLetter}
                       onTapLetter={handleTapLetter}
                       onTapSlot={handleTapSlot}
-                      isActionInProgress={isActionInProgress} // KLÚČOVÁ ZMENA: Posielame isActionInProgress
+                      isActionInProgress={isActionInProgress}
                     />
                   </div>
                 </div>
@@ -186,31 +191,28 @@ function GamePage({ gameId, userId, onGoToLobby, db }) {
                   selectedLetter={selectedLetter}
                   onTapLetter={handleTapLetter}
                   onTapSlot={handleTapSlot}
-                  isActionInProgress={isActionInProgress} // KLÚČOVÁ ZMENA: Posielame isActionInProgress
+                  isActionInProgress={isActionInProgress}
                 />
 
                 <div className="game-controls">
                   <button
                     className="confirm-turn-button"
                     onClick={confirmTurn}
-                    // KLÚČOVÁ ZMENA: Zakážeme tlačidlo, ak prebieha akcia
-                    disabled={isGameOver || showLetterSelectionModal || myPlayerIndex === null || currentPlayerIndex !== myPlayerIndex}
+                    disabled={isGameOver || showLetterSelectionModal || myPlayerIndex === null || currentPlayerIndex !== myPlayerIndex || isActionInProgress}
                   >
                     Potvrdiť ťah
                   </button>
                   <button
                     className="exchange-letters-button"
                     onClick={handleExchangeLetters}
-                    // KLÚČOVÁ ZMENA: Zakážeme tlačidlo, ak prebieha akcia
-                    disabled={isGameOver || letterBag.length < exchangeZoneLetters.length || showLetterSelectionModal || myPlayerIndex === null || currentPlayerIndex !== myPlayerIndex}
+                    disabled={isGameOver || letterBag.length < exchangeZoneLetters.length || showLetterSelectionModal || myPlayerIndex === null || currentPlayerIndex !== myPlayerIndex || isActionInProgress}
                   >
                     Vymeniť písmená ({exchangeZoneLetters.length})
                   </button>
                   <button
                     className="pass-turn-button"
                     onClick={handlePassTurn}
-                    // KLÚČOVÁ ZMENA: Zakážeme tlačidlo, ak prebieha akcia
-                    disabled={isGameOver || showLetterSelectionModal || myPlayerIndex === null || currentPlayerIndex !== myPlayerIndex}
+                    disabled={isGameOver || showLetterSelectionModal || myPlayerIndex === null || currentPlayerIndex !== myPlayerIndex || isActionInProgress}
                   >
                     Pass
                   </button>
@@ -230,19 +232,16 @@ function GamePage({ gameId, userId, onGoToLobby, db }) {
           myPlayerIndex={myPlayerIndex}
           handleSendChatMessage={handleSendChatMessage}
           setNewChatMessage={setNewChatMessage}
+          playerNicknames={playerNicknames} // Odovzdávame playerNicknames
         />
 
         {showLetterSelectionModal && (
           <LetterSelectionModal
             onSelectLetter={assignLetterToJoker}
             onClose={() => {
-              // KĽÚČOVÁ ZMENA: Ak sa modálne okno žolíka zatvorí bez priradenia písmena,
-              // žolík sa vráti späť na stojan.
               if (jokerTileCoords) {
-                // Získame písmeno žolíka z dosky
                 const currentJokerLetter = gameState.board[jokerTileCoords.x][jokerTileCoords.y];
                 if (currentJokerLetter) {
-                  // Zavoláme moveLetter, aby sa žolík presunul z dosky na stojan
                   moveLetter(
                     currentJokerLetter,
                     { type: 'board', x: jokerTileCoords.x, y: jokerTileCoords.y },

@@ -26,6 +26,8 @@ export const setupSocketListeners = (socket, setConnectionStatus, setMyPlayerInd
             isGameOver: false,
             isBagEmpty: false,
             hasInitialGameStateReceived: false, // Resetujeme aj toto
+            playerNicknames: {}, // KLÚČOVÁ ZMENA: Reset prezývok
+            highlightedLetters: [], // KLÚČOVÁ ZMENA: Reset zvýraznených písmen
         });
         setMyPlayerIndex(null);
         // setChatMessages([]); // Môžeme ponechať históriu chatu, ak chceme
@@ -47,6 +49,8 @@ export const setupSocketListeners = (socket, setConnectionStatus, setMyPlayerInd
             console.warn("Prijatý neplatný (undefined, null alebo nie objekt) stav hry zo servera cez Socket.IO. Preskakujem aktualizáciu v socketHandlers.");
             return; // Preskočíme aktualizáciu, ak je stav neplatný
         }
+        // KLÚČOVÁ ZMENA: setGameState teraz prijíma celý objekt serverGameState,
+        // ktorý už obsahuje playerNicknames a upravený players objekt.
         setGameState(prevState => ({
             ...prevState,
             ...serverGameState,
@@ -96,6 +100,8 @@ export const setupSocketListeners = (socket, setConnectionStatus, setMyPlayerInd
             isGameOver: false,
             isBagEmpty: false,
             hasInitialGameStateReceived: false, // Po resete potrebujeme znova inicializovať
+            playerNicknames: {}, // KLÚČOVÁ ZMENA: Reset prezývok pri resete hry
+            highlightedLetters: [], // KLÚČOVÁ ZMENA: Reset zvýraznených písmen
         });
         setMyPlayerIndex(null);
         // setChatMessages([]); // Môžeme ponechať históriu chatu
@@ -107,6 +113,7 @@ export const setupSocketListeners = (socket, setConnectionStatus, setMyPlayerInd
     });
 
     socket.on('receiveChatMessage', (message) => {
+        // KLÚČOVÁ ZMENA: Správa teraz obsahuje senderNickname
         setChatMessages((prevMessages) => [...prevMessages, message]);
     });
 
@@ -118,6 +125,8 @@ export const setupSocketListeners = (socket, setConnectionStatus, setMyPlayerInd
 };
 
 // Funkcia na odosielanie chatových správ
+// KLÚČOVÁ ZMENA: Táto funkcia už nie je priamo používaná pre chat, ale je ponechaná pre konzistentnosť.
+// Používame sendPlayerAction.
 export const sendChatMessage = (socket, gameId, message) => {
     if (socket && socket.connected && message.trim() !== '') {
         console.log(`Odosielam chat správu pre hru ${gameId}: ${message}`);
