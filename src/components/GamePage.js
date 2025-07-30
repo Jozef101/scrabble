@@ -119,17 +119,17 @@ function GamePage({ gameId, userId, onGoToLobby, db }) {
         </div>
 
         {isGameOver && <h2 className="game-over-message">Hra skončila!</h2>}
-        <Scoreboard
-          playerScores={playerScores}
-          currentPlayerIndex={currentPlayerIndex}
-          isGameOver={isGameOver}
-          playerNicknames={playerNicknames} // Odovzdávame playerNicknames
-          myPlayerIndex={myPlayerIndex}
-        />
-        <LetterBag remainingLettersCount={letterBag.length} />
-
+        
         {isGameReadyToRender ? (
           <>
+            <Scoreboard
+              playerScores={playerScores}
+              currentPlayerIndex={currentPlayerIndex}
+              isGameOver={isGameOver}
+              playerNicknames={playerNicknames} // Odovzdávame playerNicknames
+              myPlayerIndex={myPlayerIndex}
+            />
+            <LetterBag remainingLettersCount={letterBag.length} />
             {waitingForSecondPlayer && (
               <div className="second-player-status-message">
                 <p>Druhý hráč nie je pri stole.</p>
@@ -219,21 +219,20 @@ function GamePage({ gameId, userId, onGoToLobby, db }) {
                 </div>
               </div>
             </div>
+            <ChatWindow
+              chatMessages={chatMessages}
+              newChatMessage={newChatMessage}
+              myPlayerIndex={myPlayerIndex}
+              handleSendChatMessage={handleSendChatMessage}
+              setNewChatMessage={setNewChatMessage}
+              playerNicknames={playerNicknames} // Odovzdávame playerNicknames
+            />
           </>
         ) : (
           <div className="waiting-message">
-            <p>Pripájam sa k hre ID: **{gameId}**...</p>
+            <p>Pripájam sa k hre...</p>
           </div>
-        )}
-
-        <ChatWindow
-          chatMessages={chatMessages}
-          newChatMessage={newChatMessage}
-          myPlayerIndex={myPlayerIndex}
-          handleSendChatMessage={handleSendChatMessage}
-          setNewChatMessage={setNewChatMessage}
-          playerNicknames={playerNicknames} // Odovzdávame playerNicknames
-        />
+        )}        
 
         {showLetterSelectionModal && (
           <LetterSelectionModal
