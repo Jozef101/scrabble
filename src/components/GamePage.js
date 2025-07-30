@@ -198,21 +198,21 @@ function GamePage({ gameId, userId, onGoToLobby, db }) {
                   <button
                     className="confirm-turn-button"
                     onClick={confirmTurn}
-                    disabled={isGameOver || showLetterSelectionModal || myPlayerIndex === null || currentPlayerIndex !== myPlayerIndex || isActionInProgress}
+                    disabled={isGameOver || showLetterSelectionModal || myPlayerIndex === null || currentPlayerIndex !== myPlayerIndex}
                   >
                     Potvrdiť ťah
                   </button>
                   <button
                     className="exchange-letters-button"
                     onClick={handleExchangeLetters}
-                    disabled={isGameOver || letterBag.length < exchangeZoneLetters.length || showLetterSelectionModal || myPlayerIndex === null || currentPlayerIndex !== myPlayerIndex || isActionInProgress}
+                    disabled={isGameOver || letterBag.length < exchangeZoneLetters.length || showLetterSelectionModal || myPlayerIndex === null || currentPlayerIndex !== myPlayerIndex}
                   >
                     Vymeniť písmená ({exchangeZoneLetters.length})
                   </button>
                   <button
                     className="pass-turn-button"
                     onClick={handlePassTurn}
-                    disabled={isGameOver || showLetterSelectionModal || myPlayerIndex === null || currentPlayerIndex !== myPlayerIndex || isActionInProgress}
+                    disabled={isGameOver || showLetterSelectionModal || myPlayerIndex === null || currentPlayerIndex !== myPlayerIndex}
                   >
                     Pass
                   </button>
