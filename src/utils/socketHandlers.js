@@ -49,6 +49,16 @@ export const setupSocketListeners = (socket, setConnectionStatus, setMyPlayerInd
             console.warn("Prijatý neplatný (undefined, null alebo nie objekt) stav hry zo servera cez Socket.IO. Preskakujem aktualizáciu v socketHandlers.");
             return; // Preskočíme aktualizáciu, ak je stav neplatný
         }
+        
+        // DÔLEŽITÁ OPRAVA: Kontrolujeme počet hráčov pri každej aktualizácii stavu hry
+        const numberOfPlayers = serverGameState.playerRacks.filter(rack => rack !== null).length;
+        console.log("Počet aktívnych hráčov v gameStateUpdate:", numberOfPlayers);
+        if (numberOfPlayers < 2) {
+            setWaitingForSecondPlayer(true);
+        } else {
+            setWaitingForSecondPlayer(false);
+        }
+
         // KLÚČOVÁ ZMENA: setGameState teraz prijíma celý objekt serverGameState,
         // ktorý už obsahuje playerNicknames a upravený players objekt.
         setGameState(prevState => ({

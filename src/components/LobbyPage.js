@@ -11,10 +11,9 @@ import '../styles/LobbyPage.css';
  * @param {string} props.currentUserNickname - Prezývka aktuálneho používateľa.
  * @param {function} props.onStartGame - Callback funkcia na spustenie hry.
  * @param {object} props.db - Inštancia Firestore databázy.
- * @param {string} props.appId - ID aktuálnej aplikácie z Canvas prostredia. // KLÚČOVÁ ZMENA: Pridaný appId prop
+ * @param {string} props.appId - ID aktuálnej aplikácie z Canvas prostredia.
  */
-function LobbyPage({ userId, currentUserNickname, onStartGame, db, appId }) { // KLÚČOVÁ ZMENA: Prijímame appId
-    const [gameName, setGameName] = useState('');
+function LobbyPage({ userId, currentUserNickname, onStartGame, db, appId }) {
     const [games, setGames] = useState([]);
     const [error, setError] = useState('');
     const [playerNicknames, setPlayerNicknames] = useState({}); // Stav pre ukladanie prezývok všetkých hráčov v hrách
@@ -72,10 +71,6 @@ function LobbyPage({ userId, currentUserNickname, onStartGame, db, appId }) { //
     }, [db, userId, playerNicknames, appId]); // KLÚČOVÁ ZMENA: Pridané appId do závislostí
 
     const handleCreateGame = async () => {
-        if (!gameName.trim()) {
-            setError("Názov hry nemôže byť prázdny.");
-            return;
-        }
         if (!userId) {
             setError("Nie si prihlásený. Skús sa znova prihlásiť.");
             return;
@@ -86,17 +81,15 @@ function LobbyPage({ userId, currentUserNickname, onStartGame, db, appId }) { //
         }
 
         try {
-            // KLÚČOVÁ ZMENA: Používame appId z propov
             const gamesCollectionRef = collection(db, `artifacts/${appId}/public/data/games`);
+            // KLÚČOVÁ ZMENA: Pole 'name' je odstránené, názov sa už neukladá.
             await addDoc(gamesCollectionRef, {
-                name: gameName,
                 creatorId: userId,
                 creatorNickname: currentUserNickname,
                 players: [{ id: userId, playerIndex: 0, nickname: currentUserNickname }],
                 status: 'waiting',
                 createdAt: new Date(),
             });
-            setGameName('');
             setError('');
         } catch (e) {
             console.error("Chyba pri vytváraní hry:", e);
@@ -114,7 +107,6 @@ function LobbyPage({ userId, currentUserNickname, onStartGame, db, appId }) { //
             return;
         }
 
-        // KLÚČOVÁ ZMENA: Používame appId z propov
         const gameRef = doc(db, `artifacts/${appId}/public/data/games`, gameId);
 
         try {
@@ -155,7 +147,6 @@ function LobbyPage({ userId, currentUserNickname, onStartGame, db, appId }) { //
             return;
         }
 
-        // KLÚČOVÁ ZMENA: Používame appId z propov
         const gameRef = doc(db, `artifacts/${appId}/public/data/games`, gameId);
         try {
             const gameDoc = await getDoc(gameRef);
@@ -179,13 +170,7 @@ function LobbyPage({ userId, currentUserNickname, onStartGame, db, appId }) { //
 
             <div className="create-game-section">
                 <h3>Vytvoriť novú hru</h3>
-                <input
-                    type="text"
-                    placeholder="Názov hry"
-                    value={gameName}
-                    onChange={(e) => setGameName(e.target.value)}
-                    className="game-name-input"
-                />
+                {/* Pôvodné pole na zadávanie názvu hry bolo odstránené */}
                 <button onClick={handleCreateGame} className="create-game-button">
                     Vytvoriť hru
                 </button>
@@ -201,7 +186,8 @@ function LobbyPage({ userId, currentUserNickname, onStartGame, db, appId }) { //
                         {games.map((game) => (
                             <li key={game.id} className="game-item">
                                 <span>
-                                    {game.name} (Tvorca: {game.creatorNickname || 'Neznámy'}) - Hráči: {
+                                    {/* KLÚČOVÁ ZMENA: Názov hry sa už nezobrazuje */}
+                                    Tvorca: {game.creatorNickname || 'Neznámy'} - Hráči: {
                                         game.players.map(player => playerNicknames[player.id] || player.id.substring(0, 8)).join(', ')
                                     } - Status: {game.status}
                                 </span>

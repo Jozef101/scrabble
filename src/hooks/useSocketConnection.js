@@ -1,10 +1,18 @@
 // src/hooks/useSocketConnection.js
 import { useState, useEffect, useRef } from 'react';
 import io from 'socket.io-client';
-import { SERVER_URL } from '../utils/constants'; // Uistite sa, že SERVER_URL je správne nastavená, napr. 'http://localhost:3001'
+import { SERVER_URL } from '../utils/constants'; // Uistite sa, že SERVER_URL je správne nastavená
 import { setupSocketListeners } from '../utils/socketHandlers';
 
-function useSocketConnection(gameId, userId, setGameState) {
+/**
+ * Hook pre správu pripojenia cez WebSocket a základných herných stavov.
+ * @param {string} gameId - ID aktuálnej hry.
+ * @param {string} userId - ID aktuálneho používateľa.
+ * @param {function} setGameState - Callback na aktualizáciu globálneho stavu hry.
+ * @param {function} displayMessage - Callback na zobrazenie dočasných správ.
+ * @returns {object} - Objekt s aktuálnym stavom pripojenia, hry a chatu.
+ */
+function useSocketConnection(gameId, userId, setGameState, displayMessage) {
   const [socket, setSocket] = useState(null);
   const [myPlayerIndex, setMyPlayerIndex] = useState(null);
   const [connectionStatus, setConnectionStatus] = useState('Pripájam sa...');
@@ -15,7 +23,6 @@ function useSocketConnection(gameId, userId, setGameState) {
   const hasJoinedGameRef = useRef(false); // Používame ref na zabránenie duplicitného joinGame
 
   useEffect(() => {
-    // Ak už socket existuje a je pripojený, alebo ak chýba gameId/userId, nič nerobíme
     if (socket && socket.connected) {
       return;
     }
@@ -33,15 +40,15 @@ function useSocketConnection(gameId, userId, setGameState) {
 
     setSocket(newSocket); // Nastavíme socket do stavu
 
-    // Nastavenie všetkých poslucháčov cez setupSocketListeners
-    // Uistite sa, že poradie argumentov je správne podľa setupSocketListeners
+    // Správne odovzdanie všetkých potrebných funkcií poslucháčom, vrátane displayMessage
     setupSocketListeners(
       newSocket,
       setConnectionStatus,
       setMyPlayerIndex,
-      setGameState, // Toto je setGameState z GamePage
+      setGameState,
       setChatMessages,
-      setWaitingForSecondPlayer
+      setWaitingForSecondPlayer,
+      displayMessage
     );
 
     // Pripojenie k hre po úspešnom pripojení socketu
@@ -79,7 +86,7 @@ function useSocketConnection(gameId, userId, setGameState) {
       setSocket(null); // Resetujeme stav socketu
       hasJoinedGameRef.current = false; // Resetujeme ref
     };
-  }, [gameId, userId, setGameState]); // Závislosti: gameId, userId, setGameState
+  }, [gameId, userId, setGameState, displayMessage]); // Dôležité: závislosti pre useEffect
 
   return {
     socket,
