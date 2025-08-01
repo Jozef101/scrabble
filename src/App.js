@@ -1,6 +1,6 @@
 // src/App.js
 /* global __app_id, __firebase_config, __initial_auth_token */
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { Routes, Route, useNavigate, useParams, useLocation } from 'react-router-dom';
@@ -8,7 +8,7 @@ import { Routes, Route, useNavigate, useParams, useLocation } from 'react-router
 // Firebase Imports
 import { initializeApp } from 'firebase/app';
 import { getAuth, signInWithCustomToken, onAuthStateChanged, applyActionCode } from 'firebase/auth';
-import { getFirestore, doc, getDoc } from 'firebase/firestore'; // Pridané importy doc, getDoc
+import { getFirestore, doc, getDoc } from 'firebase/firestore'; 
 
 // Import nových komponentov
 import AuthPage from './components/AuthPage';
@@ -54,11 +54,11 @@ function App() {
     const [isAuthReady, setIsAuthReady] = useState(false);
     const [isEmailVerified, setIsEmailVerified] = useState(false);
     const [currentUserEmail, setCurrentUserEmail] = useState(null);
-    const [currentUserNickname, setCurrentUserNickname] = useState(null); // Nový stav pre prezývku
-
+    const [currentUserNickname, setCurrentUserNickname] = useState(null);
 
     const navigate = useNavigate();
     const location = useLocation();
+    const initialGameIdRef = useRef(sessionStorage.getItem('activeGameId'));
 
     // Effect pre Firebase Authentication
     useEffect(() => {
@@ -119,7 +119,10 @@ function App() {
 
                 if (user.emailVerified) {
                     console.log("App.js: E-mail je overený. Navigácia.");
-                    if (!location.pathname.startsWith('/game/') && location.pathname !== '/lobby') {
+                    if (initialGameIdRef.current) {
+                        console.log("App.js: Nájdené aktívne ID hry v sessionStorage. Navigujem do hry.");
+                        navigate(`/game/${initialGameIdRef.current}`, { replace: true });
+                    } else if (!location.pathname.startsWith('/game/') && location.pathname !== '/lobby') {
                         navigate('/lobby');
                     }
                 } else {
@@ -145,7 +148,7 @@ function App() {
         authenticateFirebase();
 
         return () => unsubscribe();
-    }, [auth, navigate, initialAuthToken, location.pathname, db]); // Pridané db do závislostí
+    }, [auth, navigate, initialAuthToken, location.pathname, db]);
 
     // Effect pre spracovanie overovacieho odkazu z e-mailu
     useEffect(() => {
@@ -166,7 +169,7 @@ function App() {
                     if (error.code === 'auth/invalid-action-code' || error.code === 'auth/expired-action-code') {
                         console.warn("App.js: Overovací odkaz už bol použitý alebo vypršal. Presmerovanie bez alertu.");
                     } else {
-                        alert(`Chyba pri overovaní e-mailu: ${error.message}. Skúste to znova alebo sa prihláste.`);
+                        console.error(`Chyba pri overovaní e-mailu: ${error.message}. Skúste to znova alebo sa prihláste.`);
                     }
                     navigate('/', { replace: true });
                 }
@@ -180,10 +183,12 @@ function App() {
     }, [auth, location.search, navigate, isEmailVerified]);
 
     const handleStartGame = (id) => {
+        sessionStorage.setItem('activeGameId', id);
         navigate(`/game/${id}`);
     };
 
     const handleGoToLobby = () => {
+        sessionStorage.removeItem('activeGameId');
         navigate('/lobby');
     };
 
@@ -213,10 +218,10 @@ function App() {
                         element={
                             <LobbyPage
                                 userId={userId}
-                                currentUserNickname={currentUserNickname} // KLÚČOVÁ ZMENA: Odovzdávame prezývku do LobbyPage
+                                currentUserNickname={currentUserNickname} 
                                 onStartGame={handleStartGame}
                                 db={db}
-                                appId={appId} // KLÚČOVÁ ZMENA: Odovzdávame appId do LobbyPage
+                                appId={appId}
                             />
                         }
                     />
