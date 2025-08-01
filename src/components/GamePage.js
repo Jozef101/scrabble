@@ -29,7 +29,7 @@ import '../styles/GamePage.css';
 function GamePage({ gameId, userId, onGoToLobby, db }) {
   console.log('GamePage: userId prop value at render:', userId);
 
-  // Ref pre hernú dosku (z predchádzajúceho tasku)
+  // Ref pre hernú dosku
   const boardRef = useRef(null);
   // Ref pre ChatWindow komponent
   const chatWindowRef = useRef(null);
@@ -44,7 +44,7 @@ function GamePage({ gameId, userId, onGoToLobby, db }) {
     exchangeZoneLetters: [],
     isGameOver: false,
     highlightedLetters: [],
-    playerNicknames: {}, // Dôležité: Inicializujeme playerNicknames ako prázdny objekt
+    playerNicknames: {},
   });
 
   // Stav pre počet neprečítaných správ
@@ -52,7 +52,7 @@ function GamePage({ gameId, userId, onGoToLobby, db }) {
   // Ref na uloženie predchádzajúceho počtu správ pre detekciu nových
   const previousChatMessagesLength = useRef(0);
   // Stav pre viditeľnosť chatového okna
-  const [isChatVisible, setIsChatVisible] = useState(false); // Zmenené na false, chat je predvolene skrytý
+  const [isChatVisible, setIsChatVisible] = useState(false);
 
   const {
     socket,
@@ -64,7 +64,7 @@ function GamePage({ gameId, userId, onGoToLobby, db }) {
     waitingForSecondPlayer,
   } = useSocketConnection(gameId, userId, setGameState);
 
-  // useEffect na posun okna na hernú dosku po načítaní a pripravenosti hry (z predchádzajúceho tasku)
+  // useEffect na posun okna na hernú dosku po načítaní a pripravenosti hry
   useEffect(() => {
     if (boardRef.current && myPlayerIndex !== null) {
       boardRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -74,6 +74,13 @@ function GamePage({ gameId, userId, onGoToLobby, db }) {
 
   // useEffect na sledovanie nových správ a aktualizáciu počtu neprečítaných správ
   useEffect(() => {
+    // Kľúčová oprava: Ak je to prvé načítanie (previousChatMessagesLength je 0)
+    // a chatMessages už obsahujú dáta, inicializujeme ref a preskočíme počítadlo.
+    if (previousChatMessagesLength.current === 0 && chatMessages.length > 0) {
+      previousChatMessagesLength.current = chatMessages.length;
+      return;
+    }
+
     // Ak pribudli nové správy
     if (chatMessages.length > previousChatMessagesLength.current) {
       const lastMessage = chatMessages[chatMessages.length - 1];
@@ -84,11 +91,10 @@ function GamePage({ gameId, userId, onGoToLobby, db }) {
         setUnreadMessageCount(prevCount => prevCount + 1);
         console.log('GamePage: Incremented unread message count.');
       }
-      // Dôležité: Neresetujeme počítadlo tu. Reset sa vykoná pri explicitnej akcii (odoslanie, otvorenie, posun).
     }
     // Vždy aktualizujeme predchádzajúcu dĺžku správ
     previousChatMessagesLength.current = chatMessages.length;
-  }, [chatMessages, myPlayerIndex, isChatVisible]); // Pridaná závislosť isChatVisible
+  }, [chatMessages, myPlayerIndex, isChatVisible]);
 
   // Funkcia na resetovanie počtu neprečítaných správ
   const resetUnreadMessages = () => {
@@ -148,7 +154,7 @@ function GamePage({ gameId, userId, onGoToLobby, db }) {
     }
   };
 
-  // NOVÉ: Funkcia na OTVORENIE chatu a resetovanie počtu neprečítaných správ
+  // Funkcia na OTVORENIE chatu a resetovanie počtu neprečítaných správ
   const openChatAndResetUnread = () => {
     setIsChatVisible(true); // Vždy nastavíme chat na viditeľný
     // Použijeme setTimeout, aby sa zabezpečilo, že chat je už vykreslený a má správnu výšku
@@ -158,7 +164,7 @@ function GamePage({ gameId, userId, onGoToLobby, db }) {
     }, 0);
   };
 
-  // NOVÉ: Funkcia na ZATVORENIE chatu
+  // Funkcia na ZATVORENIE chatu
   const handleCloseChat = () => {
     setIsChatVisible(false);
   };
