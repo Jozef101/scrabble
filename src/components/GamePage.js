@@ -20,6 +20,8 @@ import Scoreboard from '../components/Scoreboard';
 import LetterBag from '../components/LetterBag';
 import ExchangeZone from '../components/ExchangeZone';
 import LetterSelectionModal from '../components/LetterSelectionModal';
+// NOVÝ IMPORT: Komponent pre záznam ťahov
+import GameLog from '../components/GameLog';
 
 // Import sendPlayerAction
 import { sendPlayerAction } from '../utils/socketHandlers';
@@ -53,6 +55,8 @@ function GamePage({ gameId, userId, onGoToLobby, db }) {
   const previousChatMessagesLength = useRef(0);
   // Stav pre viditeľnosť chatového okna
   const [isChatVisible, setIsChatVisible] = useState(false);
+  // NOVÝ STAV: Viditeľnosť okna pre záznam ťahov
+  const [isGameLogVisible, setIsGameLogVisible] = useState(true);
 
   const {
     socket,
@@ -200,21 +204,26 @@ function GamePage({ gameId, userId, onGoToLobby, db }) {
               </div>
             )}
             {/* Priradenie ref boardRef k hlavnému kontajneru hernej plochy */}
-            <div className="game-area-container" ref={boardRef}>
-              <Board
-                board={board}
-                moveLetter={moveLetter}
-                boardAtStartOfTurn={boardAtStartOfTurn}
-                myPlayerIndex={myPlayerIndex}
-                currentPlayerIndex={currentPlayerIndex}
-                selectedLetter={selectedLetter}
-                onTapLetter={handleTapLetter}
-                onTapSlot={handleTapSlot}
-                highlightedLetters={highlightedLetters}
-                isActionInProgress={isActionInProgress}
-              />
+            {/* ZMENA: Vytvorenie nového kontajnera pre trojstĺpcové rozloženie */}
+            <div className="main-game-layout">
+              {/* Prvý stĺpec - Hracia doska */}
+              <div className="board-column" ref={boardRef}>
+                <Board
+                  board={board}
+                  moveLetter={moveLetter}
+                  boardAtStartOfTurn={boardAtStartOfTurn}
+                  myPlayerIndex={myPlayerIndex}
+                  currentPlayerIndex={currentPlayerIndex}
+                  selectedLetter={selectedLetter}
+                  onTapLetter={handleTapLetter}
+                  onTapSlot={handleTapSlot}
+                  highlightedLetters={highlightedLetters}
+                  isActionInProgress={isActionInProgress}
+                />
+              </div>
 
-              <div className="right-panel-content">
+              {/* Druhý stĺpec - Racks a ovládacie prvky */}
+              <div className="right-panel-column">
                 <div className="player-racks-container">
                   <div className="player-rack-section">
                     <h3>{playerNicknames[0] || 'Hráč 1'} Rack:</h3>
@@ -281,7 +290,14 @@ function GamePage({ gameId, userId, onGoToLobby, db }) {
                   </button>
                 </div>
               </div>
-            </div>
+
+              {/* Tretí stĺpec - Nový komponent GameLog */}
+              {isGameLogVisible && (
+                <div className="gamelog-column">
+                  <GameLog />
+                </div>
+              )}
+            </div> {/* Koniec main-game-layout */}
             {/* Podmienené vykresľovanie ChatWindow */}
             {isChatVisible && (
               <ChatWindow
@@ -306,8 +322,8 @@ function GamePage({ gameId, userId, onGoToLobby, db }) {
           <div className="waiting-message">
             <p>Pripájam sa k hre...</p>
           </div>
-        )}        
-
+        )}
+        
         {showLetterSelectionModal && (
           <LetterSelectionModal
             onSelectLetter={assignLetterToJoker}

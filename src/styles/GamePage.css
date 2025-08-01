@@ -69,5 +69,40 @@
     text-align: center;
 }
 
-/* Ostatné štýly pre herné komponenty (Board, PlayerRack, atď.) sú stále v App.css */
-/* Ak by boli špecifické pre GamePage, presunuli by sa sem */
+/* NOVÉ ŠTÝLY PRE 3-STĹPCOVÉ ROZLOŽENIE */
+.main-game-layout {
+    display: flex;
+    gap: 20px;
+    width: 100%;
+    justify-content: center;
+}
+
+.board-column {
+    flex: 0 0 auto; /* Necháme hracej doske jej vlastné rozmery */
+    max-width: 600px;
+}
+
+.right-panel-column {
+    flex: 1 1 300px; /* Panel s rackmi a ovládaním má flexibilnú šírku */
+    max-width: 350px;
+}
+
+.gamelog-column {
+    flex: 1 1 250px; /* GameLog má menšiu, ale flexibilnú šírku */
+    max-width: 300px;
+}
+
+/* Prispôsobenie pre menšie obrazovky */
+@media (max-width: 1200px) {
+    .main-game-layout {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .board-column,
+    .right-panel-column,
+    .gamelog-column {
+        width: 100%;
+        max-width: 100%;
+    }
+}
