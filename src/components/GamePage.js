@@ -291,10 +291,10 @@ function GamePage({ gameId, userId, onGoToLobby, db }) {
               />
             )}
             {/* Vykreslenie FloatingChatIcon */}
-            <FloatingChatIcon
+            {!isChatVisible && (<FloatingChatIcon
               unreadCount={unreadMessageCount}
               onClick={openChatAndResetUnread}
-            />
+            /> )}
           </>
         ) : (
           <div className="waiting-message">

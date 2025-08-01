@@ -1,0 +1,128 @@
+/*
+ * Štylovanie pre komponent ChatWindow.
+ * Tento kód rieši problém s rozložením tlačidla "Odoslať"
+ * v kontajneri pre vstup, čím zabezpečuje, že je vždy viditeľné.
+ * Taktiež zmení tlačidlo na štvorcové s ikonou.
+ */
+
+.chat-container {
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 350px;
+  height: 500px;
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+  z-index: 1000;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+.chat-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 15px;
+  background-color: #f0f0f0;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.chat-header-row h3 {
+  margin: 0;
+  font-size: 1.2em;
+}
+
+.close-chat-button {
+  background: none;
+  border: none;
+  padding: 5px;
+  cursor: pointer;
+  color: #555;
+  transition: color 0.2s ease-in-out;
+}
+
+.close-chat-button:hover {
+  color: #333;
+}
+
+.close-chat-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.chat-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background-color: #fafafa;
+}
+
+.chat-message {
+  padding: 10px;
+  border-radius: 10px;
+  max-width: 80%;
+  word-wrap: break-word;
+}
+
+.my-message {
+  background-color: #dcf8c6;
+  align-self: flex-end;
+}
+
+.other-message {
+  background-color: #e5e5ea;
+  align-self: flex-start;
+}
+
+.chat-input {
+  display: flex;
+  align-items: center; /* Zarovná prvky vertikálne */
+  padding: 10px;
+  border-top: 1px solid #e0e0e0;
+  background-color: #f0f0f0;
+}
+
+.chat-input input {
+  flex: 1; /* Input zaberie všetok dostupný priestor */
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  margin-right: 10px;
+  /* Kľúčová oprava: Zabezpečí, že padding a border nepridajú k celkovej šírke prvku. */
+  box-sizing: border-box;
+}
+
+/* Nové štýly pre tlačidlo s ikonou */
+.send-chat-button {
+  flex-shrink: 0; /* Zabezpečí, že sa tlačidlo nezmenší */
+  width: 44px; /* Štvorcový tvar */
+  height: 44px; /* Štvorcový tvar */
+  display: flex;
+  justify-content: center; /* Vycentruje ikonu horizontálne */
+  align-items: center; /* Vycentruje ikonu vertikálne */
+  border: none;
+  border-radius: 50%; /* Tvar kruhu, aby vyzeralo lepšie */
+  background-color: #007bff;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.send-chat-button:hover {
+  background-color: #0056b3;
+}
+
+.send-chat-button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+.send-chat-icon {
+  width: 24px;
+  height: 24px;
+}

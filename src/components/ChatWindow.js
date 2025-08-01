@@ -1,5 +1,6 @@
 // src/components/ChatWindow.jsx
 import React, { useRef, useEffect, useImperativeHandle, forwardRef } from 'react';
+import '../styles/ChatWindow.css'; // Pridaný import pre CSS súbor
 
 /**
  * Komponent ChatWindow zobrazuje chatové správy a umožňuje odosielanie nových správ.
@@ -31,7 +32,7 @@ const ChatWindow = forwardRef(({ chatMessages, newChatMessage, myPlayerIndex, ha
       const element = chatMessagesContainerRef.current;
       if (element) {
         // Tolerancia pre posúvanie, aby sa predišlo problémom s floatmi alebo zaokrúhľovaním.
-        const tolerance = 1; 
+        const tolerance = 1;
         return element.scrollHeight - element.scrollTop <= element.clientHeight + tolerance;
       }
       return false;
@@ -82,7 +83,7 @@ const ChatWindow = forwardRef(({ chatMessages, newChatMessage, myPlayerIndex, ha
 
   return (
     <div className="chat-container">
-      <div className="chat-header-row"> {/* NOVÉ: Kontajner pre hlavičku a tlačidlo zatvorenia */}
+      <div className="chat-header-row">
         <h3>Chat</h3>
         {onCloseChat && (
           <button onClick={onCloseChat} className="close-chat-button">
@@ -112,7 +113,13 @@ const ChatWindow = forwardRef(({ chatMessages, newChatMessage, myPlayerIndex, ha
           placeholder="Napíš správu..."
           disabled={myPlayerIndex === null}
         />
-        <button onClick={handleSendChatMessage} disabled={myPlayerIndex === null}>Odoslať</button>
+        {/* Upravené tlačidlo s ikonou */}
+        <button onClick={handleSendChatMessage} disabled={myPlayerIndex === null} className="send-chat-button">
+          {/* Ikonka papierového lietadla (SVG) */}
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" className="send-chat-icon">
+            <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+          </svg>
+        </button>
       </div>
     </div>
   );
