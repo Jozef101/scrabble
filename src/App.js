@@ -157,30 +157,38 @@ function App() {
             const oobCode = params.get('oobCode');
             const currentUser = auth.currentUser;
 
-            if (oobCode && currentUser && !currentUser.emailVerified) {
-                console.log("App.js: Nájdený oobCode v URL, pokúšam sa overiť e-mail...");
-                try {
-                    await applyActionCode(auth, oobCode);
-                    console.log("App.js: E-mail úspešne overený pomocou oobCode.");
-                    alert('Váš e-mail bol úspešne overený! Môžete začať hrať.');
-                    navigate('/lobby', { replace: true });
-                } catch (error) {
-                    console.error("App.js: Chyba pri overovaní e-mailu pomocou oobCode:", error);
-                    if (error.code === 'auth/invalid-action-code' || error.code === 'auth/expired-action-code') {
-                        console.warn("App.js: Overovací odkaz už bol použitý alebo vypršal. Presmerovanie bez alertu.");
-                    } else {
-                        console.error(`Chyba pri overovaní e-mailu: ${error.message}. Skúste to znova alebo sa prihláste.`);
-                    }
-                    navigate('/', { replace: true });
-                }
-            } else if (oobCode && currentUser && currentUser.emailVerified) {
-                console.log("App.js: OobCode nájdený, ale e-mail je už overený. Presmerovanie do lobby.");
-                navigate('/lobby', { replace: true });
+            if (!oobCode) return; // Ak nie je oobCode, nerob nič
+
+            if (!currentUser) {
+            console.log("App.js: Čakám na načítanie currentUser pred overením e-mailu...");
+            return; // Počkám, až bude currentUser načítaný
+            }
+
+            if (currentUser.emailVerified) {
+            console.log("App.js: E-mail už overený, presmerujem do lobby.");
+            navigate('/lobby', { replace: true });
+            return;
+            }
+
+            try {
+            console.log("App.js: Pokúšam sa overiť e-mail pomocou oobCode...");
+            await applyActionCode(auth, oobCode);
+
+            // Aktualizuj currentUser stav, aby sa emailVerified zmenilo na true
+            await auth.currentUser.reload();
+
+            console.log("App.js: E-mail úspešne overený pomocou oobCode.");
+            alert('Váš e-mail bol úspešne overený! Môžete začať hrať.');
+            navigate('/lobby', { replace: true });
+            } catch (error) {
+            console.error("App.js: Chyba pri overovaní e-mailu pomocou oobCode:", error);
+            navigate('/', { replace: true });
             }
         };
 
         handleEmailVerificationLink();
-    }, [auth, location.search, navigate, isEmailVerified]);
+        }, [auth, location.search, navigate, userId]);
+
 
     const handleStartGame = (id) => {
         sessionStorage.setItem('activeGameId', id);
