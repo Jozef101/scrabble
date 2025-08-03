@@ -23,8 +23,7 @@ function LobbyPage({ userId, currentUserNickname, onStartGame, db, appId }) {
             setError("Databáza nie je inicializovaná.");
             return;
         }
-        // KLÚČOVÁ ZMENA: Používame appId z propov
-        const gamesCollectionRef = collection(db, `artifacts/${appId}/public/data/games`);
+        const gamesCollectionRef = collection(db, 'scrabbleGames');
         const q = query(gamesCollectionRef, orderBy('createdAt', 'desc'));
 
         const unsubscribe = onSnapshot(q, async (snapshot) => {
@@ -68,7 +67,7 @@ function LobbyPage({ userId, currentUserNickname, onStartGame, db, appId }) {
         });
 
         return () => unsubscribe();
-    }, [db, userId, playerNicknames, appId]); // KLÚČOVÁ ZMENA: Pridané appId do závislostí
+    }, [db, userId, playerNicknames]);
 
     const handleCreateGame = async () => {
         if (!userId) {
@@ -81,8 +80,7 @@ function LobbyPage({ userId, currentUserNickname, onStartGame, db, appId }) {
         }
 
         try {
-            const gamesCollectionRef = collection(db, `artifacts/${appId}/public/data/games`);
-            // KLÚČOVÁ ZMENA: Pole 'name' je odstránené, názov sa už neukladá.
+            const gamesCollectionRef = collection(db, 'scrabbleGames');
             await addDoc(gamesCollectionRef, {
                 creatorId: userId,
                 creatorNickname: currentUserNickname,
@@ -107,7 +105,7 @@ function LobbyPage({ userId, currentUserNickname, onStartGame, db, appId }) {
             return;
         }
 
-        const gameRef = doc(db, `artifacts/${appId}/public/data/games`, gameId);
+        const gameRef = doc(db, 'scrabbleGames', gameId);
 
         try {
             if (existingPlayers.some(player => player.id === userId)) {
@@ -147,7 +145,7 @@ function LobbyPage({ userId, currentUserNickname, onStartGame, db, appId }) {
             return;
         }
 
-        const gameRef = doc(db, `artifacts/${appId}/public/data/games`, gameId);
+        const gameRef = doc(db, 'scrabbleGames', gameId);
         try {
             const gameDoc = await getDoc(gameRef);
             if (gameDoc.exists()) {
