@@ -20,18 +20,17 @@ function useGameLogic(socket, gameId, myPlayerIndex, slovakWordsArray, gameState
 
   const [showLetterSelectionModal, setShowLetterSelectionModal] = useState(false);
   const [jokerTileCoords, setJokerTileCoords] = useState(null);
-  const [isActionInProgress, setIsActionInProgress] = useState(false); // KLÚČOVÁ ZMENA: Nový stav pre sledovanie prebiehajúcej akcie
+  const [isActionInProgress, setIsActionInProgress] = useState(false);
 
   const validWordsSet = useRef(new Set(slovakWordsArray.map(word => word.toUpperCase())));
 
-  // Effect pre aktualizáciu stavu hry zo servera
   useEffect(() => {
     if (!socket) return;
     const handleGameStateUpdate = (newGameState) => {
       console.log('useGameLogic: Received gameStateUpdate:', newGameState);
       console.log('useGameLogic: Received highlightedLetters:', newGameState.highlightedLetters);
       setGameState(newGameState);
-      setIsActionInProgress(false); // KLÚČOVÁ ZMENA: Vypneme indikátor akcie po prijatí aktualizácie zo servera
+      setIsActionInProgress(false);
     };
     socket.on('gameStateUpdate', handleGameStateUpdate);
     return () => {
@@ -39,14 +38,12 @@ function useGameLogic(socket, gameId, myPlayerIndex, slovakWordsArray, gameState
     };
   }, [socket, setGameState]);
 
-  // Memoizovaná funkcia moveLetter
   const moveLetter = useCallback((letterData, source, target) => {
-    // KLÚČOVÁ ZMENA: Ak už prebieha akcia, neumožníme ďalšiu
     if (isActionInProgress) {
       console.log("Akcia už prebieha, počkajte prosím.");
       return;
     }
-    setIsActionInProgress(true); // KLÚČOVÁ ZMENA: Zapneme indikátor akcie pred jej odoslaním
+    setIsActionInProgress(true);
     importedMoveLetter({
       gameState,
       setGameState,
@@ -56,15 +53,14 @@ function useGameLogic(socket, gameId, myPlayerIndex, slovakWordsArray, gameState
       socket,
       gameIdToJoin: gameId,
     })(letterData, source, target);
-  }, [gameState, setGameState, myPlayerIndex, setJokerTileCoords, setShowLetterSelectionModal, socket, gameId, isActionInProgress]); // KLÚČOVÁ ZMENA: Pridaný isActionInProgress do závislostí
+  }, [gameState, setGameState, myPlayerIndex, setJokerTileCoords, setShowLetterSelectionModal, socket, gameId, isActionInProgress]);
 
   const assignLetterToJoker = useCallback((selectedLetter) => {
-    // KLÚČOVÁ ZMENA: Ak už prebieha akcia, neumožníme ďalšiu
     if (isActionInProgress) {
       console.log("Akcia už prebieha, počkajte prosím.");
       return;
     }
-    setIsActionInProgress(true); // KLÚČOVÁ ZMENA: Zapneme indikátor akcie
+    setIsActionInProgress(true);
     if (jokerTileCoords) {
       sendPlayerAction(socket, gameId, 'assignJoker', {
         x: jokerTileCoords.x,
@@ -74,19 +70,18 @@ function useGameLogic(socket, gameId, myPlayerIndex, slovakWordsArray, gameState
     }
     setShowLetterSelectionModal(false);
     setJokerTileCoords(null);
-  }, [jokerTileCoords, socket, gameId, isActionInProgress]); // KLÚČOVÁ ZMENA: Pridaný isActionInProgress do závislostí
+  }, [jokerTileCoords, socket, gameId, isActionInProgress]);
 
   const confirmTurn = useCallback(() => {
-    // KLÚČOVÁ ZMENA: Ak už prebieha akcia, neumožníme ďalšiu
     if (isActionInProgress) {
       console.log("Akcia už prebieha, počkajte prosím.");
       return;
     }
-    setIsActionInProgress(true); // KLÚČOVÁ ZMENA: Zapneme indikátor akcie
+    setIsActionInProgress(true);
 
     if (gameState.isGameOver || myPlayerIndex === null || gameState.currentPlayerIndex !== myPlayerIndex) {
       alert("Hra skončila, nie si pripojený alebo nie je tvoj ťah!");
-      setIsActionInProgress(false); // Vypneme indikátor, ak je neplatná podmienka
+      setIsActionInProgress(false);
       return;
     }
 
@@ -242,7 +237,7 @@ function useGameLogic(socket, gameId, myPlayerIndex, slovakWordsArray, gameState
         consecutivePasses: 0,
         isGameOver: true,
         isBagEmpty: currentBagEmpty,
-        highlightedLetters: newHighlightedLetters, // Reset highlighted letters at the end of the game
+        highlightedLetters: newHighlightedLetters,
       };
       alert(`Hra skončila! Konečné skóre: Hráč 1: ${finalScores[0]}, Hráč 2: ${finalScores[1]}`);
     } else {
@@ -261,19 +256,40 @@ function useGameLogic(socket, gameId, myPlayerIndex, slovakWordsArray, gameState
         consecutivePasses: 0,
         isGameOver: false,
         isBagEmpty: currentBagEmpty,
-        highlightedLetters: newHighlightedLetters, // Aktualizujeme zvýraznené písmená
+        highlightedLetters: newHighlightedLetters,
       };
     }
+    
+    // --- ÚPRAVA: Uložíme log ťahu s novými informáciami. ---
+    const turnDetails = {
+        actionType: 'placeLetters',
+        placedLetters: actualPlacedLetters.map(l => ({
+            x: l.x,
+            y: l.y,
+            letterData: l.letterData
+        })),
+        newWords: allFormedWords.map(w => w.wordString),
+        score: turnScore,
+        turnNumber: gameState.turnNumber + 1,
+        playerIndex: myPlayerIndex,
+        timestamp: Date.now(),
+        exchangedLetters: null,
+        // PRIDANÉ:
+        rackBeforeTurn: gameState.playerRacks[myPlayerIndex],
+        lettersDrawn: newLetters,
+    };
+    sendPlayerAction(socket, gameId, 'turnSubmitted', turnDetails);
+    // ----------------------------
+
     sendPlayerAction(socket, gameId, 'updateGameState', updatedGameState);
   }, [gameState, myPlayerIndex, socket, gameId, validWordsSet]);
 
   const handleExchangeLetters = useCallback(() => {
-    // KLÚČOVÁ ZMENA: Ak už prebieha akcia, neumožníme ďalšiu
     if (isActionInProgress) {
       console.log("Akcia už prebieha, počkajte prosím.");
       return;
     }
-    setIsActionInProgress(true); // KLÚČOVÁ ZMENA: Zapneme indikátor akcie
+    setIsActionInProgress(true);
 
     if (gameState.isGameOver || myPlayerIndex === null || gameState.currentPlayerIndex !== myPlayerIndex) {
       alert("Hra skončila, nie si pripojený alebo nie je tvoj ťah!");
@@ -349,18 +365,35 @@ function useGameLogic(socket, gameId, myPlayerIndex, slovakWordsArray, gameState
       consecutivePasses: 0,
       isGameOver: false,
       isBagEmpty: currentBagEmpty,
-        highlightedLetters: [], // Vyčistíme zvýraznené písmená pri výmene
+      highlightedLetters: [],
     };
+
+    // --- ÚPRAVA: Uložíme log výmeny s novými informáciami. ---
+    const exchangeDetails = {
+        actionType: 'exchange',
+        placedLetters: null,
+        newWords: null,
+        score: 0,
+        exchangedLetters: gameState.exchangeZoneLetters.map(l => ({ id: l.id, letter: l.letter })),
+        turnNumber: gameState.turnNumber + 1,
+        playerIndex: myPlayerIndex,
+        timestamp: Date.now(),
+        // PRIDANÉ:
+        rackBeforeTurn: gameState.playerRacks[myPlayerIndex],
+        lettersDrawn: newLettersForRack,
+    };
+    sendPlayerAction(socket, gameId, 'turnSubmitted', exchangeDetails);
+    // -------------------------------
+
     sendPlayerAction(socket, gameId, 'updateGameState', updatedGameState);
-  }, [gameState, myPlayerIndex, socket, gameId, isActionInProgress]); // KLÚČOVÁ ZMENA: Pridaný isActionInProgress do závislostí
+  }, [gameState, myPlayerIndex, socket, gameId, isActionInProgress]);
 
   const handlePassTurn = useCallback(() => {
-    // KLÚČOVÁ ZMENA: Ak už prebieha akcia, neumožníme ďalšiu
     if (isActionInProgress) {
       console.log("Akcia už prebieha, počkajte prosím.");
       return;
     }
-    setIsActionInProgress(true); // KLÚČOVÁ ZMENA: Zapneme indikátor akcie
+    setIsActionInProgress(true);
 
     if (gameState.isGameOver || myPlayerIndex === null || gameState.currentPlayerIndex !== myPlayerIndex) {
       alert("Hra skončila, nie si pripojený alebo nie je tvoj ťah!");
@@ -408,10 +441,28 @@ function useGameLogic(socket, gameId, myPlayerIndex, slovakWordsArray, gameState
       hasMovedToExchangeZoneThisTurn: false,
       consecutivePasses: newConsecutivePasses,
       isGameOver: isGameOverCondition,
-      highlightedLetters: [], // Vyčistíme zvýraznené písmená pri prechode ťahu
+      highlightedLetters: [],
     };
+
+    // --- ÚPRAVA: Uložíme log pasovania s novými informáciami. ---
+    const passDetails = {
+        actionType: 'pass',
+        placedLetters: null,
+        newWords: null,
+        score: 0,
+        turnNumber: gameState.turnNumber + 1,
+        playerIndex: myPlayerIndex,
+        timestamp: Date.now(),
+        exchangedLetters: null,
+        // PRIDANÉ:
+        rackBeforeTurn: gameState.playerRacks[myPlayerIndex],
+        lettersDrawn: [], // pri pasovaní sa nič nevyberá
+    };
+    sendPlayerAction(socket, gameId, 'turnSubmitted', passDetails);
+    // ---------------------------------
+
     sendPlayerAction(socket, gameId, 'updateGameState', updatedGameState);
-  }, [gameState, myPlayerIndex, socket, gameId, isActionInProgress]); // KLÚČOVÁ ZMENA: Pridaný isActionInProgress do závislostí
+  }, [gameState, myPlayerIndex, socket, gameId, isActionInProgress]);
 
   return {
     gameState,
@@ -425,7 +476,7 @@ function useGameLogic(socket, gameId, myPlayerIndex, slovakWordsArray, gameState
     confirmTurn,
     handleExchangeLetters,
     handlePassTurn,
-    isActionInProgress, // KLÚČOVÁ ZMENA: Exportujeme nový stav
+    isActionInProgress,
   };
 }
 
