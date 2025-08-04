@@ -197,7 +197,8 @@ function GamePage({ gameId, userId, onGoToLobby, db }) {
             {userId && ` | User ID: ${userId}`}
           </div>
           {/* <button onClick={onGoToLobby} className="back-to-lobby-button">Späť do Lobby</button> */}
-          <a href="/" className="back-to-lobby-button" onClick={(e) => { e.preventDefault(); handleGoToLobby(); }}>Späť do Lobby</a>
+          <button onClick={handleGoToLobby} className="back-to-lobby-button">Späť do Lobby</button>
+          {/* <a href="/" className="back-to-lobby-button" onClick={(e) => { e.preventDefault(); handleGoToLobby(); }}>Späť do Lobby</a> */}
         </div>
 
         {isGameOver && <h2 className="game-over-message">Hra skončila!</h2>}
