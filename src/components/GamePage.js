@@ -109,6 +109,7 @@ function GamePage({ gameId, userId, onGoToLobby, db }) {
 
   const {
     isActionInProgress,
+    setIsActionInProgress,
     showLetterSelectionModal,
     setShowLetterSelectionModal,
     jokerTileCoords,
@@ -124,7 +125,7 @@ function GamePage({ gameId, userId, onGoToLobby, db }) {
     selectedLetter,
     handleTapLetter,
     handleTapSlot,
-  } = useTapToMove(moveLetter, gameState, myPlayerIndex);
+  } = useTapToMove(moveLetter, gameState, myPlayerIndex, isActionInProgress, setIsActionInProgress);
 
   const {
     letterBag,

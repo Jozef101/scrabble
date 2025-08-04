@@ -53,6 +53,7 @@ function useGameLogic(socket, gameId, myPlayerIndex, slovakWordsArray, gameState
       socket,
       gameIdToJoin: gameId,
     })(letterData, source, target);
+    setIsActionInProgress(false);
   }, [gameState, setGameState, myPlayerIndex, setJokerTileCoords, setShowLetterSelectionModal, socket, gameId, isActionInProgress]);
 
   const assignLetterToJoker = useCallback((selectedLetter) => {
@@ -477,6 +478,7 @@ function useGameLogic(socket, gameId, myPlayerIndex, slovakWordsArray, gameState
     handleExchangeLetters,
     handlePassTurn,
     isActionInProgress,
+    setIsActionInProgress,
   };
 }
 
