@@ -16,13 +16,14 @@ import { RACK_SIZE } from '../utils/constants';
 import { moveLetter as importedMoveLetter } from '../utils/moveLetterLogic';
 import { sendPlayerAction } from '../utils/socketHandlers';
 
-function useGameLogic(socket, gameId, myPlayerIndex, slovakWordsArray, gameState, setGameState) {
-
+// Prijímame slovník ako parameter slovakWordsSet
+function useGameLogic(socket, gameId, myPlayerIndex, slovakWordsSet, gameState, setGameState) { // ZMENA V PARAMETROCH
   const [showLetterSelectionModal, setShowLetterSelectionModal] = useState(false);
   const [jokerTileCoords, setJokerTileCoords] = useState(null);
   const [isActionInProgress, setIsActionInProgress] = useState(false);
 
-  const validWordsSet = useRef(new Set(slovakWordsArray.map(word => word.toUpperCase())));
+  // Kľúčová zmena: slovník sa už nealokuje, ale použije sa prijatý parameter
+  const validWordsSet = useRef(slovakWordsSet);
 
   useEffect(() => {
     if (!socket) return;
@@ -167,6 +168,7 @@ function useGameLogic(socket, gameId, myPlayerIndex, slovakWordsArray, gameState
       if (wordString.length > 5) {
         return false;
       }
+      // Používame už pripravený validWordsSet z parametrov
       return !validWordsSet.current.has(wordString);
     });
 
@@ -268,7 +270,7 @@ function useGameLogic(socket, gameId, myPlayerIndex, slovakWordsArray, gameState
             x: l.x,
             y: l.y,
             letterData: l.letterData
-        })),
+        })) ,
         newWords: allFormedWords.map(w => w.wordString),
         score: turnScore,
         turnNumber: gameState.turnNumber + 1,

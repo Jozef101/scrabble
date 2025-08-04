@@ -16,6 +16,7 @@ import LobbyPage from './components/LobbyPage';
 import GamePage from './components/GamePage';
 import UserMenuIcon from './components/UserMenuIcon';
 import EmailVerificationPage from './components/EmailVerificationPage';
+import slovakWords from './data/slovakWords.json';
 
 import './styles/App.css';
 
@@ -55,10 +56,18 @@ function App() {
     const [isEmailVerified, setIsEmailVerified] = useState(false);
     const [currentUserEmail, setCurrentUserEmail] = useState(null);
     const [currentUserNickname, setCurrentUserNickname] = useState(null);
+    const [slovakWordsSet, setSlovakWordsSet] = useState(null); 
 
     const navigate = useNavigate();
     const location = useLocation();
     const initialGameIdRef = useRef(sessionStorage.getItem('activeGameId'));
+
+    useEffect(() => {
+        // Slovník je už importovaný ako 'slovakWords'
+        const wordsSet = new Set(slovakWords.map(word => word.toUpperCase()));
+        setSlovakWordsSet(wordsSet);
+        console.log("App.js: Slovník načítaný a spracovaný do Set. Veľkosť:", wordsSet.size);
+    }, []); // Prázdne pole závislostí zabezpečí, že sa vykoná len raz
 
     // Effect pre Firebase Authentication
     useEffect(() => {
@@ -200,10 +209,11 @@ function App() {
         navigate('/lobby');
     };
 
-    if (!isAuthReady) {
+    // ZMENA 4: Pridanie isSlovakWordsReady do podmienky pre načítavanie
+    if (!isAuthReady || !slovakWordsSet) { 
         return (
             <div className="app-container flex items-center justify-center min-h-screen bg-gray-100">
-                <p className="text-lg text-gray-700">Načítavam autentifikáciu...</p>
+                <p className="text-lg text-gray-700">Načítavam autentifikáciu a slovník...</p>
             </div>
         );
     }
@@ -240,6 +250,7 @@ function App() {
                             <GamePageWrapper
                                 userId={userId}
                                 onGoToLobby={handleGoToLobby}
+                                slovakWordsSet={slovakWordsSet} 
                             />
                         }
                     />
@@ -251,13 +262,14 @@ function App() {
     );
 }
 
-function GamePageWrapper({ userId, onGoToLobby }) {
+function GamePageWrapper({ userId, onGoToLobby, slovakWordsSet }) {
     const { gameId } = useParams();
     return (
         <GamePage
             gameId={gameId}
             userId={userId}
             onGoToLobby={onGoToLobby}
+            slovakWordsSet={slovakWordsSet} 
         />
     );
 }
