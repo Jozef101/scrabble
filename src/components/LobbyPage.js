@@ -16,7 +16,8 @@ import '../styles/LobbyPage.css';
 function LobbyPage({ userId, currentUserNickname, onStartGame, db, appId }) {
     const [games, setGames] = useState([]);
     const [error, setError] = useState('');
-    const [playerNicknames, setPlayerNicknames] = useState({}); // Stav pre ukladanie prezývok všetkých hráčov v hrách
+    // Odstránime stav 'playerNicknames', pretože už ho nebudeme potrebovať
+    // const [playerNicknames, setPlayerNicknames] = useState({});
 
     useEffect(() => {
         if (!db) {
@@ -26,39 +27,11 @@ function LobbyPage({ userId, currentUserNickname, onStartGame, db, appId }) {
         const gamesCollectionRef = collection(db, 'scrabbleGames');
         const q = query(gamesCollectionRef, orderBy('createdAt', 'desc'));
 
-        const unsubscribe = onSnapshot(q, async (snapshot) => {
+        const unsubscribe = onSnapshot(q, (snapshot) => {
             const gamesList = snapshot.docs.map(doc => ({
                 id: doc.id,
                 ...doc.data()
             }));
-
-            const nicknamesToFetch = new Set();
-            gamesList.forEach(game => {
-                game.players.forEach(player => {
-                    if (player && player.id && !playerNicknames[player.id]) {
-                        nicknamesToFetch.add(player.id);
-                    }
-                });
-            });
-
-            const newNicknames = { ...playerNicknames };
-            const fetchPromises = Array.from(nicknamesToFetch).map(async (playerId) => {
-                try {
-                    const userDocRef = doc(db, 'users', playerId);
-                    const userDocSnap = await getDoc(userDocRef);
-                    if (userDocSnap.exists()) {
-                        newNicknames[playerId] = userDocSnap.data().nickname;
-                    } else {
-                        newNicknames[playerId] = 'Neznámy Hráč';
-                    }
-                } catch (e) {
-                    console.error(`Chyba pri načítaní prezývky pre ${playerId}:`, e);
-                    newNicknames[playerId] = 'Chyba Načítania';
-                }
-            });
-
-            await Promise.all(fetchPromises);
-            setPlayerNicknames(newNicknames);
             setGames(gamesList);
             setError('');
         }, (err) => {
@@ -67,7 +40,7 @@ function LobbyPage({ userId, currentUserNickname, onStartGame, db, appId }) {
         });
 
         return () => unsubscribe();
-    }, [db, userId, playerNicknames]);
+    }, [db, userId]); // Odstránili sme playerNicknames z dependencies
 
     const handleCreateGame = async () => {
         if (!userId) {
@@ -82,8 +55,7 @@ function LobbyPage({ userId, currentUserNickname, onStartGame, db, appId }) {
         try {
             const gamesCollectionRef = collection(db, 'scrabbleGames');
             await addDoc(gamesCollectionRef, {
-                creatorId: userId,
-                creatorNickname: currentUserNickname,
+                // Odstránime creatorId a creatorNickname, tieto informácie budú v poli players
                 players: [{ id: userId, playerIndex: 0, nickname: currentUserNickname }],
                 status: 'waiting',
                 createdAt: new Date(),
@@ -112,12 +84,10 @@ function LobbyPage({ userId, currentUserNickname, onStartGame, db, appId }) {
                 onStartGame(gameId);
                 return;
             }
-
-            let newPlayerIndex = 0;
-            if (existingPlayers.length > 0) {
-                const maxIndex = Math.max(...existingPlayers.map(p => p.playerIndex));
-                newPlayerIndex = maxIndex + 1;
-            }
+            
+            // Logika pre určenie playerIndex ostáva rovnaká
+            const maxIndex = Math.max(...existingPlayers.map(p => p.playerIndex));
+            const newPlayerIndex = existingPlayers.length > 0 ? maxIndex + 1 : 0;
             
             if (newPlayerIndex >= 2) {
                 setError("Hra je už plná (max 2 hráči).");
@@ -136,21 +106,17 @@ function LobbyPage({ userId, currentUserNickname, onStartGame, db, appId }) {
     };
 
     const handleLeaveGame = async (gameId) => {
+        // Táto funkcia je v poriadku, pretože už má prístup k prezývke
         if (!userId) {
             setError("Nie si prihlásený.");
             return;
         }
-        if (!currentUserNickname) {
-            setError("Tvoja prezývka sa nenačítala. Skús sa znova prihlásiť.");
-            return;
-        }
-
         const gameRef = doc(db, 'scrabbleGames', gameId);
         try {
             const gameDoc = await getDoc(gameRef);
             if (gameDoc.exists()) {
                 const currentPlayers = gameDoc.data().players || [];
-                const updatedPlayers = currentPlayers.filter(player => !(player.id === userId && player.nickname === currentUserNickname));
+                const updatedPlayers = currentPlayers.filter(player => player.id !== userId);
                 await updateDoc(gameRef, {
                     players: updatedPlayers
                 });
@@ -168,7 +134,6 @@ function LobbyPage({ userId, currentUserNickname, onStartGame, db, appId }) {
 
             <div className="create-game-section">
                 <h3>Vytvoriť novú hru</h3>
-                {/* Pôvodné pole na zadávanie názvu hry bolo odstránené */}
                 <button onClick={handleCreateGame} className="create-game-button">
                     Vytvoriť hru
                 </button>
@@ -184,9 +149,8 @@ function LobbyPage({ userId, currentUserNickname, onStartGame, db, appId }) {
                         {games.map((game) => (
                             <li key={game.id} className="game-item">
                                 <span>
-                                    {/* KLÚČOVÁ ZMENA: Názov hry sa už nezobrazuje */}
-                                    Tvorca: {game.creatorNickname || 'Neznámy'} - Hráči: {
-                                        game.players.map(player => playerNicknames[player.id] || player.id.substring(0, 8)).join(', ')
+                                    Tvorca: {game.players[0]?.nickname || 'Neznámy'} - Hráči: {
+                                        game.players.map(player => player.nickname).join(', ')
                                     } - Status: {game.status}
                                 </span>
                                 {game.players.some(p => p.id === userId) ? (
