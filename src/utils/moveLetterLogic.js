@@ -1,159 +1,183 @@
 // src/utils/moveLetterLogic.js
 import { RACK_SIZE } from './constants';
 import { getPlacedLettersDuringCurrentTurn } from './gameLogic';
-// sendPlayerAction už nie je potrebný pre túto funkciu, pretože ju nebude volať
-// import { sendPlayerAction } from './socketHandlers'; 
+import { sendPlayerAction } from './socketHandlers'; // Predpokladáme, že sendPlayerAction je tu dostupný
 
 /**
- * Spracováva logiku presunu písmena medzi rackom, doskou a výmennou zónou.
- * Táto funkcia je navrhnutá tak, aby bola oddelená od komponentu App.js a prijímala
- * všetky potrebné stavy a funkcie ako argumenty.
- *
- * @param {object} params - Objekt obsahujúci všetky potrebné parametre.
- * @param {object} params.gameState - Aktuálny stav hry.
- * @param {function} params.myPlayerIndex - Index aktuálneho hráča.
- * @param {function} params.setJokerTileCoords - Funkcia na nastavenie súradníc žolíka.
- * @param {function} params.setShowLetterSelectionModal - Funkcia na zobrazenie/skrytie modálneho okna pre výber písmena žolíka.
- * @param {object} letterData - Dáta o presúvanom písmene (id, letter, value, assignedLetter, originalRackIndex).
- * @param {object} source - Objekt popisujúci zdroj presunu (type: 'rack' | 'board' | 'exchangeZone', index | x, y, playerIndex).
- * @param {object} target - Objekt popisujúci cieľ presunu (type: 'rack' | 'board' | 'exchangeZone', index | x, y, playerIndex).
- */
+ * Spracováva logiku presunu písmena medzi rackom, doskou a výmennou zónou.
+ * Táto funkcia je navrhnutá tak, aby bola oddelená od komponentu App.js a prijímala
+ * všetky potrebné stavy a funkcie ako argumenty.
+ *
+ * @param {object} params - Objekt obsahujúci všetky potrebné parametre.
+ * @param {object} params.gameState - Aktuálny stav hry.
+ * @param {function} params.setGameState - Funkcia na aktualizáciu stavu hry.
+ * @param {number} params.myPlayerIndex - Index aktuálneho hráča.
+ * @param {function} params.setJokerTileCoords - Funkcia na nastavenie súradníc žolíka.
+ * @param {function} params.setShowLetterSelectionModal - Funkcia na zobrazenie/skrytie modálneho okna pre výber písmena žolíka.
+ * @param {object} params.socket - Socket.IO inštancia pre komunikáciu so serverom.
+ * @param {string} params.gameIdToJoin - ID aktuálnej hry.
+ * @param {object} letterData - Dáta o presúvanom písmene (id, letter, value, assignedLetter, originalRackIndex).
+ * @param {object} source - Objekt popisujúci zdroj presunu (type: 'rack' | 'board' | 'exchangeZone', index | x, y, playerIndex).
+ * @param {object} target - Objekt popisujúci cieľ presunu (type: 'rack' | 'board' | 'exchangeZone', index | x, y, playerIndex).
+ */
 export const moveLetter = ({
-    gameState,
+    gameState, // Používame gameState z closure, ale pre aktuálny stav je lepšie použiť prevState v setGameState
+    setGameState,
     myPlayerIndex,
     setJokerTileCoords,
     setShowLetterSelectionModal,
-    // socket a gameIdToJoin už nie sú potrebné
+    socket,
+    gameIdToJoin,
 }) => (letterData, source, target) => {
+    // Základné kontroly, ktoré platia pre všetky presuny, bez ohľadu na ťah
     if (gameState.isGameOver || myPlayerIndex === null) {
         console.log("Nemôžeš presúvať písmená (hra skončila alebo nie si pripojený).");
-        return gameState;
+        return;
     }
 
-    // --- KĽÚČOVÁ ZMENA: Odstránime setGameState a logiku vrátime ako návratovú hodnotu ---
-    let newPlayerRacks = gameState.playerRacks.map(rack => [...rack]);
-    let newBoard = gameState.board.map(row => [...row]);
-    let newExchangeZoneLetters = [...gameState.exchangeZoneLetters];
+    // KĽÚČOVÁ ZMENA: stateToUpdateAndSend už nie je definovaný mimo setGameState,
+    // ale je priamo vrátený z neho a následne použitý vo vnútri.
+    setGameState(prevState => {
+        let newPlayerRacks = prevState.playerRacks.map(rack => [...rack]);
+        let newBoard = prevState.board.map(row => [...row]);
+        let newExchangeZoneLetters = [...prevState.exchangeZoneLetters];
 
-    if (source.type === 'board' && gameState.boardAtStartOfTurn[source.x][source.y] !== null) {
-        console.log("Nemôžeš presunúť zamknuté písmeno z dosky.");
-        return gameState;
-    }
-
-    if (source.type === 'rack' && target.type === 'rack') {
-        if (source.playerIndex !== myPlayerIndex) {
-            console.log("Nemôžeš presúvať písmená z racku iného hráča.");
-            return gameState;
+        // Kontrola, či sa snažíš presunúť už potvrdené písmeno z dosky
+        if (source.type === 'board' && prevState.boardAtStartOfTurn[source.x][source.y] !== null) {
+            console.log("Nemôžeš presunúť zamknuté písmeno z dosky.");
+            return prevState; // Vrátime pôvodný stav, ak je neplatný presun
         }
 
-        const fromIndex = source.index;
-        const toIndex = target.index;
-
-        if (newPlayerRacks[myPlayerIndex][toIndex] === null) {
-            newPlayerRacks[myPlayerIndex][toIndex] = newPlayerRacks[myPlayerIndex][fromIndex];
-            newPlayerRacks[myPlayerIndex][fromIndex] = null;
-        } else {
-            const [movedLetter] = newPlayerRacks[myPlayerIndex].splice(fromIndex, 1);
-            newPlayerRacks[myPlayerIndex].splice(toIndex, 0, movedLetter);
-        }
-
-        const updatedState = {
-            ...gameState,
-            playerRacks: newPlayerRacks,
-        };
-        // --- KĽÚČOVÁ ZMENA: Namiesto odoslania na server, vrátime aktualizovaný stav ---
-        // sendPlayerAction(socket, gameIdToJoin, 'updateGameState', updatedState); 
-        return updatedState;
-    }
-
-    let letterToMove = null;
-
-    if (source.type === 'board') {
-        letterToMove = { ...newBoard[source.x][source.y] };
-        newBoard[source.x][source.y] = null;
-        if (letterToMove && letterToMove.letter === '') {
-            letterToMove.assignedLetter = null;
-        }
-    } else if (source.type === 'rack') {
-        if (source.playerIndex !== myPlayerIndex) {
-            console.log("Nemôžeš presúvať písmená z racku iného hráča.");
-            return gameState;
-        }
-        letterToMove = { ...letterData };
-        newPlayerRacks[myPlayerIndex][source.index] = null;
-    } else if (source.type === 'exchangeZone') {
-        const indexInExchangeZone = newExchangeZoneLetters.findIndex(l => l.id === letterData.id);
-        if (indexInExchangeZone !== -1) {
-            letterToMove = { ...newExchangeZoneLetters[indexInExchangeZone] };
-            newExchangeZoneLetters.splice(indexInExchangeZone, 1);
-            if (letterToMove && letterToMove.letter === '') {
-                letterToMove.assignedLetter = null;
+        // Spracovanie presunu v rámci racku (špeciálny prípad)
+        if (source.type === 'rack' && target.type === 'rack') {
+            if (source.playerIndex !== myPlayerIndex) {
+                console.log("Nemôžeš presúvať písmená z racku iného hráča.");
+                return prevState;
             }
-        } else {
-            console.warn("Písmeno sa nenašlo vo výmennej zóne pri pokuse o presun.");
-            return gameState;
-        }
-    }
 
-    if (!letterToMove || letterToMove.id === undefined) {
-        console.warn("Nepodarilo sa nájsť platné písmeno na presun alebo chýba ID.");
-        return gameState;
-    }
+            const fromIndex = source.index;
+            const toIndex = target.index;
 
-    if (target.type === 'rack') {
-        if (target.playerIndex !== myPlayerIndex) {
-            console.log("Nemôžeš presúvať písmená na rack iného hráča.");
-            return gameState;
-        }
-
-        let targetRack = newPlayerRacks[myPlayerIndex];
-
-        if (target.index !== undefined && targetRack[target.index] === null) {
-            targetRack[target.index] = letterToMove;
-        }
-        else if (letterToMove.originalRackIndex !== undefined && targetRack[letterToMove.originalRackIndex] === null) {
-            targetRack[letterToMove.originalRackIndex] = letterToMove;
-        }
-        else {
-            const firstEmptyIndex = targetRack.findIndex(l => l === null);
-            if (firstEmptyIndex !== -1) {
-                targetRack[firstEmptyIndex] = letterToMove;
+            // Ak je cieľový slot prázdny, jednoducho presunieme
+            if (newPlayerRacks[myPlayerIndex][toIndex] === null) {
+                newPlayerRacks[myPlayerIndex][toIndex] = newPlayerRacks[myPlayerIndex][fromIndex];
+                newPlayerRacks[myPlayerIndex][fromIndex] = null;
             } else {
-                console.warn("Rack je plný, písmeno sa nedá vrátiť (rollback by bol potrebný).");
-                alert("Rack je plný, písmeno sa nedá vrátiť.");
-                return gameState;
+                // Ak je cieľový slot obsadený, vykonáme výmenu
+                const [movedLetter] = newPlayerRacks[myPlayerIndex].splice(fromIndex, 1);
+                newPlayerRacks[myPlayerIndex].splice(toIndex, 0, movedLetter);
+            }
+
+            // Normalizácia racku po preusporiadaní bola odstránená v predchádzajúcom kroku.
+            // Písmená ostávajú na svojich pozíciách.
+
+            const updatedState = { // Zachytíme stav, ktorý sa odošle
+                ...prevState,
+                playerRacks: newPlayerRacks,
+            };
+            sendPlayerAction(socket, gameIdToJoin, 'updateGameState', updatedState); // KĽÚČOVÁ ZMENA: Voláme sendPlayerAction tu
+            return updatedState; // Vrátime nový stav pre React
+        }
+
+        let letterToMove = null;
+
+        // Určenie písmena na presun a jeho odstránenie zo zdroja
+        if (source.type === 'board') {
+            letterToMove = { ...newBoard[source.x][source.y] };
+            newBoard[source.x][source.y] = null;
+            if (letterToMove && letterToMove.letter === '') {
+                letterToMove.assignedLetter = null; // Žolík stráca priradené písmeno pri návrate
+            }
+        } else if (source.type === 'rack') {
+            if (source.playerIndex !== myPlayerIndex) {
+                console.log("Nemôžeš presúvať písmená z racku iného hráča.");
+                return prevState;
+            }
+            // Používame letterData priamo, ktorá už obsahuje originalRackIndex z useDrag
+            letterToMove = { ...letterData };
+            newPlayerRacks[myPlayerIndex][source.index] = null; // Toto vytvorí prázdny slot na pôvodnej pozícii
+        } else if (source.type === 'exchangeZone') {
+            const indexInExchangeZone = newExchangeZoneLetters.findIndex(l => l.id === letterData.id);
+            if (indexInExchangeZone !== -1) {
+                letterToMove = { ...newExchangeZoneLetters[indexInExchangeZone] };
+                newExchangeZoneLetters.splice(indexInExchangeZone, 1);
+                if (letterToMove && letterToMove.letter === '') {
+                    letterToMove.assignedLetter = null;
+                }
+            } else {
+                console.warn("Písmeno sa nenašlo vo výmennej zóne pri pokuse o presun.");
+                return prevState;
             }
         }
-    } else if (target.type === 'board') {
-        if (gameState.currentPlayerIndex !== myPlayerIndex) {
-            console.log("Nemôžeš umiestniť písmeno na dosku, keď nie je tvoj ťah.");
-            return gameState;
-        }
-        if (newBoard[target.x][target.y] !== null) {
-            console.log("Cieľové políčko na doske je už obsadené, nemôžeš tam položiť písmeno.");
-            alert("Cieľové políčko na doske je už obsadené!");
-            return gameState;
+
+        if (!letterToMove || letterToMove.id === undefined) {
+            console.warn("Nepodarilo sa nájsť platné písmeno na presun alebo chýba ID.");
+            return prevState;
         }
 
-        newBoard[target.x][target.y] = { ...letterToMove, originalRackIndex: letterData.originalRackIndex };
-        if (letterToMove.letter === '') {
-            setJokerTileCoords({ x: target.x, y: target.y });
-            setShowLetterSelectionModal(true);
+        // Umiestnenie písmena na cieľové miesto
+        if (target.type === 'rack') {
+            if (target.playerIndex !== myPlayerIndex) {
+                console.log("Nemôžeš presúvať písmená na rack iného hráča.");
+                return prevState;
+            }
+
+            let targetRack = newPlayerRacks[myPlayerIndex];
+
+            // Prioritizujeme cieľový slot, na ktorý používateľ ťukol/pretiahol, ak je prázdny.
+            if (target.index !== undefined && targetRack[target.index] === null) {
+                targetRack[target.index] = letterToMove;
+            }
+            // Ak cieľový slot nie je prázdny, alebo target.index nie je definovaný,
+            // pokúsime sa vrátiť písmeno na jeho pôvodnú pozíciu (ak je voľná).
+            else if (letterToMove.originalRackIndex !== undefined && targetRack[letterToMove.originalRackIndex] === null) {
+                targetRack[letterToMove.originalRackIndex] = letterToMove;
+            }
+            // Ak ani pôvodná pozícia nie je voľná, nájdeme prvý voľný slot.
+            else {
+                const firstEmptyIndex = targetRack.findIndex(l => l === null);
+                if (firstEmptyIndex !== -1) {
+                    targetRack[firstEmptyIndex] = letterToMove;
+                } else {
+                    console.warn("Rack je plný, písmeno sa nedá vrátiť (rollback by bol potrebný).");
+                    alert("Rack je plný, písmeno sa nedá vrátiť.");
+                    return prevState; // Vrátime pôvodný stav
+                }
+            }
+
+        } else if (target.type === 'board') {
+            // Používame prevState.currentPlayerIndex, ktorý je aktuálny v rámci setGameState callbacku
+            if (prevState.currentPlayerIndex !== myPlayerIndex) {
+                console.log("Nemôžeš umiestniť písmeno na dosku, keď nie je tvoj ťah.");
+                return prevState;
+            }
+            // NOVÁ KONTROLA: Ak je cieľové políčko na doske už obsadené, zabránime presunu
+            if (newBoard[target.x][target.y] !== null) {
+                console.log("Cieľové políčko na doske je už obsadené, nemôžeš tam položiť písmeno.");
+                alert("Cieľové políčko na doske je už obsadené!"); // Pridáme aj alert pre používateľa
+                return prevState; // Vrátime pôvodný stav
+            }
+
+            // Keď umiestňujeme písmeno na dosku, explicitne uložíme originalRackIndex
+            newBoard[target.x][target.y] = { ...letterToMove, originalRackIndex: letterData.originalRackIndex };
+            if (letterToMove.letter === '') {
+                setJokerTileCoords({ x: target.x, y: target.y });
+                setShowLetterSelectionModal(true);
+            }
+        } else if (target.type === 'exchangeZone') {
+            newExchangeZoneLetters.push(letterToMove);
         }
-    } else if (target.type === 'exchangeZone') {
-        newExchangeZoneLetters.push(letterToMove);
-    }
 
-    const updatedState = {
-        ...gameState,
-        playerRacks: newPlayerRacks,
-        board: newBoard,
-        exchangeZoneLetters: newExchangeZoneLetters,
-        hasPlacedOnBoardThisTurn: getPlacedLettersDuringCurrentTurn(newBoard, gameState.boardAtStartOfTurn).length > 0,
-        hasMovedToExchangeZoneThisTurn: newExchangeZoneLetters.length > 0,
-    };
-
-    // --- KĽÚČOVÁ ZMENA: Namiesto odoslania na server, vrátime aktualizovaný stav ---
-    // sendPlayerAction(socket, gameIdToJoin, 'updateGameState', updatedState);
-    return updatedState;
+        // Vytvoríme kompletný nový stav na základe predchádzajúceho stavu a vykonaných zmien
+        const updatedState = {
+            ...prevState,
+            playerRacks: newPlayerRacks,
+            board: newBoard,
+            exchangeZoneLetters: newExchangeZoneLetters,
+            hasPlacedOnBoardThisTurn: getPlacedLettersDuringCurrentTurn(newBoard, prevState.boardAtStartOfTurn).length > 0,
+            hasMovedToExchangeZoneThisTurn: newExchangeZoneLetters.length > 0,
+        };
+        sendPlayerAction(socket, gameIdToJoin, 'updateGameState', updatedState); // KĽÚČOVÁ ZMENA: Voláme sendPlayerAction tu
+        return updatedState; // Vrátime nový stav pre React
+    });
 };
