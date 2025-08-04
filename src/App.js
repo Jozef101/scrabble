@@ -16,8 +16,8 @@ import LobbyPage from './components/LobbyPage';
 import GamePage from './components/GamePage';
 import UserMenuIcon from './components/UserMenuIcon';
 import EmailVerificationPage from './components/EmailVerificationPage';
-import slovakWords from './data/slovakWords.json';
 
+import slovakWords from './data/slovakWords.json';
 import './styles/App.css';
 
 // ====================================================================

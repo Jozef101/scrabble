@@ -4,8 +4,6 @@ import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 
 // Importy pre hernú logiku
-import slovakWordsArray from '../data/slovakWords.json';
-
 // Import vlastných hookov
 import useSocketConnection from '../hooks/useSocketConnection';
 import useGameLogic from '../hooks/useGameLogic';
@@ -28,7 +26,7 @@ import { sendPlayerAction } from '../utils/socketHandlers';
 
 import '../styles/GamePage.css';
 
-function GamePage({ gameId, userId, onGoToLobby, db }) {
+function GamePage({ gameId, userId, onGoToLobby, slovakWordsSet  }) {
   console.log('GamePage: userId prop value at render:', userId);
 
   // Ref pre hernú dosku
@@ -119,7 +117,7 @@ function GamePage({ gameId, userId, onGoToLobby, db }) {
     confirmTurn,
     handleExchangeLetters,
     handlePassTurn,
-  } = useGameLogic(socket, gameId, myPlayerIndex, slovakWordsArray, gameState, setGameState);
+  } = useGameLogic(socket, gameId, myPlayerIndex, slovakWordsSet, gameState, setGameState);
 
   const {
     selectedLetter,
