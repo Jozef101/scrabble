@@ -174,6 +174,18 @@ function GamePage({ gameId, userId, onGoToLobby, db }) {
     setIsChatVisible(false);
   };
 
+  const handleGoToLobby = () => {
+    // Odoslanie správy na server, že hráč opúšťa hru.
+    // Server by mal potom odstrániť hráča zo zoznamu a zastaviť posielanie aktualizácií.
+    if (socket) {
+      sendPlayerAction(socket, gameId, 'playerLeftGame');
+      // Vynútené odpojenie, ak je potrebné.
+      socket.disconnect();
+    }
+    // Zavolanie funkcie pre prechod do lobby
+    onGoToLobby();
+  };
+
   return (
     <DndProvider backend={HTML5Backend}>
       <div className="game-page-container">
@@ -184,7 +196,8 @@ function GamePage({ gameId, userId, onGoToLobby, db }) {
             {myPlayerIndex !== null && ` | Si Hráč ${myPlayerIndex + 1}`}
             {userId && ` | User ID: ${userId}`}
           </div>
-          <button onClick={onGoToLobby} className="back-to-lobby-button">Späť do Lobby</button>
+          {/* <button onClick={onGoToLobby} className="back-to-lobby-button">Späť do Lobby</button> */}
+          <a href="/" className="back-to-lobby-button" onClick={(e) => { e.preventDefault(); handleGoToLobby(); }}>Späť do Lobby</a>
         </div>
 
         {isGameOver && <h2 className="game-over-message">Hra skončila!</h2>}
