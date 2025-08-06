@@ -280,12 +280,17 @@ function useGameLogic(socket, gameId, myPlayerIndex, slovakWordsSet, gameState, 
         // PRIDANÉ:
         rackBeforeTurn: gameState.playerRacks[myPlayerIndex],
         lettersDrawn: newLetters,
+        boardBeforeTurn: JSON.stringify(gameState.boardAtStartOfTurn), // Uložíme stav dosky pred ťahom
+        boardAfterTurn: JSON.stringify(updatedGameState.board),
+        letterBagBeforeTurn: gameState.letterBag,
+        letterBagAfterTurn: updatedBagAfterTurn,
+         // Uložíme stav dosky po ťahu
     };
     sendPlayerAction(socket, gameId, 'turnSubmitted', turnDetails);
     // ----------------------------
 
     sendPlayerAction(socket, gameId, 'updateGameState', updatedGameState);
-  }, [gameState, myPlayerIndex, socket, gameId, validWordsSet]);
+  }, [gameState, myPlayerIndex, socket, gameId, validWordsSet, isActionInProgress]);
 
   const handleExchangeLetters = useCallback(() => {
     if (isActionInProgress) {
