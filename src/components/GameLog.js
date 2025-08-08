@@ -13,7 +13,7 @@ function GameLog({ db, gameId, playerNicknames }) {
         if (!db || !gameId) return;
         const q = query(
             collection(db, "scrabbleGames", gameId, "turnLogs"),
-            orderBy("turnNumber", "asc")
+            orderBy("turnNumber", "desc")
         );
         const unsubscribe = onSnapshot(q, (snapshot) => {
             const docs = snapshot.docs.map(doc => doc.data());
@@ -43,17 +43,17 @@ function GameLog({ db, gameId, playerNicknames }) {
                                             <span className="player-info">
                                                 {playerNicknames?.[turn.playerIndex] || `Hráč ${turn.playerIndex + 1}`}
                                             </span>
-                                            <span> položil písmená </span>
+                                            <span> položil </span>
                                             <span className="placed-letters-info">
-                                                '{placedLetters.map(l => l.letterData.letter || l.letterData.assignedLetter).join('')}'
+                                                {placedLetters.map(l => l.letterData.letter || l.letterData.assignedLetter).join('')}
                                             </span>
-                                            <span>, čím zahral slová </span>
-                                            <span className="word-info">'{newWords.join(', ')}'</span>
+                                            <span>, nové slov{newWords.length===1?'o':'á'} </span>
+                                            <span className="word-info">{newWords.join(', ')}</span>
                                             {turn.score > 0 && (
                                                 <>
                                                     <span> za </span>
                                                     <span className="points-info">{turn.score}</span>
-                                                    <span> bodov.</span>
+                                                    <span> bod{turn.score === 1 ? '' : (turn.score > 4 ? 'ov' : 'y')}</span>
                                                 </>
                                             )}
                                         </>
@@ -65,7 +65,7 @@ function GameLog({ db, gameId, playerNicknames }) {
                                             </span>
                                             <span> vymenil </span>
                                             <span className="exchange-info">{exchangedLetters.length}</span>
-                                            <span> písmen{exchangedLetters.length === 1 ? 'o' : 'á'}.</span>
+                                            <span> písmen{exchangedLetters.length === 1 ? 'o' : (exchangedLetters.length > 4 ? '' : 'á')}</span>
                                         </>
                                     )}
                                     {turn.actionType === 'pass' && (
