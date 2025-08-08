@@ -241,6 +241,7 @@ function useGameLogic(socket, gameId, myPlayerIndex, slovakWordsSet, gameState, 
         isGameOver: true,
         isBagEmpty: currentBagEmpty,
         highlightedLetters: newHighlightedLetters,
+        turnNumber: gameState.turnNumber + 1,
       };
       alert(`Hra skončila! Konečné skóre: Hráč 1: ${finalScores[0]}, Hráč 2: ${finalScores[1]}`);
     } else {
@@ -260,6 +261,7 @@ function useGameLogic(socket, gameId, myPlayerIndex, slovakWordsSet, gameState, 
         isGameOver: false,
         isBagEmpty: currentBagEmpty,
         highlightedLetters: newHighlightedLetters,
+        turnNumber: gameState.turnNumber + 1,
       };
     }
     
@@ -374,6 +376,7 @@ function useGameLogic(socket, gameId, myPlayerIndex, slovakWordsSet, gameState, 
       isGameOver: false,
       isBagEmpty: currentBagEmpty,
       highlightedLetters: [],
+      turnNumber: gameState.turnNumber + 1,
     };
 
     // --- ÚPRAVA: Uložíme log výmeny s novými informáciami. ---
@@ -450,6 +453,7 @@ function useGameLogic(socket, gameId, myPlayerIndex, slovakWordsSet, gameState, 
       consecutivePasses: newConsecutivePasses,
       isGameOver: isGameOverCondition,
       highlightedLetters: [],
+      turnNumber: gameState.turnNumber + 1,
     };
 
     // --- ÚPRAVA: Uložíme log pasovania s novými informáciami. ---

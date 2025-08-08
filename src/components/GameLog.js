@@ -1,59 +1,92 @@
-// src/components/GameLog.js
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { collection, query, orderBy, onSnapshot } from 'firebase/firestore';
 import '../styles/GameLog.css';
 
 /**
  * Komponent na zobrazenie záznamu ťahov v hre.
- * Prijíma pole ťahov (turnLog) a prezývky hráčov na správne zobrazenie.
- *
- * @param {Array<Object>} turnLog - Pole objektov s informáciami o ťahoch.
- * @param {Array<string>} playerNicknames - Pole prezývok hráčov.
+ * Prijíma Firestore db, gameId a prezývky hráčov.
  */
-function GameLog({ turnLog=[], playerNicknames }) {
-    // Ak je turnLog prázdny alebo neexistuje, zobrazíme správu, inak iterujeme cez ťahy.
+function GameLog({ db, gameId, playerNicknames }) {
+    const [turnLog, setTurnLog] = useState([]);
+
+    useEffect(() => {
+        if (!db || !gameId) return;
+        const q = query(
+            collection(db, "scrabbleGames", gameId, "turnLogs"),
+            orderBy("turnNumber", "asc")
+        );
+        const unsubscribe = onSnapshot(q, (snapshot) => {
+            const docs = snapshot.docs.map(doc => doc.data());
+            setTurnLog(docs);
+        });
+        return () => unsubscribe();
+    }, [db, gameId]);
+
     return (
         <div className="gamelog-container">
-            <h3 className="gamelog-title">Záznam ťahov</h3>
+            <h3 className="log-title">Záznam ťahov</h3>
             <div className="gamelog-content">
                 {turnLog.length === 0 ? (
                     <p className="no-moves-message">Zatiaľ žiadne ťahy neboli zaznamenané.</p>
                 ) : (
                     <ul className="turn-list">
-                        {turnLog.map((turn, index) => (
-                            <li key={index} className="turn-item">
-                                {/* Zobrazujeme rôzne typy ťahov na základe vlastnosti 'type' */}
-                                {turn.type === 'wordPlayed' && (
-                                    <>
-                                        <span className="player-info">
-                                            {playerNicknames[turn.playerIndex] || `Hráč ${turn.playerIndex + 1}`}
-                                        </span>
-                                        <span> zahral slovo </span>
-                                        <span className="word-info">'{turn.word}'</span>
-                                        <span> za </span>
-                                        <span className="points-info">{turn.points}</span>
-                                        <span> bodov.</span>
-                                    </>
-                                )}
-                                {turn.type === 'exchange' && (
-                                    <>
-                                        <span className="player-info">
-                                            {playerNicknames[turn.playerIndex] || `Hráč ${turn.playerIndex + 1}`}
-                                        </span>
-                                        <span> vymenil </span>
-                                        <span className="exchange-info">{turn.count}</span>
-                                        <span> písmen{turn.count === 1 ? 'o' : 'á'}.</span>
-                                    </>
-                                )}
-                                {turn.type === 'pass' && (
-                                    <>
-                                        <span className="player-info">
-                                            {playerNicknames[turn.playerIndex] || `Hráč ${turn.playerIndex + 1}`}
-                                        </span>
-                                        <span> sa vzdal ťahu.</span>
-                                    </>
-                                )}
-                            </li>
-                        ))}
+                        {turnLog.map((turn, index) => {
+                            // Upravené: Netreba parsovať, data sú už vo formáte poľa
+                            let newWords = turn.newWords || [];
+                            let exchangedLetters = turn.exchangedLetters || [];
+                            let placedLetters = turn.placedLetters || [];
+
+                            return (
+                                <li key={index} className="turn-item">
+                                    {turn.actionType === 'placeLetters' && (
+                                        <>
+                                            <span className="player-info">
+                                                {playerNicknames?.[turn.playerIndex] || `Hráč ${turn.playerIndex + 1}`}
+                                            </span>
+                                            <span> položil písmená </span>
+                                            <span className="placed-letters-info">
+                                                '{placedLetters.map(l => l.letterData.letter || l.letterData.assignedLetter).join('')}'
+                                            </span>
+                                            <span>, čím zahral slová </span>
+                                            <span className="word-info">'{newWords.join(', ')}'</span>
+                                            {turn.score > 0 && (
+                                                <>
+                                                    <span> za </span>
+                                                    <span className="points-info">{turn.score}</span>
+                                                    <span> bodov.</span>
+                                                </>
+                                            )}
+                                        </>
+                                    )}
+                                    {turn.actionType === 'exchange' && (
+                                        <>
+                                            <span className="player-info">
+                                                {playerNicknames?.[turn.playerIndex] || `Hráč ${turn.playerIndex + 1}`}
+                                            </span>
+                                            <span> vymenil </span>
+                                            <span className="exchange-info">{exchangedLetters.length}</span>
+                                            <span> písmen{exchangedLetters.length === 1 ? 'o' : 'á'}.</span>
+                                        </>
+                                    )}
+                                    {turn.actionType === 'pass' && (
+                                        <>
+                                            <span className="player-info">
+                                                {playerNicknames?.[turn.playerIndex] || `Hráč ${turn.playerIndex + 1}`}
+                                            </span>
+                                            <span> sa vzdal ťahu.</span>
+                                        </>
+                                    )}
+                                    {!turn.actionType && (
+                                        <>
+                                            <span className="player-info">
+                                                {playerNicknames?.[turn.playerIndex] || `Hráč ${turn.playerIndex + 1}`}
+                                            </span>
+                                            <span> vykonal neznámy ťah.</span>
+                                        </>
+                                    )}
+                                </li>
+                            );
+                        })}
                     </ul>
                 )}
             </div>

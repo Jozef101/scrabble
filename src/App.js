@@ -250,7 +250,8 @@ function App() {
                             <GamePageWrapper
                                 userId={userId}
                                 onGoToLobby={handleGoToLobby}
-                                slovakWordsSet={slovakWordsSet} 
+                                slovakWordsSet={slovakWordsSet}
+                                db={db}
                             />
                         }
                     />
@@ -269,7 +270,8 @@ function GamePageWrapper({ userId, onGoToLobby, slovakWordsSet }) {
             gameId={gameId}
             userId={userId}
             onGoToLobby={onGoToLobby}
-            slovakWordsSet={slovakWordsSet} 
+            slovakWordsSet={slovakWordsSet}
+            db={db}
         />
     );
 }

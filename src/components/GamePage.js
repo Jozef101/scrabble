@@ -26,7 +26,7 @@ import { sendPlayerAction } from '../utils/socketHandlers';
 
 import '../styles/GamePage.css';
 
-function GamePage({ gameId, userId, onGoToLobby, slovakWordsSet  }) {
+function GamePage({ gameId, userId, onGoToLobby, slovakWordsSet, db }) {
   console.log('GamePage: userId prop value at render:', userId);
 
   // Ref pre hernú dosku
@@ -45,6 +45,7 @@ function GamePage({ gameId, userId, onGoToLobby, slovakWordsSet  }) {
     isGameOver: false,
     highlightedLetters: [],
     playerNicknames: {},
+    turnLogs: [], // NOVÝ STAV: Záznam ťahov
   });
 
   // Stav pre počet neprečítaných správ
@@ -305,9 +306,13 @@ function GamePage({ gameId, userId, onGoToLobby, slovakWordsSet  }) {
               </div>
 
               {/* Tretí stĺpec - Nový komponent GameLog */}
-              {isGameLogVisible && (
+              {gameId && isGameLogVisible && (
                 <div className="gamelog-column">
-                  <GameLog />
+                  <GameLog
+                  db={db}
+                  gameId={gameId}
+                  playerNicknames={playerNicknames}
+                  />
                 </div>
               )}
             </div> {/* Koniec main-game-layout */}
