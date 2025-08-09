@@ -133,7 +133,7 @@ function LobbyPage({ userId, currentUserNickname, onStartGame, db, appId }) {
 
     return (
         <div className="lobby-container">
-            <h2>Vitajte v Lobby, {currentUserNickname || 'Hráč'}!</h2>
+            <h2>Vitaj v Lobby {currentUserNickname || 'Hráč'}</h2>
 
             <div className="create-game-section">
                 <h3>Vytvoriť novú hru</h3>

@@ -16,6 +16,7 @@ import '../styles/AuthPage.css'; // Import štýlov pre AuthPage
 function AuthPage({ auth, db }) { // KLÚČOVÁ ZMENA: Prijímame aj db ako prop
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState(''); // NOVINKA: Stav pre zopakovanie hesla
     const [nickname, setNickname] = useState(''); // KLÚČOVÁ ZMENA: Stav pre prezývku
     const [errorMessage, setErrorMessage] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
@@ -36,7 +37,7 @@ function AuthPage({ auth, db }) { // KLÚČOVÁ ZMENA: Prijímame aj db ako prop
             } else if (error.code === 'auth/invalid-email') {
                 message = "Neplatný formát e-mailu.";
             } else if (error.code === 'auth/invalid-credential') {
-                message = "Neplatné prihlasovacie údaje.";
+                message = "Nesprávne prihlasovacie údaje.";
             }
             setErrorMessage(message);
         }
@@ -47,9 +48,29 @@ function AuthPage({ auth, db }) { // KLÚČOVÁ ZMENA: Prijímame aj db ako prop
         setErrorMessage('');
         setSuccessMessage('');
 
-        // KLÚČOVÁ ZMENA: Validácia prezývky
-        if (!email || !password || !nickname) {
-            setErrorMessage("Vyplňte, prosím, všetky polia (E-mail, Heslo, Prezývka).");
+        // NOVINKA: Kontrola, či sú všetky polia vyplnené
+        if (!email || !password || !confirmPassword || !nickname) {
+            setErrorMessage("Vyplňte, prosím, všetky polia.");
+            return;
+        }
+
+        // NOVINKA: Kontrola hesla a zopakovania hesla
+        if (password !== confirmPassword) {
+            setErrorMessage("Heslá sa nezhodujú.");
+            return;
+        }
+
+        // NOVINKA: Kontrola zložitosti hesla (aspoň 8 znakov, aspoň 1 veľké písmeno)
+        const passwordRegex = /^(?=.*[A-Z]).{8,}$/;
+        if (!passwordRegex.test(password)) {
+            setErrorMessage("Heslo musí mať aspoň 8 znakov a obsahovať aspoň jedno veľké písmeno.");
+            return;
+        }
+
+        // NOVINKA: Kontrola prezývky (len alfanumerické znaky)
+        const nicknameRegex = /^[a-zA-Z0-9]+$/;
+        if (!nicknameRegex.test(nickname)) {
+            setErrorMessage("Prezývka môže obsahovať iba písmená a čísla.");
             return;
         }
 
@@ -107,6 +128,7 @@ function AuthPage({ auth, db }) { // KLÚČOVÁ ZMENA: Prijímame aj db ako prop
                 // Vyčistíme polia po úspešnej registrácii
                 setEmail('');
                 setPassword('');
+                setConfirmPassword(''); // NOVINKA: Vyčistenie pola pre zopakovanie hesla
                 setNickname('');
             });
 
@@ -140,49 +162,62 @@ function AuthPage({ auth, db }) { // KLÚČOVÁ ZMENA: Prijímame aj db ako prop
 
     return (
         <div className="auth-container">
-            <h2>Vitajte v Scrabble!</h2>
-            <p>Prosím, {isRegistering ? 'zaregistrujte sa' : 'prihláste sa'} pre pokračovanie.</p>
-
+            <h2>Vitaj v Našej herni!</h2>
             <form onSubmit={handleSubmit} className="auth-form">
                 <div className="auth-form-group">
-                    <label htmlFor="email">E-mail:</label>
                     <input
                         type="email"
                         id="email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        placeholder="zadajte svoj e-mail"
+                        placeholder="e-mail"
                         className="auth-input"
                         required
                     />
                 </div>
                 {isRegistering && ( // KLÚČOVÁ ZMENA: Zobrazí sa len pri registrácii
                     <div className="auth-form-group">
-                        <label htmlFor="nickname">Prezývka:</label>
                         <input
                             type="text"
                             id="nickname"
                             value={nickname}
                             onChange={(e) => setNickname(e.target.value)}
-                            placeholder="zadajte svoju prezývku"
+                            placeholder="prezývka"
                             className="auth-input"
                             required
                             minLength="3"
                         />
+                        {/* NOVINKA: Popis pre správnu prezývku */}
+                        <p className="input-description">Môže obsahovať len písmená a čísla.</p>
                     </div>
                 )}
                 <div className="auth-form-group">
-                    <label htmlFor="password">Heslo:</label>
                     <input
                         type="password"
                         id="password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
-                        placeholder="zadajte svoje heslo"
+                        placeholder="heslo"
                         className="auth-input"
                         required
                     />
+                    {isRegistering && (
+                         <p className="input-description">Aspoň 8 znakov a 1 veľké písmeno.</p>
+                    )}
                 </div>
+                {isRegistering && (
+                    <div className="auth-form-group">
+                        <input
+                            type="password"
+                            id="confirm-password"
+                            value={confirmPassword}
+                            onChange={(e) => setConfirmPassword(e.target.value)}
+                            placeholder="zopakuj svoje heslo"
+                            className="auth-input"
+                            required
+                        />
+                    </div>
+                )}
 
                 {errorMessage && <p className="auth-error-message">{errorMessage}</p>}
                 {successMessage && <p className="success-message">{successMessage}</p>}
@@ -203,9 +238,10 @@ function AuthPage({ auth, db }) { // KLÚČOVÁ ZMENA: Prijímame aj db ako prop
                         setSuccessMessage('');
                         setEmail(''); // Vyčistíme polia
                         setPassword('');
+                        setConfirmPassword(''); // NOVINKA: Vyčistenie pola pre zopakovanie hesla
                         setNickname('');
                     }} className="auth-button auth-button-secondary">
-                        {isRegistering ? 'Mám účet? Prihlásiť sa' : 'Nemám účet? Zaregistrovať sa'}
+                        {isRegistering ? 'Máš účet? Prihlás sa' : 'Nemáš účet? Zaregistruj sa'}
                     </button>
                 </div>
             </form>

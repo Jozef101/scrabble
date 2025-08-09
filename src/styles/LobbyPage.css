@@ -103,10 +103,7 @@ body {
         .lobby-tabs {
             display: flex;
             justify-content: flex-start;
-            /* Zarovnanie naľavo pre profesionálnejší vzhľad */
-            /* flex-wrap: wrap; */
             gap: 5px;
-            /* Menšia medzera medzi záložkami */
             margin-bottom: 15px;
             border-bottom: 1px solid #dee2e6;
             padding-bottom: 5px;

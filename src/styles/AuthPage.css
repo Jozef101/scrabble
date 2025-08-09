@@ -162,6 +162,11 @@
     font-weight: bold;
 }
 
+.input-description {
+    font-size: 0.8em;
+    color: #777;
+    margin-left: 13px;
+}
 /* Responzívne úpravy */
 @media (max-width: 600px) {
     .auth-form {
