@@ -55,7 +55,7 @@ function GamePage({ gameId, userId, onGoToLobby, slovakWordsSet, db }) {
   // Stav pre viditeľnosť chatového okna
   const [isChatVisible, setIsChatVisible] = useState(false);
   // NOVÝ STAV: Viditeľnosť okna pre záznam ťahov
-  const [isGameLogVisible, setIsGameLogVisible] = useState(true);
+  const [isGameLogVisible] = useState(true);
 
   const {
     socket,
@@ -189,7 +189,6 @@ function GamePage({ gameId, userId, onGoToLobby, slovakWordsSet, db }) {
     <DndProvider backend={HTML5Backend}>
       <div className="game-page-container">
         <div className="game-header">
-          <h1>Scrabble (Hra ID: {gameId})</h1>
           <div className="connection-status">
             Stav pripojenia: <span className={connectionStatus === 'Pripojený' ? 'connected' : 'disconnected'}>{connectionStatus}</span>
             {myPlayerIndex !== null && ` | Si Hráč ${myPlayerIndex + 1}`}
@@ -293,7 +292,7 @@ function GamePage({ gameId, userId, onGoToLobby, slovakWordsSet, db }) {
                     onClick={handleExchangeLetters}
                     disabled={isGameOver || letterBag.length < exchangeZoneLetters.length || showLetterSelectionModal || myPlayerIndex === null || currentPlayerIndex !== myPlayerIndex}
                   >
-                    Vymeniť písmená ({exchangeZoneLetters.length})
+                    Vymeniť ({exchangeZoneLetters.length})
                   </button>
                   <button
                     className="pass-turn-button"

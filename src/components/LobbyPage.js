@@ -1,5 +1,5 @@
 // src/components/LobbyPage.js
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { collection, addDoc, query, orderBy, onSnapshot, doc, updateDoc, arrayUnion, getDoc } from 'firebase/firestore';
 import '../styles/LobbyPage.css';
 
@@ -16,8 +16,8 @@ import '../styles/LobbyPage.css';
 function LobbyPage({ userId, currentUserNickname, onStartGame, db, appId }) {
     const [games, setGames] = useState([]);
     const [error, setError] = useState('');
-    // Odstránime stav 'playerNicknames', pretože už ho nebudeme potrebovať
-    // const [playerNicknames, setPlayerNicknames] = useState({});
+    // NOVINKA: Stav pre aktuálne zvolený filter (záložku)
+    const [filter, setFilter] = useState('myOngoingGames');
 
     useEffect(() => {
         if (!db) {
@@ -40,7 +40,7 @@ function LobbyPage({ userId, currentUserNickname, onStartGame, db, appId }) {
         });
 
         return () => unsubscribe();
-    }, [db, userId]); // Odstránili sme playerNicknames z dependencies
+    }, [db]);
 
     const handleCreateGame = async () => {
         if (!userId) {
@@ -55,7 +55,6 @@ function LobbyPage({ userId, currentUserNickname, onStartGame, db, appId }) {
         try {
             const gamesCollectionRef = collection(db, 'scrabbleGames');
             await addDoc(gamesCollectionRef, {
-                // Odstránime creatorId a creatorNickname, tieto informácie budú v poli players
                 players: [{ id: userId, playerIndex: 0, nickname: currentUserNickname }],
                 status: 'waiting',
                 createdAt: new Date(),
@@ -85,7 +84,6 @@ function LobbyPage({ userId, currentUserNickname, onStartGame, db, appId }) {
                 return;
             }
             
-            // Logika pre určenie playerIndex ostáva rovnaká
             const maxIndex = Math.max(...existingPlayers.map(p => p.playerIndex));
             const newPlayerIndex = existingPlayers.length > 0 ? maxIndex + 1 : 0;
             
@@ -105,28 +103,33 @@ function LobbyPage({ userId, currentUserNickname, onStartGame, db, appId }) {
         }
     };
 
-    const handleLeaveGame = async (gameId) => {
-        // Táto funkcia je v poriadku, pretože už má prístup k prezývke
-        if (!userId) {
-            setError("Nie si prihlásený.");
-            return;
+    // NOVINKA: Funkcia na filtrovanie hier, ktorá sa volá len pri zmene závislostí
+    const filteredGames = useMemo(() => {
+        if (!games) return [];
+        const userIsInGame = (game) => game.players.some(p => p.id === userId);
+
+        switch (filter) {
+            case 'myOngoingGames':
+                return games.filter(game => 
+                    userIsInGame(game) && (game.status === 'waiting' || game.status === 'in-progress')
+                );
+            case 'waitingToJoin':
+                return games.filter(game => 
+                    !userIsInGame(game) && game.status === 'waiting' && game.players.length < 2
+                );
+            case 'allOngoingGames':
+                return games.filter(game => 
+                    game.status === 'waiting' || game.status === 'in-progress'
+                );
+            case 'myFinishedGames':
+                return games.filter(game => 
+                    userIsInGame(game) && game.status === 'finished'
+                );
+            default:
+                return games;
         }
-        const gameRef = doc(db, 'scrabbleGames', gameId);
-        try {
-            const gameDoc = await getDoc(gameRef);
-            if (gameDoc.exists()) {
-                const currentPlayers = gameDoc.data().players || [];
-                const updatedPlayers = currentPlayers.filter(player => player.id !== userId);
-                await updateDoc(gameRef, {
-                    players: updatedPlayers
-                });
-            }
-            setError('');
-        } catch (e) {
-            console.error("Chyba pri opúšťaní hry:", e);
-            setError("Nepodarilo sa opustiť hru.");
-        }
-    };
+    }, [games, filter, userId]);
+
 
     return (
         <div className="lobby-container">
@@ -142,36 +145,64 @@ function LobbyPage({ userId, currentUserNickname, onStartGame, db, appId }) {
 
             <div className="available-games-section">
                 <h3>Dostupné hry</h3>
-                {games.length === 0 ? (
-                    <p>Momentálne nie sú k dispozícii žiadne hry. Vytvorte novú!</p>
+                {/* NOVINKA: Kontajner pre záložky */}
+                <div className="lobby-tabs">
+                    <button 
+                        className={`tab-button ${filter === 'myOngoingGames' ? 'active' : ''}`}
+                        onClick={() => setFilter('myOngoingGames')}
+                    >
+                        Moje rozohrané hry
+                    </button>
+                    <button 
+                        className={`tab-button ${filter === 'waitingToJoin' ? 'active' : ''}`}
+                        onClick={() => setFilter('waitingToJoin')}
+                    >
+                        Čakajúce na pripojenie
+                    </button>
+                    <button 
+                        className={`tab-button ${filter === 'allOngoingGames' ? 'active' : ''}`}
+                        onClick={() => setFilter('allOngoingGames')}
+                    >
+                        Všetky rozohrané
+                    </button>
+                    <button 
+                        className={`tab-button ${filter === 'myFinishedGames' ? 'active' : ''}`}
+                        onClick={() => setFilter('myFinishedGames')}
+                    >
+                        Moje ukončené hry
+                    </button>
+                </div>
+
+                {/* NOVINKA: Vykresľujeme filtrované hry */}
+                {filteredGames.length === 0 ? (
+                    <p className="no-games-message">Momentálne tu nie sú žiadne hry v tejto kategórii.</p>
                 ) : (
                     <ul className="games-list">
-                        {games.map((game) => (
-                            <li key={game.id} className="game-item">
-                                <span>
-                                    Tvorca: {game.players[0]?.nickname || 'Neznámy'} - Hráči: {
-                                        game.players.map(player => player.nickname).join(', ')
-                                    } - Status: {game.status}
-                                </span>
-                                {game.players.some(p => p.id === userId) ? (
-                                    <button onClick={() => onStartGame(game.id)} className="join-game-button active">
-                                        Pokračovať v hre
-                                    </button>
-                                ) : (
-                                    <button
-                                        onClick={() => handleJoinGame(game.id, game.players)}
-                                        disabled={game.players.length >= 2 || game.status !== 'waiting'}
-                                        className="join-game-button"
-                                    >
-                                        Pripojiť sa
-                                    </button>
-                                )}
-                                {game.players.some(p => p.id === userId) && (
-                                    <button onClick={() => handleLeaveGame(game.id)} className="leave-game-button">
-                                        Opustiť hru
-                                    </button>
-                                )}
-                            </li>
+                        {filteredGames.map((game) => (
+                            // NOVINKA: Používame div s triedou game-info-wrapper namiesto li
+                            <div key={game.id} className="game-item-wrapper">
+                                <div className="game-info">
+                                    <span>
+                                        {game.players[0]?.nickname || 'Neznámy'} ({game.players.length}/2)
+                                    </span>
+                                </div>
+                                <div className="game-actions">
+                                    {/* NOVINKA: Zjednodušená podmienka pre tlačidlo */}
+                                    {game.players.some(p => p.id === userId) ? (
+                                        <button onClick={() => onStartGame(game.id)} className="join-game-button active">
+                                            Pokračovať v hre
+                                        </button>
+                                    ) : (
+                                        <button
+                                            onClick={() => handleJoinGame(game.id, game.players)}
+                                            disabled={game.players.length >= 2 || game.status !== 'waiting'}
+                                            className="join-game-button"
+                                        >
+                                            Pripojiť sa
+                                        </button>
+                                    )}
+                                </div>
+                            </div>
                         ))}
                     </ul>
                 )}
@@ -179,5 +210,9 @@ function LobbyPage({ userId, currentUserNickname, onStartGame, db, appId }) {
         </div>
     );
 }
+
+// ZMENA: Odstránená je funkcia handleLeaveGame, nakoľko sa už nevyužíva.
+// ZMENA: Odstránené je tlačidlo "Opustiť hru".
+// ZMENA: Zmenený formát zobrazenia informácií o hre.
 
 export default LobbyPage;

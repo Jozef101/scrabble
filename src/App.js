@@ -53,8 +53,8 @@ console.log("Firestore DB inštancia v App.js:", db);
 function App() {
     const [userId, setUserId] = useState(null);
     const [isAuthReady, setIsAuthReady] = useState(false);
-    const [isEmailVerified, setIsEmailVerified] = useState(false);
-    const [currentUserEmail, setCurrentUserEmail] = useState(null);
+    // const [isEmailVerified, setIsEmailVerified] = useState(false);
+    // const [currentUserEmail, setCurrentUserEmail] = useState(null);
     const [currentUserNickname, setCurrentUserNickname] = useState(null);
     const [slovakWordsSet, setSlovakWordsSet] = useState(null); 
 
@@ -94,7 +94,7 @@ function App() {
             console.log("App.js: onAuthStateChanged - Spustený.");
             if (user) {
                 setUserId(user.uid);
-                setCurrentUserEmail(user.email);
+                // setCurrentUserEmail(user.email);
                 console.log("App.js: Aktuálny používateľ:", user.uid, "Email:", user.email, "Email Verified (pred reload):", user.emailVerified);
 
                 try {
@@ -124,7 +124,7 @@ function App() {
                 }
 
                 console.log("App.js: User emailVerified (po reload):", user.emailVerified);
-                setIsEmailVerified(user.emailVerified);
+                // setIsEmailVerified(user.emailVerified);
 
                 if (user.emailVerified) {
                     console.log("App.js: E-mail je overený. Navigácia.");
@@ -142,8 +142,8 @@ function App() {
                 }
             } else {
                 setUserId(null);
-                setIsEmailVerified(false);
-                setCurrentUserEmail(null);
+                // setIsEmailVerified(false);
+                // setCurrentUserEmail(null);
                 setCurrentUserNickname(null); // Reset prezývky pri odhlásení
                 console.log("App.js: Používateľ odhlásený z Firebase. Navigácia na /.");
                 if (location.pathname !== '/') {
@@ -157,7 +157,7 @@ function App() {
         authenticateFirebase();
 
         return () => unsubscribe();
-    }, [auth, navigate, initialAuthToken, location.pathname, db]);
+    }, [navigate, location.pathname]);
 
     // Effect pre spracovanie overovacieho odkazu z e-mailu
     useEffect(() => {
@@ -196,7 +196,7 @@ function App() {
         };
 
         handleEmailVerificationLink();
-        }, [auth, location.search, navigate, userId]);
+        }, [location.search, navigate, userId]);
 
 
     const handleStartGame = (id) => {
