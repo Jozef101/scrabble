@@ -39,7 +39,7 @@ html {
         /* NOVINKA: Dôležité pre absolútne umiestnenie UserMenuIcon */
         position: relative;
         /* NOVINKA: Pridávame priestor pre ikonu v hornej časti */
-        padding-top: 70px;
+        padding-top: 80px;
         /* Výška ikony (cca 50px) + odsadenie (20px) */
 }
 
