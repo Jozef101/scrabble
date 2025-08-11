@@ -263,7 +263,7 @@ function App() {
     );
 }
 
-function GamePageWrapper({ userId, onGoToLobby, slovakWordsSet }) {
+function GamePageWrapper({ userId, onGoToLobby, slovakWordsSet, db }) {
     const { gameId } = useParams();
     return (
         <GamePage

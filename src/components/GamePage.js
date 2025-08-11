@@ -2,6 +2,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
+import { doc, getDoc } from 'firebase/firestore'; 
 
 // Importy pre hernú logiku
 // Import vlastných hookov
@@ -44,6 +45,7 @@ function GamePage({ gameId, userId, onGoToLobby, slovakWordsSet, db }) {
     exchangeZoneLetters: [],
     isGameOver: false,
     highlightedLetters: [],
+    players: [],
     playerNicknames: {},
     turnLogs: [], // NOVÝ STAV: Záznam ťahov
   });
@@ -58,6 +60,13 @@ function GamePage({ gameId, userId, onGoToLobby, slovakWordsSet, db }) {
   // NOVÝ STAV: Viditeľnosť okna pre záznam ťahov
   const [isGameLogVisible] = useState(true);
 
+  const handleGameStateUpdate = React.useCallback(newGameState => {
+    setGameState(prevGameState => ({
+        ...prevGameState,
+        ...newGameState
+    }));
+}, []);
+
   const {
     socket,
     myPlayerIndex,
@@ -66,7 +75,7 @@ function GamePage({ gameId, userId, onGoToLobby, slovakWordsSet, db }) {
     newChatMessage,
     setNewChatMessage,
     waitingForSecondPlayer,
-  } = useSocketConnection(gameId, userId, setGameState);
+  } = useSocketConnection(gameId, userId, handleGameStateUpdate);
 
   // useEffect na posun okna na hernú dosku po načítaní a pripravenosti hry
   useEffect(() => {
@@ -141,35 +150,62 @@ function GamePage({ gameId, userId, onGoToLobby, slovakWordsSet, db }) {
   } = gameState;
 
   useEffect(() => {
-    if (db && Object.keys(playerNicknames).length > 0) {
+    console.log('--- DEBUGGING ELO ---');
+    console.log('playerNicknames:', playerNicknames);
+    console.log('playerNicknames keys length:', Object.keys(playerNicknames).length);
+    console.log('gameState.players:', gameState.players);
+    console.log('gameState.players length:', gameState.players?.length);
+    console.log('--- END DEBUGGING ---');
+}, [playerNicknames, gameState.players]);
+
+  useEffect(() => {
+    console.log('GamePage: useEffect pre ELO spustený.');
+    console.log('Aktuálny gameState.players:', gameState.players);
+    console.log('Aktuálne playerNicknames:', playerNicknames);
+
+    if (db && Object.keys(playerNicknames).length > 0 && gameState.players && gameState.players.length > 0) {
+        console.log('GamePage: Podmienka na načítanie ELO splnená.');
         const fetchEloScores = async () => {
             const eloScores = {};
             // Prejdeme cez všetkých hráčov, pre ktorých máme prezývky
             for (const playerIndex of Object.keys(playerNicknames)) {
                 try {
-                    // Načítame userId z gameInstance
                     const player = gameState.players.find(p => p && p.playerIndex === parseInt(playerIndex, 10));
+                    console.log(`GamePage: Hľadá sa player ${playerIndex}, nájdený objekt:`, player);
                     if (player && player.userId) {
-                        const userDocRef = db.collection('users').doc(player.userId);
-                        const userDocSnap = await userDocRef.get();
-                        if (userDocSnap.exists && userDocSnap.data() && userDocSnap.data().elo) {
-                            eloScores[playerIndex] = userDocSnap.data().elo;
+                        const userDocRef = doc(db, 'users', player.userId);
+                        const userDocSnap = await getDoc(userDocRef);
+                        console.log(`GamePage: Načítaný dokument pre userId ${player.userId}, existuje?`, userDocSnap.exists());
+                        
+                        if (userDocSnap.exists()) {
+                           const userData = userDocSnap.data();
+                           console.log(`GamePage: Načítané dáta používateľa:`, userData);
+                           if (userData && userData.elo) {
+                               eloScores[playerIndex] = userData.elo;
+                           } else {
+                               eloScores[playerIndex] = 1000; // Defaultná hodnota, ak ELO nie je v DB
+                           }
                         } else {
-                            eloScores[playerIndex] = null; // alebo 1000 ako default
+                           eloScores[playerIndex] = 1000;
                         }
+                    } else {
+                        // Ak sa nenašiel hráč, preskočíme
+                        eloScores[playerIndex] = null;
                     }
                 } catch (e) {
                     console.error(`Chyba pri načítaní ELO pre hráča ${playerIndex}:`, e);
                     eloScores[playerIndex] = null;
                 }
             }
+            console.log('GamePage: Načítané ELO skóre:', eloScores);
             setPlayerElo(eloScores);
         };
-
         fetchEloScores();
+    } else {
+      console.log('GamePage: Podmienka na načítanie ELO nie je splnená.');
+      setPlayerElo({});
     }
-}, [db, playerNicknames, gameState.players]); // Pridané gameState.players ako závislosť
-
+}, [db, playerNicknames, gameState.players]);
 
   const isGameReadyToRender = myPlayerIndex !== null;
 
