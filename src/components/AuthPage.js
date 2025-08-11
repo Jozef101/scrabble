@@ -104,7 +104,8 @@ function AuthPage({ auth, db }) { // KLÚČOVÁ ZMENA: Prijímame aj db ako prop
                     nickname: nickname,
                     email: email, // Uložíme aj e-mail pre referenciu
                     createdAt: new Date(),
-                    userId: user.uid // Uložíme aj userId pre ľahší prístup
+                    userId: user.uid, // Uložíme aj userId pre ľahší prístup
+                    elo: 1600 // NOVINKA: Predvolená hodnota ELO
                 });
 
                 // Zaznamenáme nickname ako obsadený

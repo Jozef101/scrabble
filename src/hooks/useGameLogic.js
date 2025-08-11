@@ -244,6 +244,10 @@ function useGameLogic(socket, gameId, myPlayerIndex, slovakWordsSet, gameState, 
         turnNumber: (gameState.turnNumber || 0) + 1,
       };
       alert(`Hra skončila! Konečné skóre: Hráč 1: ${finalScores[0]}, Hráč 2: ${finalScores[1]}`);
+      // --- PRIDANÉ: Zavolanie 'gameOver' akcie na server. ---
+      const winnerIndex = finalScores[0] > finalScores[1] ? 0 : 1;
+      const loserIndex = finalScores[0] > finalScores[1] ? 1 : 0;
+      sendPlayerAction(socket, gameId, 'gameOver', { winnerId: gameState.players[winnerIndex], loserId: gameState.players[loserIndex] });
     } else {
       updatedGameState = {
         ...gameState,
@@ -440,6 +444,9 @@ function useGameLogic(socket, gameId, myPlayerIndex, slovakWordsSet, gameState, 
     if (isGameOverCondition) {
       updatedPlayerScores = calculateFinalScores(null, [], gameState.playerScores, gameState.playerRacks);
       alert("Hra skončila! Obaja hráči pasovali dvakrát po sebe. Konečné skóre bolo upravené o zostávajúce písmená.");
+      const winnerIndex = updatedPlayerScores[0] > updatedPlayerScores[1] ? 0 : 1;
+      const loserIndex = updatedPlayerScores[0] > updatedPlayerScores[1] ? 1 : 0;
+      sendPlayerAction(socket, gameId, 'gameOver', { winnerId: gameState.players[winnerIndex], loserId: gameState.players[loserIndex] });
     } else {
       alert("Ťah bol prenesený na ďalšieho hráča.");
     }

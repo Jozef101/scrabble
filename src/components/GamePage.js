@@ -48,6 +48,7 @@ function GamePage({ gameId, userId, onGoToLobby, slovakWordsSet, db }) {
     turnLogs: [], // NOVÝ STAV: Záznam ťahov
   });
 
+  const [playerElo, setPlayerElo] = useState({});
   // Stav pre počet neprečítaných správ
   const [unreadMessageCount, setUnreadMessageCount] = useState(0);
   // Ref na uloženie predchádzajúceho počtu správ pre detekciu nových
@@ -139,12 +140,35 @@ function GamePage({ gameId, userId, onGoToLobby, slovakWordsSet, db }) {
     playerNicknames,
   } = gameState;
 
-  // Debugovací výpis pre playerNicknames
   useEffect(() => {
-    if (Object.keys(playerNicknames).length > 0) {
-      console.log('GamePage: Prijaté playerNicknames:', playerNicknames);
+    if (db && Object.keys(playerNicknames).length > 0) {
+        const fetchEloScores = async () => {
+            const eloScores = {};
+            // Prejdeme cez všetkých hráčov, pre ktorých máme prezývky
+            for (const playerIndex of Object.keys(playerNicknames)) {
+                try {
+                    // Načítame userId z gameInstance
+                    const player = gameState.players.find(p => p && p.playerIndex === parseInt(playerIndex, 10));
+                    if (player && player.userId) {
+                        const userDocRef = db.collection('users').doc(player.userId);
+                        const userDocSnap = await userDocRef.get();
+                        if (userDocSnap.exists && userDocSnap.data() && userDocSnap.data().elo) {
+                            eloScores[playerIndex] = userDocSnap.data().elo;
+                        } else {
+                            eloScores[playerIndex] = null; // alebo 1000 ako default
+                        }
+                    }
+                } catch (e) {
+                    console.error(`Chyba pri načítaní ELO pre hráča ${playerIndex}:`, e);
+                    eloScores[playerIndex] = null;
+                }
+            }
+            setPlayerElo(eloScores);
+        };
+
+        fetchEloScores();
     }
-  }, [playerNicknames]);
+}, [db, playerNicknames, gameState.players]); // Pridané gameState.players ako závislosť
 
 
   const isGameReadyToRender = myPlayerIndex !== null;
@@ -208,6 +232,7 @@ function GamePage({ gameId, userId, onGoToLobby, slovakWordsSet, db }) {
               currentPlayerIndex={currentPlayerIndex}
               isGameOver={isGameOver}
               playerNicknames={playerNicknames}
+              playerElo={playerElo}
               myPlayerIndex={myPlayerIndex}
             />
             <LetterBag remainingLettersCount={letterBag.length} />
