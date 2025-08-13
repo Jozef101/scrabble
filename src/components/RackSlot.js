@@ -1,5 +1,4 @@
 // src/components/RackSlot.js
-import React from 'react';
 import { useDrop } from 'react-dnd';
 import Letter from './Letter';
 import '../styles/RackSlot.css';

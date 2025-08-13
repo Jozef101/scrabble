@@ -1,5 +1,4 @@
 // src/components/ExchangeZone.js
-import React from 'react';
 import { useDrop } from 'react-dnd';
 import Letter from './Letter';
 import '../styles/ExchangeZone.css';
@@ -32,7 +31,7 @@ function ExchangeZone({ lettersInZone, moveLetter, myPlayerIndex, currentPlayerI
 
   // NOVÉ: Handler pre ťuknutie na prázdnu zónu výmeny
   const handleExchangeZoneClick = () => {
-    if (onTapSlot) {
+    if (myPlayerIndex !== null && currentPlayerIndex === myPlayerIndex && onTapSlot) {
       onTapSlot({ type: 'exchangeZone' });
     }
     // Ak zóna obsahuje písmená, kliknutie na ne sa spracuje v komponente Letter
