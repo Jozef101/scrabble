@@ -60,7 +60,6 @@ function App() {
 
     const navigate = useNavigate();
     const location = useLocation();
-    const initialGameIdRef = useRef(sessionStorage.getItem('activeGameId'));
 
     useEffect(() => {
         // Slovník je už importovaný ako 'slovakWords'
@@ -127,11 +126,8 @@ function App() {
                 // setIsEmailVerified(user.emailVerified);
 
                 if (user.emailVerified) {
-                    console.log("App.js: E-mail je overený. Navigácia.");
-                    if (initialGameIdRef.current) {
-                        console.log("App.js: Nájdené aktívne ID hry v sessionStorage. Navigujem do hry.");
-                        navigate(`/game/${initialGameIdRef.current}`, { replace: true });
-                    } else if (!location.pathname.startsWith('/game/') && location.pathname !== '/lobby') {
+                    console.log("App.js: E-mail je overený. Navigácia do lobby.");
+                    if (!location.pathname.startsWith('/game/') && location.pathname !== '/lobby') {
                         navigate('/lobby');
                     }
                 } else {
@@ -200,12 +196,10 @@ function App() {
 
 
     const handleStartGame = (id) => {
-        sessionStorage.setItem('activeGameId', id);
         navigate(`/game/${id}`);
     };
 
     const handleGoToLobby = () => {
-        sessionStorage.removeItem('activeGameId');
         navigate('/lobby');
     };
 
