@@ -183,8 +183,17 @@ function LobbyPage({ userId, currentUserNickname, onStartGame, db, appId }) {
                             <div key={game.id} className="game-item-wrapper">
                                 <div className="game-info">
                                     <span>
-                                        {game.players[0]?.nickname || 'Neznámy'} ({game.players.length}/2)
+                                        {game.players[0]?.nickname || 'Neznámy'} vs {game.players.length > 1 ? game.players[1]?.nickname || 'Neznámy' : 'Čaká na súpera'}
                                     </span>
+                                    <div className="game-progress-container">
+                                        <div 
+                                            className="game-progress-bar"
+                                            style={{ width: `${((game.progress || 0) / 100) * 100}%` }}
+                                        ></div>
+                                        <span className="progress-text">
+                                            Progres: {game.progress || 0}%
+                                        </span>
+                                    </div>
                                 </div>
                                 <div className="game-actions">
                                     {/* NOVINKA: Zjednodušená podmienka pre tlačidlo */}
