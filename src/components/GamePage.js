@@ -53,8 +53,6 @@ function GamePage({ gameId, userId, onGoToLobby, slovakWordsSet, db }) {
   const [playerElo, setPlayerElo] = useState({});
   // Stav pre počet neprečítaných správ
   const [unreadMessageCount, setUnreadMessageCount] = useState(0);
-  // Ref na uloženie predchádzajúceho počtu správ pre detekciu nových
-  const previousChatMessagesLength = useRef(0);
   // Stav pre viditeľnosť chatového okna
   const [isChatVisible, setIsChatVisible] = useState(false);
   // NOVÝ STAV: Viditeľnosť okna pre záznam ťahov
@@ -87,34 +85,30 @@ function GamePage({ gameId, userId, onGoToLobby, slovakWordsSet, db }) {
 
   // useEffect na sledovanie nových správ a aktualizáciu počtu neprečítaných správ
   useEffect(() => {
-    // Kľúčová oprava: Ak je to prvé načítanie (previousChatMessagesLength je 0)
-    // a chatMessages už obsahujú dáta, inicializujeme ref a preskočíme počítadlo.
-    if (previousChatMessagesLength.current === 0 && chatMessages.length > 0) {
-      previousChatMessagesLength.current = chatMessages.length;
-      return;
-    }
+    if (!chatMessages || myPlayerIndex === null) return;
 
-    // Ak pribudli nové správy
-    if (chatMessages.length > previousChatMessagesLength.current) {
-      const lastMessage = chatMessages[chatMessages.length - 1];
-      const isMyMessage = lastMessage && lastMessage.senderIndex === myPlayerIndex;
+    const unreadCount = chatMessages.reduce((count, msg) => {
+      return msg.seen && msg.seen[myPlayerIndex] === false ? count + 1 : count;
+    }, 0);
 
-      // Ak chat nie je viditeľný alebo nie je posunutý dole a správa nie je od nás, zvýšime počet neprečítaných správ.
-      if ((!isChatVisible || !chatWindowRef.current?.isScrolledToBottom()) && !isMyMessage) {
-        setUnreadMessageCount(prevCount => prevCount + 1);
-        console.log('GamePage: Incremented unread message count.');
-      }
-    }
-    // Vždy aktualizujeme predchádzajúcu dĺžku správ
-    previousChatMessagesLength.current = chatMessages.length;
-  }, [chatMessages, myPlayerIndex, isChatVisible]);
+    setUnreadMessageCount(unreadCount);
+  }, [chatMessages, myPlayerIndex]);
 
-  // Funkcia na resetovanie počtu neprečítaných správ
-  const resetUnreadMessages = () => {
-    setUnreadMessageCount(0);
-    // Po resetovaní môžeme aj posunúť chat dole, ak ho používateľ otvoril
-    chatWindowRef.current?.scrollToBottom();
-  };
+  useEffect(() => {
+        // Podmienka: Ak je chat viditeľný a máme neprečítané správy
+        if (isChatVisible && unreadMessageCount > 0 && socket && myPlayerIndex !== null) {
+            console.log("GamePage: Chat je otvorený a prichádza nová správa. Označujem ako prečítané.");
+            
+            // Voláme funkciu na označenie správ na serveri
+            socket.emit('markMessagesSeen', {
+                gameId,
+                playerIndex: myPlayerIndex
+            });
+            
+            // Posunieme chat dole pre zobrazenie najnovšej správy
+            chatWindowRef.current?.scrollToBottom();
+        }
+    }, [isChatVisible, unreadMessageCount, socket, gameId, myPlayerIndex]);
 
   const {
     isActionInProgress,
@@ -213,18 +207,25 @@ function GamePage({ gameId, userId, onGoToLobby, slovakWordsSet, db }) {
     if (socket && gameId && newChatMessage.trim()) {
       sendPlayerAction(socket, gameId, 'chatMessage', newChatMessage);
       setNewChatMessage('');
-      // Po odoslaní vlastnej správy by sa mal chat posunúť dole a resetovať neprečítané správy
-      resetUnreadMessages(); 
     }
   };
 
   // Funkcia na OTVORENIE chatu a resetovanie počtu neprečítaných správ
   const openChatAndResetUnread = () => {
-    setIsChatVisible(true); // Vždy nastavíme chat na viditeľný
-    // Použijeme setTimeout, aby sa zabezpečilo, že chat je už vykreslený a má správnu výšku
+    setIsChatVisible(true);
+
+    // Označíme správy ako prečítané na serveri
+    if (socket && chatMessages.length > 0 && myPlayerIndex !== null) {
+      socket.emit('markMessagesSeen', { 
+        gameId, 
+        playerIndex: myPlayerIndex        
+      });
+      console.log(`GamePage: Správy označené ako prečítané pre Hráča ${myPlayerIndex + 1} v hre ${gameId}.`);
+    }
+
+    // Po vykreslení chat okna posuň na koniec
     setTimeout(() => {
       chatWindowRef.current?.scrollToBottom();
-      resetUnreadMessages();
     }, 0);
   };
 
@@ -386,7 +387,6 @@ function GamePage({ gameId, userId, onGoToLobby, slovakWordsSet, db }) {
                 setNewChatMessage={setNewChatMessage}
                 playerNicknames={playerNicknames}
                 ref={chatWindowRef}
-                onScrollStateChange={resetUnreadMessages}
                 onCloseChat={handleCloseChat}
               />
             )}

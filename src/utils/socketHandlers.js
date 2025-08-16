@@ -123,13 +123,22 @@ export const setupSocketListeners = (socket, setConnectionStatus, setMyPlayerInd
     });
 
     socket.on('receiveChatMessage', (message) => {
-        // KLÚČOVÁ ZMENA: Správa teraz obsahuje senderNickname
-        setChatMessages((prevMessages) => [...prevMessages, message]);
+        setChatMessages(prev => [
+            ...prev,
+            {
+                ...message,
+                text: typeof message.text === 'object' ? message.text.text : message.text
+            }
+        ]);
     });
 
     socket.on('chatHistory', (history) => {
         console.log('socketHandlers: chatHistory event received, history length:', history.length);
-        setChatMessages(history);
+        const normalizedHistory = history.map(msg => ({
+            ...msg,
+            text: typeof msg.text === 'object' ? msg.text.text : msg.text
+        }));
+        setChatMessages(normalizedHistory);
         console.log('socketHandlers: Chat history applied to state.');
     });
 };
