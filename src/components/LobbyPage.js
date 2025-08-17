@@ -57,6 +57,7 @@ function LobbyPage({ userId, currentUserNickname, onStartGame, db, appId }) {
                 players: [{ id: userId, playerIndex: 0, nickname: currentUserNickname }],
                 status: 'waiting',
                 createdAt: new Date(),
+                scores: [0, 0],
             });
             setError('');
         } catch (e) {
@@ -92,8 +93,13 @@ function LobbyPage({ userId, currentUserNickname, onStartGame, db, appId }) {
             }
 
             await updateDoc(gameRef, {
-                players: arrayUnion({ id: userId, playerIndex: newPlayerIndex, nickname: currentUserNickname })
-            });
+                players: arrayUnion({
+                    id: userId,
+                    playerIndex: newPlayerIndex,
+                    nickname: currentUserNickname
+                }),
+                scores: [0, 0]
+            }, { merge: true });
             onStartGame(gameId);
             setError('');
         } catch (e) {
@@ -179,11 +185,17 @@ function LobbyPage({ userId, currentUserNickname, onStartGame, db, appId }) {
                             <div
                                 key={game.id}
                                 className={`game-item-wrapper ${game.currentPlayerIndex !== undefined && game.players[game.currentPlayerIndex]?.id === userId ? 'my-turn-highlight' : ''}`}
+                                onClick={() => handleJoinGame(game.id, game.players)} // TOTO JE NOVÝ KLIKATEĽNÝ PRVOK
+                                // Pridáme podmienku pre zakázanie kliknutia na plnú hru, kde nie si
+                                style={{ cursor: (!game.players.some(p => p.id === userId) && (game.players.length >= 2 || game.status !== 'waiting')) ? 'not-allowed' : 'pointer' }}
                             >
                                 <div className="game-info">
                                     <span>
                                         {game.players[0]?.nickname || 'Neznámy'} vs {game.players.length > 1 ? game.players[1]?.nickname || 'Neznámy' : 'Čaká na súpera'}
                                     </span>
+                                    <div className="game-score">
+                                        Skóre: {game.scores && game.scores.length > 0 ? `${game.scores[0]} : ${game.scores[1]}` : '0 : 0'}
+                                    </div>
                                     <div className="game-progress-container">
                                         <div 
                                             className="game-progress-bar"
@@ -193,21 +205,6 @@ function LobbyPage({ userId, currentUserNickname, onStartGame, db, appId }) {
                                             Progres: {game.progress || 0}%
                                         </span>
                                     </div>
-                                </div>
-                                <div className="game-actions">
-                                    {game.players.some(p => p.id === userId) ? (
-                                        <button onClick={() => onStartGame(game.id)} className="join-game-button active">
-                                            Pokračovať v hre
-                                        </button>
-                                    ) : (
-                                        <button
-                                            onClick={() => handleJoinGame(game.id, game.players)}
-                                            disabled={game.players.length >= 2 || game.status !== 'waiting'}
-                                            className="join-game-button"
-                                        >
-                                            Pripojiť sa
-                                        </button>
-                                    )}
                                 </div>
                             </div>
                         ))}

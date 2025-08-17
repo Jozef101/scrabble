@@ -149,23 +149,24 @@ body {
 .game-item-wrapper {
     background-color: #ffffff;
     margin-bottom: 8px;
-        /* Menší spodný okraj */
-        padding: 12px;
-        /* Menšie odsadenie */
-        border-radius: 6px;
+    padding: 12px;
+    border-radius: 6px;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     gap: 8px;
-        /* Menšia medzera */
-        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
         border: 1px solid #e9ecef;
         transition: box-shadow 0.2s, border-color 0.2s;
-    }
+    cursor: pointer;
+        transition: all 0.2s ease-in-out;
+}
     
     .game-item-wrapper:hover {
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
         border-color: #ced4da;
+        transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     }
     
     @media (min-width: 768px) {
@@ -174,7 +175,7 @@ body {
             align-items: center;
             justify-content: space-between;
         }
-}
+                }
 
 .game-info {
     flex-grow: 1;
@@ -186,54 +187,6 @@ body {
     /* Menšia veľkosť písma */
     color: #495057;
     font-weight: 500;
-}
-
-/* Tlačidlá v zozname hier */
-.game-actions {
-    display: flex;
-    gap: 6px;
-    /* Menšia medzera medzi tlačidlami */
-}
-.join-game-button,
-.leave-game-button {
-    padding: 8px 15px;
-        /* Menšie odsadenie */
-    border: none;
-    border-radius: 4px;
-        font-size: 0.85rem;
-        /* Menšia veľkosť písma */
-    cursor: pointer;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
-        white-space: nowrap;
-    font-weight: 500;
-        transition: background-color 0.2s, box-shadow 0.2s;
-}
-
-.join-game-button {
-    background-color: #28a745;
-    color: white;
-}
-
-.join-game-button:hover:not(:disabled) {
-    background-color: #218838;
-}
-
-.join-game-button:disabled {
-    background-color: #e9ecef;
-        /* Svetlejšia šedá pre disabled */
-        color: #868e96;
-    cursor: not-allowed;
-    opacity: 0.7;
-        box-shadow: none;
-}
-
-.join-game-button.active {
-    background-color: #6c757d;
-    color: white;
-    }
-    
-    .join-game-button.active:hover {
-        background-color: #5a6268;
 }
 
 /* Správy o chybách */
@@ -288,4 +241,10 @@ body {
     border: 2px solid #ff9800;
     box-shadow: 0 0 10px rgba(255, 152, 0, 0.5);
     transition: all 0.3s ease;
+}
+.game-score {
+    font-size: 0.85rem;
+    color: #6c757d;
+    font-weight: 500;
+    margin-top: 5px;
 }
