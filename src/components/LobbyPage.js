@@ -176,7 +176,10 @@ function LobbyPage({ userId, currentUserNickname, onStartGame, db, appId }) {
                     <ul className="games-list">
                         {filteredGames.map((game) => (
                             // NOVINKA: Používame div s triedou game-info-wrapper namiesto li
-                            <div key={game.id} className="game-item-wrapper">
+                            <div
+                                key={game.id}
+                                className={`game-item-wrapper ${game.currentPlayerIndex !== undefined && game.players[game.currentPlayerIndex]?.id === userId ? 'my-turn-highlight' : ''}`}
+                            >
                                 <div className="game-info">
                                     <span>
                                         {game.players[0]?.nickname || 'Neznámy'} vs {game.players.length > 1 ? game.players[1]?.nickname || 'Neznámy' : 'Čaká na súpera'}
