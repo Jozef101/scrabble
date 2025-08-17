@@ -16,7 +16,6 @@ import '../styles/LobbyPage.css';
 function LobbyPage({ userId, currentUserNickname, onStartGame, db, appId }) {
     const [games, setGames] = useState([]);
     const [error, setError] = useState('');
-    // NOVINKA: Stav pre aktuálne zvolený filter (záložku)
     const [filter, setFilter] = useState('myOngoingGames');
 
     useEffect(() => {
@@ -103,7 +102,6 @@ function LobbyPage({ userId, currentUserNickname, onStartGame, db, appId }) {
         }
     };
 
-    // NOVINKA: Funkcia na filtrovanie hier, ktorá sa volá len pri zmene závislostí
     const filteredGames = useMemo(() => {
         if (!games) return [];
         const userIsInGame = (game) => game.players.some(p => p.id === userId);
@@ -145,7 +143,6 @@ function LobbyPage({ userId, currentUserNickname, onStartGame, db, appId }) {
 
             <div className="available-games-section">
                 <h3>Dostupné hry</h3>
-                {/* NOVINKA: Kontajner pre záložky */}
                 <div className="lobby-tabs">
                     <button 
                         className={`tab-button ${filter === 'myOngoingGames' ? 'active' : ''}`}
@@ -157,7 +154,7 @@ function LobbyPage({ userId, currentUserNickname, onStartGame, db, appId }) {
                         className={`tab-button ${filter === 'waitingToJoin' ? 'active' : ''}`}
                         onClick={() => setFilter('waitingToJoin')}
                     >
-                        Čakajúce na pripojenie
+                        Čakajúce na hráča
                     </button>
                     <button 
                         className={`tab-button ${filter === 'allOngoingGames' ? 'active' : ''}`}
@@ -173,9 +170,8 @@ function LobbyPage({ userId, currentUserNickname, onStartGame, db, appId }) {
                     </button>
                 </div>
 
-                {/* NOVINKA: Vykresľujeme filtrované hry */}
                 {filteredGames.length === 0 ? (
-                    <p className="no-games-message">Momentálne tu nie sú žiadne hry v tejto kategórii.</p>
+                    <p className="no-games-message">Momentálne tu nie sú žiadne hry.</p>
                 ) : (
                     <ul className="games-list">
                         {filteredGames.map((game) => (
@@ -188,7 +184,6 @@ function LobbyPage({ userId, currentUserNickname, onStartGame, db, appId }) {
                                     <div className="game-progress-container">
                                         <div 
                                             className="game-progress-bar"
-                                            style={{ width: `${((game.progress || 0) / 100) * 100}%` }}
                                         ></div>
                                         <span className="progress-text">
                                             Progres: {game.progress || 0}%
@@ -196,7 +191,6 @@ function LobbyPage({ userId, currentUserNickname, onStartGame, db, appId }) {
                                     </div>
                                 </div>
                                 <div className="game-actions">
-                                    {/* NOVINKA: Zjednodušená podmienka pre tlačidlo */}
                                     {game.players.some(p => p.id === userId) ? (
                                         <button onClick={() => onStartGame(game.id)} className="join-game-button active">
                                             Pokračovať v hre
@@ -219,9 +213,5 @@ function LobbyPage({ userId, currentUserNickname, onStartGame, db, appId }) {
         </div>
     );
 }
-
-// ZMENA: Odstránená je funkcia handleLeaveGame, nakoľko sa už nevyužíva.
-// ZMENA: Odstránené je tlačidlo "Opustiť hru".
-// ZMENA: Zmenený formát zobrazenia informácií o hre.
 
 export default LobbyPage;
