@@ -257,3 +257,30 @@ body {
     font-weight: 400;
     font-size: 0.95rem;
 }
+.game-progress-container {
+    width: 100%;
+    background-color: #ddd;
+    border-radius: 4px;
+    margin-top: 8px;
+    position: relative;
+    height: 20px;
+}
+
+.game-progress-bar {
+    height: 100%;
+    background-color: #4caf50;
+    /* Zelená farba progress baru */
+    border-radius: 4px;
+    transition: width 0.4s ease;
+    /* Plynulá zmena šírky */
+}
+
+.progress-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 12px;
+    color: #333;
+    font-weight: bold;
+}

@@ -184,6 +184,7 @@ function LobbyPage({ userId, currentUserNickname, onStartGame, db, appId }) {
                                     <div className="game-progress-container">
                                         <div 
                                             className="game-progress-bar"
+                                            style={{ width: `${((game.progress || 0) / 100) * 100}%` }}
                                         ></div>
                                         <span className="progress-text">
                                             Progres: {game.progress || 0}%
