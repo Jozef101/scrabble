@@ -97,7 +97,7 @@ function GamePage({ gameId, userId, onGoToLobby, slovakWordsSet, db }) {
   useEffect(() => {
         // Podmienka: Ak je chat viditeľný a máme neprečítané správy
         if (isChatVisible && unreadMessageCount > 0 && socket && myPlayerIndex !== null) {
-            console.log("GamePage: Chat je otvorený a prichádza nová správa. Označujem ako prečítané.");
+            console.log("GamePage: Chat je otvorený a prichádza nová správa. Označujem ako prečítané. " + unreadMessageCount);
             
             // Voláme funkciu na označenie správ na serveri
             socket.emit('markMessagesSeen', {
@@ -107,6 +107,7 @@ function GamePage({ gameId, userId, onGoToLobby, slovakWordsSet, db }) {
             
             // Posunieme chat dole pre zobrazenie najnovšej správy
             chatWindowRef.current?.scrollToBottom();
+            console.log("TOTO "+unreadMessageCount)
         }
     }, [isChatVisible, unreadMessageCount, socket, gameId, myPlayerIndex]);
 
@@ -144,21 +145,10 @@ function GamePage({ gameId, userId, onGoToLobby, slovakWordsSet, db }) {
   } = gameState;
 
   useEffect(() => {
-    console.log('--- DEBUGGING ELO ---');
-    console.log('playerNicknames:', playerNicknames);
-    console.log('playerNicknames keys length:', Object.keys(playerNicknames).length);
-    console.log('gameState.players:', gameState.players);
-    console.log('gameState.players length:', gameState.players?.length);
-    console.log('--- END DEBUGGING ---');
 }, [playerNicknames, gameState.players]);
 
   useEffect(() => {
-    console.log('GamePage: useEffect pre ELO spustený.');
-    console.log('Aktuálny gameState.players:', gameState.players);
-    console.log('Aktuálne playerNicknames:', playerNicknames);
-
     if (db && Object.keys(playerNicknames).length > 0 && gameState.players && gameState.players.length > 0) {
-        console.log('GamePage: Podmienka na načítanie ELO splnená.');
         const fetchEloScores = async () => {
             const eloScores = {};
             // Prejdeme cez všetkých hráčov, pre ktorých máme prezývky
