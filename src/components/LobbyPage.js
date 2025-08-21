@@ -108,32 +108,35 @@ function LobbyPage({ userId, currentUserNickname, onStartGame, db, appId }) {
         }
     };
 
-    const filteredGames = useMemo(() => {
-        if (!games) return [];
+    const gameLists = useMemo(() => {
+        if (!games) {
+            return {
+                myOngoingGames: [],
+                waitingToJoin: [],
+                allOngoingGames: [],
+                myFinishedGames: []
+            };
+        }
         const userIsInGame = (game) => game.players.some(p => p.id === userId);
 
-        switch (filter) {
-            case 'myOngoingGames':
-                return games.filter(game => 
-                    userIsInGame(game) && (game.status === 'waiting' || game.status === 'in-progress')
-                );
-            case 'waitingToJoin':
-                return games.filter(game => 
-                    !userIsInGame(game) && game.status === 'waiting' && game.players.length < 2
-                );
-            case 'allOngoingGames':
-                return games.filter(game => 
-                    game.status === 'waiting' || game.status === 'in-progress'
-                );
-            case 'myFinishedGames':
-                return games.filter(game => 
-                    userIsInGame(game) && game.status === 'finished'
-                );
-            default:
-                return games;
-        }
-    }, [games, filter, userId]);
+        return {
+            myOngoingGames: games.filter(game =>
+                userIsInGame(game) && (game.status === 'waiting' || game.status === 'in-progress')
+            ),
+            waitingToJoin: games.filter(game =>
+                !userIsInGame(game) && game.status === 'waiting' && game.players.length < 2
+            ),
+            allOngoingGames: games.filter(game =>
+                game.status === 'waiting' || game.status === 'in-progress'
+            ),
+            myFinishedGames: games.filter(game =>
+                userIsInGame(game) && game.status === 'finished'
+            )
+        };
+    }, [games, userId]);
 
+    const filteredGames = gameLists[filter] || [];
+    const challengesCount = gameLists.waitingToJoin.length;
 
     return (
         <div className="lobby-container">
@@ -156,17 +159,17 @@ function LobbyPage({ userId, currentUserNickname, onStartGame, db, appId }) {
                     >
                         Moje rozohrané hry
                     </button>
-                    <button 
+                    <button
                         className={`tab-button ${filter === 'waitingToJoin' ? 'active' : ''}`}
                         onClick={() => setFilter('waitingToJoin')}
                     >
-                        Čakajúce na hráča
+                        Čakajúce na súpera {challengesCount > 0 && `(${challengesCount})`}
                     </button>
                     <button 
                         className={`tab-button ${filter === 'allOngoingGames' ? 'active' : ''}`}
                         onClick={() => setFilter('allOngoingGames')}
                     >
-                        Všetky rozohrané
+                        Všetky rozohrané {gameLists.allOngoingGames.length > 0 ? `(${gameLists.allOngoingGames.length})` : ''}
                     </button>
                     <button 
                         className={`tab-button ${filter === 'myFinishedGames' ? 'active' : ''}`}
