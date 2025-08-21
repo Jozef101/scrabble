@@ -71,40 +71,37 @@ function LobbyPage({ userId, currentUserNickname, onStartGame, db, appId }) {
             setError("Nie si prihlásený. Skús sa znova prihlásiť.");
             return;
         }
+
+        const isAlreadyPlayer = existingPlayers.some(p => p.id === userId);
+
+        // PRÍPAD 1: Používateľ je už hráčom ALEBO je hra plná (a chce sa pripojiť ako divák).
+        // V oboch prípadoch ho len pošleme na stránku hry a o zvyšok sa postará backend.
+        if (isAlreadyPlayer || existingPlayers.length >= 2) {
+            onStartGame(gameId);
+            return;
+        }
+
+        // PRÍPAD 2: Používateľ nie je hráčom A hra má voľné miesto.
+        // V tomto prípade sa ho pokúsime pridať ako nového hráča.
         if (!currentUserNickname) {
             setError("Tvoja prezývka sa nenačítala. Skús sa znova prihlásiť.");
             return;
         }
-
+        
         const gameRef = doc(db, 'scrabbleGames', gameId);
-
         try {
-            if (existingPlayers.some(player => player.id === userId)) {
-                onStartGame(gameId);
-                return;
-            }
-            
-            const maxIndex = Math.max(...existingPlayers.map(p => p.playerIndex));
-            const newPlayerIndex = existingPlayers.length > 0 ? maxIndex + 1 : 0;
-            
-            if (newPlayerIndex >= 2) {
-                setError("Hra je už plná (max 2 hráči).");
-                return;
-            }
-
+            const newPlayerIndex = existingPlayers.length;
             await updateDoc(gameRef, {
                 players: arrayUnion({
                     id: userId,
                     playerIndex: newPlayerIndex,
                     nickname: currentUserNickname
                 }),
-                scores: [0, 0]
-            }, { merge: true });
+            });
             onStartGame(gameId);
-            setError('');
         } catch (e) {
             console.error("Chyba pri pripájaní sa k hre:", e);
-            setError("Nepodarilo sa pripojiť k hre. Skúste to znova.");
+            setError("Nepodarilo sa pripojiť k hre.");
         }
     };
 
@@ -190,7 +187,7 @@ function LobbyPage({ userId, currentUserNickname, onStartGame, db, appId }) {
                                 className={`game-item-wrapper ${game.currentPlayerIndex !== undefined && game.players[game.currentPlayerIndex]?.id === userId ? 'my-turn-highlight' : ''}`}
                                 onClick={() => handleJoinGame(game.id, game.players)} // TOTO JE NOVÝ KLIKATEĽNÝ PRVOK
                                 // Pridáme podmienku pre zakázanie kliknutia na plnú hru, kde nie si
-                                style={{ cursor: (!game.players.some(p => p.id === userId) && (game.players.length >= 2 || game.status !== 'waiting')) ? 'not-allowed' : 'pointer' }}
+                                style={{ cursor: 'pointer' }}
                             >
                                 <div className="game-info">
                                     <span>

@@ -125,6 +125,8 @@ function GamePage({ gameId, userId, onGoToLobby, slovakWordsSet, db }) {
     handlePassTurn,
   } = useGameLogic(socket, gameId, myPlayerIndex, slovakWordsSet, gameState, setGameState);
 
+  const isSpectator = myPlayerIndex === null;
+  
   const {
     selectedLetter,
     handleTapLetter,
@@ -191,9 +193,10 @@ function GamePage({ gameId, userId, onGoToLobby, slovakWordsSet, db }) {
     }
 }, [db, playerNicknames, gameState.players]);
 
-  const isGameReadyToRender = myPlayerIndex !== null;
+  const isGameReadyToRender = gameState.hasInitialGameStateReceived;
 
   const handleSendChatMessage = () => {
+    if (isSpectator) return;
     if (socket && gameId && newChatMessage.trim()) {
       sendPlayerAction(socket, gameId, 'chatMessage', newChatMessage);
       setNewChatMessage('');
@@ -251,6 +254,8 @@ function GamePage({ gameId, userId, onGoToLobby, slovakWordsSet, db }) {
         </div>
 
         {isGameOver && <h2 className="game-over-message">Hra skončila!</h2>}
+
+        {isSpectator && isGameReadyToRender && <div className="spectator-message">Sledujete hru ako divák.</div>}
         
         {isGameReadyToRender ? (
           <>
@@ -335,21 +340,21 @@ function GamePage({ gameId, userId, onGoToLobby, slovakWordsSet, db }) {
                   <button
                     className="confirm-turn-button"
                     onClick={confirmTurn}
-                    disabled={isGameOver || showLetterSelectionModal || myPlayerIndex === null || currentPlayerIndex !== myPlayerIndex}
+                    disabled={isGameOver || showLetterSelectionModal || myPlayerIndex === null || currentPlayerIndex !== myPlayerIndex || isSpectator}
                   >
                     Potvrdiť ťah
                   </button>
                   <button
                     className="exchange-letters-button"
                     onClick={handleExchangeLetters}
-                    disabled={isGameOver || letterBag.length < exchangeZoneLetters.length || showLetterSelectionModal || myPlayerIndex === null || currentPlayerIndex !== myPlayerIndex}
+                    disabled={isGameOver || letterBag.length < exchangeZoneLetters.length || showLetterSelectionModal || myPlayerIndex === null || currentPlayerIndex !== myPlayerIndex || isSpectator}
                   >
                     Vymeniť ({exchangeZoneLetters.length})
                   </button>
                   <button
                     className="pass-turn-button"
                     onClick={handlePassTurn}
-                    disabled={isGameOver || showLetterSelectionModal || myPlayerIndex === null || currentPlayerIndex !== myPlayerIndex}
+                    disabled={isGameOver || showLetterSelectionModal || myPlayerIndex === null || currentPlayerIndex !== myPlayerIndex || isSpectator}
                   >
                     Pass
                   </button>
