@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { collection, addDoc, query, orderBy, onSnapshot, doc, updateDoc, arrayUnion, getDoc } from 'firebase/firestore';
 import '../styles/LobbyPage.css';
+import ConfirmationModal from './ConfirmationModal';
 
 /**
  * Komponent pre lobby, kde si používateľ môže vybrať akciu (napr. vytvoriť/pripojiť sa k hre).
@@ -17,6 +18,7 @@ function LobbyPage({ userId, currentUserNickname, onStartGame, db, appId }) {
     const [games, setGames] = useState([]);
     const [error, setError] = useState('');
     const [filter, setFilter] = useState('myOngoingGames');
+    const [confirmation, setConfirmation] = useState({ isOpen: false, message: '', onConfirm: null });
 
     useEffect(() => {
         if (!db) {
@@ -105,6 +107,21 @@ function LobbyPage({ userId, currentUserNickname, onStartGame, db, appId }) {
         }
     };
 
+    const openConfirmation = (message, onConfirmAction) => {
+        setConfirmation({
+            isOpen: true,
+            message,
+            onConfirm: () => {
+                onConfirmAction();
+                closeConfirmation();
+            }
+        });
+    };
+
+    const closeConfirmation = () => {
+        setConfirmation({ isOpen: false, message: '', onConfirm: null });
+    };
+
     const gameLists = useMemo(() => {
         if (!games) {
             return {
@@ -141,7 +158,7 @@ function LobbyPage({ userId, currentUserNickname, onStartGame, db, appId }) {
 
             <div className="create-game-section">
                 <h3>Vytvoriť novú hru</h3>
-                <button onClick={handleCreateGame} className="create-game-button">
+                <button onClick={() => openConfirmation('Naozaj chcete vytvoriť novú hru?', handleCreateGame)} className="create-game-button">
                     Vytvoriť hru
                 </button>
                 {error && <p className="error-message">{error}</p>}
@@ -211,6 +228,12 @@ function LobbyPage({ userId, currentUserNickname, onStartGame, db, appId }) {
                     </ul>
                 )}
             </div>
+            <ConfirmationModal
+                isOpen={confirmation.isOpen}
+                message={confirmation.message}
+                onConfirm={confirmation.onConfirm}
+                onCancel={closeConfirmation}
+            />
         </div>
     );
 }
