@@ -11,6 +11,7 @@ import useGameLogic from '../hooks/useGameLogic';
 import useTapToMove from '../hooks/useTapToMove';
 import ChatWindow from '../components/ChatWindow';
 import FloatingChatIcon from '../components/FloatingChatIcon';
+import ConfirmationModal from '../components/ConfirmationModal';
 
 // Import komponentov UI
 import Board from '../components/Board';
@@ -57,6 +58,8 @@ function GamePage({ gameId, userId, onGoToLobby, slovakWordsSet, db }) {
   const [isChatVisible, setIsChatVisible] = useState(false);
   // NOVÝ STAV: Viditeľnosť okna pre záznam ťahov
   const [isGameLogVisible] = useState(true);
+
+  const [confirmation, setConfirmation] = useState({ isOpen: false, message: '', onConfirm: null });
 
   const handleGameStateUpdate = React.useCallback(newGameState => {
     setGameState(prevGameState => ({
@@ -239,6 +242,21 @@ function GamePage({ gameId, userId, onGoToLobby, slovakWordsSet, db }) {
     onGoToLobby();
   };
 
+  const openConfirmation = (message, onConfirmAction) => {
+    setConfirmation({
+      isOpen: true,
+      message,
+      onConfirm: () => {
+        onConfirmAction();
+        closeConfirmation();
+      }
+    });
+  };
+
+  const closeConfirmation = () => {
+    setConfirmation({ isOpen: false, message: '', onConfirm: null });
+  };
+
   return (
     <DndProvider backend={HTML5Backend}>
       <div className="game-page-container">
@@ -339,21 +357,21 @@ function GamePage({ gameId, userId, onGoToLobby, slovakWordsSet, db }) {
                 <div className="game-controls">
                   <button
                     className="confirm-turn-button"
-                    onClick={confirmTurn}
+                    onClick={() => openConfirmation('Naozaj chcete potvrdiť ťah?', confirmTurn)}
                     disabled={isGameOver || showLetterSelectionModal || myPlayerIndex === null || currentPlayerIndex !== myPlayerIndex || isSpectator}
                   >
                     Potvrdiť ťah
                   </button>
                   <button
                     className="exchange-letters-button"
-                    onClick={handleExchangeLetters}
+                    onClick={() => openConfirmation('Naozaj chcete urobiť výmenu?', handleExchangeLetters)}
                     disabled={isGameOver || letterBag.length < exchangeZoneLetters.length || showLetterSelectionModal || myPlayerIndex === null || currentPlayerIndex !== myPlayerIndex || isSpectator}
                   >
                     Vymeniť ({exchangeZoneLetters.length})
                   </button>
                   <button
                     className="pass-turn-button"
-                    onClick={handlePassTurn}
+                    onClick={() => openConfirmation('Naozaj chcete preskočiť ťah?', handlePassTurn)}
                     disabled={isGameOver || showLetterSelectionModal || myPlayerIndex === null || currentPlayerIndex !== myPlayerIndex || isSpectator}
                   >
                     Pass
@@ -416,6 +434,12 @@ function GamePage({ gameId, userId, onGoToLobby, slovakWordsSet, db }) {
             }}
           />
         )}
+        <ConfirmationModal
+        isOpen={confirmation.isOpen}
+        message={confirmation.message}
+        onConfirm={confirmation.onConfirm}
+        onCancel={closeConfirmation}
+      />
       </div>
     </DndProvider>
   );

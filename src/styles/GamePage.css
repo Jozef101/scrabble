@@ -106,3 +106,78 @@
         max-width: 100%;
     }
 }
+
+/* --- NOVÉ ŠTÝLY PRE POTVRDZOVACÍ DIALÓG --- */
+
+.confirmation-modal-overlay {
+    position: fixed;
+    /* Zobrazí sa nad celou stránkou */
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+    /* Polopriehľadné čierne pozadie */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    /* Zabezpečí, že bude navrchu */
+    padding: 15px;
+}
+
+.confirmation-modal {
+    background-color: white;
+    padding: 25px 30px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    max-width: 400px;
+    width: 100%;
+}
+
+.confirmation-modal p {
+    margin: 0 0 20px 0;
+    font-size: 1.1em;
+    color: #333;
+}
+
+.confirmation-modal-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+}
+
+.confirmation-modal-buttons button {
+    border: none;
+    border-radius: 5px;
+    padding: 10px 25px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: transform 0.1s ease;
+    font-weight: bold;
+}
+
+.confirmation-modal-buttons button:active {
+    transform: scale(0.95);
+}
+
+.confirmation-modal-buttons .confirm-button {
+    background-color: #28a745;
+    /* Zelená */
+    color: white;
+}
+
+.confirmation-modal-buttons .confirm-button:hover {
+    background-color: #218838;
+}
+
+.confirmation-modal-buttons .cancel-button {
+    background-color: #dc3545;
+    /* Červená */
+    color: white;
+}
+
+.confirmation-modal-buttons .cancel-button:hover {
+    background-color: #c82333;
+}
