@@ -13,7 +13,7 @@ import {
   isWordContiguousOnBoard,
 } from '../utils/gameLogic';
 import { RACK_SIZE } from '../utils/constants';
-import { moveLetter as importedMoveLetter } from '../utils/moveLetterLogic';
+import { moveLetter as importedMoveLetter, applyMoveLetter } from '../utils/moveLetterLogic';
 import { sendPlayerAction } from '../utils/socketHandlers';
 
 // Prijímame slovník ako parameter slovakWordsSet
@@ -27,17 +27,35 @@ function useGameLogic(socket, gameId, myPlayerIndex, slovakWordsSet, gameState, 
 
   useEffect(() => {
     if (!socket) return;
+
+    // Listener pre plnú aktualizáciu stavu (zostáva pre akcie ako confirmTurn, pass, atď.)
     const handleGameStateUpdate = (newGameState) => {
-      console.log('useGameLogic: Received gameStateUpdate:', newGameState);
-      console.log('useGameLogic: Received highlightedLetters:', newGameState.highlightedLetters);
+      console.log('useGameLogic: Received full gameStateUpdate');
       setGameState(newGameState);
       setIsActionInProgress(false);
     };
+
+    // NOVÝ LISTENER: Pre malé, rýchle akcie presunu písmena
+    const handleMoveLetterAction = (action) => {
+    console.log('useGameLogic: Received moveLetter action:', action);
+      console.log('useGameLogic: Received moveLetter action:', action);
+      
+      // Akciu aplikujeme iba vtedy, ak prišla od iného hráča.
+      // Naše vlastné pohyby sú už aplikované lokálne ("optimisticky").
+      // Server nám do akcie pridá 'playerIndex', aby sme to vedeli rozlíšiť.
+      if (action.playerIndex !== myPlayerIndex) {
+        setGameState(prevState => applyMoveLetter(prevState, action));
+      }
+    };
+
     socket.on('gameStateUpdate', handleGameStateUpdate);
+    socket.on('moveLetter', handleMoveLetterAction); // Pridali sme nový listener
+
     return () => {
       socket.off('gameStateUpdate', handleGameStateUpdate);
+      socket.off('moveLetter', handleMoveLetterAction); // Nezabudneme ho pri odpojení odstrániť
     };
-  }, [socket, setGameState]);
+  }, [socket, setGameState, myPlayerIndex]);
 
   const moveLetter = useCallback((letterData, source, target) => {
     if (isActionInProgress) {
