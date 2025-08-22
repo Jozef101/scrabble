@@ -242,6 +242,15 @@ function GamePage({ gameId, userId, onGoToLobby, slovakWordsSet, db }) {
     onGoToLobby();
   };
 
+  const handleRightClickFromExchangeZone = (letterData, source) => {
+    // Kontrolujeme, či je na ťahu aktuálny hráč a nie je divák
+    if (myPlayerIndex === null || gameState.currentPlayerIndex !== myPlayerIndex) {
+      return;
+    }
+    // Zavoláme hlavnú funkciu moveLetter s cieľom nastaveným na hráčov stojan (rack)
+    moveLetter(letterData, source, { type: 'rack', playerIndex: myPlayerIndex });
+  };
+
   const openConfirmation = (message, onConfirmAction) => {
     setConfirmation({
       isOpen: true,
@@ -351,6 +360,7 @@ function GamePage({ gameId, userId, onGoToLobby, slovakWordsSet, db }) {
                   selectedLetter={selectedLetter}
                   onTapLetter={handleTapLetter}
                   onTapSlot={handleTapSlot}
+                  onRightClick={handleRightClickFromExchangeZone}
                   isActionInProgress={isActionInProgress}
                 />
 
