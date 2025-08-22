@@ -57,11 +57,16 @@ export const applyMoveLetter = (gameState, action) => {
     if (target.type === 'rack') {
         const targetRack = newPlayerRacks[playerIndex];
         if (targetRack) {
-            // Skúsime vrátiť písmeno na jeho pôvodné miesto, ak je voľné
-            if (letterToMove.originalRackIndex !== undefined && targetRack[letterToMove.originalRackIndex] === null) {
+            // PRIORITA 1: Umiestniť na konkrétny voľný slot, kam hráč ťahal.
+            if (target.index !== undefined && targetRack[target.index] === null) {
+                targetRack[target.index] = letterToMove;
+            }
+            // PRIORITA 2: Vrátiť na pôvodné miesto (pre pravé kliknutie).
+            else if (letterToMove.originalRackIndex !== undefined && targetRack[letterToMove.originalRackIndex] === null) {
                 targetRack[letterToMove.originalRackIndex] = letterToMove;
-            } else {
-                // Ak je pôvodné miesto obsadené, nájdeme prvé voľné miesto
+            }
+            // PRIORITA 3: Ak všetko ostatné zlyhá, nájsť prvé voľné miesto.
+            else {
                 const firstEmptyIndex = targetRack.findIndex(l => l === null);
                 if (firstEmptyIndex !== -1) {
                     targetRack[firstEmptyIndex] = letterToMove;
