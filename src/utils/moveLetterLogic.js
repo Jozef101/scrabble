@@ -94,7 +94,11 @@ export const moveLetter = ({
                 ...prevState,
                 playerRacks: newPlayerRacks,
             };
-            sendPlayerAction(socket, gameIdToJoin, 'updateGameState', updatedState);
+            sendPlayerAction(socket, gameIdToJoin, 'moveLetter', {
+                letterData,
+                source,
+                target,
+            });
             return updatedState;
         }
 
@@ -175,7 +179,11 @@ export const moveLetter = ({
             hasPlacedOnBoardThisTurn: getPlacedLettersDuringCurrentTurn(newBoard, prevState.boardAtStartOfTurn).length > 0,
             hasMovedToExchangeZoneThisTurn: newExchangeZoneLetters.length > 0,
         };
-        sendPlayerAction(socket, gameIdToJoin, 'updateGameState', updatedState);
+        sendPlayerAction(socket, gameIdToJoin, 'moveLetter', {
+            letterData,
+            source,
+            target,
+        });
         return updatedState;
     });
 };
