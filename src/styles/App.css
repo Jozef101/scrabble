@@ -493,3 +493,24 @@ h1 {
         padding: 8px 12px;
     }
 }
+@media (max-width: 768px) {
+
+    /* Zrušíme obmedzenie maximálnej šírky pre hlavný kontajner celej aplikácie */
+    .app-container {
+        max-width: none;
+        /* Kľúčová zmena */
+        /* Zmenšíme padding, aby bol obsah bližšie k okrajom */
+        padding-left: 5px;
+        padding-right: 5px;
+        /* Upravíme horný padding, ak je to potrebné kvôli UserMenuIcon */
+        padding-top: 70px;
+    }
+
+    /* Zrušíme obmedzenie šírky aj pre kontajnery jednotlivých stránok,
+     ktoré sú definované v iných CSS súboroch (napr. LobbyPage.css) */
+    .lobby-container,
+    .auth-form {
+        max-width: none;
+        /* Kľúčová zmena */
+    }
+}
