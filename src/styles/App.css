@@ -136,15 +136,6 @@ h1 {
         max-width: 400px;
 }
 
-.board-container {
-    display: grid;
-    grid-template-columns: repeat(15, 40px);
-    grid-template-rows: repeat(15, 40px);
-    border: 5px solid #8B4513;
-        box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
-    margin-bottom: 20px;
-}
-
 .player-racks-container {
     display: flex;
     flex-direction: column;
