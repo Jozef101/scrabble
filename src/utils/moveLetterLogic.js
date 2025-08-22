@@ -57,10 +57,16 @@ export const applyMoveLetter = (gameState, action) => {
     if (target.type === 'rack') {
         const targetRack = newPlayerRacks[playerIndex];
         if (targetRack) {
-             const firstEmptyIndex = targetRack.findIndex(l => l === null);
-             if (firstEmptyIndex !== -1) {
-                 targetRack[firstEmptyIndex] = letterToMove;
-             }
+            // Skúsime vrátiť písmeno na jeho pôvodné miesto, ak je voľné
+            if (letterToMove.originalRackIndex !== undefined && targetRack[letterToMove.originalRackIndex] === null) {
+                targetRack[letterToMove.originalRackIndex] = letterToMove;
+            } else {
+                // Ak je pôvodné miesto obsadené, nájdeme prvé voľné miesto
+                const firstEmptyIndex = targetRack.findIndex(l => l === null);
+                if (firstEmptyIndex !== -1) {
+                    targetRack[firstEmptyIndex] = letterToMove;
+                }
+            }
         }
     } else if (target.type === 'board') {
         newBoard[target.x][target.y] = { ...letterToMove, originalRackIndex: letterData.originalRackIndex };
