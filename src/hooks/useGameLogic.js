@@ -501,6 +501,26 @@ function useGameLogic(socket, gameId, myPlayerIndex, slovakWordsSet, gameState, 
     sendPlayerAction(socket, gameId, 'updateGameState', updatedGameState);
   }, [gameState, myPlayerIndex, socket, gameId, isActionInProgress]);
 
+   const handleSurrender = useCallback(() => {
+    if (isActionInProgress) {
+      console.log("Akcia už prebieha, počkajte prosím.");
+      return;
+    }
+    if (gameState.isGameOver || myPlayerIndex === null) {
+      alert("Hra už skončila alebo nie si platným hráčom.");
+      return;
+    }
+
+    console.log(`Hráč ${myPlayerIndex + 1} vzdáva hru.`);
+    setIsActionInProgress(true);
+    
+    // Pošleme na server akciu 'surrender' s indexom hráča, ktorý sa vzdal
+    sendPlayerAction(socket, gameId, 'surrender', {
+      surrenderingPlayerIndex: myPlayerIndex,
+    });
+
+  }, [gameState.isGameOver, myPlayerIndex, socket, gameId, isActionInProgress]);
+
   return {
     gameState,
     setGameState,
@@ -513,6 +533,7 @@ function useGameLogic(socket, gameId, myPlayerIndex, slovakWordsSet, gameState, 
     confirmTurn,
     handleExchangeLetters,
     handlePassTurn,
+    handleSurrender,
     isActionInProgress,
     setIsActionInProgress,
   };

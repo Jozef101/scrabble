@@ -181,3 +181,12 @@
 .confirmation-modal-buttons .cancel-button:hover {
     background-color: #c82333;
 }
+.surrender-button {
+    background-color: #f44336;
+    /* Červená farba */
+}
+
+.surrender-button:hover {
+    background-color: #d32f2f !important;
+    /* Tmavšia červená pri hoveri */
+}

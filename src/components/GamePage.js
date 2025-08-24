@@ -126,6 +126,7 @@ function GamePage({ gameId, userId, onGoToLobby, slovakWordsSet, db }) {
     confirmTurn,
     handleExchangeLetters,
     handlePassTurn,
+    handleSurrender,
   } = useGameLogic(socket, gameId, myPlayerIndex, slovakWordsSet, gameState, setGameState);
 
   const isSpectator = myPlayerIndex === null;
@@ -385,6 +386,13 @@ function GamePage({ gameId, userId, onGoToLobby, slovakWordsSet, db }) {
                     disabled={isGameOver || showLetterSelectionModal || myPlayerIndex === null || currentPlayerIndex !== myPlayerIndex || isSpectator}
                   >
                     Pass
+                  </button>
+                  <button
+                      className="surrender-button" // Nová trieda pre štýlovanie
+                      onClick={() => openConfirmation('Naozaj chcete vzdať hru? Súper vyhrá.', handleSurrender)}
+                      disabled={isGameOver || isSpectator || myPlayerIndex === null}
+                  >
+                      Vzdať hru
                   </button>
                 </div>
               </div>
