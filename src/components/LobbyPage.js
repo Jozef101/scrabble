@@ -28,24 +28,13 @@ function LobbyPage({ userId, currentUserNickname, onStartGame, db, appId }) {
         const gamesCollectionRef = collection(db, 'scrabbleGames');
         const q = query(gamesCollectionRef, orderBy('createdAt', 'desc'));
 
-        const unsubscribe = onSnapshot(q, async (snapshot) => {
+        const unsubscribe = onSnapshot(q, (snapshot) => {
             const gamesList = snapshot.docs.map(doc => ({
                 id: doc.id,
                 ...doc.data()
             }));
-
-            // Nová logika na obohatenie hier o ELO skóre
-            const enrichedGames = await Promise.all(gamesList.map(async (game) => {
-                const enrichedPlayers = await Promise.all(game.players.map(async (player) => {
-                    const userDocRef = doc(db, 'users', player.id);
-                    const userDocSnap = await getDoc(userDocRef);
-                    const elo = userDocSnap.exists() ? userDocSnap.data().elo : 1600;
-                    return { ...player, elo };
-                }));
-                return { ...game, players: enrichedPlayers };
-            }));
-
-            setGames(enrichedGames);
+            // Už nie je potrebné nič dodatočne načítavať, ELO je priamo v dátach hry.
+            setGames(gamesList);
             setError('');
         }, (err) => {
             console.error("Chyba pri načítaní hier z Firestore:", err);
@@ -56,19 +45,26 @@ function LobbyPage({ userId, currentUserNickname, onStartGame, db, appId }) {
     }, [db]);
 
     const handleCreateGame = async () => {
-        if (!userId) {
-            setError("Nie si prihlásený. Skús sa znova prihlásiť.");
-            return;
-        }
-        if (!currentUserNickname) {
-            setError("Tvoja prezývka sa nenačítala. Skús sa znova prihlásiť.");
+        if (!userId || !currentUserNickname) {
+            setError("Nie si prihlásený alebo sa nenačítala prezývka.");
             return;
         }
 
         try {
+            // 1. Získame aktuálne ELO hráča, ktorý vytvára hru
+            const userDocRef = doc(db, 'users', userId);
+            const userDocSnap = await getDoc(userDocRef);
+            const currentUserElo = userDocSnap.exists() ? userDocSnap.data().elo : 1600;
+
+            // 2. Uložíme hru aj s ELO hodnotou
             const gamesCollectionRef = collection(db, 'scrabbleGames');
             await addDoc(gamesCollectionRef, {
-                players: [{ id: userId, playerIndex: 0, nickname: currentUserNickname }],
+                players: [{ 
+                    id: userId, 
+                    playerIndex: 0, 
+                    nickname: currentUserNickname, 
+                    elo: currentUserElo // Pridali sme ELO
+                }],
                 status: 'waiting',
                 createdAt: new Date(),
                 scores: [0, 0],
@@ -88,15 +84,11 @@ function LobbyPage({ userId, currentUserNickname, onStartGame, db, appId }) {
 
         const isAlreadyPlayer = existingPlayers.some(p => p.id === userId);
 
-        // PRÍPAD 1: Používateľ je už hráčom ALEBO je hra plná (a chce sa pripojiť ako divák).
-        // V oboch prípadoch ho len pošleme na stránku hry a o zvyšok sa postará backend.
         if (isAlreadyPlayer || existingPlayers.length >= 2) {
             onStartGame(gameId);
             return;
         }
 
-        // PRÍPAD 2: Používateľ nie je hráčom A hra má voľné miesto.
-        // V tomto prípade sa ho pokúsime pridať ako nového hráča.
         if (!currentUserNickname) {
             setError("Tvoja prezývka sa nenačítala. Skús sa znova prihlásiť.");
             return;
@@ -104,12 +96,19 @@ function LobbyPage({ userId, currentUserNickname, onStartGame, db, appId }) {
         
         const gameRef = doc(db, 'scrabbleGames', gameId);
         try {
+            // 1. Získame aktuálne ELO hráča, ktorý sa pripája
+            const userDocRef = doc(db, 'users', userId);
+            const userDocSnap = await getDoc(userDocRef);
+            const currentUserElo = userDocSnap.exists() ? userDocSnap.data().elo : 1600;
+
+            // 2. Pridáme hráča do hry aj s jeho ELO
             const newPlayerIndex = existingPlayers.length;
             await updateDoc(gameRef, {
                 players: arrayUnion({
                     id: userId,
                     playerIndex: newPlayerIndex,
-                    nickname: currentUserNickname
+                    nickname: currentUserNickname,
+                    elo: currentUserElo // PRIDALI SME ELO
                 }),
             });
             onStartGame(gameId);
