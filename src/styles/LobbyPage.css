@@ -248,3 +248,7 @@ body {
     font-weight: 500;
     margin-top: 5px;
 }
+.game-info .player-elo {
+    color: #6c757d;
+    font-weight: 500;
+}

@@ -28,12 +28,24 @@ function LobbyPage({ userId, currentUserNickname, onStartGame, db, appId }) {
         const gamesCollectionRef = collection(db, 'scrabbleGames');
         const q = query(gamesCollectionRef, orderBy('createdAt', 'desc'));
 
-        const unsubscribe = onSnapshot(q, (snapshot) => {
+        const unsubscribe = onSnapshot(q, async (snapshot) => {
             const gamesList = snapshot.docs.map(doc => ({
                 id: doc.id,
                 ...doc.data()
             }));
-            setGames(gamesList);
+
+            // Nová logika na obohatenie hier o ELO skóre
+            const enrichedGames = await Promise.all(gamesList.map(async (game) => {
+                const enrichedPlayers = await Promise.all(game.players.map(async (player) => {
+                    const userDocRef = doc(db, 'users', player.id);
+                    const userDocSnap = await getDoc(userDocRef);
+                    const elo = userDocSnap.exists() ? userDocSnap.data().elo : 1600;
+                    return { ...player, elo };
+                }));
+                return { ...game, players: enrichedPlayers };
+            }));
+
+            setGames(enrichedGames);
             setError('');
         }, (err) => {
             console.error("Chyba pri načítaní hier z Firestore:", err);
@@ -208,7 +220,14 @@ function LobbyPage({ userId, currentUserNickname, onStartGame, db, appId }) {
                             >
                                 <div className="game-info">
                                     <span>
-                                        {game.players[0]?.nickname || 'Neznámy'} vs {game.players.length > 1 ? game.players[1]?.nickname || 'Neznámy' : 'Čaká na súpera'}
+                                        {game.players[0] ? `${game.players[0].nickname || 'Neznámy'} ` : 'Neznámy '}
+                                        {game.players[0]?.elo && <span className="player-elo">({game.players[0].elo})</span>}
+                                        {' vs '}
+                                        {game.players.length > 1
+                                            ? `${game.players[1].nickname || 'Neznámy'} `
+                                            : 'Čaká na súpera'
+                                        }
+                                        {game.players.length > 1 && game.players[1]?.elo && <span className="player-elo">({game.players[1].elo})</span>}
                                     </span>
                                     <div className="game-score">
                                         Skóre: {game.scores && game.scores.length > 0 ? `${game.scores[0]} : ${game.scores[1]}` : '0 : 0'}
