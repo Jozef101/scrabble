@@ -33,6 +33,7 @@ function LobbyPage({ userId, currentUserNickname, onStartGame, db, appId }) {
                 id: doc.id,
                 ...doc.data()
             }));
+            // Už nie je potrebné nič obohacovať, ELO je priamo v dátach hry
             setGames(gamesList);
             setError('');
         }, (err) => {
@@ -208,7 +209,14 @@ function LobbyPage({ userId, currentUserNickname, onStartGame, db, appId }) {
                             >
                                 <div className="game-info">
                                     <span>
-                                        {game.players[0]?.nickname || 'Neznámy'} vs {game.players.length > 1 ? game.players[1]?.nickname || 'Neznámy' : 'Čaká na súpera'}
+                                        {game.players[0] ? `${game.players[0].nickname || 'Neznámy'} ` : 'Neznámy '}
+                                        {game.players[0]?.elo && <span className="player-elo">({game.players[0].elo})</span>}
+                                        {' vs '}
+                                        {game.players.length > 1
+                                            ? `${game.players[1].nickname || 'Neznámy'} `
+                                            : 'Čaká na súpera'
+                                        }
+                                        {game.players.length > 1 && game.players[1]?.elo && <span className="player-elo">({game.players[1].elo})</span>}
                                     </span>
                                     <div className="game-score">
                                         Skóre: {game.scores && game.scores.length > 0 ? `${game.scores[0]} : ${game.scores[1]}` : '0 : 0'}
