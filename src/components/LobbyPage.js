@@ -19,6 +19,7 @@ function LobbyPage({ userId, currentUserNickname, onStartGame, db, appId }) {
     const [error, setError] = useState('');
     const [filter, setFilter] = useState('myOngoingGames');
     const [confirmation, setConfirmation] = useState({ isOpen: false, message: '', onConfirm: null });
+    const [gameMode, setGameMode] = useState('competitive');
 
     useEffect(() => {
         if (!db) {
@@ -69,6 +70,7 @@ function LobbyPage({ userId, currentUserNickname, onStartGame, db, appId }) {
                 createdAt: new Date(),
                 scores: [0, 0],
                 progress: 0,
+                gameMode: gameMode,
             });
             setError('');
         } catch (e) {
@@ -170,6 +172,28 @@ function LobbyPage({ userId, currentUserNickname, onStartGame, db, appId }) {
 
             <div className="create-game-section">
                 <h3>Vytvoriť novú hru</h3>
+                <div className="game-mode-selection">
+                    <label>
+                        <input 
+                            type="radio" 
+                            name="gameMode" 
+                            value="competitive" 
+                            checked={gameMode === 'competitive'} 
+                            onChange={(e) => setGameMode(e.target.value)}
+                        />
+                        Kompetitívna (mení ELO)
+                    </label>
+                    <label>
+                        <input 
+                            type="radio" 
+                            name="gameMode" 
+                            value="friendly" 
+                            checked={gameMode === 'friendly'} 
+                            onChange={(e) => setGameMode(e.target.value)}
+                        />
+                        Priateľská (nemá vplyv na ELO)
+                    </label>
+                </div>
                 <button onClick={() => openConfirmation('Naozaj chcete vytvoriť novú hru?', handleCreateGame)} className="create-game-button">
                     Vytvoriť hru
                 </button>
