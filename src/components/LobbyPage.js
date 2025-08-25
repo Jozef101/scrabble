@@ -173,26 +173,18 @@ function LobbyPage({ userId, currentUserNickname, onStartGame, db, appId }) {
             <div className="create-game-section">
                 <h3>Vytvoriť novú hru</h3>
                 <div className="game-mode-selection">
-                    <label>
-                        <input 
-                            type="radio" 
-                            name="gameMode" 
-                            value="competitive" 
-                            checked={gameMode === 'competitive'} 
-                            onChange={(e) => setGameMode(e.target.value)}
-                        />
-                        Kompetitívna (mení ELO)
-                    </label>
-                    <label>
-                        <input 
-                            type="radio" 
-                            name="gameMode" 
-                            value="friendly" 
-                            checked={gameMode === 'friendly'} 
-                            onChange={(e) => setGameMode(e.target.value)}
-                        />
-                        Priateľská (nemá vplyv na ELO)
-                    </label>
+                    <div className="toggle-switch-container">
+                        <span className={gameMode === 'friendly' ? 'active' : ''}>Priateľská</span>
+                        <label className="switch">
+                            <input 
+                                type="checkbox" 
+                                checked={gameMode === 'competitive'}
+                                onChange={() => setGameMode(gameMode === 'competitive' ? 'friendly' : 'competitive')}
+                            />
+                            <span className="slider round"></span>
+                        </label>
+                        <span className={gameMode === 'competitive' ? 'active' : ''}>Kompetitívna</span>
+                    </div>
                 </div>
                 <button onClick={() => openConfirmation('Naozaj chcete vytvoriť novú hru?', handleCreateGame)} className="create-game-button">
                     Vytvoriť hru
