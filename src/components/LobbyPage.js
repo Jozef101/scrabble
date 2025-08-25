@@ -68,6 +68,7 @@ function LobbyPage({ userId, currentUserNickname, onStartGame, db, appId }) {
                 status: 'waiting',
                 createdAt: new Date(),
                 scores: [0, 0],
+                progress: 0,
             });
             setError('');
         } catch (e) {
