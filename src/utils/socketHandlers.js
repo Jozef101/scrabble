@@ -51,9 +51,9 @@ export const setupSocketListeners = (socket, setConnectionStatus, setMyPlayerInd
         }
         
         // DÔLEŽITÁ OPRAVA: Kontrolujeme počet hráčov pri každej aktualizácii stavu hry
-        const numberOfPlayers = serverGameState.playerRacks.filter(rack => rack !== null).length;
-        console.log("Počet aktívnych hráčov v gameStateUpdate:", numberOfPlayers);
-        if (numberOfPlayers < 2) {
+        const connectedPlayersCount = serverGameState.players.filter(p => p !== null && p.socketId !== null).length;
+        console.log("Počet aktívnych hráčov v gameStateUpdate:", connectedPlayersCount);
+        if (connectedPlayersCount < 2) {
             setWaitingForSecondPlayer(true);
         } else {
             setWaitingForSecondPlayer(false);
