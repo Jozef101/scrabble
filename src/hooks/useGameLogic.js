@@ -15,9 +15,11 @@ import {
 import { RACK_SIZE } from '../utils/constants';
 import { moveLetter as importedMoveLetter, applyMoveLetter } from '../utils/moveLetterLogic';
 import { sendPlayerAction } from '../utils/socketHandlers';
+import { useToastContext } from '../App';
 
 // Prijímame slovník ako parameter slovakWordsSet
 function useGameLogic(socket, gameId, myPlayerIndex, slovakWordsSet, gameState, setGameState) { // ZMENA V PARAMETROCH
+  const addToast = useToastContext();
   const [showLetterSelectionModal, setShowLetterSelectionModal] = useState(false);
   const [jokerTileCoords, setJokerTileCoords] = useState(null);
   const [isActionInProgress, setIsActionInProgress] = useState(false);
@@ -100,7 +102,7 @@ function useGameLogic(socket, gameId, myPlayerIndex, slovakWordsSet, gameState, 
     setIsActionInProgress(true);
 
     if (gameState.isGameOver || myPlayerIndex === null || gameState.currentPlayerIndex !== myPlayerIndex) {
-      alert("Hra skončila, nie si pripojený alebo nie je tvoj ťah!");
+      addToast("Hra skončila, nie si pripojený alebo nie je tvoj ťah!");
       setIsActionInProgress(false);
       return;
     }
@@ -109,7 +111,7 @@ function useGameLogic(socket, gameId, myPlayerIndex, slovakWordsSet, gameState, 
       .filter(l => l.letterData.letter === '' && l.letterData.assignedLetter === null);
 
     if (placedJokersWithoutAssignment.length > 0) {
-      alert("Všetkým žolíkom na doske musí byť priradené písmeno!");
+      addToast("Všetkým žolíkom na doske musí byť priradené písmeno!");
       setIsActionInProgress(false);
       return;
     }
@@ -117,25 +119,25 @@ function useGameLogic(socket, gameId, myPlayerIndex, slovakWordsSet, gameState, 
     const actualPlacedLetters = getPlacedLettersDuringCurrentTurn(gameState.board, gameState.boardAtStartOfTurn);
 
     if (actualPlacedLetters.length === 0) {
-      alert("Najprv polož aspoň jedno písmeno na dosku!");
+      addToast("Najprv polož aspoň jedno písmeno na dosku!");
       setIsActionInProgress(false);
       return;
     }
 
     if (gameState.hasMovedToExchangeZoneThisTurn) {
-      alert("Nemôžeš potvrdiť ťah na doske, ak si už presunul(a) písmeno do výmennej zóny v tomto ťahu!");
+      addToast("Nemôžeš potvrdiť ťah na doske, ak si už presunul(a) písmeno do výmennej zóny v tomto ťahu!");
       setIsActionInProgress(false);
       return;
     }
 
     if (!isStraightLine(actualPlacedLetters)) {
-      alert("Písmená musia byť v jednom rade alebo stĺpci!");
+      addToast("Písmená musia byť v jednom rade alebo stĺpci!");
       setIsActionInProgress(false);
       return;
     }
 
     if (actualPlacedLetters.length > 1 && !arePlacedLettersContiguousOnBoard(actualPlacedLetters, gameState.board)) {
-        alert("Položené písmená nesmú mať prázdnu medzeru na doske v rámci slova!");
+        addToast("Položené písmená nesmú mať prázdnu medzeru na doske v rámci slova!");
         setIsActionInProgress(false);
         return;
     }
@@ -143,14 +145,14 @@ function useGameLogic(socket, gameId, myPlayerIndex, slovakWordsSet, gameState, 
     const allFormedWords = getAllWordsInTurn(actualPlacedLetters, gameState.board);
 
     if (allFormedWords.length === 0) {
-      alert("Nezistilo sa žiadne platné slovo. Skontroluj umiestnenie.");
+      addToast("Nezistilo sa žiadne platné slovo. Skontroluj umiestnenie.");
       setIsActionInProgress(false);
       return;
     }
 
     for (const wordObj of allFormedWords) {
       if (!isWordContiguousOnBoard(wordObj.letters, gameState.board)) {
-        alert(`Slovo "${wordObj.wordString}" nie je súvislé (žiadne diery)!`);
+        addToast(`Slovo "${wordObj.wordString}" nie je súvislé (žiadne diery)!`);
         setIsActionInProgress(false);
         return;
       }
@@ -159,9 +161,9 @@ function useGameLogic(socket, gameId, myPlayerIndex, slovakWordsSet, gameState, 
     const mainWordLettersForConnectionCheck = getFullWordLetters(actualPlacedLetters, gameState.board);
     if (!isConnected(actualPlacedLetters, gameState.board, gameState.isFirstTurn, mainWordLettersForConnectionCheck)) {
       if (gameState.isFirstTurn) {
-        alert("Prvý ťah musí pokrývať stredové políčko (hviezdičku)!");
+        addToast("Prvý ťah musí pokrývať stredové políčko (hviezdičku)!");
       } else {
-        alert("Položené písmená sa musia spájať s existujúcimi písmenami na doske (alebo použiť existujúce písmeno ako súčasť slova)!");
+        addToast("Položené písmená sa musia spájať s existujúcimi písmenami na doske (alebo použiť existujúce písmeno ako súčasť slova)!");
       }
       setIsActionInProgress(false);
       return;
@@ -169,14 +171,14 @@ function useGameLogic(socket, gameId, myPlayerIndex, slovakWordsSet, gameState, 
 
     for (const letter of actualPlacedLetters) {
       if (gameState.boardAtStartOfTurn[letter.x][letter.y] !== null) {
-        alert("Nemôžeš položiť písmeno na už obsadené políčko!");
+        addToast("Nemôžeš položiť písmeno na už obsadené políčko!");
         setIsActionInProgress(false);
         return;
       }
     }
 
     if (actualPlacedLetters.length === 1 && allFormedWords[0].wordString.length === 1 && !gameState.isFirstTurn) {
-      alert("Musíš vytvoriť slovo spojením s existujúcimi písmenami.");
+      addToast("Musíš vytvoriť slovo spojením s existujúcimi písmenami.");
       setIsActionInProgress(false);
       return;
     }
@@ -191,7 +193,7 @@ function useGameLogic(socket, gameId, myPlayerIndex, slovakWordsSet, gameState, 
     });
 
     if (invalidWords.length > 0) {
-      alert(`Neplatné slovo(á) nájdené: ${invalidWords.map(w => w.wordString).join(', ')}. Skontroluj slovník alebo dĺžku slova.`);
+      addToast(`Neplatné slovo(á) nájdené: ${invalidWords.map(w => w.wordString).join(', ')}. Skontroluj slovník alebo dĺžku slova.`);
       setIsActionInProgress(false);
       return;
     }
@@ -203,13 +205,13 @@ function useGameLogic(socket, gameId, myPlayerIndex, slovakWordsSet, gameState, 
 
     if (actualPlacedLetters.length === 7) {
       turnScore += 50;
-      alert("BINGO! +50 bodov!");
+      addToast("BINGO! +50 bodov!");
     }
 
     let newScores = [...gameState.playerScores];
     newScores[gameState.currentPlayerIndex] += turnScore;
 
-    alert(`Ťah je platný! Získal si ${turnScore} bodov. Vytvorené slová: ${allFormedWords.map(w => w.wordString).join(', ')}`);
+    addToast(`Ťah je platný! Získal si ${turnScore} bodov. Vytvorené slová: ${allFormedWords.map(w => w.wordString).join(', ')}`);
 
     const newBoardAtStartOfTurn = gameState.board.map(row => [...row]);
 
@@ -261,7 +263,7 @@ function useGameLogic(socket, gameId, myPlayerIndex, slovakWordsSet, gameState, 
         highlightedLetters: newHighlightedLetters,
         turnNumber: (gameState.turnNumber || 0) + 1,
       };
-      alert(`Hra skončila! Konečné skóre: Hráč 1: ${finalScores[0]}, Hráč 2: ${finalScores[1]}`);
+      addToast(`Hra skončila! Konečné skóre: Hráč 1: ${finalScores[0]}, Hráč 2: ${finalScores[1]}`);
       // --- PRIDANÉ: Zavolanie 'gameOver' akcie na server. ---
       const winnerIndex = finalScores[0] > finalScores[1] ? 0 : 1;
       const loserIndex = finalScores[0] > finalScores[1] ? 1 : 0;
@@ -324,7 +326,7 @@ function useGameLogic(socket, gameId, myPlayerIndex, slovakWordsSet, gameState, 
     setIsActionInProgress(true);
 
     if (gameState.isGameOver || myPlayerIndex === null || gameState.currentPlayerIndex !== myPlayerIndex) {
-      alert("Hra skončila, nie si pripojený alebo nie je tvoj ťah!");
+      addToast("Hra skončila, nie si pripojený alebo nie je tvoj ťah!");
       setIsActionInProgress(false);
       return;
     }
@@ -333,24 +335,24 @@ function useGameLogic(socket, gameId, myPlayerIndex, slovakWordsSet, gameState, 
       .filter(l => l.letterData.letter === '' && l.letterData.assignedLetter === null);
 
     if (placedJokersWithoutAssignment.length > 0) {
-      alert("Všetkým žolíkom na doske musí byť priradené písmeno, aby si mohol(a) vymeniť písmená!");
+      addToast("Všetkým žolíkom na doske musí byť priradené písmeno, aby si mohol(a) vymeniť písmená!");
       setIsActionInProgress(false);
       return;
     }
 
     if (gameState.exchangeZoneLetters.length === 0) {
-      alert("Najprv presuň písmená do výmennej zóny!");
+      addToast("Najprv presuň písmená do výmennej zóny!");
       setIsActionInProgress(false);
       return;
     }
     if (gameState.hasPlacedOnBoardThisTurn) {
-      alert("Nemôžeš vymeniť písmená, ak si už položil(a) písmeno na dosku v tomto ťahu!");
+      addToast("Nemôžeš vymeniť písmená, ak si už položil(a) písmeno na dosku v tomto ťahu!");
       setIsActionInProgress(false);
       return;
     }
 
     if (gameState.letterBag.length < gameState.exchangeZoneLetters.length) {
-      alert(`Vo vrecúšku nie je dostatok písmen na výmenu (potrebných je ${gameState.exchangeZoneLetters.length}, k dispozícii ${gameState.letterBag.length})!`);
+      addToast(`Vo vrecúšku nie je dostatok písmen na výmenu (potrebných je ${gameState.exchangeZoneLetters.length}, k dispozícii ${gameState.letterBag.length})!`);
       setIsActionInProgress(false);
       return;
     }
@@ -429,7 +431,7 @@ function useGameLogic(socket, gameId, myPlayerIndex, slovakWordsSet, gameState, 
     setIsActionInProgress(true);
 
     if (gameState.isGameOver || myPlayerIndex === null || gameState.currentPlayerIndex !== myPlayerIndex) {
-      alert("Hra skončila, nie si pripojený alebo nie je tvoj ťah!");
+      addToast("Hra skončila, nie si pripojený alebo nie je tvoj ťah!");
       setIsActionInProgress(false);
       return;
     }
@@ -438,18 +440,18 @@ function useGameLogic(socket, gameId, myPlayerIndex, slovakWordsSet, gameState, 
       .filter(l => l.letterData.letter === '' && l.letterData.assignedLetter === null);
 
     if (placedJokersWithoutAssignment.length > 0) {
-      alert("Všetkým žolíkom na doske musí byť priradené písmeno, aby si mohol(a) prejsť ťah!");
+      addToast("Všetkým žolíkom na doske musí byť priradené písmeno, aby si mohol(a) prejsť ťah!");
       setIsActionInProgress(false);
       return;
     }
 
     if (gameState.hasPlacedOnBoardThisTurn) {
-      alert("Nemôžeš prejsť ťah, ak máš položené písmená na doske. Buď ich potvrď, alebo vráť na stojan.");
+      addToast("Nemôžeš prejsť ťah, ak máš položené písmená na doske. Buď ich potvrď, alebo vráť na stojan.");
       setIsActionInProgress(false);
       return;
     }
     if (gameState.hasMovedToExchangeZoneThisTurn) {
-      alert("Nemôžeš prejsť ťah, ak máš písmená vo výmennej zóne. Buď ich vymeň, alebo vráť na stojan.");
+      addToast("Nemôžeš prejsť ťah, ak máš písmená vo výmennej zóne. Buď ich vymeň, alebo vráť na stojan.");
       setIsActionInProgress(false);
       return;
     }
@@ -461,12 +463,12 @@ function useGameLogic(socket, gameId, myPlayerIndex, slovakWordsSet, gameState, 
 
     if (isGameOverCondition) {
       updatedPlayerScores = calculateFinalScores(null, [], gameState.playerScores, gameState.playerRacks);
-      alert("Hra skončila! Obaja hráči pasovali dvakrát po sebe. Konečné skóre bolo upravené o zostávajúce písmená.");
+      addToast("Hra skončila! Obaja hráči pasovali dvakrát po sebe. Konečné skóre bolo upravené o zostávajúce písmená.");
       const winnerIndex = updatedPlayerScores[0] > updatedPlayerScores[1] ? 0 : 1;
       const loserIndex = updatedPlayerScores[0] > updatedPlayerScores[1] ? 1 : 0;
       sendPlayerAction(socket, gameId, 'gameOver', { winnerId: gameState.players[winnerIndex], loserId: gameState.players[loserIndex] });
     } else {
-      alert("Ťah bol prenesený na ďalšieho hráča.");
+      addToast("Ťah bol prenesený na ďalšieho hráča.");
     }
 
     const updatedGameState = {
@@ -507,7 +509,7 @@ function useGameLogic(socket, gameId, myPlayerIndex, slovakWordsSet, gameState, 
       return;
     }
     if (gameState.isGameOver || myPlayerIndex === null) {
-      alert("Hra už skončila alebo nie si platným hráčom.");
+      addToast("Hra už skončila alebo nie si platným hráčom.");
       return;
     }
 

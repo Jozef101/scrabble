@@ -16,6 +16,9 @@ import LobbyPage from './components/LobbyPage';
 import GamePage from './components/GamePage';
 import UserMenuIcon from './components/UserMenuIcon';
 import EmailVerificationPage from './components/EmailVerificationPage';
+import { ToastContainer } from './components/Toast';
+import { useToast } from './hooks/useToast';
+import { createContext, useContext } from 'react';
 
 import slovakWords from './data/slovakWords.json';
 import './styles/App.css';
@@ -36,6 +39,10 @@ const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__f
     measurementId: "G-CYE7T1EDWL"
 };
 
+// Vytvoríme Context, ktorý bude prenášať funkciu na pridanie notifikácie
+const ToastContext = createContext(null);
+export const useToastContext = () => useContext(ToastContext)
+
 const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
 
 // DEBUG LOG: Skontroluj, aká konfigurácia sa používa
@@ -51,6 +58,7 @@ console.log("Firestore DB inštancia v App.js:", db);
 
 
 function App() {
+    const { toasts, addToast, dismissToast } = useToast();
     const [userId, setUserId] = useState(null);
     const [isAuthReady, setIsAuthReady] = useState(false);
     // const [isEmailVerified, setIsEmailVerified] = useState(false);
@@ -213,47 +221,50 @@ function App() {
     }
 
     return (
-        <DndProvider backend={HTML5Backend}>
-            <div className="app-container">
-                {userId && location.pathname !== '/verify-email' && <UserMenuIcon userId={userId} auth={auth} />}
+        <ToastContext.Provider value={addToast}>
+            <DndProvider backend={HTML5Backend}>
+                <div className="app-container">
+                    <ToastContainer toasts={toasts} dismissToast={dismissToast} />
+                    {userId && location.pathname !== '/verify-email' && <UserMenuIcon userId={userId} auth={auth} />}
 
-                <Routes>
-                    <Route path="/" element={<AuthPage auth={auth} db={db} />} />
+                    <Routes>
+                        <Route path="/" element={<AuthPage auth={auth} db={db} />} />
 
-                    <Route
-                        path="/verify-email"
-                        element={<EmailVerificationPage auth={auth} userId={userId} />}
-                    />
+                        <Route
+                            path="/verify-email"
+                            element={<EmailVerificationPage auth={auth} userId={userId} />}
+                        />
 
-                    <Route
-                        path="/lobby"
-                        element={
-                            <LobbyPage
-                                userId={userId}
-                                currentUserNickname={currentUserNickname} 
-                                onStartGame={handleStartGame}
-                                db={db}
-                                appId={appId}
-                            />
-                        }
-                    />
+                        <Route
+                            path="/lobby"
+                            element={
+                                <LobbyPage
+                                    userId={userId}
+                                    currentUserNickname={currentUserNickname} 
+                                    onStartGame={handleStartGame}
+                                    db={db}
+                                    appId={appId}
+                                />
+                            }
+                        />
 
-                    <Route
-                        path="/game/:gameId"
-                        element={
-                            <GamePageWrapper
-                                userId={userId}
-                                onGoToLobby={handleGoToLobby}
-                                slovakWordsSet={slovakWordsSet}
-                                db={db}
-                            />
-                        }
-                    />
+                        <Route
+                            path="/game/:gameId"
+                            element={
+                                <GamePageWrapper
+                                    userId={userId}
+                                    onGoToLobby={handleGoToLobby}
+                                    slovakWordsSet={slovakWordsSet}
+                                    db={db}
+                                />
+                            }
+                        />
 
-                    <Route path="*" element={<h1>404: Stránka nenájdená</h1>} />
-                </Routes>
-            </div>
-        </DndProvider>
+                        <Route path="*" element={<h1>404: Stránka nenájdená</h1>} />
+                    </Routes>
+                </div>
+            </DndProvider>
+        </ToastContext.Provider>
     );
 }
 
