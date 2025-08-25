@@ -53,6 +53,7 @@ function ExchangeZone({ lettersInZone, moveLetter, myPlayerIndex, currentPlayerI
               source={{ type: 'exchangeZone' }}
               // Písmená vo výmennej zóne sú draggable len ak je na ťahu aktuálny hráč
               isDraggable={myPlayerIndex !== null && currentPlayerIndex === myPlayerIndex}
+              isVisible={myPlayerIndex !== null && currentPlayerIndex === myPlayerIndex}
               selectedLetter={selectedLetter}
               onTapLetter={onTapLetter}
               onRightClick={onRightClick}
