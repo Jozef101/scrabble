@@ -124,6 +124,9 @@ export const moveLetter = ({
         alert("Rack je plný, písmeno sa nedá vrátiť.");
         return;
     }
+    if (target.type === 'board' && gameState.currentPlayerIndex !== myPlayerIndex) {
+        return;
+    }
     // --- Koniec validácií ---
 
 
