@@ -12,12 +12,15 @@ import '../styles/Scoreboard.css';
  * @param {object} props.playerElo - Objekt s ELO skóre hráčov, kde kľúč je playerIndex a hodnota je ELO.
  * @param {number} props.myPlayerIndex - Index aktuálneho používateľa (môjho hráča).
  */
-function Scoreboard({ playerScores, currentPlayerIndex, isGameOver, playerNicknames, playerElo, myPlayerIndex }) {
+function Scoreboard({ playerScores, currentPlayerIndex, isGameOver, playerNicknames, playerElo, myPlayerIndex, gameMode }) {
   return (
     <div className="scoreboard-container">
       <div className={`player-score ${currentPlayerIndex === 0 ? 'active-player' : ''} ${myPlayerIndex === 0 ? 'my-player' : ''}`}>
         {playerNicknames[0] || 'Hráč 1'} {playerElo[0] ? `(ELO: ${playerElo[0]})` : ''}: {playerScores[0]}
       </div>
+      <div className={`game-mode-display game-mode-display-${gameMode}`}>
+        {gameMode === 'competitive' ? '🏆 Kompetitívna Hra' : '😊 Priateľská Hra'}
+    </div>
       <div className={`player-score ${currentPlayerIndex === 1 ? 'active-player' : ''} ${myPlayerIndex === 1 ? 'my-player' : ''}`}>
         {playerNicknames[1] || 'Hráč 2'} {playerElo[1] ? `(ELO: ${playerElo[1]})` : ''}: {playerScores[1]}
        </div>

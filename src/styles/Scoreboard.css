@@ -8,6 +8,7 @@
   background-color: #f0f0f0;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  align-items: center;
 }
 
 .player-score {
@@ -26,3 +27,45 @@
   box-shadow: 0 0 10px rgba(76, 175, 80, 0.5);
   transform: scale(1.05);
 }
+.game-mode-display {
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 0.9em;
+  text-align: center;
+  margin: 0 15px;
+  flex-shrink: 0;
+  border: 1px solid transparent;
+}
+
+/* Štýl pre kompetitívnu hru */
+.game-mode-display-competitive {
+  background-color: #fffbeb;
+  color: #b45309;
+  border-color: #fde68a;
+}
+
+/* Štýl pre priateľskú hru */
+.game-mode-display-friendly {
+  background-color: #f0fdf4;
+  color: #15803d;
+  border-color: #a7f3d0;
+}
+
+@media (max-width: 768px) {
+
+    .scoreboard-container {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+      }
+    
+      .player-score {
+        text-align: center;
+      }
+    
+      .game-mode-display {
+        margin: 0 auto;
+        width: fit-content;
+      }
+    }

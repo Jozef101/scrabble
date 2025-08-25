@@ -294,6 +294,7 @@ function GamePage({ gameId, userId, onGoToLobby, slovakWordsSet, db }) {
               playerNicknames={playerNicknames}
               playerElo={playerElo}
               myPlayerIndex={myPlayerIndex}
+              gameMode={gameState.gameMode}
             />
             <LetterBag remainingLettersCount={letterBag.length} />
             {waitingForSecondPlayer && (
