@@ -70,3 +70,14 @@
     font-style: italic;
     color: #999;
 }
+.log-draw-result {
+    background-color: #e7f5ff;
+    border-left: 4px solid #007bff;
+    font-style: italic;
+    color: #333;
+    padding: 8px 12px;
+}
+
+.log-icon {
+    margin-right: 8px;
+}

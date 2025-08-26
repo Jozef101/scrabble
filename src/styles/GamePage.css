@@ -190,3 +190,118 @@
     background-color: #d32f2f !important;
     /* Tmavšia červená pri hoveri */
 }
+/* --- Štýly pre obrazovku losovania --- */
+.draw-for-turn-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    text-align: center;
+    margin: 20px auto;
+    max-width: 600px;
+}
+
+.draw-for-turn-container h2 {
+    margin-bottom: 10px;
+}
+
+.draw-for-turn-container p {
+    margin-bottom: 30px;
+    color: #6c757d;
+}
+
+.draw-players-container {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    margin-bottom: 30px;
+}
+
+.draw-player-box {
+    padding: 20px;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    width: 150px;
+}
+
+.draw-player-box h3 {
+    margin-bottom: 15px;
+}
+
+.drawn-letter-display {
+    font-size: 2em;
+    font-weight: bold;
+    min-height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.letter-tile-static {
+    width: 50px;
+    height: 50px;
+    background-color: #f3d9b1;
+    border: 1px solid #d4bda1;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 1.5rem;
+    box-shadow: 0 2px 2px rgba(0, 0, 0, 0.1);
+}
+
+.draw-button {
+    padding: 12px 24px;
+    font-size: 1.1rem;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.draw-button:hover {
+    background-color: #0056b3;
+}
+
+.waiting-for-opponent-draw {
+    margin-top: 20px;
+    font-style: italic;
+    color: #6c757d;
+}
+
+.draw-result-message {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #e9f7ef;
+    border: 1px solid #a7d7c5;
+    border-radius: 8px;
+}
+
+.draw-result-message h3 {
+    margin: 0 0 5px 0;
+    color: #155724;
+}
+
+.draw-result-message p {
+    margin: 0;
+    color: #155724;
+    font-style: italic;
+}
+
+.draw-button:disabled {
+    background-color: #a0c3e6;
+    /* Svetlejšia modrá */
+    cursor: not-allowed;
+}
+
+.draw-button:disabled:hover {
+    background-color: #a0c3e6;
+    /* Farba sa pri prejdení myšou nezmení */
+}

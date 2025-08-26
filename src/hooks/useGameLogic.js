@@ -523,6 +523,14 @@ function useGameLogic(socket, gameId, myPlayerIndex, slovakWordsSet, gameState, 
 
   }, [gameState.isGameOver, myPlayerIndex, socket, gameId, isActionInProgress]);
 
+  const handleDrawForTurn = useCallback(() => {
+    if (isActionInProgress) {
+        console.log("Akcia už prebieha, počkajte prosím.");
+        return;
+    }
+    sendPlayerAction(socket, gameId, 'drawForTurn', {});
+  }, [socket, gameId, isActionInProgress]);
+
   return {
     gameState,
     setGameState,
@@ -536,6 +544,7 @@ function useGameLogic(socket, gameId, myPlayerIndex, slovakWordsSet, gameState, 
     handleExchangeLetters,
     handlePassTurn,
     handleSurrender,
+    handleDrawForTurn,
     isActionInProgress,
     setIsActionInProgress,
   };

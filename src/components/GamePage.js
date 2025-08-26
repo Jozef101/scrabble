@@ -127,6 +127,7 @@ function GamePage({ gameId, userId, onGoToLobby, slovakWordsSet, db }) {
     handleExchangeLetters,
     handlePassTurn,
     handleSurrender,
+    handleDrawForTurn,
   } = useGameLogic(socket, gameId, myPlayerIndex, slovakWordsSet, gameState, setGameState);
 
   const isSpectator = myPlayerIndex === null;
@@ -270,6 +271,8 @@ function GamePage({ gameId, userId, onGoToLobby, slovakWordsSet, db }) {
   const topPlayerIndex = myPlayerIndex !== null ? myPlayerIndex : 0;
   const bottomPlayerIndex = myPlayerIndex !== null ? 1 - myPlayerIndex : 1;
 
+  const isOpponentPresent = gameState.players && gameState.players[0] && gameState.players[1];
+
   return (
     <DndProvider backend={HTML5Backend}>
       <div className="game-page-container">
@@ -300,13 +303,77 @@ function GamePage({ gameId, userId, onGoToLobby, slovakWordsSet, db }) {
               gameMode={gameState.gameMode}
             />
             <LetterBag remainingLettersCount={letterBag.length} />
-            {waitingForSecondPlayer && (
+            {waitingForSecondPlayer && gameState.gameStatus !== 'drawing_for_turn' && (
               <div className="second-player-status-message">
                 <p>Druhý hráč nie je pri stole.</p>
               </div>
             )}
             {/* Priradenie ref boardRef k hlavnému kontajneru hernej plochy */}
             {/* ZMENA: Vytvorenie nového kontajnera pre trojstĺpcové rozloženie */}
+            
+            {(gameState.gameStatus === 'drawing_for_turn' || gameState.gameStatus === 'turn_draw_reveal') ? (
+              <div className="draw-for-turn-container">
+                <h2>Losovanie o prvý ťah</h2>
+                <p>Hráč, ktorý si vylosuje písmeno bližšie k začiatku abecedy, začína.</p>
+                <div className="draw-players-container">
+                  {/* --- Zobrazenie výsledku losovania --- */}
+                  {gameState.gameStatus === 'turn_draw_reveal' && (
+                      <div className="draw-result-message">
+                          <h3>
+                              {playerNicknames[gameState.turnDrawWinner] || `Hráč ${gameState.turnDrawWinner + 1}`} vyhral losovanie!
+                          </h3>
+                          <p>Hra sa začne o malú chvíľu...</p>
+                      </div>
+                  )}
+                    {/* Zobrazenie pre Hráča 1 (index 0) */}
+                    <div className="draw-player-box">
+                        <h3>{playerNicknames[0] || 'Hráč 1'}</h3>
+                        <div className="drawn-letter-display">
+                            {gameState.turnDraw && gameState.turnDraw[0] ? (
+                                <div className="letter-tile-static">{gameState.turnDraw[0].letter || '?'}</div>
+                            ) : (
+                                <span>Čaká...</span>
+                            )}
+                        </div>
+                    </div>
+
+                    {/* Zobrazenie pre Hráča 2 (index 1) */}
+                    <div className="draw-player-box">
+                        <h3>{playerNicknames[1] || 'Hráč 2'}</h3>
+                        <div className="drawn-letter-display">
+                            {gameState.turnDraw && gameState.turnDraw[1] ? (
+                                <div className="letter-tile-static">{gameState.turnDraw[1].letter || '?'}</div>
+                            ) : (
+                                <span>Čaká...</span>
+                            )}
+                        </div>
+                    </div>
+                </div>
+
+                {/* Tlačidlo sa zobrazí len mne a len vtedy, ak som ešte nelosoval */}
+                {myPlayerIndex !== null && gameState.turnDraw && gameState.turnDraw[myPlayerIndex] === null && (
+                    <>
+                        <button 
+                            onClick={handleDrawForTurn} 
+                            className="draw-button"
+                            disabled={!isOpponentPresent}
+                        >
+                            Vylosovať písmeno
+                        </button>
+                        {!isOpponentPresent && (
+                            <p className="waiting-for-opponent-draw">
+                                Tlačidlo bude aktívne, keď sa do hry zaregistruje druhý hráč.
+                            </p>
+                        )}
+                    </>
+                )}
+
+                {/* Správa, ak čakáme na súpera */}
+                {gameState.gameStatus === 'drawing_for_turn' && myPlayerIndex !== null && gameState.turnDraw && gameState.turnDraw[myPlayerIndex] !== null && gameState.turnDraw[1 - myPlayerIndex] === null && (
+                    <p className="waiting-for-opponent-draw">Čaká sa na súpera...</p>
+                )}
+            </div>
+            ) : (
             <div className="main-game-layout">
               {/* Prvý stĺpec - Hracia doska */}
               <div className="board-column" ref={boardRef}>
@@ -413,7 +480,10 @@ function GamePage({ gameId, userId, onGoToLobby, slovakWordsSet, db }) {
                   />
                 </div>
               )}
-            </div> {/* Koniec main-game-layout */}
+            
+            </div> 
+            )} {/* Koniec podmienky pre gameStatus */}
+
             {/* Podmienené vykresľovanie ChatWindow */}
             {isChatVisible && (
               <ChatWindow

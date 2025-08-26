@@ -1,8 +1,4 @@
 /* src/styles/App.css */
-
-* {
-    outline: 1px solid red !important;
-}
 /* KĽÚČOVÁ ZMENA: Zabezpečíme scrollovanie na úrovni celého dokumentu */
 body,
 html {
