@@ -267,6 +267,9 @@ function GamePage({ gameId, userId, onGoToLobby, slovakWordsSet, db }) {
     setConfirmation({ isOpen: false, message: '', onConfirm: null });
   };
 
+  const topPlayerIndex = myPlayerIndex !== null ? myPlayerIndex : 0;
+  const bottomPlayerIndex = myPlayerIndex !== null ? 1 - myPlayerIndex : 1;
+
   return (
     <DndProvider backend={HTML5Backend}>
       <div className="game-page-container">
@@ -325,34 +328,36 @@ function GamePage({ gameId, userId, onGoToLobby, slovakWordsSet, db }) {
               <div className="right-panel-column">
                 <div className="player-racks-container">
                   <div className="player-rack-section">
-                    <h3>{playerNicknames[0] || 'Hráč 1'} Rack:</h3>
-                    <PlayerRack
-                      letters={playerRacks[0]}
-                      moveLetter={moveLetter}
-                      playerIndex={0}
-                      myPlayerIndex={myPlayerIndex}
-                      currentPlayerIndex={currentPlayerIndex}
-                      selectedLetter={selectedLetter}
-                      onTapLetter={handleTapLetter}
-                      onTapSlot={handleTapSlot}
-                      isActionInProgress={isActionInProgress}
-                    />
+                      <h3>{playerNicknames[topPlayerIndex] || `Hráč ${topPlayerIndex + 1}`} Rack:</h3>
+                      <PlayerRack
+                          letters={playerRacks[topPlayerIndex]}
+                          moveLetter={moveLetter}
+                          playerIndex={topPlayerIndex}
+                          myPlayerIndex={myPlayerIndex}
+                          currentPlayerIndex={currentPlayerIndex}
+                          selectedLetter={selectedLetter}
+                          onTapLetter={handleTapLetter}
+                          onTapSlot={handleTapSlot}
+                          isActionInProgress={isActionInProgress}
+                      />
                   </div>
+
+                  {/* DOLE: Stojan pre súpera (alebo Hráča 2 pre diváka) */}
                   <div className="player-rack-section">
-                    <h3>{playerNicknames[1] || 'Hráč 2'} Rack:</h3>
-                    <PlayerRack
-                      letters={playerRacks[1]}
-                      moveLetter={moveLetter}
-                      playerIndex={1}
-                      myPlayerIndex={myPlayerIndex}
-                      currentPlayerIndex={currentPlayerIndex}
-                      selectedLetter={selectedLetter}
-                      onTapLetter={handleTapLetter}
-                      onTapSlot={handleTapSlot}
-                      isActionInProgress={isActionInProgress}
-                    />
+                      <h3>{playerNicknames[bottomPlayerIndex] || `Hráč ${bottomPlayerIndex + 1}`} Rack:</h3>
+                      <PlayerRack
+                          letters={playerRacks[bottomPlayerIndex]}
+                          moveLetter={moveLetter}
+                          playerIndex={bottomPlayerIndex}
+                          myPlayerIndex={myPlayerIndex}
+                          currentPlayerIndex={currentPlayerIndex}
+                          selectedLetter={selectedLetter}
+                          onTapLetter={handleTapLetter}
+                          onTapSlot={handleTapSlot}
+                          isActionInProgress={isActionInProgress}
+                      />
                   </div>
-                </div>
+              </div>
 
                 <ExchangeZone
                   lettersInZone={exchangeZoneLetters}
