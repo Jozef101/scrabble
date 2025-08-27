@@ -244,30 +244,20 @@ function useGameLogic(socket, gameId, myPlayerIndex, slovakWordsSet, gameState, 
 
     let updatedGameState;
     if (currentBagEmpty && finalRackAfterPlay.length === 0) {
-      const finalScores = calculateFinalScores(gameState.currentPlayerIndex, newRackForCurrentPlayer, gameState.playerScores, gameState.playerRacks);
-      updatedGameState = {
-        ...gameState,
-        letterBag: updatedBagAfterTurn,
-        playerRacks: gameState.playerRacks.map((rack, idx) => idx === gameState.currentPlayerIndex ? newRackForCurrentPlayer : rack),
-        board: gameState.board,
-        boardAtStartOfTurn: newBoardAtStartOfTurn,
-        isFirstTurn: false,
-        playerScores: finalScores,
-        currentPlayerIndex: gameState.currentPlayerIndex,
-        exchangeZoneLetters: [],
-        hasPlacedOnBoardThisTurn: false,
-        hasMovedToExchangeZoneThisTurn: false,
-        consecutivePasses: 0,
-        isGameOver: true,
-        isBagEmpty: currentBagEmpty,
-        highlightedLetters: newHighlightedLetters,
-        turnNumber: (gameState.turnNumber || 0) + 1,
-      };
-      addToast(`Hra skončila! Konečné skóre: Hráč 1: ${finalScores[0]}, Hráč 2: ${finalScores[1]}`);
-      // --- PRIDANÉ: Zavolanie 'gameOver' akcie na server. ---
-      const winnerIndex = finalScores[0] > finalScores[1] ? 0 : 1;
-      const loserIndex = finalScores[0] > finalScores[1] ? 1 : 0;
-      sendPlayerAction(socket, gameId, 'gameOver', { winnerId: gameState.players[winnerIndex], loserId: gameState.players[loserIndex] });
+        // Hra skončila, vypočítame finálne skóre a všetky detaily
+        const finalScoresData = calculateFinalScores(gameState.currentPlayerIndex, newScores, gameState.playerRacks, gameState.players);
+
+        // Pošleme JEDNU akciu so všetkými detailmi
+        sendPlayerAction(socket, gameId, 'gameOver', {
+            ...finalScoresData, // Tu sú: finalScores, deductions, bonus, winnerId, loserId, winnerIndex
+            initialScores: newScores, // Pošleme skóre pred úpravami
+            finishingPlayerIndex: gameState.currentPlayerIndex,
+            reason: 'standard_end'
+        });
+
+        // Zmažeme starú 'updateGameState' akciu, aby sme neposielali dáta duplicitne
+        // sendPlayerAction(socket, gameId, 'updateGameState', updatedGameState);
+        return; // DÔLEŽITÉ: Ukončíme funkciu tu
     } else {
       updatedGameState = {
         ...gameState,
@@ -462,11 +452,19 @@ function useGameLogic(socket, gameId, myPlayerIndex, slovakWordsSet, gameState, 
     let isGameOverCondition = (newConsecutivePasses >= 4);
 
     if (isGameOverCondition) {
-      updatedPlayerScores = calculateFinalScores(null, [], gameState.playerScores, gameState.playerRacks);
-      addToast("Hra skončila! Obaja hráči pasovali dvakrát po sebe. Konečné skóre bolo upravené o zostávajúce písmená.");
-      const winnerIndex = updatedPlayerScores[0] > updatedPlayerScores[1] ? 0 : 1;
-      const loserIndex = updatedPlayerScores[0] > updatedPlayerScores[1] ? 1 : 0;
-      sendPlayerAction(socket, gameId, 'gameOver', { winnerId: gameState.players[winnerIndex], loserId: gameState.players[loserIndex] });
+        // Hra skončila pasovaním, vypočítame finálne skóre a detaily
+        const finalScoresData = calculateFinalScores(null, gameState.playerScores, gameState.playerRacks, gameState.players);
+
+        sendPlayerAction(socket, gameId, 'gameOver', {
+            ...finalScoresData, // Tu sú: finalScores, deductions, bonus, winnerId, loserId, winnerIndex
+            initialScores: gameState.playerScores,
+            finishingPlayerIndex: null, // Nikto aktívne nedohral
+            reason: 'pass_end'
+        });
+
+        // Zmažeme starú 'updateGameState' akciu
+        // sendPlayerAction(socket, gameId, 'updateGameState', updatedGameState);
+        return; // DÔLEŽITÉ: Ukončíme funkciu tu
     } else {
       addToast("Ťah bol prenesený na ďalšieho hráča.");
     }

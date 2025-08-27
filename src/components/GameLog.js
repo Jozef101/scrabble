@@ -13,7 +13,7 @@ function GameLog({ db, gameId, playerNicknames }) {
         if (!db || !gameId) return;
         const q = query(
             collection(db, "scrabbleGames", gameId, "turnLogs"),
-            orderBy("turnNumber", "desc")
+            orderBy("timestamp", "desc")
         );
         const unsubscribe = onSnapshot(q, (snapshot) => {
             const docs = snapshot.docs.map(doc => doc.data());
@@ -97,6 +97,46 @@ function GameLog({ db, gameId, playerNicknames }) {
                                                 <strong> {playerNicknames[1] || 'Hráč 2'}</strong> si potiahol <strong>'{turn.drawnLetters[1].letter || 'Žolík'}'</strong>.
                                                 Začína <strong>{playerNicknames[turn.winnerIndex]}</strong>.
                                             </span>
+                                        </li>
+                                    )}
+                                    {turn.actionType === 'game_over' && (
+                                        <li key={index} className="turn-item log-game-over">
+                                            <span className="log-icon">🏁</span>
+                                            <div>
+                                                <strong>Hra sa skončila!</strong>
+
+                                                {/* Zobrazíme správu podľa toho, ako hra skončila */}
+                                                <div className="game-over-details">
+                                                    {turn.reason === 'surrender' ? (
+                                                        <span>
+                                                            Hráč <strong>{playerNicknames[turn.loserIndex]}</strong> sa vzdal. Víťazom je <strong>{playerNicknames[turn.winnerIndex]}</strong>.
+                                                        </span>
+                                                    ) : (
+                                                        <span>
+                                                            Víťazom je <strong>{playerNicknames[turn.winnerIndex] || 'Neznámy hráč'}</strong> s finálnym skóre <strong>{turn.finalScores[0]} : {turn.finalScores[1]}</strong>.
+                                                        </span>
+                                                    )}
+                                                </div>
+
+                                                {/* Detailné skóre zobrazíme len ak nešlo o vzdanie sa */}
+                                                {(turn.reason === 'standard_end' || turn.reason === 'pass_end') && (
+                                                    <div className="game-over-deductions">
+                                                        <span>Upravené skóre:</span>
+                                                        <ul>
+                                                            <li>
+                                                                {playerNicknames[0] || 'Hráč 1'}: 
+                                                                {turn.initialScores[0]} - {turn.deductions[0]} bodov
+                                                                {turn.bonus > 0 && turn.finishingPlayerIndex === 0 ? ` + ${turn.bonus} (bonus)` : ''} = <strong>{turn.finalScores[0]}</strong>
+                                                            </li>
+                                                            <li>
+                                                                {playerNicknames[1] || 'Hráč 2'}: 
+                                                                {turn.initialScores[1]} - {turn.deductions[1]} bodov 
+                                                                {turn.bonus > 0 && turn.finishingPlayerIndex === 1 ? ` + ${turn.bonus} (bonus)` : ''} = <strong>{turn.finalScores[1]}</strong>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                )}
+                                            </div>
                                         </li>
                                     )}
                                 </>

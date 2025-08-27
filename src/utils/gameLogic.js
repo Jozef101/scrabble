@@ -467,22 +467,49 @@ export function getRackPoints(rack) {
 }
 
 /**
- * Vypočíta konečné skóre na konci hry.
- * @param {number} endingPlayerIndex Index hráča, ktorý ukončil hru.
- * @param {Array<Object|null>} finalRackLetters Rack hráča, ktorý ukončil hru (mal by byť prázdny, ak ukončil hru).
- * @param {Array<number>} playerScores Aktuálne skóre hráčov.
+ * Vypočíta konečné skóre na konci hry a vráti všetky detaily.
+ * @param {number|null} finishingPlayerIndex Index hráča, ktorý ukončil hru, alebo null.
+ * @param {Array<number>} currentScores Aktuálne skóre hráčov pred úpravami.
  * @param {Array<Array<Object|null>>} playerRacks Racky všetkých hráčov.
- * @returns {Array<number>} Konečné skóre hráčov.
+ * @param {Array<object>} players Pole objektov hráčov pre zistenie ich ID.
+ * @returns {object} Objekt s detailmi o finálnom skóre.
  */
-export function calculateFinalScores(endingPlayerIndex, finalRackLetters, playerScores, playerRacks) {
-    let finalScores = [...playerScores];
+export function calculateFinalScores(finishingPlayerIndex, currentScores, playerRacks, players) {
+    let finalScores = [...currentScores];
+    let deductions = { 0: 0, 1: 0 };
+    let bonus = 0;
 
-    for (let i = 0; i < playerScores.length; i++) {
-        const rack = (i === endingPlayerIndex) ? finalRackLetters : playerRacks[i];
-        const pointsOnRack = getRackPoints(rack);
-        
-        finalScores[i] -= pointsOnRack;
+    // Vypočítame odpočty pre každého hráča
+    playerRacks.forEach((rack, index) => {
+        if (rack) {
+            deductions[index] = getRackPoints(rack);
+        }
+    });
+
+    // Ak niekto dohral (neminuli sa len písmená pri pasovaní), dostane bonus
+    if (finishingPlayerIndex !== null) {
+        const opponentIndex = 1 - finishingPlayerIndex;
+        bonus = deductions[opponentIndex] || 0;
+        finalScores[finishingPlayerIndex] += bonus;
     }
 
-    return finalScores;
+    // Odpočítame body obom hráčom
+    finalScores[0] -= deductions[0];
+    finalScores[1] -= deductions[1];
+
+    // Určíme víťaza a porazeného na základe finálneho skóre
+    const winnerIndex = finalScores[0] > finalScores[1] ? 0 : (finalScores[1] > finalScores[0] ? 1 : null);
+    const loserIndex = winnerIndex !== null ? (1 - winnerIndex) : null;
+
+    const winnerId = (winnerIndex !== null && players[winnerIndex]) ? players[winnerIndex].userId : null;
+    const loserId = (loserIndex !== null && players[loserIndex]) ? players[loserIndex].userId : null;
+
+    return { 
+        finalScores, 
+        deductions, 
+        bonus, 
+        winnerId, 
+        loserId,
+        winnerIndex
+    };
 }

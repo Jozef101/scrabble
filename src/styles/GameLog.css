@@ -81,3 +81,40 @@
 .log-icon {
     margin-right: 8px;
 }
+.log-game-over {
+    background-color: #fff3cd;
+    border-left: 4px solid #ffc107;
+    padding: 12px;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    /* Pridá medzeru medzi ikonou a textom */
+}
+
+.log-game-over strong {
+    color: #856404;
+}
+
+.game-over-details {
+    margin: 8px 0;
+}
+
+.game-over-deductions {
+    font-size: 0.9em;
+    color: #666;
+}
+
+.game-over-deductions span {
+    font-weight: 500;
+}
+
+.game-over-deductions ul {
+    list-style-type: none;
+    padding-left: 10px;
+    margin-top: 4px;
+    margin-bottom: 0;
+}
+
+.log-icon {
+    font-size: 1.2em;
+}
