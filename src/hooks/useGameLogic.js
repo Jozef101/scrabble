@@ -449,7 +449,7 @@ function useGameLogic(socket, gameId, myPlayerIndex, slovakWordsSet, gameState, 
     const newConsecutivePasses = gameState.consecutivePasses + 1;
 
     let updatedPlayerScores = [...gameState.playerScores];
-    let isGameOverCondition = (newConsecutivePasses >= 4);
+    let isGameOverCondition = (newConsecutivePasses >= 6);
 
     if (isGameOverCondition) {
         // Hra skončila pasovaním, vypočítame finálne skóre a detaily
