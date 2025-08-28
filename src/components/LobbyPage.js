@@ -229,7 +229,7 @@ function LobbyPage({ userId, currentUserNickname, onStartGame, db, appId }) {
                             // NOVINKA: Používame div s triedou game-info-wrapper namiesto li
                             <div
                                 key={game.id}
-                                className={`game-item-wrapper ${game.currentPlayerIndex !== undefined && game.players[game.currentPlayerIndex]?.id === userId ? 'my-turn-highlight' : ''}`}
+                                className={`game-item-wrapper ${game.currentPlayerIndex !== undefined && game.players[game.currentPlayerIndex]?.id === userId && !game.status === 'finished' ? 'my-turn-highlight' : ''}`}
                                 onClick={() => handleJoinGame(game.id, game.players)} // TOTO JE NOVÝ KLIKATEĽNÝ PRVOK
                                 // Pridáme podmienku pre zakázanie kliknutia na plnú hru, kde nie si
                                 style={{ cursor: 'pointer' }}
