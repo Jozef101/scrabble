@@ -280,7 +280,6 @@ function GamePage({ gameId, userId, onGoToLobby, slovakWordsSet, db }) {
           <div className="connection-status">
             Stav pripojenia: <span className={connectionStatus === 'Pripojený' ? 'connected' : 'disconnected'}>{connectionStatus}</span>
             {myPlayerIndex !== null && ` | Si Hráč ${myPlayerIndex + 1}`}
-            {userId && ` | User ID: ${userId}`}
           </div>
           {/* <button onClick={onGoToLobby} className="back-to-lobby-button">Späť do Lobby</button> */}
           <button onClick={handleGoToLobby} className="back-to-lobby-button">Späť do Lobby</button>
@@ -303,7 +302,7 @@ function GamePage({ gameId, userId, onGoToLobby, slovakWordsSet, db }) {
               gameMode={gameState.gameMode}
             />
             <LetterBag remainingLettersCount={letterBag.length} />
-            {waitingForSecondPlayer && gameState.gameStatus !== 'drawing_for_turn' && (
+            {!gameState.gameStatus && (
               <div className="second-player-status-message">
                 <p>Druhý hráč nie je pri stole.</p>
               </div>
