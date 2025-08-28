@@ -4,7 +4,7 @@ import RackSlot from './RackSlot';
 import '../styles/PlayerRack.css';
 
 // Pridávame myPlayerIndex, currentPlayerIndex, selectedLetter, onTapLetter, onTapSlot ako prop
-function PlayerRack({ letters, moveLetter, playerIndex, myPlayerIndex, currentPlayerIndex, selectedLetter, onTapLetter, onTapSlot, isActionInProgress }) { // KLÚČOVÁ ZMENA: Pridaný isActionInProgress
+function PlayerRack({ letters, moveLetter, playerIndex, myPlayerIndex, currentPlayerIndex, selectedLetter, onTapLetter, onTapSlot, isActionInProgress, isGameOver }) { // KLÚČOVÁ ZMENA: Pridaný isActionInProgress
   // Určíme, či je tento PlayerRack vlastný rack aktuálneho hráča
   const isMyRack = playerIndex === myPlayerIndex;
   const isCurrentPlayerTurnRack = playerIndex === currentPlayerIndex; // Pre vizuálne zvýraznenie racku na ťahu
@@ -25,6 +25,7 @@ function PlayerRack({ letters, moveLetter, playerIndex, myPlayerIndex, currentPl
           onTapLetter={onTapLetter} // NOVÉ: Posielame handler pre ťuknutie na písmeno
           onTapSlot={onTapSlot} // NOVÉ: Posielame handler pre ťuknutie na slot
           isActionInProgress={isActionInProgress} // KLÚČOVÁ ZMENA: Posielame isActionInProgress
+          isGameOver={isGameOver} // NOVÉ: Posielame informáciu, či je hra skončená
         />
       ))}
     </div>

@@ -4,7 +4,7 @@ import Letter from './Letter';
 import '../styles/RackSlot.css';
 
 // Pridávame isMyRack, myPlayerIndex, currentPlayerIndex, selectedLetter, onTapLetter, onTapSlot ako prop
-function RackSlot({ letter, index, playerIndex, moveLetter, isMyRack, myPlayerIndex, currentPlayerIndex, selectedLetter, onTapLetter, onTapSlot, isActionInProgress }) { // KLÚČOVÁ ZMENA: Pridaný isActionInProgress
+function RackSlot({ letter, index, playerIndex, moveLetter, isMyRack, myPlayerIndex, currentPlayerIndex, selectedLetter, onTapLetter, onTapSlot, isActionInProgress, isGameOver }) {
   const [{ isOver, canDrop }, drop] = useDrop({
     accept: 'LETTER',
     canDrop: (item) => {
@@ -44,7 +44,7 @@ function RackSlot({ letter, index, playerIndex, moveLetter, isMyRack, myPlayerIn
   // Logika pre isDraggable a isVisible
   // KLÚČOVÁ ZMENA: isDraggable je teraz závislé aj od isActionInProgress
   const shouldBeDraggable = isMyRack; // Iba vlastné písmená
-  const shouldBeVisible = isMyRack; // Vlastné písmená sú vždy viditeľné, súperove nie
+  const shouldBeVisible = isMyRack || isGameOver; // Vlastné písmená sú vždy viditeľné, súperove až na konci hry
 
   // Triedy pre zvýraznenie drop zóny
   const dropHighlightClass = isOver && canDrop ? 'rack-slot-highlight-can-drop' : (isOver ? 'rack-slot-highlight' : '');
