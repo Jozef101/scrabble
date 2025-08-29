@@ -59,7 +59,7 @@ function LobbyPage({ userId, currentUserNickname, onStartGame, db, appId }) {
 
             // 2. Uložíme hru aj s ELO hodnotou
             const gamesCollectionRef = collection(db, 'scrabbleGames');
-            await addDoc(gamesCollectionRef, {
+            const newGameRef = await addDoc(gamesCollectionRef, {
                 players: [{ 
                     id: userId, 
                     playerIndex: 0, 
@@ -73,6 +73,7 @@ function LobbyPage({ userId, currentUserNickname, onStartGame, db, appId }) {
                 gameMode: gameMode,
             });
             setError('');
+            onStartGame(newGameRef.id);
         } catch (e) {
             console.error("Chyba pri vytváraní hry:", e);
             setError("Nepodarilo sa vytvoriť hru. Skúste to znova.");
@@ -252,7 +253,20 @@ function LobbyPage({ userId, currentUserNickname, onStartGame, db, appId }) {
                                 <div
                                     key={game.id}
                                     className={`game-item-wrapper ${game.currentPlayerIndex !== undefined && game.players[game.currentPlayerIndex]?.id === userId && game.status !== 'finished' ? 'my-turn-highlight' : ''} ${resultClass}`}
-                                    onClick={() => handleJoinGame(game.id, game.players)}
+                                    onClick={() => {
+                                        const isAlreadyPlayer = game.players.some(p => p.id === userId);
+
+                                        if (isAlreadyPlayer) {
+                                            // Ak už som hráč, idem priamo do hry bez pýtania sa
+                                            handleJoinGame(game.id, game.players);
+                                        } else {
+                                            // Ak nie som hráč, zobrazí sa potvrdzovacie okno
+                                            openConfirmation(
+                                                'Naozaj sa chcete pripojiť k tejto hre?',
+                                                () => handleJoinGame(game.id, game.players)
+                                            );
+                                        }
+                                    }}
                                     style={{ cursor: 'pointer' }}
                                 >
                                     <div className="game-info">
