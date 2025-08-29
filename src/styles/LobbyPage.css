@@ -323,3 +323,38 @@ input:checked+.slider:before {
 .slider.round:before {
     border-radius: 50%;
 }
+/* --- Štýly pre výsledky ukončených hier --- */
+
+/* Zelené pozadie pre výhru */
+.game-item-wrapper.game-won {
+    background-color: #f0fdf4;
+    /* Veľmi jemná zelená */
+    border-left: 5px solid #22c55e;
+    /* Výrazný zelený pásik */
+}
+
+.game-item-wrapper.game-won .game-score {
+    font-weight: bold;
+    color: #166534;
+}
+
+/* Červené pozadie pre prehru */
+.game-item-wrapper.game-lost {
+    background-color: #fff1f2;
+    /* Veľmi jemná červená/ružová */
+    border-left: 5px solid #ef4444;
+    /* Výrazný červený pásik */
+}
+
+.game-item-wrapper.game-lost .game-score {
+    font-weight: bold;
+    color: #991b1b;
+}
+
+/* Sivé pozadie pre remízu */
+.game-item-wrapper.game-tie {
+    background-color: #f8fafc;
+    /* Veľmi jemná sivá */
+    border-left: 5px solid #64748b;
+    /* Výrazný sivý pásik */
+}

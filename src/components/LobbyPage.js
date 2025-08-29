@@ -225,41 +225,63 @@ function LobbyPage({ userId, currentUserNickname, onStartGame, db, appId }) {
                     <p className="no-games-message">Momentálne tu nie sú žiadne hry.</p>
                 ) : (
                     <ul className="games-list">
-                        {filteredGames.map((game) => (
-                            // NOVINKA: Používame div s triedou game-info-wrapper namiesto li
-                            <div
-                                key={game.id}
-                                className={`game-item-wrapper ${game.currentPlayerIndex !== undefined && game.players[game.currentPlayerIndex]?.id === userId && game.status !== 'finished' ? 'my-turn-highlight' : ''}`}
-                                onClick={() => handleJoinGame(game.id, game.players)} // TOTO JE NOVÝ KLIKATEĽNÝ PRVOK
-                                // Pridáme podmienku pre zakázanie kliknutia na plnú hru, kde nie si
-                                style={{ cursor: 'pointer' }}
-                            >
-                                <div className="game-info">
-                                    <span>
-                                        {game.players[0] ? `${game.players[0].nickname || 'Neznámy'} ` : 'Neznámy '}
-                                        {game.players[0]?.elo && <span className="player-elo">({game.players[0].elo})</span>}
-                                        {' vs '}
-                                        {game.players.length > 1
-                                            ? `${game.players[1].nickname || 'Neznámy'} `
-                                            : 'Čaká na súpera'
+                        {filteredGames.map((game) => {
+                            // --- KROK 1: Vypočítame si CSS triedu pre výsledok ---
+                            let resultClass = '';
+                            if (game.status === 'finished' && game.scores && userId) {
+                                const myPlayer = game.players.find(p => p.id === userId);
+                                if (myPlayer) {
+                                    const myIndex = myPlayer.playerIndex;
+                                    const opponentIndex = myIndex === 0 ? 1 : 0;
+                                    
+                                    // Zabezpečíme, že súper existuje a hra má platné skóre pre oboch
+                                    if (game.players[opponentIndex] && game.scores.length > opponentIndex) {
+                                        if (game.scores[myIndex] > game.scores[opponentIndex]) {
+                                            resultClass = 'game-won';
+                                        } else if (game.scores[myIndex] < game.scores[opponentIndex]) {
+                                            resultClass = 'game-lost';
+                                        } else {
+                                            resultClass = 'game-tie';
                                         }
-                                        {game.players.length > 1 && game.players[1]?.elo && <span className="player-elo">({game.players[1].elo})</span>}
-                                    </span>
-                                    <div className="game-score">
-                                        Skóre: {game.scores && game.scores.length > 0 ? `${game.scores[0]} : ${game.scores[1]}` : '0 : 0'}
-                                    </div>
-                                    <div className="game-progress-container">
-                                        <div 
-                                            className="game-progress-bar"
-                                            style={{ width: `${((game.progress || 0) / 100) * 100}%` }}
-                                        ></div>
-                                        <span className="progress-text">
-                                            Progres: {game.progress || 0}%
+                                    }
+                                }
+                            }
+
+                            // --- KROK 2: Vrátime JSX s pridanou triedou ---
+                            return (
+                                <div
+                                    key={game.id}
+                                    className={`game-item-wrapper ${game.currentPlayerIndex !== undefined && game.players[game.currentPlayerIndex]?.id === userId && game.status !== 'finished' ? 'my-turn-highlight' : ''} ${resultClass}`}
+                                    onClick={() => handleJoinGame(game.id, game.players)}
+                                    style={{ cursor: 'pointer' }}
+                                >
+                                    <div className="game-info">
+                                        <span>
+                                            {game.players[0] ? `${game.players[0].nickname || 'Neznámy'} ` : 'Neznámy '}
+                                            {game.players[0]?.elo && <span className="player-elo">({game.players[0].elo})</span>}
+                                            {' vs '}
+                                            {game.players.length > 1
+                                                ? `${game.players[1].nickname || 'Neznámy'} `
+                                                : 'Čaká na súpera'
+                                            }
+                                            {game.players.length > 1 && game.players[1]?.elo && <span className="player-elo">({game.players[1].elo})</span>}
                                         </span>
+                                        <div className="game-score">
+                                            Skóre: {game.scores && game.scores.length > 0 ? `${game.scores[0]} : ${game.scores[1]}` : '0 : 0'}
+                                        </div>
+                                        <div className="game-progress-container">
+                                            <div 
+                                                className="game-progress-bar"
+                                                style={{ width: `${((game.progress || 0) / 100) * 100}%` }}
+                                            ></div>
+                                            <span className="progress-text">
+                                                Progres: {game.progress || 0}%
+                                            </span>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        ))}
+                            );
+                        })}
                     </ul>
                 )}
             </div>
