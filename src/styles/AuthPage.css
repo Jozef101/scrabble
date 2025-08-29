@@ -190,18 +190,22 @@
 }
 
 .password-toggle-icon {
-    color: #777;
     position: absolute;
     top: 50%;
     right: 12px;
     transform: translateY(-50%);
     cursor: pointer;
     user-select: none;
-    /* Zabráni označeniu ikony ako textu */
-    font-size: 1.2rem;
+    /* Nové vlastnosti pre lepšie centrovanie a farbu */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #9ca3af;
+        /* Jemná sivá farba */
 }
 
-/* Pridáme pravý padding, aby text nešiel pod ikonu */
-.auth-input {
-    padding-right: 40px !important;
+/* Nové pravidlo pre veľkosť SVG ikony */
+.password-toggle-icon svg {
+    width: 20px;
+    height: 20px;
 }
