@@ -93,8 +93,8 @@ function GameLog({ db, gameId, playerNicknames }) {
                                             <span className="log-icon">🎲</span>
                                             <span>
                                                 Losovanie: 
-                                                <strong> {playerNicknames[0] || 'Hráč 1'}</strong> si potiahol <strong>'{turn.drawnLetters[0].letter || 'Žolík'}'</strong>, 
-                                                <strong> {playerNicknames[1] || 'Hráč 2'}</strong> si potiahol <strong>'{turn.drawnLetters[1].letter || 'Žolík'}'</strong>.
+                                                <strong> {playerNicknames[0] || 'Hráč 1'}</strong> si vylosoval/a <strong>'{turn.drawnLetters[0].letter || 'Žolík'}'</strong>, 
+                                                <strong> {playerNicknames[1] || 'Hráč 2'}</strong> si vylosoval/a <strong>'{turn.drawnLetters[1].letter || 'Žolík'}'</strong>.
                                                 Začína <strong>{playerNicknames[turn.winnerIndex]}</strong>.
                                             </span>
                                         </li>
