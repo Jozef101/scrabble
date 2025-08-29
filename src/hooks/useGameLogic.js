@@ -183,19 +183,36 @@ function useGameLogic(socket, gameId, myPlayerIndex, slovakWordsSet, gameState, 
       return;
     }
 
-    const invalidWords = allFormedWords.filter(wordObj => {
-      const wordString = wordObj.wordString.toUpperCase();
-      if (wordString.length > 5) {
-        return false;
-      }
-      // Používame už pripravený validWordsSet z parametrov
-      return !validWordsSet.current.has(wordString);
+    const strictlyInvalidWords = [];
+    const unverifiedWords = [];
+
+    allFormedWords.forEach(wordObj => {
+        const wordString = wordObj.wordString.toUpperCase();
+
+        // Pravidlá pre krátke slová (musia byť v slovníku)
+        if (wordString.length <= 5) {
+            if (!validWordsSet.current.has(wordString)) {
+                strictlyInvalidWords.push(wordString);
+            }
+        } 
+        // Pravidlá pre dlhé slová (môžu, ale nemusia byť v slovníku)
+        else {
+            if (!validWordsSet.current.has(wordString)) {
+                unverifiedWords.push(wordString);
+            }
+        }
     });
 
-    if (invalidWords.length > 0) {
-      addToast(`Neplatné slovo(á) nájdené: ${invalidWords.map(w => w.wordString).join(', ')}. Skontroluj slovník alebo dĺžku slova.`);
-      setIsActionInProgress(false);
-      return;
+    // Ak sme našli krátke neplatné slovo, ťah je neplatný a končíme.
+    if (strictlyInvalidWords.length > 0) {
+        addToast(`Neplatné slovo(á): ${strictlyInvalidWords.join(', ')}. Tieto slová sa musia nachádzať v slovníku.`, 'error');
+        setIsActionInProgress(false);
+        return;
+    }
+
+    // Ak sme našli dlhé, neoverené slová, iba zobrazíme varovanie, ale pokračujeme.
+    if (unverifiedWords.length > 0) {
+        addToast(`Platnosť slova (slov) nie je možné overiť: ${unverifiedWords.join(', ')}`, 'info');
     }
 
     let turnScore = 0;
