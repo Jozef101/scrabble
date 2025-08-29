@@ -75,7 +75,6 @@ function GamePage({ gameId, userId, onGoToLobby, slovakWordsSet, db }) {
     chatMessages,
     newChatMessage,
     setNewChatMessage,
-    waitingForSecondPlayer,
   } = useSocketConnection(gameId, userId, handleGameStateUpdate);
 
   useEffect(() => {
@@ -203,13 +202,7 @@ function GamePage({ gameId, userId, onGoToLobby, slovakWordsSet, db }) {
 }, [db, playerNicknames, gameState.players]);
 
   const isGameReadyToRender = gameState.hasInitialGameStateReceived;
-  useEffect(() => {
-    if (isGameReadyToRender) {
-        console.log('GamePage: Hra je pripravená na vykreslenie');
-        console.timeEnd('NacitanieHry'); // Zastaví stopky a vypíše výsledok
-    }
-  }, [isGameReadyToRender]);
-
+  
   const handleSendChatMessage = () => {
     if (isSpectator) return;
     if (socket && gameId && newChatMessage.trim()) {
