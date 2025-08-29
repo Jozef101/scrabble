@@ -184,3 +184,23 @@
             /* Ešte menšie písmo pre mobil na 0.75em */
         }
 }
+.password-input-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.password-toggle-icon {
+    position: absolute;
+    top: 50%;
+    right: 12px;
+    transform: translateY(-50%);
+    cursor: pointer;
+    user-select: none;
+    /* Zabráni označeniu ikony ako textu */
+    font-size: 1.2rem;
+}
+
+/* Pridáme pravý padding, aby text nešiel pod ikonu */
+.auth-input {
+    padding-right: 40px !important;
+}
