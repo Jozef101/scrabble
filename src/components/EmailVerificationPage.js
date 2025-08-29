@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { sendEmailVerification, signOut } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
+import '../styles/EmailVerificationPage.css';
 
 const COOLDOWN_SECONDS = 60; // Doba čakania v sekundách pred opätovným odoslaním
 
@@ -88,47 +89,43 @@ function EmailVerificationPage({ auth, userId }) {
     };
 
     return (
-        <div className="flex items-center justify-center min-h-screen bg-gray-100 font-inter p-4">
-            <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md text-center">
-                <h2 className="text-2xl font-bold text-gray-800 mb-4">Overenie e-mailu</h2>
-                <p className="text-gray-600 mb-4">
+        <div className="verification-page-container">
+            <div className="verification-card">
+                <h2 className="verification-title">Overenie e-mailu</h2>
+                <p className="verification-text">
                     Ďakujeme za registráciu! Pre prístup do Lobby je potrebné overiť váš e-mail.
                 </p>
-                <p className="text-gray-600 mb-4">
+                <p className="verification-text">
                     {emailSent
                         ? "Práve sme vám poslali overovací odkaz na vašu e-mailovú adresu. Prosím, skontrolujte si doručenú poštu."
                         : "Prosím, kliknite na tlačidlo nižšie pre odoslanie overovacieho e-mailu."}
                     <br />
-                    Nezabudnite skontrolovať aj priečinok <span className="font-semibold">SPAM/Nevyžiadaná pošta</span>!
+                    Nezabudnite skontrolovať aj priečinok <span className="highlight">SPAM/Nevyžiadaná pošta</span>!
                 </p>
-                <p className="text-gray-600 mb-6">Overenie môže trvať niekoľko minút.</p>
+                <p className="verification-text large-margin">Overenie môže trvať niekoľko minút.</p>
 
                 {error && (
-                    <p className="text-red-500 mb-4 font-medium">{error}</p>
+                    <p className="error-message">{error}</p>
                 )}
 
                 <button
                     onClick={sendVerificationEmail}
                     disabled={resendCooldown > 0 || loading}
-                    className={`w-full py-2 px-4 rounded-md text-white font-semibold transition-colors duration-200 ${
-                        resendCooldown > 0 || loading
-                            ? 'bg-gray-400 cursor-not-allowed'
-                            : 'bg-blue-600 hover:bg-blue-700'
-                    }`}
+                    className="verification-button button-primary"
                 >
                     {loading ? 'Odosielam...' : (resendCooldown > 0 ? `Odoslať znova (${resendCooldown}s)` : 'Odoslať overovací e-mail')}
                 </button>
 
                 <button
                     onClick={handleRefreshStatus}
-                    className="mt-4 w-full py-2 px-4 rounded-md bg-green-500 text-white font-semibold hover:bg-green-600 transition-colors duration-200"
+                    className="verification-button button-success"
                 >
                     Overil som e-mail (Obnoviť stav)
                 </button>
 
                 <button
                     onClick={handleGoToLogin}
-                    className="mt-4 w-full py-2 px-4 rounded-md bg-gray-500 text-white font-semibold hover:bg-gray-600 transition-colors duration-200"
+                    className="verification-button button-secondary"
                 >
                     Ísť na prihlásenie
                 </button>
