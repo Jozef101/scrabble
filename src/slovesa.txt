@@ -1,0 +1,2345 @@
+bojí	boja	boj	bál	bojac	bojaci			bátie
+bije	bijú	bi	bil	bijúc	bijúci		bitý	bitie
+je, jest, jesto               niet, nieto	sú	buď	bol	súc				bytie
+čuje	čujú	čuj	čul	čujúc	čujúci		čutý	čutie
+dá	dajú	daj	dal	dajúc		davší	daný	danie
+duje	dujú	duj	dul	dujúc	dujúci			dutie
+ide         nejde	idú        nejdú	iď/poď/choď nejdi/nechoď	išiel/šiel   nešiel	idúc            nejdúc	idúci            nejdúci			
+			jal			javší	jatý	jatie
+kuje	kujú	kuj	kul	kujúc	kujúci		kutý	kutie
+má	majú	maj	mal	majúc	majúci			
+pije	pijú	pi	pil	pijúc	pijúci		pitý	pitie
+ruje	rujú	ruj	rul	rujúc	rujúci			rutie
+ryje	ryjú	ry	ryl	ryjúc	ryjúci		rytý	rytie
+saje	sajú	saj	sal	sajúc	sajúci		satý/saný	satie/sanie
+šije	šijú	ši	šil	šijúc	šijúci		šitý	šitie
+tne	tnú	tni	ťal	tnúc	tnúci		ťatý	ťatie
+vije	vijú	vi	vil	vijúc	vijúci		vitý	vitie
+vyje	vyjú	vy	vyl	vyjúc	vyjúci			vytie
+žne	žnú	žni	žal	žnúc	žnúci		žatý	žatie
+žije	žijú	ži	žil	žijúc	žijúci		žitý	žitie
+žuje	žujú	žuj	žul	žujúc	žujúci		žutý	žutie
+berie	berú	ber	bral	berúc	berúci		braný/bratý	branie/bratie
+ctí	ctia	cti	ctil	ctiac	ctiaci		ctený	ctenie
+čká	čkajú	čkaj	čkal	čkajúc	čkajúci			čkanie
+dbá	dbajú	dbaj	dbal	dbajúc	dbajúci			dbanie
+deje	dejú	dej	dial	dejúc	dejúci			dianie
+dme	dmú	dmi	dmul	dmúc	dmúci			dmutie
+derie	derú	der	dral	derúc	derúci		draný/dratý	dranie/dratie
+ženie	ženú	žeň	hnal	ženúc	ženúci		hnaný	hnanie
+hnije	hnijú	hni	hnil	hnijúc	hnijúci			hnitie
+hne	hnú	hni	hnul     nehnul/nehol	hnúc		hnuvší	hnutý	hnutie
+hrá	hrajú	hraj	hral	hrajúc	hrajúci		hratý/hraný	hratie/hranie
+hudie	hudú	huď	húdol	hudúc	hudúci		hudený	húdenie
+je	jedia	jedz	jedol	jediac	jediaci		jedený	jedenie
+kole	kolú	koľ	klal	kolúc	kolúci		klaný	klanie
+kľuje	kľujú	kľuj	kľul	kľujúc	kľujúci		kľutý	kľutie
+kryje	kryjú	kry	kryl	kryjúc	kryjúci		krytý	krytie
+leje	lejú	lej	lial	lejúc	lejúci		liaty	liatie
+lká	lkajú	lkaj	lkal	lkajúc	lkajúci			lkanie
+môže	môžu		mohol	môžuc	môžuci			
+obije	obijú	obi	obil	obijúc		obivší	obitý	obitie
+obuje	obujú	obuj	obul	obujúc		obuvší	obutý	obutie
+očí	očia	oč	očil	očiac	očiaci			očenie
+oduje	odujú	oduj	odul	odujúc		oduvší	odutý	odutie
+okuje	okujú	okuj	okul	okujúc		okuvší	okutý	okutie
+omyje	omyjú	omy	omyl	omyjúc		omyvší	omytý	omytie
+opije	opijú	opi	opil	opijúc		opivší	opitý	opitie
+orie	orú	or	oral	orúc	orúci		oraný	oranie
+ovije	ovijú	ovi	ovil	ovijúc		ovivší	ovitý	ovitie
+ožije	ožijú	oži	ožil	ožijúc		oživší	ožitý	ožitie
+ožuje	ožujú	ožuj	ožul	ožujúc		ožuvší	ožutý	ožutie
+pasie	pasú	pas	pásol	pasúc	pasúci		pasený	pasenie
+pľuje	pľujú	pľuj	pľul	pľujúc	pľujúci		pľutý	pľutie
+pnie	pnú	pni	pnul	pnúc	pnúci			pnutie
+perie	perú	per	pral	perúc	perúci		praný/pratý	pranie/pratie
+psuje	psujú	psuj	psul	psujúc	psujúci		psutý	psutie
+rastie	rastú	rasť/rasti	rástol	rastúc	rastúci			rastenie
+seje	sejú	sej	sial	sejúc	sejúci		siaty	siatie
+skuje	skujú	skuj	skul	skujúc		skuvší	skutý	skutie
+sníme	snímu	sním	sňal	snímuc		sňavší	sňatý	sňatie
+sní	snia	sni	snil	sniac	sniaci			snenie
+snuje	snujú	snuj	snul	snujúc	snujúci		snutý	snutie
+spí	spia	spi	spal	spiac	spiaci			spanie/spatie
+spije	spijú	spi	spil	spijúc		spivší	spitý	spitie
+serie	serú	ser	sral	serúc	serúci		sraný	sranie/sratie
+stane	stanú	staň	stal	stanúc		stavší		stanie
+stojí	stoja	stoj	stál	stojac	stojaci			státie
+stne	stnú	stni	sťal	stnúc		sťavší	sťatý	sťatie
+ští	štia	šti	šťal	štiac	štiaci			šťanie
+tká	tkajú	tkaj	tkal	tkajúc	tkajúci		tkaný	tkanie
+tlčie	tlčú	tlč	tĺkol	tlčúc	tlčúci		tlčený	tlčenie
+tmí			tmilo					tmenie
+ubije	ubijú	ubi	ubil	ubijúc		ubivší	ubitý	ubitie
+učí	učia	uč	učil	učiac	učiaci		učený	učenie
+udá	udajú	udaj	udal	udajúc		udavší	udaný	udanie
+údi	údia	úď	údil	údiac	údiaci		údený	údenie
+úfa	úfajú	úfaj	úfal	úfajúc	úfajúci			úfanie
+ujme	ujmú	ujmi	ujal	ujmúc		ujavší	ujatý	ujatie
+ujde	ujdú	ujdi	ušiel	ujdúc			ujdený	ujdenie
+ukuje	ukujú	ukuj	ukul	ukujúc		ukuvší	ukutý	ukutie
+umyje	umyjú	umy	umyl	umyjúc		umyvší	umytý	umytie
+upne	upnú	upni	upäl	upnúc		upävší	upätý	upätie
+upije	upijú	upi	upil	upijúc		upivší	upitý	upitie
+ušije	ušijú	uši	ušil	ušijúc		ušivší	ušitý	ušitie
+utne	utnú	utni	uťal	utnúc		uťavší	uťatý	utnutie
+utne	utnú	utni	uťal	utnúc		uťavší	uťatý	utnutie
+uvije	uvijú	uvi	uvil	uvijúc		uvivší	uvitý	uvitie
+užije	užijú	uži	užil	užijúc		uživší	užitý	užitie
+úži	úžia	úž	úžil	úžiac	úžiaci		úžený	úženie
+užuje	užujú	užuj	užul	užujúc		užuvší	užutý	užutie
+vbije	vbijú	vbi	vbil	vbijúc		vbivší	vbitý	vbitie
+veje	vejú	vej	vial	vejúc	vejúci		viaty	viatie
+vlaje	vlajú	vlaj	vlal	vlajúc	vlajúci			vlatie
+vpije	vpijú	vpi	vpil	vpijúc		vpivší	vpitý	vpitie
+vryje	vryjú	vry	vryl	vryjúc		vryvší	vrytý	vrytie
+vsaje	vsajú	vsaj	vsal	vsajúc		vsavší	vsatý	vsatie
+všije	všijú	vši	všil	všijúc		všivší	všitý	všitie
+vžije	vžijú	vži	vžil	vžijúc		vživší	vžitý	vžitie
+zbije	zbijú	zbi	zbil	zbijúc		zbivší	zbitý	zbitie
+zdá	zdajú	zdaj	zdal	zdajúc	zdajúci			zdanie
+zduje	zdujú	zduj	zdul	zdujúc		zduvší	zdutý	zdutie
+zíde	zídu	zíď	zišiel	zíduc			zídený	zídenie
+zmyje	zmyjú	zmy	zmyl	zmyjúc		zmyvší	zmytý	zmytie
+zná	znajú	znaj	znal	znajúc	znajúci		znaný	znanie
+zryje	zryjú	zry	zryl	zryjúc		zryvší	zrytý	zrytie
+zve	zvú	zvi	zval	zvúc	zvúci		zvaný	zvanie
+zžije	zžijú	zži	zžil	zžijúc		zživší	zžitý	zžitie
+žerie	žerú	žer	žral	žerúc	žerúci		žraný/žratý	žranie/žratie
+auká	aukajú	aukaj	aukal	aukajúc	aukajúci			aukanie
+bacá/bacia	bacajú	bacaj	bacal	bacajúc	bacajúci		bacaný	bacanie
+badá	badajú	badaj	badal	badajúc	badajúci		badaný	badanie
+báda	bádajú	bádaj	bádal	bádajúc	bádajúci		bádaný	bádanie
+bafá	bafajú	bafaj	bafal	bafajúc	bafajúci		bafaný	bafanie
+báji	bája	báj	bájil	bájac	bájaci		bájený	bájenie
+balí	balia	baľ	balil	baliac	baliaci		balený	balenie
+baví	bavia	bav	bavil	baviac	baviaci		bavený	bavenie
+baží	bažia	baž	bažil	bažiac	bažiaci			baženie
+bdie	bdejú	bdej	bdel	bdejúc	bdejúci			bdenie
+bečí	bečia	beč	bečal	bečiac	bečiaci			bečanie
+behá	behajú	behaj	behal	behajúc	behajúci		behaný	behanie
+béka	békajú	békaj	békal	békajúc	békajúci			békanie
+beží	bežia	bež	bežal	bežiac	bežiaci		bežaný	bežanie
+bíja	bíjajú	bíjaj	bíjal	bíjajúc	bíjajúci			bíjanie
+blčí	blčia	blč	blčal	blčiac	blčiaci			blčanie
+blká	blkajú	blkaj	blkal	blkajúc	blkajúci			blkanie
+bočí	bočia	boč	bočil	bočiac	bočiaci			bočenie
+bodá	bodajú	bodaj	bodal	bodajúc	bodajúci		bodaný	bodanie
+borí	boria	bor	boril	boriac	boriaci		borený	borenie
+boží	božia	bož	božil	božiac	božiaci			boženie
+bŕka	bŕkajú	bŕkaj	bŕkal	bŕkajúc	bŕkajúci			bŕkanie
+bŕľa	bŕľajú	bŕľaj	bŕľal	bŕľajúc	bŕľajúci			bŕľanie
+bučí	bučia	buč	bučal	bučiac	bučiaci			bučanie
+budí	budia	buď	budil	budiac	budiaci		budený	budenie
+búra	búrajú	búraj	búral	búrajúc	búrajúci		búraný	búranie
+búri	búria	búraj	búril	búriac	búriaci		búrený	búrenie
+búši	búšia	búš	búšil	búšiac	búšiaci	búšivší	búšený	búšenie
+búva	búvajú	búvaj	búval	búvajúc	búvajúci			búvanie
+býva	bývajú	bývaj	býval	bývajúc	bývajúci			bývanie
+cápe	cápu/cápajú	cáp/cápaj	cápal	cápuc/cápajúc	cápuci/cápajúci		cápaný	cápanie
+capí	capia	cap	capil	capiac		capivší	capený	capenie
+cári	cária	cár	cáril	cáriac	cáriaci			cárenie
+cedí	cedia	ceď	cedil	cediac	cediaci		cedený	cedenie
+celí	celia	ceľ	celil	celiac	celiaci		celený	celenie
+cení	cenia	ceň	cenil	ceniac	ceniaci		cenený	cenenie
+cerí	ceria	cer	ceril	ceriac	ceriaci		cerený	cerenie
+cicia	cicajú	cicaj	cical	cicajúc	cicajúci		cicaný	cicanie
+ciká	cikajú	cikaj	cikal	cikajúc	cikajúci			cikanie
+cíti	cítia	cíť	cítil	cítiac	cítiaci		cítený	cítenie
+cnie			cnelo					cnenie
+crčí	crčia	crč	crčal	crčiac	crčiaci			crčanie
+crká	crkajú	crkaj	crkal	crkajúc	crkajúci		crkaný	crkanie
+cŕka	cŕkajú	cŕkaj	cŕkal	cŕkajúc	cŕkajúci		cŕkaný	cŕkanie
+cucia	cucajú	cucaj	cucal	cucajúc	cucajúci		cucaný	cucanie
+cúdi	cúdia	cúď	cúdil	cúdiac	cúdiaci		cúdený	cúdenie
+cuká	cukajú	cukaj	cukal	cukajúc	cukajúci			cukanie
+cúva	cúvajú	cúvaj	cúval	cúvajúc	cúvajúci			cúvanie
+čadí	čadia	čaď	čadil	čadiac	čadiaci			čadenie
+čaká	čakajú	čakaj	čakal	čakajúc	čakajúci		čakaný	čakanie
+čapí	čapia	čap	čapil	čapiac	čapiaci	čapivší	čapený	čapenie
+čará	čarajú	čaraj	čaral	čarajúc	čarajúci	čaravší	čaraný	čaranie
+čarí	čaria	čar 	čaril	čariac	čariaci		čarený	čarenie
+časí			časilo					časenie
+čelí	čelia	čeľ	čelil	čeliac	čeliaci			čelenie
+čerí	čeria	čer	čeril	čeriac	čeriaci		čerený	čerenie
+češe	češú	češ	česal	češúc/česajúc	češúci/česajúci		česaný	česanie
+číha	číhajú	číhaj	číhal	číhajúc	číhajúci			číhanie
+činí	činia	čiň	činil	činiac	činiaci		činený	činenie
+číri	číria	čír	číril	číriac	číriaci		čírený	čírenie
+číta	čítajú	čítaj	čítal	čítajúc	čítajúci		čítaný	čítanie
+čnie	čnejú	čnej	čnel	čnejúc	čnejúci			čnenie
+čpie	čpejú	čpej	čpel	čpejúc	čpejúci			čpenie
+črtá	črtajú	črtaj	črtal	črtajúc	črtajúci		črtaný	črtanie
+čučí	čučia	čuč	čučal	čučiac	čučiaci			čučanie
+čupí	čupia	čup	čupil	čupiac	čupiaci			čupenie
+čurá	čurajú	čuraj	čural	čurajúc	čurajúci			čuranie
+čúra	čúrajú	čúraj	čúral	čúrajúc	čúrajúci			čúranie
+čuší	čušia	čuš	čušal	čušiac	čušiaci			čušanie
+darí	daria	dar	daril	dariac	dariaci			darenie
+dáva	dávajú	dávaj	dával	dávajúc	dávajúci		dávaný	dávanie
+dávi	dávia	dáv 	dávil	dáviac	dáviaci		dávený	dávenie
+dedí	dedia	deď	dedil	dediac	dediaci		dedený	dedenie
+delí	delia	deľ	delil	deliac	deliaci		delený	delenie
+desí	desia	des	desil	desiac	desiaci		desený	desenie
+díva	dívajú	dívaj	díval	dívajúc	dívajúci			dívanie
+diví	divia	div	divil	diviac	diviaci			divenie
+dlbe	dlbú	dlb	dlbal	dlbúc/dlbajúc	dlbúci/dlbajúci		dlbaný	dlbanie
+dĺži	dĺžia	dĺž	dĺžil	dĺžiac	dĺžiaci		dĺžený	dĺženie
+ďobe	ďobú	ďob/ďobaj	ďobal	ďobúc/ďobajúc	ďobúci/ďobajúci		ďobaný	ďobanie
+dobije	dobijú	dobi	dobil	dobijúc		dobivší	dobitý	dobitie
+dobyje	dobyjú	doby	dobyl	dobyjúc		dobyvší	dobytý	dobytie
+dočuje	dočujú	dočuj	dočul	dočujúc		dočuvší	dočutý	dočutie
+dodá	dodajú	dodaj	dodal	dodajúc		dodavší	dodaný	dodanie
+dojme	dojmú	dojmi	dojal	dojmúc		dojavší	dojatý 	dojatie
+dojí	doja	doj 	dojil	dojac	dojaci		dojený 	dojenie
+dokuje	dokujú	dokuj	dokul	dokujúc		dokuvší	dokutý	dokutie
+dopne	dopnú	dopni	dopäl/dopol	dopnúc		dopävší/dopnuvší	dopätý/dopnutý	dopätie/dopnutie
+dopije	dopijú	dopi	dopil	dopijúc		dopivší	dopitý 	dopitie
+doryje	doryjú	dory	doryl	doryjúc		doryvší	dorytý	dorytie
+došije	došijú	doši	došil	došijúc		došivší	došitý	došitie
+dotne	dotnú	dotni	doťal	dotnúc		doťavší	doťatý	doťatie
+dovije	dovijú	dovi	dovil	dovijúc		dovivší	dovitý	dovitie
+dožne	dožnú	dožni	dožal	dožnúc		dožavší	dožatý	dožatie
+dožije	dožijú	doži	dožil	dožijúc		doživší	dožitý 	dožitie
+dožuje	dožujú	dožuj	dožul	dožujúc		dožuvší	dožutý	dožutie
+dôjde	dôjdu	dôjdi	došiel	dôjduc			dôjdený	dôjdenie
+drgá	drgajú	drgaj	drgal	drgajúc	drgajúci		drganý	drganie
+drie	drú	dri	drel	drúc	drúci		drený/dretý	drenie/dretie
+drme	drmú/drmajú	drm/drmaj	drmal	drmúc/drmajúc	drmúcidrmajúci		drmaný	drmanie
+drví	drvia	drv	drvil	drviac	drviaci		drvený	drvenie
+drží	držia	drž	držal	držiac	držiaci		držaný	držanie
+ďube	ďubú	ďub/ďubaj	ďubal	ďubúc/ďubajúc	ďubúci/ďubajúci		ďubaný	ďubanie
+dučí	dučia	duč	dučal	dučiac	dučiaci			dučanie
+dudá	dudajú	dudaj	dudal	dudajúc	dudajúci		dudaný	dudanie
+dúda	dúdajú	dúdaj	dúdal	dúdajúc	dúdajúci		dúdaný	dúdanie
+dúfa	dúfajú	dúfaj	dúfal	dúfajúc	dúfajúci			dúfanie
+ďugá 	ďugajú	ďugaj	ďugal	ďugajúc	ďugajúci		ďuganý	ďuganie
+dumá	dumajú	dumaj	dumal	dumajúc	dumajúci			dumanie
+dupe/dupá	dupú/dupajú	dup/dupaj	dupal	dupúc/dupajúc	dupajúci		dupaný	dupanie
+durí	duria	dur	duril	duriac	duriaci		durený	durenie
+dusí	dusia	dus	dusil	dusiac	dusiaci		dusený	dusenie
+duší	dušia	duš	dušil	dušiac	dušiaci			dušenie
+dymí	dymia	dym	dymil	dymiac	dymiaci			dymenie
+džgá	džgajú	džgaj	džgal	džgajúc	džgajúci		džganý	džganie
+fára	fárajú	fáraj	fáral	fárajúc	fárajúci			fáranie
+fičí	fičia	fič	fičal	fičiac	fičiaci			fičanie
+fiká	fikajú	fikaj	fikal	fikajúc	fikajúci		fikaný	fikanie
+fotí	fotia	foť	fotil	fotiac	fotiaci		fotený	fotenie
+frčí	frčia	frč	frčal	frčiac	frčiaci			frčanie
+fŕka	fŕkajú	fŕkaj	fŕkal	fŕkajúc	fŕkajúci		fŕkaný	fŕkanie
+fŕľa	fŕľajú	fŕľaj	fŕľal	fŕľajúc	fŕľajúci			fŕľanie
+fučí	fučia	fuč	fučal	fučiac	fučiaci			fučanie
+fúka	fúkajú	fúkaj	fúkal	fúkajúc	fúkajúci		fúkaný	fúkanie
+fúľa	fúľajú	fúľaj	fúľal	fúľajúc	fúľajúci		fúľaný	fúľanie
+funí	funia	fuň	fuňal	funiac/fuňajúc	funiaci/fuňajúci			fuňanie
+gága	gágajú	gágaj	gágal	gágajúc	gágajúci			gáganie
+gáni	gánia	gáň	gánil	gániac	gániaci			gánenie
+glgá	glgajú	glgaj	glgal	glgajúc	glgajúci		glganý	glganie
+grcia	grcajú	grcaj	grcal	grcajúc	grcajúci			grcanie
+grgá	grgajú	grgaj	grgal	grgajúc	grgajúci			grganie
+gúľa	gúľajú	gúľaj	gúľal	gúľajúc	gúľajúci		gúľaný	gúľanie
+habe	habú	hab	habal	habúc/habajúc	habúci/habajúci		habaný	habanie
+hačá	hačajú	hačaj	hačal	hačajúc	hačajúci	hačavší		hačanie
+háči	háčia	háč	háčil	háčiac	háčiaci			háčenie
+háda	hádajú	hádaj	hádal	hádajúc	hádajúci		hádaný	hádanie
+hadí	hadia	haď	hadil	hadiac	hadiaci			hadenie
+hajá	hajajú	hajaj	hajal	hajajúc	hajajúci			hajanie
+háji	hája	háj	hájil	hájac	hájaci		hájený	hájenie
+halí	halia	haľ	halil	haliac	haliaci		halený	halenie
+hamá	hamajú	hamaj	hamal	hamajúc	hamajúci		hamaný	hamanie
+haní	hania	haň	hanil	haniac	haniaci		hanený	hanenie
+hapá	hapajú	hapaj	hapal	hapajúc		hapavší	hapaný	hapanie
+hasí	hasia	has	hasil	hasiac	hasiaci		hasený	hasenie
+hatá	hatajú	hac/hataj	hatal	hatajúc	hatajúci		hataný	hatanie
+hatí	hatia	hať	hatil	hatiac	hatiaci		hatený	hatenie
+hegá	hegajú	hegaj	hegal	hegajúc	hegajúci		heganý	heganie
+híka	híkajú	híkaj	híkal	híkajúc	híkajúci			híkanie
+hĺba	hĺbajú	hĺbaj	hĺbal	hĺbajúc	hĺbajúci			hĺbanie
+hĺbi	hĺbia	hĺb	hĺbil	hĺbiac	hĺbiaci		hĺbený	hĺbenie
+hlce/hltá	hlcú/hltajú	hlc/hltaj	hltal	hltajúc	hltajúci		hltaný	hltanie
+hmká	hmkajú	hmkaj	hmkal	hmkajúc	hmkajúci		hmkaný	hmkanie
+hmlí	hmlia	hmli	hmlil	hmliac	hmliaci			hmlenie
+hodí	hodia	hoď	hodil	hodiac	hodiaci	hodivší	hodený	hodenie
+hojí	hoja	hoj	hojil	hojac	hojaci		hojený	hojenie
+holí	holia	hoľ	holil	holiac	holiaci		holený	holenie
+honí	honia	hoň	honil	honiac	honiaci		honený	honenie
+hôli	hôlia	hôľ	hôlil	hôliac	hôliaci		hôlený	hôlenie
+hrbí	hrbia	hrb	hrbil	hrbiac	hrbiaci		hrbený	hrbenie
+hrčí	hrčia	hrč	hrčal	hrčiac	hrčiaci			hrčanie
+hrčí	hrčia	hrč	hrčil	hrčiac	hrčiaci			hrčenie
+hrdí	hrdia	hrď	hrdil	hrdiac	hrdiaci			hrdenie
+hreje	hrejú	hrej	hrial	hrejúc	hrejúci		hriaty	hriatie
+hrká	hrkajú	hrkaj	hrkal	hrkajúc	hrkajúci			hrkanie
+hrnie	hrnú	hrň	hrnul	hrnúc	hrnúci		hrnutý 	hrnutie
+hryzie	hryzú	hryz	hrýzol	hryzúc	hryzúci		hryzený	hryzenie
+hubí	hubia	hub	hubil	hubiac	hubiaci		hubený	hubenie
+hučí	hučia	huč	hučal	hučiac	hučiaci			hučanie
+húka	húkajú	húkaj	húkal	húkajúc	húkajúci			húkanie
+húpa	húpajú	húpaj	húpal	húpajúc	húpajúci			húpanie
+húta	hútajú	hútaj	hútal	hútajúc	hútajúci			hútanie
+hýbe	hýbu	hýb	hýbal	hýbuc/hýbajúc	hýbuci/hýbajúci		hýbaný	hýbanie
+hynie	hynú	hyň	hynul	hynúc	hynúci			hynutie
+hýri	hýria	hýr	hýril	hýriac	hýriaci			hýrenie
+ihrá	ihrajú	ihraj	ihral	ihrajúc	ihrajúci		ihraný	ihranie
+íska	ískajú	ískaj	ískal	ískajúc	ískajúci		ískaný	ískanie
+istí	istia	isť/isti	istil	istiac	istiaci		istený	istenie
+jačí	jačia	jač	jačal	jačiac	jačiaci			jačanie
+jagá	jagajú	jagaj	jagal	jagajúc	jagajúci			jaganie
+jarí			jarilo					jarenie
+jasá	jasajú	jasaj	jasal	jasajúc	jasajúci			jasanie
+jaší	jašia	jaš	jašil	jašiac	jašiaci			jašenie
+javí	javia	jav	javil	javiac	javiaci		javený	javenie
+ježí	ježia	jež	ježil	ježiac	ježiaci		ježený	ježenie
+kadí	kadia	kaď	kadil	kadiac	kadiaci			kadenie
+kajá/kaja	kajajú	kajaj	kajal	kajajúc	kajajúci			kajanie
+kaká	kakajú	kakaj	kakal	kakajúc	kakajúci			kakanie
+kála	kálajú	kálaj	kálal	kálajúc	kálajúci		kálaný	kálanie
+kalí	kalia	kaľ	kalil	kaliac	kaliaci		kalený	kalenie
+kanie	kanú	kaň	kanul	kanúc	kanúci			kanutie
+kape	kapú	kap	kapal	kapúc	kapúci			kapanie
+kaše/kasá	kašú/kasajú	kaš/kasaj	kasal	kašúc/kasajúc	kašúci/kasajúci		kasaný	kasanie
+káže	kážu	káž	kázal	kážuc	kážuci		kázaný	kázanie
+kazí	kazia	kaz	kazil	kaziac	kaziaci		kazený	kazenie
+kladie	kladú	klaď	kládol	kladúc	kladúci		kladený	kladenie
+kĺbi	kĺbia	kĺb	kĺbil	kĺbiac	kĺbiaci		kĺbený	kĺbenie
+kľaje	kľajú	kľaj	klial	kľajúc	kľajúci			kliatie
+kĺže	kĺžu	kĺž/kĺzaj	kĺzal	kĺžuc/kĺzajúc	kĺžuci/kĺzajúci		kĺzaný	kĺzanie
+kojí	koja	koj	kojil	kojac	kojaci			kojenie
+koná	konajú	konaj	konal	konajúc	konajúci		konaný	konanie
+kope	kopú	kop	kopal	kopúc/kopajúc	kopúci/kopajúci		kopaný	kopanie
+kopí	kopia	kop	kopil	kopiac	kopiaci		kopený	kopenie
+korí	koria	kor	koril	koriac	koriaci			korenie
+kosí	kosia	kos	kosil	kosiac	kosiaci		kosený	kosenie
+kotí	kotia	koť	kotil	kotiac	kotiaci		kotený	kotenie
+kuje	kujú	kuj	koval	kovajúc	kovajúci		kovaný	kovanie
+krčí	krčia	krč	krčil	krčiac	krčiaci		krčený	krčenie
+kŕka	kŕkajú	kŕkaj	kŕkal	kŕkajúc	kŕkajúci			kŕkanie
+kŕmi	kŕmia	kŕm	kŕmil	kŕmiac	kŕmiaci		kŕmený	kŕmenie
+kuká	kukajú	kukaj	kukal	kukajúc	kukajúci			kukanie
+kúpe	kúpu	kúp	kúpal	kúpuc/kúpajúc	kúpuci/kúpajúci		kúpaný	kúpanie
+kúpi	kúpia	kúp	kúpil	kúpiac		kúpivší	kúpený	kúpenie
+kúri	kúria	kúr	kúril	kúriac	kúriaci			kúrenie
+kuce/kutá	kucú/kutajú	kuc/kutaj	kutal	kutajúc	kutajúci		kutaný	kutanie
+kutí	kutia	kuť	kutil	kutiac	kutiaci		kutený	kutenie
+kydá	kydajú	kydaj	kydal	kydajúc	kydajúci		kydaný	kydanie
+kynie	kynú	kyň	kynul	kynúc	kynúci			kynutie
+kýši	kýšia	kýš	kýšil	kýšiac	kýšiaci		kýšený	kýšenie
+kýva/kýve	kývajú/kývu	kýv/kývaj	kýval	kývajúc/kývuc	kývajúci/kývuci		kývaný	kývanie
+ladí	ladia	laď	ladil	ladiac	ladiaci		ladený	ladenie
+láka	lákajú	lákaj	lákal	lákajúc	lákajúci		lákaný	lákanie
+ľaká	ľakajú	ľakaj	ľakal	ľakajúc	ľakajúci		ľakaný	ľakanie
+láme	lámu	lám	lámal	lámuc/lámajúc	lámuci/lámajúci		lámaný	lámanie
+lapá	lapajú	lap	lapal	lapajúc	lapajúci		lapaný	lapanie
+lapí	lapia	lap	lapil	lapiac		lapivší	lapený	lapenie
+láta/láce	látajú/lácu	látaj/lác	látal	látajúc/lácuc	látajúci		látaný	látanie
+lení			lenilo					lenenie
+lepí	lepia	lep	lepil	lepiac	lepiaci		lepený	lepenie
+leží	ležia	lež	ležal	ležiac	ležiaci			ležanie
+líči	líčia	líč	líčil	líčiac	líčiaci		líčený	líčenie
+lezie	lezú	lez	liezol	lezúc	lezúci			lezenie
+líha	líhajú	líhaj	líhal	líhajúc	líhajúci			líhanie
+líši	líšia	líš	líšil	líšiac	líšiaci			líšenie
+líže	lížu	líž	lízal	lížuc	lížuci		lízaný	lízanie
+logá	logajú	logaj	logal	logajúc	logajúci		loganý	loganie
+lomí	lomia	lom	lomil	lomiac	lomiaci		lomený	lomenie
+loví	lovia	lov	lovil	loviac	loviaci		lovený	lovenie
+lozí	lozia	loz	lozil	loziac	loziaci			lozenie
+ľpie	ľpejú	ľpej	ľpel	ľpejúc	ľpejúci			ľpenie
+ľúbi	ľúbia	ľúb	ľúbil	ľúbiac	ľúbiaci		ľúbený	ľúbenie
+lúči	lúčia	lúč	lúčil	lúčiac	lúčiaci			lúčenie
+luže/luhá	lužú/luhajú	luž/luhaj	luhal	lužúc/luhajúc	lužúci/luhajúci			luhanie
+lúpe	lúpu/lúpajú	lúp/lúpaj	lúpal	lúpuc/lúpajúc	lúpuci/lúpajúci		lúpaný	lúpanie
+lúpi	lúpia	lúp	lúpil	lúpiac	lúpiaci		lúpený	lúpenie
+ľúti	ľútia	ľúť	ľútil	ľútiac	ľútiaci			ľútenie
+macia	macajú	macaj	macal	macajúc	macajúci		macaný	macanie
+máča	máčajú	máčaj	máčal	máčajúc	máčajúci		máčaný	máčanie
+mága	mágajú	mágaj	mágal	mágajúc	mágajúci		máganý	máganie
+maká	makajú	makaj	makal	makajúc	makajúci			makanie
+máli	mália	máľ	málil	máliac	máliaci			málenie
+mámi	mámia	mám	mámil	mámiac	mámiaci		mámený	mámenie
+marí	maria	mar	maril	mariac	mariaci		marený	marenie
+máta/máce	mátajú/mácu	mátaj/mác	mátal	mátajúc/mácuc	mátajúci/mácuci		mátaný	mátanie
+máva	mávajú	mávaj	mával	mávajúc	mávajúci		mávaný	mávanie
+maže	mažú	maž	mazal	mažúc	mažúci		mazaný	mazanie
+mečí	mečia	meč	mečal	mečiac	mečiaci			mečanie
+méka	mékajú	mékaj	mékal	mékajúc	mékajúci			mékanie
+melí	melia	meľ	melil	meliac	meliaci		melený	melenie
+mení	menia	meň	menil	meniac	meniaci		menený	menenie
+meria	merajú	meraj	meral	merajúc	merajúci		meraný	meranie
+merí	meria	mer	meril	meriac	meriaci		merený	merenie
+mece/metá	mecú/metajú	mec/metaj	metal	metajúc	metajúci		metaný	metanie
+mätie	mätú	mäť	miatol	mätúc	mätúci		mätený	mätenie
+metie	metú	meť	mietol	metúc	metúci		metený	metenie
+migá	migajú	migaj	migal	migajúc	migajúci			miganie
+mihá	mihajú	mihaj	mihal	mihajúc	mihajúci			mihanie
+míňa	míňajú	míňaj	míňal	míňajúc	míňajúci		míňaný	míňanie
+minie	minú	miň	minul	minúc		minuvší	minutý	minutie
+mlčí	mlčia	mlč	mlčal	mlčiac	mlčiaci			mlčanie
+melie	melú	meľ	mlel	melúc	melúci		mletý	mletie
+močí	močia	moč	močil	močiac	močiaci		močený	močenie
+morí	moria	mor	moril	moriac	moriaci		morený	morenie
+moce/motá	mocú/motajú	moc/motaj	motal	motajúc/mocúc	motajúci/mocúci		motaný	motanie
+mrdá	mrdajú	mrdaj	mrdal	mrdajúc	mrdajúci			mrdanie
+mrhá	mrhajú	mrhaj	mrhal	mrhajúc	mrhajúci		mrhaný	mrhanie
+mrie	mrú	mri	mrel	mrúc	mrúci			mretie/mrenie
+mrká	mrkajú	mrkaj	mrkal	mrkajúc	mrkajúci			mrkanie
+mrví	mrvia	mrv	mrvil	mrviac	mrviaci		mrvený	mrvenie
+mstí	mstia	msti	mstil	mstiac	mstiaci		mstený	mstenie
+mučí	mučia	muč	mučal	mučiac	mučiaci			mučanie
+mučí	mučia	muč	mučil	mučiac	mučiaci		mučený	mučenie
+múka	múkajú	múkaj	múkal	múkajúc	múkajúci			múkanie
+múti	mútia	múť	mútil	mútiac	mútiaci		mútený	mútenie
+myká	mykajú	mykaj	mykal	mykajúc	mykajúci		mykaný	mykanie
+mýli	mýlia	mýľ	mýlil	mýliac	mýliaci		mýlený	mýlenie
+nabije	nabijú	nabi	nabil	nabijúc		nabivší	nabitý	nabitie
+načne	načnú	načni	načal	načnúc		načavší	načatý	načatie
+nadá	nadajú	nadaj	nadal	nadajúc		nadavší		nadanie
+naduje	nadujú	naduj	nadul	nadujúc		naduvší	nadutý	nadutie
+najme	najmú	najmi	najal	najmúc		najavší	najatý	najatie
+nájde	nájdu	nájdi	našiel	nájduc			nájdený	nájdenie
+nakuje	nakujú	nakuj	nakul	nakujúc		nakuvší	nakutý	nakutie
+napne	napnú	napni	napäl	napnúc		napävší	napätý	napätie
+napije	napijú	napi	napil	napijúc		napivší	napitý	napitie
+nasaje	nasajú	nasaj	nasal	nasajúc		nasavší	nasatý	nasatie
+našije	našijú	naši	našil	našijúc		našivší	našitý	našitie
+natne	natnú	natni	naťal	natnúc		naťavší	naťatý	naťatie
+navije	navijú	navi	navil	navijúc		navivší	navitý	navitie
+nažne	nažnú	nažni	nažal	nažnúc		nažavší	nažatý	nažatie
+nažije	nažijú	naži	nažil	nažijúc		naživší	nažitý	nažitie
+ničí	ničia	nič	ničil	ničiac	ničiaci		ničený	ničenie
+nesie	nesú	nes	niesol	nesúc	nesúci		nesený	nesenie
+níži	nížia	níž	nížil	nížiac	nížiaci		nížený	níženie
+norí	noria	nor	noril	noriac	noriaci		norený	norenie
+nosí	nosia	nos	nosil	nosiac	nosiaci		nosený	nosenie
+nôti	nôtia	nôť	nôtil	nôtiac	nôtiaci		nôtený	nôtenie
+nudí	nudia	nuď	nudil	nudiac	nudiaci		nudený	nudenie
+núka	núkajú	núkaj	núkal	núkajúc	núkajúci		núkaný	núkanie
+núra	núrajú	núraj	núral	núrajúc	núrajúci			núranie
+ňúra	ňúrajú	ňúraj	ňúral	ňúrajúc	ňúrajúci			ňúranie
+núti	nútia	núť	nútil	nútiac	nútiaci		nútený	nútenie
+obíde	obídu	obíď	obišiel	obíduc			obídený	obídenie
+objíme	objímu	objím	objal	objímuc		objavší	objatý	objatie
+obmyje	obmyjú	obmy	obmyl	obmyjúc		obmyvší	obmytý	obmytie
+oberie	oberú	ober	obral	oberúc		obravší	obraný/obratý	obranie/obratie
+obšije	obšijú	obši	obšil	obšijúc		obšivší	obšitý	obšitie
+obtne	obtnú	obtni	obťal	obtnúc		obťavší	obťatý	obťatie
+obtne	obtnú	obtni	obťal	obtnúc		obťavší	obťatý	obťatie
+obvije	obvijú	obvi	obvil	obvijúc		obvivší	obvitý	obvitie
+obžne	obžnú	obžni	obžal	obžnúc		obžavší	obžatý	obžatie
+obžije	obžijú	obži	obžil	obžijúc		obživší	obžitý	obžitie
+obžuje	obžujú	obžuj	obžul	obžujúc		obžuvší	obžutý	obžutie
+oclí	oclia	ocli	oclil	ocliac		oclivší	oclený	oclenie
+odbije	odbijú	odbi	odbil	odbijúc		odbivší	odbitý	odbitie
+odbyje	odbyjú	odby	odbyl	odbyjúc		odbyvší	odbytý	odbytie
+oddá	oddajú	oddaj	oddal	oddajúc		oddavší	oddaný	oddanie
+odduje	oddujú	odduj	oddul	oddujúc		odduvší	oddutý	oddutie
+odeje	odejú	odej	odial	odejúc		odiavší	odiaty	odiatie
+odeje	odejú	odej	odel	odejúc		odevší	odený/odetý	odenie/odetie
+odíde	odídu	odíď	odišiel	odíduc			odídený	odídenie
+odníme	odnímu	odním	odňal	odnímuc		odňavší	odňatý	odňatie
+odpije	odpijú	odpi	odpil	odpijúc		odpivší	odpitý	odpitie
+oderie	oderú	oder	odral	oderúc		odravší	odraný/odratý	odranie/odratie
+odsaje	odsajú	odsaj	odsal	odsajúc		odsavší	odsatý	odsatie
+odšije	odšijú	odši	odšil	odšijúc		odšivší	odšitý	odšitie
+odtne	odtnú	odtni	odťal	odtnúc		odťavší	odťatý	odťatie
+odvije	odvijú	odvi	odvil	odvijúc		odvivší	odvitý	odvitie
+odžne	odžnú	odžni	odžal	odžnúc		odžavší	odžatý	odžatie
+odžije	odžijú	odži	odžil	odžijúc		odživší	odžitý	odžitie
+ohká	ohkajú	ohkaj	ohkal	ohkajúc	ohkajúci			ohkanie
+oženie	oženú	ožeň	ohnal	oženúc		ohnavší	ohnaný	ohnanie
+ohne	ohnú	ohni	ohol	ohnúc		ohnuvší	ohnutý	ohnutie
+ohrá	ohrajú	ohraj	ohral	ohrajúc		ohravší	ohratý/ohraný	ohratie/ohranie
+ondí	ondia	ondi	ondil	ondiac	ondiaci		ondený	ondenie
+opľuje	opľujú	opľuj	opľul	opľujúc		opľuvší	opľutý	opľutie
+operie	operú	oper	opral	operúc		opravší	opraný/opratý	opranie/opratie
+oseje	osejú	osej	osial	osejúc		osiavší	osiaty	osiatie
+ostane	ostanú	ostaň	ostal	ostanúc		ostavší		ostanie
+otlčie	otlčú	otlč	otĺkol	otlčúc			otlčený	otlčenie
+oveje	ovejú	ovej	ovial	ovejúc		oviavší	oviaty	oviatie
+ozve	ozvú	ozvi	ozval	ozvúc		ozvavší		ozvanie
+ožerie	ožerú	ožer	ožral	ožerúc		ožravší	ožraný/ožratý	ožranie/ožratie
+páči	páčia	páč	páčil	páčiac	páčiaci		páčený	páčenie
+padá	padajú	padaj	padal	padajúc	padajúci		padaný	padanie
+páli	pália	páľ	pálil	páliac	páliaci		pálený	pálenie
+papá	papajú	papaj	papal	papajúc	papajúci		papaný	papanie
+pára	párajú	páraj	páral	párajúc	párajúci		páraný	páranie
+parí	paria	par	paril	pariac	pariaci		parený	parenie
+pári	pária	pár 	páril	páriac	páriaci		párený	párenie
+pása	pásajú	pásaj	pásal	pásajúc	pásajúci			pásanie
+pätí	pätia	päť	pätil	pätiac	pätiaci		pätený	pätenie
+pení	penia	peň	penil	peniac	peniaci		penený	penenie
+perí	peria	per	peril	periac	periaci			perenie
+pchá	pchajú	pchaj	pchal	pchajúc	pchajúci		pchaný	pchanie
+pečie	pečú	peč	piekol	pečúc	pečúci		pečený	pečenie
+pigá	pigajú	pigaj	pigal	pigajúc	pigajúci		piganý	piganie
+píja	píjajú	píjaj	píjal	píjajúc	píjajúci			píjanie
+píli	pília	píľ	pílil	píliac	píliaci		pílený	pílenie
+pípa	pípajú	pípaj	pípal	pípajúc	pípajúci			pípanie
+píše	píšu	píš	písal	píšuc	píšuci		písaný	písanie
+pišá	pišajú	pišaj	pišal	pišajúc	pišajúci			pišanie
+pleje	plejú	plej	plel	plejúc	plejúci		pletý	plenie/pletie
+plní	plnia	plň	plnil	plniac	plniaci		plnený	plnenie
+pltí	pltia	plť	pltil	pltiac	pltiaci		pltený	pltenie
+pnie	pnejú	pnej	pnel	pnejúc	pnejúci			pnenie
+pobi	pobijú	pobi	pobil	pobijúc		pobivší	pobitý	pobitie
+počne	počnú	počni	počal	počnúc		počavší	počatý	počatie
+počuje	počujú	počuj	počul	počujúc	počujúci	počuvší	počutý	počutie
+podá	podajú	podaj	podal	podajúc		podavší	podaný	podanie
+pojme	pojmú	pojmi	pojal	pojmúc		pojavší	pojatý	pojatie
+pokuje	pokujú	pokuj	pokul	pokujúc		pokuvší	pokutý	pokutie
+polí	polia	poľ	polil	poliac	poliaci		polený	polenie
+pojme	pojmú	pojmi	poňal	pojmúc		poňavší	poňatý	poňatie
+popije	popijú	popi	popil	popijúc		popivší	popitý	popitie
+poruje	porujú	poruj	porul	porujúc		poruvší	porutý	porutie
+pošije	pošijú	poši	pošil	pošijúc		pošivší	pošitý	pošitie
+potí	potia	poť	potil	potiac	potiaci		potený	potenie
+povije	povijú	povi	povil	povijúc		povivší	povitý	povitie
+požne	požnú	požni	požal	požnúc		požavší	požatý	požatie
+požije	požijú	poži	požil	požijúc		poživší	požitý	požitie
+požuje	požujú	požuj	požul	požujúc		požuvší	požutý	požutie
+pôjde	pôjdu	pôjdi	pošiel	pôjduc				pôjdenie
+praje	prajú	praj	prial	prajúc	prajúci		priaty	prianie
+prie	prú	pri	prel	prúc	prúci			prenie
+príde	prídu	príď	prišiel	príduc				
+prší	pršia	prš	pršal	pršiac	pršiaci			pršanie
+pučí	pučia	puč	pučal	pučiac	pučiaci			pučanie
+pučí	pučia	puč	pučil	pučiac	pučiaci		pučený	pučenie
+pudí	pudia	puď	pudil	pudiac	pudiaci		pudený	pudenie
+puká	pukajú	pukaj	pukal	pukajúc	pukajúci		pukaný	pukanie
+púta	pútajú	pútaj	pútal	pútajúc	pútajúci		pútaný	pútanie
+pyká	pykajú	pykaj	pykal	pykajúc	pykajúci			pykanie
+pýri	pýria	pýr	pýril	pýriac	pýriaci			pýrenie
+pýši	pýšia	pýš	pýšil	pýšiac	pýšiaci			pýšenie
+pýta	pýtajú	pýtaj	pýtal	pýtajúc	pýtajúci		pýtaný	pýtanie
+ráči	ráčia	ráč	ráčil	ráčiac	ráčiaci		ráčený	ráčenie
+radí	radia	raď	radil	radiac	radiaci		radený	radenie
+rafe/rafá	rafú/rafajú	raf/rafaj	rafal	rafajúc	rafajúci		rafaný	rafanie
+ráňa	ráňajú	ráňaj	ráňal	ráňajúc	ráňajúci		ráňaný	ráňanie
+raní	rania	raň	ranil	raniac		ranivší	ranený	ranenie
+ráta/ráce	rátajú/rácu	rátaj/rác	rátal	rátajúc	rátajúci		rátaný	rátanie
+razí	razia	raz	razil	raziac	raziaci		razený	razenie
+reve	revú	rev	reval	revúc	revúci		revaný	revanie
+reže	režú	rež	rezal	režúc	režúci		rezaný	rezanie
+rečie	rečú	rec	riekol	rečúc			rečený	rečenie
+rihá	rihajú	rihaj	rihal	rihajúc	rihajúci			rihanie
+rinie	rinú	riň	rinul	rinúc	rinúci			rinutie
+robí	robia	rob	robil	robiac	robiaci		robený	robenie
+rodí	rodia	roď	rodil	rodiac	rodiaci		rodený	rodenie
+rojí	roja	roj	rojil	rojac	rojaci			rojenie
+roní	ronia	roň	ronil	roniac	roniaci		ronený	ronenie
+rosí	rosia	ros	rosil	rosiac	rosiaci		rosený	rosenie
+rúbe	rúbu	rúb/rúbaj	rúbal	rúbuc/rúbajúc	rúbajúci		rúbaný	rúbanie
+rúca	rúcajú	rúcaj	rúcal	rúcajúc	rúcajúci		rúcaný	rúcanie
+ručí	ručia	ruč	ručal	ručiac	ručiaci			ručanie
+ručí	ručia	ruč	ručil	ručiac	ručiaci			ručenie
+rúha	rúhajú	rúhaj	rúhal	rúhajúc	rúhajúci			rúhanie
+rušia	rušajú	rušaj	rušal	rušajúc	rušajúci			rušanie
+ruší	rušia	ruš	rušil	rušiac	rušiaci		rušený	rušenie
+rúti	rútia	rúť	rútil	rútiac	rútiaci			rútenie
+ruve	ruvú	ruvaj	ruval	ruvajúc	ruvajúci			ruvanie
+ryčí	ryčia	ryč	ryčal	ryčiac	ryčiaci			ryčanie
+rýpe	rýpu	rýp	rýpal	rýpuc/rýpajúc	rýpuci/rýpajúci		rýpaný	rýpanie
+sáče	sáču/sácajú	sáč/sácaj	sácal	sácajúc	sácajúci		sácaný	sácanie
+sadá	sadajú	sadaj	sadal	sadajúc	sadajúci			sadanie
+sadí	sadia	saď	sadil	sadiac	sadiaci		sadený	sadenie
+sála	sálajú	sálaj	sálal	sálajúc	sálajúci		sálaný	sálanie
+seká	sekajú	sekaj	sekal	sekajúc	sekajúci		sekaný	sekanie
+síka	síkajú	síkaj	síkal	síkajúc	síkajúci			síkanie
+silí	silia	siľ	silil	siliac	siliaci		silený	silenie
+síri	síria	sír	síril	síriac	síriaci		sírený	sírenie
+skryje	skryjú	skry	skryl	skryjúc		skryvší	skrytý	skrytie
+slní	slnia	slň	slnil	slniac	slniaci			slnenie
+slzí	slzia	slz	slzil	slziac	slziaci			slzenie
+smeje	smejú	smej	smial	smejúc	smejúci			smiatie
+smie	smú		smel	smúc	smúci			smenie
+socia	socajú	socaj	socal	socajúc	socajúci		socaný	socanie
+solí	solia	soľ	solil	soliac	soliaci		solený	solenie
+sotí	sotia	soť	sotil	sotiac		sotivší	sotený	sotenie
+spasie	spasú	spas	spásol	spasúc			spasený	spasenie
+speje	spejú	spej	spel	spejúc	spejúci			spenie
+sperie	sperú	sper	spral	sperúc		spravší	spraný/spratý	spranie/spratie
+srdí	srdia	srď	srdil	srdiac	srdiaci		srdený	srdenie
+srká	srkajú	srkaj	srkal	srkajúc	srkajúci		srkaný	srkanie
+sŕka	sŕkajú	sŕkaj	sŕkal	sŕkajúc	sŕkajúci		sŕkaný	sŕkanie
+srší	sršia	srš	sršal	sršiac	sršiaci			sršanie
+stelie	stelú	steľ	stlal	stelúc	stelúci		stlaný/stlatý	stlanie
+stlčie	stlčú	stlč	stĺkol	stlčúc			stlčený	stlčenie
+stmí			stmilo				stmené	stmenie
+súdi	súdia	súď	súdil	súdiac	súdiaci		súdený	súdenie
+súka	súkajú	súkaj	súkal	súkajúc	súkajúci		súkaný	súkanie
+sunie	sunú	suň	sunul	sunúc	sunúci		sunutý	sunutie
+súri	súria	súr	súril	súriac	súriaci		súrený	súrenie
+suší	sušia	suš	sušil	sušiac	sušiaci		sušený	sušenie
+súži	súžia	súž	súžil	súžiac	súžiaci		súžený	súženie
+syčí	syčia	syč	syčal	syčiac	syčiaci			syčanie
+syká	sykajú	sykaj	sykal	sykajúc	sykajúci			sykanie
+sype	sypú	syp	sypal	sypúc/sypajúc	sypúci/sypajúci		sypaný	sypanie
+sýti	sýtia	sýť	sýtil	sýtiac	sýtiaci		sýtený	sýtenie
+šatí	šatia	šať	šatil	šatiac	šatiaci		šatený	šatenie
+šerí	šeria	šer	šeril	šeriac	šeriaci			šerenie
+šibe	šibú	šib/šibaj	šibal	šibúc/šibajúc	šibúci/šibajúci		šibaný	šibanie
+šíja	šíjajú	šíjaj	šíjal	šíjajúc	šíjajúci			šíjanie
+šinie	šinú	šiň	šinul	šinúc	šinúci			šinutie
+šípi	šípia	šíp	šípil	šípiac	šípiaci		šípený	šípenie
+šíri	šíria	šír	šíril	šíriac	šíriaci		šírený	šírenie
+špie	špejú	špej	špel	špejúc	špejúci		špený	špenie
+štve	štvú	štvi	štval	štvúc	štvúci		štvaný	štvanie
+šudí	šudia	šuď	šudil	šudiac	šudiaci		šudený	šudenie
+šúľa	šúľajú	šúľaj	šúľal	šúľajúc	šúľajúci		šúľaný	šúľanie
+šúpe	šúpu	šúp	šúpal	šúpuc/šúpajúc	šúpuci/šúpajúci		šúpaný	šúpanie
+ťahá	ťahajú	ťahaj	ťahal	ťahajúc	ťahajúci		ťahaný	ťahanie
+tají	taja	taj	tajil	tajac	tajaci		tajený	tajenie
+táka	tákajú	tákaj	tákal	tákajúc	tákajúci			tákanie
+tanie	tanú	taň	tanul	tanúc	tanúci			tanutie
+tápe/tápa	tápu/tápajú	táp/tápaj	tápal	tápuc/tápajúc	tápuci/tápajúci			tápanie
+tára	tárajú	táraj	táral	tárajúc	tárajúci		táraný	táranie
+tasá	tasajú	tasaj	tasal	tasajúc	tasajúci		tasaný	tasanie
+tasí	tasia	tas 	tasil	tasiac	tasiaci		tasený	tasenie
+taví	tavia	tav	tavil	taviac	taviaci		tavený	tavenie
+ťaží	ťažia	ťaž	ťažil	ťažiac	ťažiaci		ťažený	ťaženie
+telí	telia	teľ	telil	teliac	teliaci			telenie
+tepe	tepú	tep/tepaj	tepal	tepúc/tepajúc	tepúci/tepajúci		tepaný	tepanie
+teše/tesá	tešú/tesajú	teš/tesaj	tesal	tesajúc	tešúci/tesajúci		tesaný	tesanie
+teší	tešia	teš	tešil	tešiac	tešiaci		tešený	tešenie
+tečie	tečú	teč	tiekol	tečúc	tečúci			tečenie
+tiká	tikajú	tikaj	tikal	tikajúc	tikajúci			tikanie
+tíši	tíšia	tíš	tíšil	tíšiac	tíšiaci		tíšený	tíšenie
+tlie	tlejú	tlej	tlel	tlejúc	tlejúci			tlenie/tletie
+tlmí	tlmia	tlm	tlmil	tlmiac	tlmiaci		tlmený	tlmenie
+tmie	tmejú	tmej	tmel	tmejúc	tmejúci			tmenie
+točí	točia	toč	točil	točiac	točiaci		točený	točenie
+toká	tokajú	tokaj	tokal	tokajúc	tokajúci			tokanie
+tonie	tonú	toň	tonul	tonúc	tonúci			tonutie
+topí	topia	top	topil	topiac	topiaci		topený	topenie
+tôni	tônia	tôň	tônil	tôniac	tôniaci		tônený	tônenie
+trčí	trčia	trč	trčal	trčiac	trčiaci			trčanie
+trhá	trhajú	trhaj	trhal	trhajúc	trhajúci		trhaný	trhanie
+trie	trú	tri	trel	trúc	trúci		trený	trenie
+trká	trkajú	trkaj	trkal	trkajúc	trkajúci		trkaný	trkanie
+trme	trmú	trm/trmaj	trmal	trmajúc/trmúc	trmajúci/trmúci		trmaný	trmanie
+trnie	trnú	trň	trnul	trnúc	trnúci			trnutie
+trvá	trvajú	trvaj	trval	trvajúc	trvajúci			trvanie
+tŕži	tŕžia	tŕž	tŕžil	tŕžiac	tŕžiaci		tŕžený	tŕženie
+ťuká	ťukajú	ťukaj	ťukal	ťukajúc	ťukajúci			ťukanie
+túla	túlajú	túlaj	túlal	túlajúc	túlajúci			túlanie
+túli	túlia	túľ	túlil	túliac	túliaci		túlený	túlenie
+tupí	tupia	tup	tupil	tupiac	tupiaci		tupený	tupenie
+tuší	tušia	tuš	tušil	tušiac	tušiaci		tušený	tušenie
+tuží	tužia	tuž	tužil	tužiac	tužiaci		tužený	tuženie
+túži	túžia	túž	túžil	túžiac	túžiaci			túženie
+týči	týčia	týč	týčil	týčiac	týčiaci			týčenie
+tyká	tykajú	tykaj	tykal	tykajúc	tykajúci			tykanie
+týka	týkajú	týkaj	týkal	týkajúc	týkajúci			týkanie
+týra	týrajú	týraj	týral	týrajúc	týrajúci		týraný	týranie
+uberie	uberú	uber	ubral	uberúc		ubravší	ubraný/ubratý	ubranie/ubratie
+uctí	uctia	ucti	uctil	uctiac	uctiaci	uctivší	uctený	uctenie
+udeje	udejú	udej	udial	udejúc		udiavší		udiatie
+uhne	uhnú	uhni	uhol	uhnúc		uhnuvší	uhnutý	uhnutie
+ukryje	ukryjú	ukry	ukryl	ukryjúc		ukryvší	ukrytý	ukrytie
+uleje	ulejú	ulej	ulial	ulejúc		uliavší	uliaty	uliatie
+úpie	úpejú	úpej	úpel	úpejúc	úpejúci			úpenie
+upne	upnú	upni	upol	upnúc		upnuvší	upnutý	upnutie
+určí	určia	urč/urči	určil	určiac		určivší	určený	určenie
+usne	usnú	usni	usnul	usnúc		usnuvší		usnutie
+uspí	uspia	uspi	uspal	uspiac		uspavší	uspaný/uspatý	uspanie/uspatie
+ustane	ustanú	ustaň	ustal	ustanúc		ustavší	ustaný/ustatý	ustanie/ustatie
+ustojí	ustoja	ustoj	ustál	ustojac		ustávší	ustáty	ustátie
+ústi	ústia	úsť/ústi	ústil	ústiac	ústiaci			ústenie
+utká	utkajú	utkaj	utkal	utkajúc		utkavší	utkaný	utkanie
+utlčie	utlčú	utlč	utĺkol	utlčúc			utlčený	utlčenie
+uzná	uznajú	uznaj	uznal	uznajúc		uznavší	uznaný	uznanie
+vábi	vábia	váb	vábil	vábiac	vábiaci		vábený	vábenie
+vadí	vadia	vaď	vadil	vadiac	vadiaci			vadenie
+váha	váhajú	váhaj	váhal	váhajúc	váhajúci			váhanie
+váľa	váľajú	váľaj	váľal	váľajúc	váľajúci		váľaný	váľanie
+valí	valia	vaľ	valil	valiac	valiaci		valený	valenie
+vanie	vanú	vaň	vanul	vanúc	vanúci			vanutie
+varí	varia	var	varil	variac	variaci		varený	varenie
+váži	vážia	váž	vážil	vážiac	vážiaci		vážený	váženie
+vderie	vderú	vder	vdral	vderúc		vdravší	vdraný/vdratý	vdranie/vdratie
+velí	velia	veľ	velil	veliac	veliaci		velený	velenie
+verí	veria	ver	veril	veriac	veriaci			verenie
+vešia	vešajú	vešaj	vešal	vešajúc	vešajúci		vešaný	vešanie
+veží	vežia	vež	vežil	vežiac	vežiaci			veženie
+vída	vídajú	vídaj	vídal	vídajúc	vídajúci			vídanie
+vedie	vedú	veď	viedol	vedúc	vedúci		vedený	vedenie
+vezie	vezú	vez	viezol	vezúc	vezúci		vezený	vezenie
+viní	vinia	viň	vinil	viniac	viniaci		vinený	vinenie
+vinie	vinú	viň	vinul	vinúc	vinúci		vinutý	vinutie
+víri	víria	vír	víril	víriac	víriaci		vírený	vírenie
+víta	vítajú	vítaj	vítal	vítajúc	vítajúci		vítaný	vítanie
+vleje	vlejú	vlej	vlial	vlejúc		vliavší	vliaty	vliatie
+vlní	vlnia	vlň	vlnil	vlniac	vlniaci		vlnený	vlnenie
+vodí	vodia	voď	vodil	vodiac	vodiaci		vodený	vodenie
+vojde	vojdú	vojdi	vošiel	vojdúc			vojdený	vojdenie
+volá	volajú	volaj	volal	volajúc	volajúci		volaný	volanie
+volí	volia	voľ	volil	voliac	voliaci		volený	volenie
+vonia	voňajú	voňaj	voňal	voňajúc	voňajúci		voňaný	voňanie
+vozí	vozia	voz	vozil	voziac	voziaci		vozený	vozenie
+vrastie	vrastú	vrasť/vrasti	vrástol	vrastúc			vrastený	vrastenie
+vrčí	vrčia	vrč	vrčal	vrčiac	vrčiaci			vrčanie
+vrhá	vrhajú	vrhaj	vrhal	vrhajúc	vrhajúci		vrhaný	vrhanie
+vrie	vrú	vri	vrel	vrúc	vrúci			vrenie
+vŕka	vŕkajú	vŕkaj	vŕkal	vŕkajúc	vŕkajúci			vŕkanie
+vŕši	vŕšia	vŕš	vŕšil	vŕšiac	vŕšiaci		vŕšený	vŕšenie
+vŕta	vŕtajú	vŕtaj	vŕtal	vŕtajúc	vŕtajúci		vŕtaný	vŕtanie
+vŕza	vŕzajú	vŕzaj	vŕzal	vŕzajúc	vŕzajúci			vŕzanie
+vstane	vstanú	vstaň	vstal	vstanúc		vstavší		vstanie
+vtlčie	vtlčú	vtlč	vtĺkol	vtlčúc			vtlčený	vtlčenie
+vybije	vybijú	vybi	vybil	vybijúc		vybivší	vybitý	vybitie
+vydá	vydajú	vydaj	vydal	vydajúc		vydavší	vydaný/vydatý	vydanie/vydatie
+vyduje	vydujú	vyduj	vydul	vydujúc		vyduvší	vydutý	vydutie
+vyjde	vyjdú	vyjdi	vyšiel	vyjdúc			vyjdený	vyjdenie
+vyká	vykajú	vykaj	vykal	vykajúc	vykajúci			vykanie
+vykuje	vykujú	vykuj	vykul	vykujúc		vykuvší	vykutý	vykutie
+vymyje	vymyjú	vymy	vymyl	vymyjúc		vymyvší	vymytý	vymytie
+vyjme	vyjmú	vyjmi	vyňal	vyjmúc		vyňavší	vyňatý	vyňatie
+vypne	vypnú	vypni	vypäl	vypnúc		vypävší	vypätý	vypätie
+vypije	vypijú	vypi	vypil	vypijúc		vypivší	vypitý	vypitie
+vyryje	vyryjú	vyry	vyryl	vyryjúc		vyryvší	vyrytý	vyrytie
+vysaje	vysajú	vysaj	vysal	vysajúc		vysavší	vysatý	vysatie
+vyšije	vyšijú	vyši	vyšil	vyšijúc		vyšivší	vyšitý	vyšitie
+vytne	vytnú	vytni	vyťal	vytnúc		vyťavší	vyťatý	vyťatie
+vytne	vytnú	vytni	vyťal	vytnúc		vyťavší	vyťatý	vyťatie
+vyzuje	vyzujú	vyzuj	vyzul	vyzujúc		vyzuvší	vyzutý	vyzutie
+vyžne	vyžnú	vyžni	vyžal	vyžnúc		vyžavší	vyžatý	vyžatie
+vyžije	vyžijú	vyži	vyžil	vyžijúc		vyživší	vyžitý	vyžitie
+vzdá	vzdajú	vzdaj	vzdal	vzdajúc		vzdavší	vzdaný	vzdanie
+vzduje	vzdujú	vzduj	vzdul	vzdujúc		vzduvší	vzdutý	vzdutie
+vezme	vezmú	vezmi	vzal	vezmúc		vzavší	vzatý	vzatie
+vzíde	vzídu	vzíď	vzišiel	vzíduc			vzídený	vzídenie
+			vzňal				vzňatý	vzňatie
+vžerie	vžerú	vžer	vžral	vžerúc		vžravší	vžraný/vžratý	vžranie/vžratie
+zabije	zabijú	zabi	zabil	zabijúc		zabivší	zabitý	zabitie
+začne	začnú	začni	začal	začnúc		začavší	začatý	začatie
+začuje	začujú	začuj	začul	začujúc		začuvší	začutý	začutie
+zadá	zadajú	zadaj	zadal	zadajúc		zadavší	zadaný	zadanie
+zaduje	zadujú	zaduj	zadul	zadujúc		zaduvší	zadutý	zadutie
+zajme	zajmú	zajmi	zajal	zajmúc		zajavší	zajatý	zajatie
+zájde	zájdu	zájdi	zašiel	zájduc			zájdený	zájdenie
+zapne	zapnú	zapni	zapäl	zapnúc		zapävší	zapätý	zapätie
+zapije	zapijú	zapi	zapil	zapijúc		zapivší	zapitý	zapitie
+zaryje	zaryjú	zary	zaryl	zaryjúc		zaryvší	zarytý	zarytie
+zašije	zašijú	zaši	zašil	zašijúc		zašivší	zašitý	zašitie
+zatne	zatnú	zatni	zaťal	zatnúc		zaťavší	zaťatý	zaťatie
+zavije	zavijú	zavi	zavil	zavijúc		zavivší	zavitý	zavitie
+zavyje	zavyjú	zavy	zavyl	zavyjúc		zavyvší		zavytie
+zažne	zažnú	zažni	zažal	zažnúc		zažavší	zažatý	zažatie
+zažije	zažijú	zaži	zažil	zažijúc		zaživší	zažitý	zažitie
+zderie	zderú	zder	zdral	zderúc		zdravší	zdraný/zdratý	zdranie/zdratie
+zhnije	zhnijú	zhni	zhnil	zhnijúc		zhnivší	zhnitý	zhnitie
+zhrá	zhrajú	zhraj	zhral	zhrajúc		zhravší	zhraný/zhratý	zhranie/zhratie
+zimí	zimia	zim	zimil	zimiac	zimiaci			zimenie
+zíva	zívajú	zívaj	zíval	zívajúc	zívajúci			zívanie
+zíza	zízajú	zízaj	zízal	zízajúc	zízajúci			zízanie
+zje	zjedia	zjedz	zjedol	zjediac			zjedený	zjedenie
+zleje	zlejú	zlej	zlial	zlejúc		zliavší	zliaty	zliatie
+zmôže	zmôžu	zmôž	zmohol	zmôžuc			zmožený	zmoženie
+znie	znejú	znej	znel	znejúc	znejúci			znenie
+zobe	zobú	zob/zobaj	zobal	zobúc/zobajúc	zobúci/zobajúci		zobaný	zobanie
+zobuje	zobujú	zobuj	zobul	zobujúc		zobuvší	zobutý	zobutie
+zočí	zočia	zoč	zočil	zočiac		zočivší	zočený	zočenie
+zopne	zopnú	zopni	zopäl	zopnúc		zopävší	zopätý	zopätie
+zorie	zorú	zor	zoral	zorúc		zoravší	zoraný	zoranie
+zošije	zošijú	zoši	zošil	zošijúc		zošivší	zošitý	zošitie
+zotne	zotnú	zotni	zoťal	zotnúc		zoťavší	zoťatý	zoťatie
+zožne	zožnú	zožni	zožal	zožnúc		zožavší	zožatý	zožatie
+zožuje	zožujú	zožuj	zožul	zožujúc		zožuvší	zožutý	zožutie
+zrastie	zrastú	zrasť/zrasti	zrástol	zrastúc			zrastený	zrastenie
+zreje	zrejú	zrej	zrel	zrejúc	zrejúci			zrenie
+zrie	zrú	zri	zrel	zrúc	zrúci		zrený	zrenie
+zubí	zubia	zub	zubil	zubiac	zubiaci			zubenie 
+zúfa	zúfajú	zúfaj	zúfal	zúfajúc	zúfajúci	zúfavší		zúfanie 
+zúri	zúria	zúr	zúril	zúriac	zúriaci			zúrenie 
+zúži	zúžia	zúž	zúžil	zúžiac		zúživší	zúžený	zúženie 
+želá	želajú	želaj	želal	želajúc	želajúci		želaný	želanie 
+žení	ženia	žeň	ženil	ženiac	ženiaci		ženený	ženenie 
+žičí	žičia	žič	žičil	žičiac	žičiaci		žičený	žičenie 
+žíha	žíhajú	žíhaj	žíhal	žíhajúc	žíhajúci		žíhaný	žíhanie 
+žíri	žíria	žír	žíril	žíriac	žíriaci			žírenie 
+živí	živia	živ	živil	živiac	živiaci		živený	živenie 
+žuje	žujú	žuj	žul	žujúc	žujúci		žuvaný	žuvanie 
+aháka	ahákajú	ahákaj	ahákal	ahákajúc	ahákajúci			ahákanie
+achká	achkajú	achkaj	achkal	achkajúc	achkajúci			achkanie
+babre	babrú	babri	babral	babrúc/babrajúc	babrúci/babrajúci		babraný	babranie
+bacne	bacnú	bacni	bacol	bacnúc		bacnuvší	bacnutý	bacnutie
+badká	badkajú	badkaj	badkal	badkajúc	badkajúci			badkanie
+bafčí	bafčia	bafči	bafčil	bafčiac	bafčiaci			bafčenie
+bafká	bafkajú	bafkaj	bafkal	bafkajúc	bafkajúci		bafkaný	bafkanie
+bafne	bafnú	bafni	bafol	bafnúc		bafnuvší	bafnutý	bafnutie
+bahní	bahnia	bahni	bahnil	bahniac	bahniaci		bahnený	bahnenie
+bácha	báchajú	báchaj	báchal	báchajúc	báchajúci		báchaný	báchanie
+básni	básnia	básni	básnil	básniac	básniaci		básnený	básnenie
+bavká	bavkajú	bavkaj	bavkal	bavkajúc	bavkajúci			bavkanie
+bedlí	bedlia	bedli	bedlil	bedliac	bedliaci			bedlenie
+belie	belejú	belej	belel	belejúc	belejúci			belenie
+besní	besnia	besni	besnil	besniac	besniaci			besnenie
+bežká	bežkajú	bežkaj	bežkal	bežkajúc	bežkajúci			bežkanie
+biedi	biedia	bieď	biedil	biediac	biediaci			biedenie
+bieli	bielia	bieľ	bielil	bieliac	bieliaci		bielený	bielenie
+bľačí	bľačia	bľač	bľačal	bľačiac	bľačiaci			bľačanie
+bláha	bláhajú	bláhaj	bláhal	bláhajúc	bláhajúci			bláhanie
+blaží	blažia	blaž	blažil	blažiac	blažiaci		blažený	blaženie
+bliká	blikajú	blikaj	blikal	blikajúc	blikajúci			blikanie
+blíži	blížia	blíž	blížil	blížiac	blížiaci			blíženie
+blúdi	blúdia	blúď	blúdil	blúdiac	blúdiaci			blúdenie
+bodne	bodnú	bodni	bodol	bodnúc		bodnuvší	bodnutý	bodnutie
+bolí	bolia	boľ	bolel	boliac	boliaci			bolenie
+boľká	boľkajú	boľkaj	boľkal	boľkajúc	boľkajúci			boľkanie
+bozká	bozkajú	bozkaj	bozkal	bozkajúc	bozkajúci		bozkaný	bozkanie
+bráni	bránia	bráň	bránil	brániac	brániaci		bránený	bránenie
+bratá	bratajú	brataj	bratal	bratajúc	bratajúci			bratanie
+bráva	brávajú	brávaj	brával	brávajúc	brávajúci			brávanie
+brble	brblú	brbli	brblal	brblúc/brblajúc	brblúci/brblajúci		brblaný	brblanie
+brbce/brbtá	brbcú/brbtajú	brbci/brboc/brbtaj	brbtal	brbtajúc	brbtajúci		brbtaný	brbtanie
+brezí	brezia	brez	brezil	breziac	breziaci			brezenie
+brhlí	brhlia	brhli	brhlil	brhliac	brhliaci		brhlený	brhlenie
+bridí	bridia	briď	bridil	bridiac	bridiaci			bridenie
+bŕkne	bŕknu	bŕkni	bŕkol	bŕknuc		bŕknuvší	bŕknutý	bŕknutie
+brnčí	brnčia	brnč / brnči	brnčal	brnčiac	brnčiaci			brnčanie
+brní	brnia	brň	brnel	brniac	brniaci			brnenie
+brnie	brnejú	brnej	brnel	brnejúc	brnejúci			brnenie
+brnká	brnkajú	brnkaj	brnkal	brnkajúc	brnkajúci			brnkanie
+brodí	brodia	broď	brodil	brodiac	brodiaci		brodený	brodenie
+brojí	broja	broj	brojil	brojac	brojaci			brojenie
+bručí	bručia	bruč	bručal	bručiac	bručiaci			bručanie
+brúsi	brúsia	brús	brúsil	brúsiac	brúsiaci		brúsený	brúsenie
+brzdí	brzdia	brzď / brzdi	brzdil	brzdiac	brzdiaci		brzdený	brzdenie
+brzne	brznú	brzni	brzol	brznúc	brznúci			brznutie
+buble/bublá	bublú/bublajú	bubli/bublaj	bublal	bublúc/bublajúc	bublúci/bublajúci			bublanie
+bucne	bucnú	bucni	bucol	bucnúc		bucnuvší	bucnutý	bucnutie
+búcha	búchajú	búchaj	búchal	búchajúc	búchajúci		búchaný	búchanie
+bzíka	bzíkajú	bzíkaj	bzíkal	bzíkajúc	bzíkajúci			bzíkanie
+bzučí	bzučia	bzuč	bzučal	bzučiac	bzučiaci		bzučaný	bzučanie
+cabre	cabrú	cabri	cabral	cabrúc/cabrajúc	cabrúci/cabrajúci			cabranie
+capká	capkajú	capkaj	capkal	capkajúc	capkajúci		capkaný	capkanie
+capne	capnú	capni	capol	capnúc		capnuvší	capnutý	capnutie
+cekne	ceknú	cekni	cekol	ceknúc		ceknuvší	ceknutý	ceknutie
+celí	celejú	celej	celel	celejúc	celejúci			celenie
+cengá	cengajú	cengaj	cengal	cengajúc	cengajúci			cenganie
+cibrí	cibria	cibri	cibril	cibriac	cibriaci		cibrený	cibrenie
+cická	cickajú	cickaj	cickal	cickajúc	cickajúci		cickaný	cickanie
+cieli	cielia	cieľ	cielil	cieliac	cieliaci		cielený	cielenie
+cingá	cingajú	cingaj	cingal	cingajúc	cingajúci			cinganie
+cinká	cinkajú	cinkaj	cinkal	cinkajúc	cinkajúci			cinkanie
+cipčí	cipčia	cipči	cipčal	cipčiac	cipčiaci			cipčanie
+cipká	cipkajú	cipkaj	cipkal	cipkajúc	cipkajúci			cipkanie
+civie	civejú	civej	civel	civejúc	civejúci			civenie
+cloní	clonia	cloň	clonil	cloniac	cloniaci		clonený	clonenie
+cmuká	cmukajú	cmukaj	cmukal	cmukajúc	cmukajúci		cmukaný	cmukanie
+cmúľa	cmúľajú	cmúľaj	cmúľal	cmúľajúc	cmúľajúci		cmúľaný	cmúľanie
+crkne	crknú	crkni	crkol	crknúc		crknuvší	crknutý	crknutie
+cucká	cuckajú	cuckaj	cuckal	cuckajúc	cuckajúci		cuckaný	cuckanie
+cucle	cucľú	cucli	cucľal	cucľúc/cucľajúc	cucľúci/cucľajúci		cucľaný	cucľanie
+cukne	cuknú	cukni	cukol	cuknúc		cuknuvší	cuknutý	cuknutie
+cukrí	cukria	cukri	cukril	cukriac	cukriaci		cukrený	cukrenie
+cumle	cumľú/cumľajú	cumli/cumľaj	cumľal	cumľúc/cumľajúc	cumľúci/cumľajúci		cumľaný	cumľanie
+cupká	cupkajú	cupkaj	cupkal	cupkajúc	cupkajúci			cupkanie
+cupne	cupnú	cupni	cupol	cupnúc		cupnuvší	cupnutý	cupnutie
+curčí	curčia	curč/curči	curčal	curčiac	curčiaci			curčanie
+curgá	curgajú	curgaj	curgal	curgajúc	curgajúci			curganie
+curká	curkajú	curkaj	curkal	curkajúc	curkajúci			curkanie
+cúvne	cúvnu	cúvni	cúvol	cúvnuc		cúvnuvší	cúvnutý	cúvnutie
+cvaká	cvakajú	cvakaj	cvakal	cvakajúc	cvakajúci		cvakaný	cvakanie
+cvála	cválajú	cválaj	cválal	cválajúc	cválajúci			cválanie
+cvičí	cvičia	cvič	cvičil	cvičiac	cvičiaci		cvičený	cvičenie
+cviká	cvikajú	cvikaj	cvikal	cvikajúc	cvikajúci		cvikaný	cvikanie
+cvrčí	cvrčia	cvrč	cvrčal	cvrčiac	cvrčiaci			cvrčanie
+cvrká	cvrkajú	cvrkaj	cvrkal	cvrkajúc	cvrkajúci		cvrkaný	cvrkanie
+cvŕka	cvŕkajú	cvŕkaj	cvŕkal	cvŕkajúc	cvŕkajúci		cvŕkaný	cvŕkanie
+čabre	čabrú	čabri	čabral	čabrúc/čabrajúc	čabrúci/čabrajúci			čabranie
+čačká	čačkajú	čačkaj	čačkal	čačkajúc	čačkajúci		čačkaný	čačkanie
+čadne	čadnú	čadni	čadol	čadnúc	čadnúci			čadnutie
+čanká	čankajú	čankaj	čankal	čankajúc	čankajúci		čankaný	čankanie
+čapká	čapkajú	čapkaj	čapkal	čapkajúc	čapkajúci		čapkaný	čapkanie
+čapne	čapnú	čapni	čapol	čapnúc		čapnuvší	čapnutý	čapnutie
+čapce / čaptá	čapcú / čaptajú	čapci / čaptaj	čaptal	čaptajúc	čaptajúci			čaptanie
+čepčí	čepčia	čepči	čepčil	čepčiac	čepčiaci		čepčený	čepčenie
+čerpá	čerpajú	čerpaj	čerpal	čerpajúc	čerpajúci		čerpaný	čerpanie
+čertí	čertia	čerti	čertil	čertiac	čertiaci		čertený	čertenie
+česne	česnú	česni	česol	česnúc		česnuvší	česnutý	česnutie
+čiaha	čiahajú	číhaj	číhal	čiahajúc	čiahajúci			čiahanie
+čiape	čiapu	čiap	čiapal	čiapuc/čiapajúc	čiapuci/čiapajúci		čiapaný	čiapanie
+čiara	čiarajú	čiaraj	čiaral	čiarajúc	čiarajúci		čiaraný	čiaranie
+čičre	čičrú	čičri	čičral	čičrúc/čičrajúc	čičrúci/čičrajúci			čičranie
+čipčí	čipčia	čipči	čipčal	čipčiac	čipčiaci			čipčanie
+čistí	čistia	čisť / čisti	čistil	čistiac	čistiaci		čistený	čistenie
+čivčí	čivčia	čivč / čivči	čivčal	čivčiac	čivčiaci			čivčanie
+čivká	čivkajú	čivkaj	čivkal	čivkajúc	čivkajúci			čivkanie
+člení	členia	čleň	členil	členiac	členiaci		členený	členenie
+čmára	čmárajú	čmáraj	čmáral	čmárajúc	čmárajúci		čmáraný	čmáranie
+čmudí	čmudia	čmuď	čmudil	čmudiac	čmudiaci			čmudenie
+črpká	črpkajú	črpkaj	črpkal	črpkajúc	črpkajúci		črpkaný	črpkanie
+črpne	črpnú	črpni	črpol	črpnúc		črpnuvší	črpnutý	črpnutie
+čučká	čučkajú	čučkaj	čučkal	čučkajúc	čučkajúci			čučkanie
+čuchá	čuchajú	čuchaj	čuchal	čuchajúc	čuchajúci		čuchaný	čuchanie
+čupí	čupia	čup	čupel	čupiac	čupiaci			čupenie
+čupne	čupnú	čupni	čupol	čupnúc		čupnuvší	čupnutý	čupnutie
+čurčí	čurčia	čurč / čurči	čurčal	čurčiac	čurčiaci			čurčanie
+čurká	čurkajú	čurkaj	čurkal	čurkajúc	čurkajúci			čurkanie
+čušká	čuškajú	čuškaj	čuškal	čuškajúc	čuškajúci			čuškanie
+čvrká	čvrkajú	čvrkaj	čvrkal	čvrkajúc	čvrkajúci			čvrkanie
+čvŕka	čvŕkajú	čvŕkaj	čvŕkal	čvŕkajúc	čvŕkajúci			čvŕkanie
+ďavká	ďavkajú	ďavkaj	ďavkal	ďavkajúc	ďavkajúci			ďavkanie
+dbáva	dbávajú	dbávaj	dbával	dbávajúc	dbávajúci			dbávanie
+dební	debnia	debni	debnil	debniac	debniaci		debnený	debnenie
+depce / deptá	depcú / deptajú	depci / deptaj	deptal	depcúc/deptajúc	deptajúci		deptaný	deptanie
+divie	divejú	divej	divel	divejúc	divejúci			divenie
+dlabe	dlabú	dlab	dlabal	dlabúc/dlabajúc	dlabúci/dlabajúci		dlabaný	dlabanie
+dlávi	dlávia	dláv	dlávil	dláviac	dláviaci		dlávený	dlávenie
+dlbne	dlbnú	dlbni	dlbol	dlbnúc		dlbnuvší	dlbnutý	dlbnutie
+ďobká	ďobkajú	ďobkaj	ďobkal	ďobkajúc	ďobkajúci			ďobkanie
+ďobne	ďobnú	ďobni	ďobol	ďobnúc		ďobnuvší	ďobnutý	ďobnutie
+doberie	doberú	dober	dobral	doberúc		dobravší	dobraný/dobratý	dobranie/dobratie
+dočká	dočkajú	dočkaj	dočkal	dočkajúc		dočkavší	dočkaný	dočkanie
+doderie	doderú	doder	dodral	dodrúc/ doderúc		dodravší	dodraný/dodratý	dodranie/dodratie
+doženie	doženú	dožeň	dohnal	doženúc		dohnavší	dohnaný	dohnanie
+dohnije	dohnijú	dohni	dohnil	dohnijúc		dohnivší	dohnitý	dohnitie
+dohrá	dohrajú	dohraj	dohral	dohrajúc		dohravší	dohraný/dohratý	dohranie/dohratie
+dojčí	dojčia	dojč / dojči	dojčil	dojčiac	dojčiaci		dojčený	dojčenie
+doje	dojedia	dojedz	dojedol	dojediac			dojedený	dojedenie
+dokole	dokolú	dokoľ	doklal	dokolúc		doklavší	doklaný	doklanie
+doleje	dolejú	dolej	dolial	dolejúc		doliavší	doliaty	doliatie
+domôže	domôžu	domôž	domohol	domôžuc				domoženie
+doorie	doorú	door	dooral	doorúc		dooravší	dooraný	dooranie
+dopne	dopnú	dopni	dopol	dopnúc		dopnuvší	dopnutý	dopnutie
+doperie	doperú	doper	dopral	doperúc		dopravší	dopraný/dopratý	dopranie/dopratie
+dorastie	dorastú	dorasť / dorasti	dorástol	dorastúc			dorastený	dorastenie
+doseje	dosejú	dosej 	dosial	dosejúc		dosiavší 		dosiatie
+dospí	dospia	dospi	dospal	dospiac		dospavší	dospaný/dospatý	dospanie/dospatie
+dostane	dostanú	dostaň	dostal	dostanúc		dostavší	dostaný	dostanie
+dostojí	dostoja	dostoj	dostál	dostojac		dostávší		dostátie
+doští	doštia	došť/došti	doštil	doštiac	doštiaci		doštený	doštenie
+dotká	dotkajú	dotkaj	dotkal	dotkajúc		dotkavší	dotkaný	dotkanie
+doúča	doúčajú	doúčaj	doúčal	doúčajúc	doúčajúci		doúčaný	doúčanie
+doučí	doučia	douč	doučil	doučiac		doučivší	doučený	doučenie
+doúdi	doúdia	doúď	doúdil	doúdiac		doúdivší	doúdený	doúdenie
+doveje	dovejú	dovej	dovial	dovejúc		doviavší	doviaty	doviatie
+dozná	doznajú	doznaj	doznal	doznajúc		doznavší	doznaný	doznanie
+dožerie	dožerú	dožer	dožral	dožerúc		dožravší	dožraný/dožratý	dožratie/dožranie
+dráva	drávajú	drávaj	drával	drávajúc	drávajúci			drávanie
+draží	dražia	draž	dražil	dražiac	dražiaci		dražený	draženie
+drcne	drcnú	drcni	drcol	drcnúc		drcnuvší	drcnutý	drcnutie
+drdle	drdlú	drdli	drdlal	drdlajúc	drdlajúci		drdlaný	drdlanie
+drgne	drgnú	drgni	drgol	drgnúc		drgnuvší	drgnutý	drgnutie
+drhlí	drhlia	drhli	drhlil	drhliac	drhliaci		drhlený	drhlenie
+drhne	drhnú	drhni	drhol	drhnúc	drhnúci		drhnutý	drhnutie
+drmne	drmnú	drmni	drmol	drmnúc		drmnuvší	drmnutý	drmnutie
+drnčí	drnčia	drnč/drnči	drnčal	drnčiac	drnčiaci			drnčanie
+drnká	drnkajú	drnkaj	drnkal	drnkajúc	drnkajúci			drnkanie
+drobí	drobia	drob	drobil	drobiac	drobiaci		drobený	drobenie
+drúľa	drúľajú	drúľaj	drúľal	drúľajúc	drúľajúci		drúľaný	drúľanie
+druží	družia	druž	družil	družiac	družiaci			druženie
+ďubká	ďubkajú	ďubkaj	ďubkal	ďubkajúc	ďubkajúci			ďubkanie
+ďubne	ďubnú	ďubni	ďubol	ďubnúc		ďubnuvší	ďubnutý	ďubnutie
+dudle	dudlú	dudli	dudlal	dudlúc/dudlajúc	dudlúci/dudlajúci			dudlanie
+dudre	dudrú	dudri	dudral	dudrúc/dudrajúc	dudrajúci			dudranie
+ďugne	ďugnú	ďugni	ďugol	ďugnúc		ďugnuvší	ďugnutý	ďugnutie
+dúcha	dúchajú	dúchaj	dúchal	dúchajúc	dúchajúci		dúchaný	dúchanie
+duní	dunia	duň	dunel	duniac	duniaci			dunenie
+dupčí	dupčia	dupč / dupči	dupčil	dupčiac	dupčiaci		dupčený	dupčenie
+dupká	dupkajú	dupkaj	dupkal	dupkajúc	dupkajúci			dupkanie
+dupne	dupnú	dupni	dupol	dupnúc		dupnuvší		dupnutie
+durdí	durdia	durdi	durdil	durdiac	durdiaci			durdenie
+durká	durkajú	durkaj	durkal	durkajúc	durkajúci		durkaný	durkanie
+dužie	dužejú	dužej	dužel	dužejúc	dužejúci			duženie
+dvíha	dvíhajú	dvíhaj	dvíhal	dvíhajúc	dvíhajúci		dvíhaný	dvíhanie
+dvojí	dvoja	dvoj	dvojil	dvojac	dvojaci		dvojený	dvojenie
+dvorí	dvoria	dvor	dvoril	dvoriac	dvoriaci			dvorenie
+dýcha	dýchajú	dýchaj	dýchal	dýchajúc	dýchajúci		dýchaný	dýchanie
+dzeká	dzekajú	dzekaj	dzekal	dzekajúc	dzekajúci			dzekanie
+džugá	džugajú	džugaj	džugal	džugajúc	džugajúci		džuganý	džuganie
+ehmká	ehmkajú	ehmkaj	ehmkal	ehmkajúc	ehmkajúci			ehmkanie
+echká	echkajú	echkaj	echkal	echkajúc	echkajúci			echkanie
+erdží	erdžia	erdž / erdži	erdžal	erdžiac	erdžiaci			erdžanie
+facká	fackajú	fackaj	fackal	fackajúc	fackajúci		fackaný	fackanie
+facne	facnú	facni	facol	facnúc		facnuvší	facnutý	facnutie
+fafre	fafrú	fafri	fafral	fafrúc/fafrajúc	fafrúci/fafrajúci			fafranie
+fajčí	fajčia	fajč / fajči	fajčil	fajčiac	fajčiaci		fajčený	fajčenie
+faklí	faklia	fakli	faklil	fakliac	fakliaci		faklený	faklenie
+farbí	farbia	farbi	farbil	farbiac	farbiaci		farbený	farbenie
+fikne	fiknú	fikni	fikol	fiknúc		fiknuvší	fiknutý	fiknutie
+fintí	fintia	finti	fintil	fintiac	fintiaci		fintený	fintenie
+fláka	flákajú	flákaj	flákal	flákajúc	flákajúci		flákaný	flákanie
+fľočí	fľočia	fľoč	fľočil	fľočiac	fľočiaci			fľočenie
+fľoší	fľošia	fľoš	fľošil	fľošiac	fľošiaci			 fľošenie 
+fňuká	fňukajú	fňukaj	fňukal	fňukajúc	fňukajúci			fňukanie
+frcká	frckajú	frckaj	frckal	frckajúc	frckajúci		frckaný	frckanie
+frcne	frcnú	frcni	frcol	frcnúc		frcnuvší	frcnutý	frcnutie
+frfle	frflú	frfli	frflal	frflúc/frflajúc	frflajúci			frflanie
+frkne	frknú	frkni	frkol	frknúc		frknuvší	frknutý	frknutie
+frndí	frndia	frndi	frndil	frndiac	frndiaci			frndenie
+frngá	frngajú	frngaj	frngal	frngajúc	frngajúci			frnganie
+frnká	frnkajú	frnkaj	frnkal	frnkajúc	frnkajúci			frnkanie
+fŕska	fŕskajú	fŕskaj	fŕskal	fŕskajúc	fŕskajúci			fŕskanie
+fufne	fufnú	fufni	fufnal	fufnúc/fufnajúc	fufnúci/fufnajúci			fufnanie
+fujká	fujkajú	fujkaj	fujkal	fujkajúc	fujkajúci			fujkanie
+fukne	fuknú	fukni	fukol	fuknúc		fuknuvší	fuknutý	fuknutie
+fúkne	fúknu	fúkni	fúkol	fúknuc		fúknuvší	fúknutý	fúknutie
+funí	funia	fuň	funel	funiac/funejúc	funiaci/funejúci			funenie
+gágne	gágnu	gágni	gágol	gágnuc		gágnuvší		gágnutie
+gebrí	gebria	gebri	gebril	gebriac	gebriaci		gebrený	gebrenie
+glejí	gleja	glej	glejil	glejac	glejaci		glejený	glejenie
+glgne	glgnú	glgni	glgol	glgnúc		glgnuvší	glgnutý	glgnutie
+grcká	grckajú	grckaj	grckal	grckajúc	grckajúci			grckanie
+grgne	grgnú	grgni	grgol	grgnúc		grgnuvší		grgnutie
+grúli	grúlia	grúľ	grúlil	grúliac	grúliaci			grúlenie
+guľká	guľkajú	guľkaj	guľkal	guľkajúc	guľkajúci		guľkaný	guľkanie
+habká	habkajú	habkaj	habkal	habkajúc	habkajúci		habkaný	habkanie
+habne	habnú	habni	habol	habnúc		habnuvší		habnutie
+hačká	hačkajú	hačkaj	hačkal	hačkajúc	hačkajúci	hačkavší		hačkanie
+hačne	hačnú	hačni	hačol	hačnúc		hačnuvší	hačnutý	hačnutie
+hádže	hádžu	hádž	hádzal	hádžuc/hádzajúc	hádžuci/hádzajúci		hádzaný	hádzanie
+hafká	hafkajú	hafkaj	hafkal	hafkajúc	hafkajúci			hafkanie
+hafne	hafnú	hafni	hafol	hafnúc		hafnuvší		hafnutie
+hajká	hajkajú	hajkaj	hajkal	hajkajúc	hajkajúci			hajkanie
+hamká	hamkajú	hamkaj	hamkal	hamkajúc	hamkajúci		hamkaný	hamkanie
+hanbí	hanbia	hanbi	hanbil	hanbiac	hanbiaci		hanbený	hanbenie
+harká	harkajú	harkaj	harkal	harkajúc	harkajúci			harkanie
+hasne	hasnú	hasni	hasol	hasnúc	hasnúci			hasnutie
+hatle	hatlú	hatli	hatlal	hatlúc/hatlajúc	hatlúci/hatlajúci		hatlaný	hatlanie
+havká	havkajú	havkaj	havkal	havkajúc	havkajúci		havkaný	havkanie
+hegne	hegnú	hegni	hegol	hegnúc		hegnuvší	hegnutý	hegnutie
+hekne	heknú	hekni	hekol	heknúc		heknuvší	heknutý	heknutie
+hemží	hemžia	hemži	hemžil	hemžiac	hemžiaci			hemženie
+híkne	híknu	híkni	híkol	híknuc		híknuvší		híknutie
+hľadá	hľadajú	hľadaj	hľadal	hľadajúc	hľadajúci		hľadaný	hľadanie
+hladí	hladia	hlaď	hladil	hladiac	hladiaci		hladený	hladenie
+hlása	hlásajú	hlásaj	hlásal	hlásajúc	hlásajúci		hlásaný	hlásanie
+hlási	hlásia	hlás	hlásil	hlásiac	hlásiaci		hlásený	hlásenie
+hlobí	hlobia	hlob	hlobil	hlobiac	hlobiaci		hlobený	hlobenie
+hlodá	hlodajú	hlodaj	hlodal	hlodajúc	hlodajúci		hlodaný	hlodanie
+hltne	hltnú	hltni	hltol	hltnúc		hltnuvší		hltnutie
+hluší	hlušia	hluš	hlušil	hlušiac	hlušiaci		hlušený	hlušenie
+hmatá	hmatajú	hmataj	hmatal	hmatajúc	hmatajúci		hmataný	hmatanie
+hmkne	hmknú	hmkni	hmkol	hmknúc		hmknuvší		hmknutie
+hmýri	hmýria	hmýr	hmýril	hmýriac	hmýriaci			hmýrenie
+hnáva	hnávajú	hnávaj	hnával	hnávajúc	hnávajúci			hnávanie
+hnevá	hnevajú	hnevaj	hneval	hnevajúc	hnevajúci		hnevaný	hnevanie
+hnetie	hnetú	hneť	hnietol	hnetúc	hnetúci		hnetený	hnetenie
+hnisá	hnisajú	hnisaj	hnisal	hnisajúc	hnisajúci			hnisanie
+hnojí	hnoja	hnoj	hnojil	hnojac	hnojaci		hnojený	hnojenie
+hnusí	hnusia	hnus	hnusil	hnusiac	hnusiaci		hnusený	hnusenie
+hodlá	hodlajú	hodlaj	hodlal	hodlajúc	hodlajúci			hodlanie
+hojdá	hojdajú	hojdaj	hojdal	hojdajúc	hojdajúci		hojdaný	hojdanie
+hopká	hopkajú	hopkaj	hopkal	hopkajúc	hopkajúci		hopkaný	hopkanie
+hopne	hopnú	hopni	hopol	hopnúc		hopnuvší		hopnutie
+hopsá	hopsajú	hopsaj	hopsal	hopsajúc	hopsajúci			hopsanie
+horí	horia	hor	horel	horiac	horiaci			horenie
+horlí	horlia	horli	horlil	horliac	horliaci			horlenie
+horší	horšia	horš / horši	horšil	horšiac	horšiaci			horšenie
+hostí	hostia	hosť / hosti	hostil	hostiac	hostiaci		hostený	hostenie
+hovie	hovejú	hovej	hovel	hovejúc	hovejúci			hovenie
+hovká	hovkajú	hovkaj	hovkal	hovkajúc	hovkajúci			hovkanie
+hrabe	hrabú	hrab	hrabal	hrabúc/hrabajúc	hrabúci/hrabajúci		hrabaný	hrabanie
+hradí	hradia	hraď	hradil	hradiac	hradiaci		hradený	hradenie
+hráva	hrávajú	hrávaj	hrával	hrávajúc	hrávajúci			hrávanie
+hrdne	hrdnú	hrdni	hrdol	hrdnúc	hrdnúci			hrdnutie
+hreší	hrešia	hreš	hrešil	hrešiac	hrešiaci		hrešený	hrešenie
+hrkne	hrknú	hrkni	hrkol	hrknúc		hrknuvší	hrknutý	hrknutie
+hrmí	hrmia	hrm	hrmel	hrmiac	hrmiaci			hrmenie
+hrotí	hrotia	hroť	hrotil	hrotiac	hrotiaci			hrotenie
+hrozí	hrozia	hroz	hrozil	hroziac	hroziaci			hrozenie
+hrúži	hrúžia	hrúž	hrúžil	hrúžiac	hrúžiaci			hrúženie
+hucká	huckajú	huckaj	huckal	huckajúc	huckajúci		huckaný	huckanie
+hudre	hudrú	hudri	hudral	hudrúc/hudrajúc	hudrajúci			hudranie
+huhle	huhlú	huhli	huhlal	huhlúc/huhlajúc	huhlúci/huhlajúci		huhlaný	huhlanie
+huhne	huhňú/huhňajú	huhni	huhňal	huhňúc/huhňajúc	huhňúci/huhňajúci		huhňaný	huhňanie
+húkne	húknu	húkni	húkol	húknuc		húknuvší		húknutie
+hupká	hupkajú	hupkaj	hupkal	hupkajúc	hupkajúci			hupkanie
+hupne	hupnú	hupni	hupol	hupnúc		hupnuvší		hupnutie
+hustí	hustia	husť / husti	hustil	hustiac	hustiaci		hustený	hustenie
+húžve/húžva	húžvu/húžvajú	húžvi/húžvaj	húžval	húžvuc/húžvajúc	húžvuci/húžvajúci		húžvaný	húžvanie
+húžvi	húžvia	húžvi	húžvil	húžviac	húžviaci		húžvený	húžvenie
+hyzdí	hyzdia	hyzď / hyzdi	hyzdil	hyzdiac	hyzdiaci		hyzdený	hyzdenie
+chápe	chápu	cháp	chápal	chápuc/chápajúc	chápuci/chápajúci		chápaný	chápanie
+chce	chcú	chci	chcel	chcúc/chcejúc	chcúci/chcejúci		chcený	chcenie
+chlpí	chlpia	chlp	chlpil	chlpiac	chlpiaci		chlpený	chlpenie
+chodí	chodia	choď	chodil	chodiac	chodiaci			chodenie
+chopí	chopia	chop	chopil	chopiac		chopivší	chopený	chopenie
+chová	chovajú	chovaj	choval	chovajúc	chovajúci		chovaný	chovanie
+chrčí	chrčia	chrč	chrčal	chrčiac	chrčiaci			chrčanie
+chŕka	chŕkajú	chŕkaj	chŕkal	chŕkajúc	chŕkajúci			chŕkanie
+chrlí	chrlia	chrľ	chrlil	chrliac	chrliaci		chrlený	chrlenie
+chúli	chúlia	chúľ	chúlil	chúliac	chúliaci			chúlenie
+chutí	chutia	chuť	chutil	chutiac	chutiaci			chutenie
+chveje	chvejú	chvej	chvel	chvejúc	chvejúci			chvenie
+chýba	chýbajú	chýbaj	chýbal	chýbajúc	chýbajúci			chýbanie
+chybí	chybia	chyb	chybil	chybiac		chybivší	chybený	chybenie
+chýli	chýlia	chýľ	chýlil	chýliac	chýliaci		chýlený	chýlenie
+chýri	chýria	chýr	chýril	chýriac	chýriaci		chýrený	chýrenie
+chytá	chytajú	chytaj	chytal	chytajúc	chytajúci		chytaný	chytanie
+chytí	chytia	chyť	chytil	chytiac			chytený	chytenie
+chytí	chytia	chyť	chytil	chytiac	chytiaci		chytený	chytenie
+iskrí	iskria	iskri	iskril	iskriac	iskriaci			iskrenie
+jahní	jahnia	jahni	jahnil	jahniac	jahniaci			jahnenie
+jachá	jachajú	jachaj	jachal	jachajúc	jachajúci			jachanie
+jajčí	jajčia	jajč / jajči	jajčal	jajčiac	jajčiaci			jajčanie
+jajká	jajkajú	jajkaj	jajkal	jajkajúc	jajkajúci			jajkanie
+jančí	jančia	janči	jančil	jančiac	jančiaci			jančenie
+jarmí	jarmia	jarmi	jarmil	jarmiac	jarmiaci		jarmený	jarmenie
+jasní	jasnia	jasni	jasnil	jasniac	jasniaci		jasnený	jasnenie
+jatrí	jatria	jatri	jatril	jatriac	jatriaci		jatrený	jatrenie
+jazdí	jazdia	jazď / jazdi	jazdil	jazdiac	jazdiaci		jazdený	jazdenie
+jazví	jazvia	jazvi	jazvil	jazviac	jazviaci		jazvený	jazvenie
+jedná	jednajú	jednaj	jednal	jednajúc	jednajúci		jednaný	jednanie
+jojčí	jojčia	jojč / jojči	jojčal	jojčiac	jojčiaci			jojčanie
+jojká	jojkajú	jojkaj	jojkal	jojkajúc	jojkajúci			jojkanie
+jujká	jujkajú	jujkaj	jujkal	jujkajúc	jujkajúci			jujkanie
+kačká	kačkajú	kačkaj	kačkal	kačkajúc	kačkajúci			kačkanie
+kafre	kafrú	kafri	kafral	kafrúc/kafrajúc	kafrúci/kafrajúci			kafranie
+kašle	kašlú	kašli	kašlal	kašlúc/kašlajúc	kašlúci/kašlajúci		kašlaný	kašlanie
+kašle	kašľú	kašli	kašľal	kašľúc/kašľajúc	kašľúci/kašľajúci		kašľaný	kašľanie
+kefne	kefnú	kefni	kefol	kefnúc		kefnuvší	kefnutý	kefnutie
+kľačí	kľačia	kľač	kľačal	kľačiac	kľačiaci			kľačanie
+kľagá	kľagajú	kľagaj	kľagal	kľagajúc	kľagajúci		kľaganý	kľaganie
+kľaká	kľakajú	kľakaj	kľakal	kľakajúc	kľakajúci			kľakanie
+klame	klamú	klam	klamal	klamúc/klamajúc	klamúci/klamajúci		klamaný	klamanie
+klania	klaňajú	klaňaj	klaňal	klaňajúc	klaňajúci			klaňanie
+klape	klapú	klap	klapal	klapúc/klapajúc	klapúci/klapajúci			klapanie
+klasí	klasia	klas	klasil	klasiac	klasiaci			klasenie
+kláti	klátia	kláť	klátil	klátiac	klátiaci		klátený	klátenie
+klbčí	klbčia	klbči	klbčil	klbčiac	klbčiaci			klbčenie
+klenie	klenú	kleň	klenul	klenúc	klenúci		klenutý	klenutie
+klepe	klepú	klep	klepal	klepúc/klepajúc	klepúci/klepajúci		klepaný	klepanie
+klesá	klesajú	klesaj	klesal	klesajúc	klesajúci			klesanie
+klíči	klíčia	klíč	klíčil	klíčiac	klíčiaci			klíčenie
+kliká	klikajú	klikaj	klikal	klikajúc	klikajúci			klikanie
+kloní	klonia	kloň	klonil	kloniac	kloniaci		klonený	klonenie
+klope	klopú	klop	klopal	klopúc/klopajúc	klopúci/klopajúci			klopanie
+klopí	klopia	klop	klopil	klopiac	klopiaci		klopený	klopenie
+kľučí	kľučia	kľuč	kľučal	kľučiac	kľučiaci			kľučanie
+kluše / klusá	klušú / klusajú	kluš / klusaj	klusal	klušúc/klusajúc	klusajúci			klusanie
+kľuje	kľujú	kľuj	kľuval	kľujúc	kľujúci		kľuvaný	kľuvanie
+kmáše/kmása	kmášu/kmásajú	kmáš/kmásaj	kmásal	kmášuc/kmásajúc	kmášuci/kmásajúci		kmásaný	kmásanie
+kmitá	kmitajú	kmitaj	kmital	kmitajúc	kmitajúci		kmitaný	kmitanie
+kníše	kníšu	kníš	knísal	kníšuc/knísajúc	kníšuci/knísajúci		knísaný	knísanie
+kňučí	kňučia	kňuč	kňučal	kňučiac	kňučiaci			kňučanie
+kochá	kochajú	kochaj	kochal	kochajúc	kochajúci			kochanie
+kokce / koktá	kokcú / koktajú	kokci / koktaj	koktal	koktajúc	koktajúci			koktanie
+končí	končia	konči	končil	končiac	končiaci		končený	končenie
+kopká	kopkajú	kopkaj	kopkal	kopkajúc	kopkajúci		kopkaný	kopkanie
+kopne	kopnú	kopni	kopol	kopnúc		kopnuvší	kopnutý	kopnutie
+kotví	kotvia	kotvi	kotvil	kotviac	kotviaci		kotvený	kotvenie
+kráča	kráčajú	kráčaj	kráčal	kráčajúc	kráčajúci			kráčanie
+krája	krájajú	krájaj	krájal	krájajúc	krájajúci		krájaný	krájanie
+kráka	krákajú	krákaj	krákal	krákajúc	krákajúci			krákanie
+kráti	krátia	kráť	krátil	krátiac	krátiaci		krátený	krátenie
+kreše	krešú/kresajú	kreš	kresal	krešúc/kresajúc	krešúci/kresajúci		kresaný	kresanie
+kričí	kričia	krič	kričal	kričiac	kričiaci			kričanie
+kríva	krívajú	krívaj	kríval	krívajúc	krívajúci			krívanie
+kriví	krivia	kriv	krivil	kriviac	kriviaci		krivený	krivenie
+kríži	krížia	kríž	krížil	krížiac	krížiaci		krížený	kríženie
+krkve	krkvú	krkvi	krkval	krkvúc/krkvajúc	krkvúci/krkvajúci		krkvaný	krkvanie
+kročí	kročia	kroč	kročil	kročiac	kročiaci			kročenie
+krojí	kroja	kroj	krojil	krojac		krojivší	krojený	krojenie
+kropí	kropia	krop	kropil	kropiac	kropiaci		kropený	kropenie
+krotí	krotia	kroť	krotil	krotiac	krotiaci		krotený	krotenie
+krstí	krstia	krsť / krsti	krstil	krstiac	krstiaci		krstený	krstenie
+kručí	kručia	kruč	kručal	kručiac	kručiaci			kručanie
+krúti	krútia	krúť	krútil	krútiac	krútiaci		krútený	krútenie
+krúži	krúžia	krúž	krúžil	krúžiac	krúžiaci			krúženie
+kucká	kuckajú	kuckaj	kuckal	kuckajúc	kuckajúci			kuckanie
+kudlí	kudlia	kudli	kudlil	kudliac	kudliaci		kudlený	kudlenie
+kuklí	kuklia	kukli	kuklil	kukliac	kukliaci			kuklenie
+kukne	kuknú	kukni	kukol	kuknúc		kuknuvší		kuknutie
+kunká	kunkajú	kunkaj	kunkal	kunkajúc	kunkajúci			kunkanie
+kupčí	kupčia	kupči	kupčil	kupčiac	kupčiaci			kupčenie
+kutre	kutrú	kutri/kutraj	kutral	kutrúc/kutrajúc	kutrúci/kutrajúci			kutranie
+kúzli	kúzlia	kúzli	kúzlil	kúzliac	kúzliaci		kúzlený	kúzlenie
+kváka / kváče	kvákajú / kváču	kvákaj / kváč	kvákal	kváčuc/kvákajúc	kváčuci/kvákajúci		kvákaný	kvákanie
+kvári	kvária	kvár	kváril	kváriac	kváriaci		kvárený	kvárenie
+kvasí	kvasia	kvas	kvasil	kvasiac	kvasiaci		kvasený	kvasenie
+kvičí	kvičia	kvič	kvičal	kvičiac	kvičiaci			kvičanie
+kvíka	kvíkajú	kvíkaj	kvíkal	kvíkajúc	kvíkajúci			kvíkanie
+kvíli	kvília	kvíľ	kvílil	kvíliac	kvíliaci			kvílenie
+kvočí	kvočia	kvoč	kvočal	kvočiac	kvočiaci			kvočanie
+kvoká	kvokajú	kvokaj	kvokal	kvokajúc	kvokajúci			kvokanie
+kycká	kyckajú	kyckaj	kyckal	kyckajúc	kyckajúci		kyckaný	kyckanie
+kycne	kycnú	kycni	kycol	kycnúc		kycnuvší	kycnutý	kycnutie
+kydne	kydnú	kydni	kydol	kydnúc		kydnuvší	kydnutý	kydnutie
+kýcha	kýchajú	kýchaj	kýchal	kýchajúc	kýchajúci			kýchanie
+kypí	kypia	kyp	kypel	kypiac	kypiaci			kypenie
+kyprí	kypria	kypri	kypril	kypriac	kypriaci		kyprený	kyprenie
+kyptí	kyptia	kypti	kyptil	kyptiac	kyptiaci		kyptený	kyptenie
+kysli	kyslia	kysli	kyslil	kysliac	kysliaci		kyslený	kyslenie
+kysne	kysnú	kysni	kysol	kysnúc	kysnúci		kysnutý	kysnutie
+kyvká	kyvkajú	kyvkaj	kyvkal	kyvkajúc	kyvkajúci		kyvkaný	kyvkanie
+kývne	kývnu	kývni	kývol	kývnuc		kývnuvší	kývnutý	kývnutie
+ľahne	ľahnú	ľahni	ľahol	ľahnúc		ľahnuvší	ľahnutý	ľahnutie
+lajní	lajnia	lajni	lajnil	lajniac	lajniaci			lajnenie
+ľakne	ľaknú	ľakni	ľakol	ľaknúc		ľaknuvší	ľaknutý	ľaknutie
+lapká	lapkajú	lapkaj	lapkal	lapkajúc	lapkajúci		lapkaný	lapkanie
+ľapne	ľapnú	ľapni	ľapol	ľapnúc		ľapnuvší	ľapnutý	ľapnutie
+ľapce	ľapcú 	ľapci	ľaptal	ľapcúc	ľapcúci			ľaptanie
+láska	láskajú	láskaj	láskal	láskajúc	láskajúci		láskaný	láskanie
+ľažká	ľažkajú	ľažkaj	ľažkal	ľažkajúc		ľažkavší	ľažkaný	ľažkanie
+lehní	lehnia	lehni	lehnil	lehniac	lehniaci			lehnenie
+lengá	lengajú	lengaj	lengal	lengajúc	lengajúci			lenganie
+lepší	lepšia	lepši	lepšil	lepšiac	lepšiaci			lepšenie
+leptá	leptajú	leptaj	leptal	leptajúc	leptajúci		leptaný	leptanie
+leští	leštia	lešť / lešti	leštil	leštiac	leštiaci		leštený	leštenie
+letí	letia	leť	letel	letiac	letiaci			letenie
+ležká	ležkajú	ležkaj	ležkal	ležkajúc	ležkajúci			ležkanie
+lieči	liečia	lieč	liečil	liečiac	liečiaci		liečený	liečenie
+lieni	lienia	lieň	lienil	lieniac	lieniaci			lienenie
+liepa	liepajú	liepaj	liepal	liepajúc	liepajúci			liepanie
+lieta	lietajú	lietaj	lietal	lietajúc	lietajúci			lietanie
+lieva	lievajú	lievaj	lieval	lievajúc	lievajúci			lievanie
+lipne	lipnú	lipni	lipol	lipnúc	lipnúci			lipnutie
+lisne	lisnú	lisni	lisol	lisnúc	lisnúci			lisnutie
+líška	líškajú	líškaj	líškal	líškajúc	líškajúci			líškanie
+lizká	lizkajú	lizkaj	lizkal	lizkajúc	lizkajúci		lizkaný	lizkanie
+lizne	liznú	lizni	lizol	liznúc		liznuvší	liznutý	liznutie
+ločká	ločkajú	ločkaj	ločkal	ločkajúc	ločkajúci		ločkaný	ločkanie
+lofne	lofnú	lofni	lofol	lofnúc		lofnuvší	lofnutý	lofnutie
+logne	lognú	logni	logol	lognúc		lognuvší	lognutý	lognutie
+lopí	lopia	lop	lopel	lopiac	lopiaci			lopenie
+lopne	lopnú	lopni	lopol	lopnúc		lopnuvší	lopnutý	lopnutie
+lôcha	lôchajú	lôchaj	lôchal	lôchajúc	lôchajúci		lôchaný	lôchanie
+lúcha	lúchajú	lúchaj	lúchal	lúchajúc	lúchajúci		lúchaný	lúchanie
+lupká	lupkajú	lupkaj	lupkal	lupkajúc	lupkajúci			lupkanie
+lupne	lupnú	lupni	lupol	lupnúc		lupnuvší	lupnutý	lupnutie
+lúska	lúskajú	lúskaj	lúskal	lúskajúc	lúskajúci		lúskaný	lúskanie
+lúšti	lúštia	lúšť / lúšti	lúštil	lúštiac	lúštiaci		lúštený	lúštenie
+lysie	lysejú	lysej	lysel	lysejúc 	lysejúci 			lysenie
+macká	mackajú	mackaj	mackal	mackajúc	mackajúci		mackaný	mackanie
+márni	márnia	márni	márnil	márniac	márniaci		márnený	márnenie
+mastí	mastia	masť / masti	mastil	mastiac	mastiaci		mastený	mastenie
+mávne	mávnu	mávni	mávol	mávnuc		mávnuvší		mávnutie
+mazná / mazne	maznajú / maznú	mazni / maznaj	maznal	maznajúc	maznajúci		maznaný	maznanie
+mädlí	mädlia	mädli	mädlil	mädliac	mädliaci		mädlený	mädlenie
+mäkčí	mäkčia	mäkči	mäkčil	mäkčiac	mäkčiaci		mäkčený	mäkčenie
+mäkne	mäknú	mäkni	mäkol	mäknúc	mäknúci			mäknutie
+mešká	meškajú	meškaj	meškal	meškajúc	meškajúci			meškanie
+miaga	miagajú	miagaj	miagal	miagajúc	miagajúci		miaganý	miaganie
+mieni	mienia	mieň	mienil	mieniac	mieniaci		mienený	mienenie
+mieri	mieria	mier	mieril	mieriac	mieriaci		mierený	mierenie
+miesi	miesia	mies	miesil	miesiac	miesiaci		miesený	miesenie
+mieša	miešajú	miešaj	miešal	miešajúc	miešajúci		miešaný	miešanie
+migne	mignú	migni	migol	mignúc		mignuvší	mignutý	mignutie
+mihne	mihnú	mihni	mihol	mihnúc		mihnuvší	mihnutý	mihnutie
+mizne	miznú	mizni	mizol	miznúc	miznúci			miznutie
+mladí	mladia	mlaď	mladil	mladiac	mladiaci		mladený	mladenie
+mláti	mlátia	mláť	mlátil	mlátiac	mlátiaci		mlátený	mlátenie
+mĺkne	mĺknu	mĺkni	mĺkol	mĺknuc	mĺknuci			mĺknutie
+množí	množia	množ	množil	množiac	množiaci		množený	množenie
+modlí	modlia	modli	modlil	modliac	modliaci		modlený	modlenie
+modrá	modrajú	modraj	modral	modrajúc	modrajúci			modranie
+modrí	modria	modri	modril	modriac	modriaci		modrený	modrenie
+mojká	mojkajú	mojkaj	mojkal	mojkajúc	mojkajúci		mojkaný	mojkanie
+mokne	moknú	mokni	mokol	moknúc	moknúci			moknutie
+mokrí	mokria	mokri	mokril	mokriac	mokriaci		mokrený	mokrenie
+mokvá	mokvajú	mokvaj	mokval	mokvajúc	mokvajúci			mokvanie
+motká	motkajú	motkaj	motkal	motkajúc	motkajúci			motkanie
+mračí	mračia	mrač	mračil	mračiac	mračiaci		mračený	mračenie
+mrazí	mrazia	mraz	mrazil	mraziac	mraziaci		mrazený	mrazenie
+mrdne	mrdnú	mrdni	mrdol	mrdnúc		mrdnuvší		mrdnutie
+mrkne	mrknú	mrkni	mrkol	mrknúc		mrknuvší		mrknutie
+mrmle	mrmlú	mrmli	mrmlal	mrmlúc	mrmlúci		mrmlaný	mrmlanie
+mrnčí	mrnčia	mrnč / mrnči	mrnčal	mrnčiac	mrnčiaci		mrnčaný	mrnčanie
+mrnká	mrnkajú	mrnkaj	mrnkal	mrnkajúc	mrnkajúci		mrnkaný	mrnkanie
+mŕšti	mŕštia	mŕšť / mŕšti	mŕštil	mŕštiac	mŕštiaci		mŕštený	mŕštenie
+mrští	mrštia	mršť / mršti	mrštil	mrštiac		mrštivší	mrštený	mrštenie
+mručí	mručia	mruč	mručal	mručiac	mručiaci			mručanie
+mrzí	mrzia	mrzni	mrzel	mrziac	mrziaci			mrzenie
+mrzne	mrznú	mrzni	mrzol	mrznúc	mrznúci			mrznutie
+mucká	muckajú	muckaj	muckal	muckajúc	muckajúci			muckanie
+múdri	múdria	múdri	múdril	múdriac	múdriaci			múdrenie
+mukne	muknú	mukni	mukol	muknúc		muknuvší	muknutý	muknutie
+mumle	mumlú	mumli/mumlaj	mumlal	mumlúc/mumlajúc	mumlúci/mumlajúci		mumlaný	mumlanie
+mumre	mumrú	mumri	mumral	mumrúc/mumrajúc	mumrúci/mumrajúci		mumraný	mumranie
+musí	musia		musel	musiac	musiaci		musený	musenie
+mydlí	mydlia	mydli	mydlil	mydliac	mydliaci		mydlený	mydlenie
+mykne	myknú	mykni	mykol	myknúc		myknuvší	myknutý	myknutie
+naberie	naberú	naber	nabral	naberúc		nabravší	nabratý/nabraný	nabratie/nabranie
+nadeje	nadejú	nadej	nadel	nadejúc		nadiavší	nadiaty	nadiatie
+nadeje	nadejú	nadej	nadel	nadejúc		nadevší	nadený/nadetý	nadenie/nadetie
+nadíde	nadídu	nadíď	nadišiel	nadíduc			nadídený	nadídenie
+nadme	nadmú	nadmi	nadmul	nadmúc		nadmuvší	nadmutý	nadmutie
+naderie	naderú	nader	nadral	naderúc		nadravší	nadraný/nadratý	nadranie/nadratie
+nadšije	nadšijú	nadši	nadšil	nadšijúc		nadšivší	nadšitý	nadšitie
+náhli	náhlia	náhli	náhlil	náhliac	náhliaci		náhlený	náhlenie
+naženie	naženú	nažeň	nahnal	naženúc		nahnavší	nahnaný	nahnanie
+nahnije	nahnijú	nahni	nahnil	nahnijúc		nahnivší	nahnitý	nahnitie
+nahne	nahnú	nahni	nahol	nahnúc		nahnuvší	nahnutý	nahnutie
+nahrá	nahrajú	nahraj	nahral	nahrajúc		nahravší	nahratý/nahraný	nahratie/nahranie
+nahudie	nahudú	nahuď	nahúdol	nahudúc			nahudený	nahudenie
+naje	najedia	najedz	najedol	najediac			najedený	najedenie
+nakľuje	nakľujú	nakľuj	nakľul	nakľujúc		nakľuvší	nakľutý	nakľutie
+nakryje	nakryjú	nakry	nakryl	nakryjúc		nakryvší	nakrytý	nakrytie
+naleje	nalejú	nalej	nalial	nalejúc		naliavší	naliaty	naliatie
+naorie	naorú	naor	naoral	naorúc		naoravší	naoraný	naoranie
+napasie	napasú	napas	napásol	napasúc			napasený	napasenie
+napľuje	napľujú	napľuj	napľul	napľujúc		napľuvší	napľutý	napľutie
+napne	napnú	napni	napol	napnúc		napnuvší	napnutý	napnutie
+naperie	naperú	naper	napral	naperúc		napravší	napraný/napratý	napranie/napratie
+narastie	narastú	narasť / narasti	narástol	narastúc			narastený	narastenie
+naseje	nasejú	nasej	nasial	nasejúc		nasiavší	nasiaty	nasiatie
+nasnuje	nasnujú	nasnuj	nasnul	nasnujúc		nasnuvší	nasnutý	nasnutie
+naspí	naspia	naspi	naspal	naspiac		naspavší	naspaný/naspatý	naspanie/naspatie
+naserie	naserú	naser	nasral	naserúc		nasravší	nasraný/nasratý	nasranie/nasratie
+nastane	nastanú	nastaň	nastal	nastanúc		nastavší		nastanie/nastatie
+nastojí	nastoja	nastoj	nastál	nastojac		nastávší	nastáty	nastátie
+natká	natkajú	natkaj	natkal	natkajúc		natkavší	natkaný	natkanie
+natlčie	natlčú	natlč	natĺkol	natlčúc			natlčený	natlčenie
+naúča	naúčajú	naúčaj	naúčal	naúčajúc	naúčajúci		naúčaný	naúčanie
+naučí	naučia	nauč	naučil	naučiac		naučivší	naučený	naučenie
+naveje	navejú	navej	navial	navejúc		naviavší	naviaty	naviatie
+nazdá	nazdajú	nazdaj	nazdal	nazdajúc	nazdajúci	nazdavší		nazdanie
+nazve	nazvú	nazvi	nazval	nazvúc		nazvavší	nazvaný	nazvanie
+nažerie	nažerú	nažer	nažral	nažerúc		nažravší	nažratý/nažraný	nažratie/nažranie
+nechá	nechajú	nechaj	nechal	nechajúc		nechavší	nechaný	nechanie
+nieti	nietia	nieť	nietil	nietiac	nietiaci		nietený	nietenie
+ňuchá	ňuchajú	ňuchaj	ňuchal	ňuchajúc	ňuchajúci		ňuchaný	ňuchanie
+nutká	nutkajú	nutkaj	nutkal	nutkajúc	nutkajúci		nutkaný	nutkanie
+obalí	obalia	obaľ	obalil	obaliac		obalivší	obalený	obalenie
+obára	obárajú	obáraj	obáral	obárajúc	obárajúci		obáraný	obáranie
+obarí	obaria	obar	obaril	obariac		obarivší	obarený	obarenie
+obáva	obávajú	obávaj	obával	obávajúc	obávajúci		obávaný	obávanie
+obderie	obderú	obder	obdral	obderúc		obdravší	obdratý/obdraný	obdratie/obdranie
+obehá	obehajú	obehaj	obehal	obehajúc		obehavší	obehaný	obehanie
+oberá	oberajú	oberaj	oberal	oberajúc	oberajúci		oberaný	oberanie
+obesí	obesia	obes	obesil	obesiac		obesivší	obesený	obesenie
+obhnije	obhnijú	obhni	obhnil	obhnijúc		obhnivší	obhnitý	obhnitie
+obíja	obíjajú	obíjaj	obíjal	obíjajúc	obíjajúci		obíjaný	obíjanie
+obje	objedia	objedz	objedol	objediac			objedený	objedenie
+obleje	oblejú	oblej	oblial	oblejúc		obliavší	obliaty	obliatie
+obopne	obopnú	obopni	obopäl	obopnúc		obopävší	obopätý	obopätie
+oborie	oború	obor	oboral	oborúc		oboravší	oboraný	oboranie
+oborí	oboria	obor	oboril	oboriac		oborivší	oborený	oborenie
+obrastie	obrastú	obrasť / obrasti	obrástol	obrastúc			obrastený	obrastenie
+obrní	obrnia	obrň	obrnil	obrniac		obrnivší	obrnený	obrnenie
+obseje	obsejú	obsej	obsial	obsejúc		obsiavší	obsiaty	obsiatie
+obstane	obstanú	obstaň	obstal	obstanúc		obstavší	obstatý	obstatie
+obstojí	obstoja	obstoj	obstál	obstojac		obstávší	obstáty	obstátie
+obtlčie	obtlčú	obtlč	obtĺkol	obtlčúc			obtlčený	obtlčenie
+obúva	obúvajú	obúvaj	obúval	obúvajúc	obúvajúci		obúvaný	obúvanie
+obýva	obývajú	obývaj	obýval	obývajúc	obývajúci		obývaný	obývanie
+obžerie	obžerú	obžer	obžral	obžerúc		obžravší	obžratý/obžraný	obžranie/obžratie
+ocedí	ocedia	oceď	ocedil	ocediac		ocedivší	ocedený	ocedenie
+ocení	ocenia	oceň	ocenil	oceniac		ocenivší	ocenený	ocenenie
+ociká	ocikajú	ocikaj	ocikal	ocikajúc		ocikavší	ocikaný	ocikanie
+ocitá	ocitajú	ocitaj	ocital	ocitajúc	ocitajúci			ocitanie
+očadí	očadia	očaď	očadil	očadiac		očadivší	očadený	očadenie
+očarí	očaria	očar	očaril	očariac		očarivší	očarený	očarenie
+očeše	očešú	očeš	očesal	očešúc		očesavší	očesaný	očesanie
+očúra	očúrajú	očúraj	očúral	očúrajúc			očúraný	očúranie
+odhnije	odhnijú	odhni	odhnil	odhnijúc		odhnivší	odhnitý	odhnitie
+odhne	odhnú	odhni	odhol	odhnúc		odhnuvší	odhnutý	odhnutie
+odje	odjedia	odjedz	odjedol	odjediac			odjedený	odjedenie
+odkryje	odkryjú	odkry	odkryl	odkryjúc		odkryvší	odkrytý	odkrytie
+odleje	odlejú	odlej	odlial	odlejúc		odliavší	odliaty	odliatie
+odolá	odolajú	odolaj	odolal	odolajúc		odolavší		odolanie
+odopne	odopnú	odopni	odopäl	odopnúc		odopävší	odopätý	odopätie
+odorie	odorú	odor	odoral	odorúc		odoravší	odoraný	odoranie
+odpasie	odpasú	odpas	odpásol	odpasúc			odpasený	odpasenie
+odpľuje	odpľujú	odpľuj	odpľul	odpľujúc		odpľuvší	odpľutý	odpľutie
+odperie	odperú	odper	odpral	odperúc		odpravší	odpratý/odpraný	odpratie/odpranie
+odrastie	odrastú	odrasť / odrasti	odrástol	odrastúc			odrastený	odrastenie
+odŕha	odŕhajú	odŕhaj	odŕhal	odŕhajúc	odŕhajúci			odŕhanie
+odrie	odrú	odri	odrel	odrúc		odrevší	odretý/odrený	odretie/odrenie
+odspí	odspia	odspi	odspal	odspiac		odspavší	odspaný/odspatý	odspanie/odspatie
+odstane	odstanú	odstaň	odstal	odstanúc		odstavší		odstatie
+odstojí	odstoja	odstoj	odstál	odstojac		odstávší	odstáty	odstátie
+odtlčie	odtlčú	odtlč	odtĺkol	odtlčúc			odtlčený	odtlčenie
+odúča	odúčajú	odúčaj	odúčal	odúčajúc	odúčajúci		odúčaný	odúčanie
+odučí	odučia	oduč	odučil	odučiac		odučivší	odučený	odučenie
+odúva	odúvajú	odúvaj	odúval	odúvajúc	odúvajúci		odúvaný	odúvanie
+odveje	odvejú	odvej	odvial	odvejúc		odviavší	odviaty	odviatie
+odžerie	odžerú	odžer	odžral	odžerúc		odžravší	odžraný/odžratý	odžratie/odžranie
+ofotí	ofotia	ofoť	ofotil	ofotiac		ofotivší	ofotený	ofotenie
+ofŕka	ofŕkajú	ofŕkaj	ofŕkal	ofŕkajúc		ofŕkavší	ofŕkaný	ofŕkanie
+ofúka	ofúkajú	ofúkaj	ofúkal	ofúkajúc		ofúkavší	ofúkaný	ofúkanie
+ogabe	ogabú	ogab	ogabal	ogabúc		ogabavší	ogabaný	ogabanie
+ogrcia	ogrcajú	ogrcaj	ogrcal	ogrcajúc		ogrcavší	ogrcaný	ogrcanie
+oháňa	oháňajú	oháňaj	oháňal	oháňajúc	oháňajúci			oháňanie
+ohaví	ohavia	ohav	ohavil	ohaviac	ohaviaci		ohavený	ohavenie
+ohodí	ohodia	ohoď	ohodil	ohodiac		ohodivší	ohodený	ohodenie
+oholí	oholia	ohoľ	oholil	oholiac		oholivší	oholený	oholenie
+ohŕda	ohŕdajú	ohŕdaj	ohŕdal	ohŕdajúc	ohŕdajúci		ohŕdaný	ohŕdanie
+ohrdí	ohrdia	ohrď	ohrdil	ohrdiac		ohrdivší	ohrdený	ohrdenie
+ohreje	ohrejú	ohrej	ohrial	ohrejúc		ohriavší	ohriaty	ohriatie
+ohŕňa	ohŕňajú	ohŕňaj	ohŕňal	ohŕňajúc	ohŕňajúci		ohŕňaný	ohŕňanie
+ohrnie	ohrnú	ohrň	ohrnul	ohrnúc		ohrnuvší	ohrnutý	ohrnutie
+ohryzie	ohryzú	ohryz	ohrýzol	ohryzúc			ohryzený	ohryzenie
+ohučí	ohučia	ohuč	ohučal	ohučiac		ohučavší	ohučaný	ohučanie
+ohúri	ohúria	ohúr	ohúril	ohúriac		ohúrivší	ohúrený	ohúrenie
+ohýba	ohýbajú	ohýbaj	ohýbal	ohýbajúc	ohýbajúci		ohýbaný	ohýbanie
+ohýna	ohýnajú	ohýnaj	ohýnal	ohýnajúc	ohýnajúci		ohýnaný	ohýnanie
+ochká	ochkajú	ochkaj	ochkal	ochkajúc	ochkajúci			ochkanie
+okadí	okadia	okaď	okadil	okadiac		okadivší	okadený	okadenie
+okáli	okália	okáľ	okálil	okáliac	okáliaci			okálenie
+okope	okopú	okop	okopal	okopúc		okopavší	okopaný	okopanie
+okotí	okotia	okoť	okotil	okotiac		okotivší	okotený	okotenie
+okuje	okujú	okuj	okoval	okujúc		okovavší	okovaný	okovanie
+okreje	okrejú	okrej	okrial	okrejúc		okriavší	okriaty	okriatie
+okuká	okukajú	okukaj	okukal	okukajúc		okukavší	okukaný	okukanie
+okúka	okúkajú	okúkaj	okúkal	okúkajúc	okúkajúci		okúkaný	okúkanie
+okúňa	okúňajú	okúňaj	okúňal	okúňajúc	okúňajúci			okúňanie
+okúpe	okúpu	okúp	okúpal	okúpuc		okúpavší	okúpaný	okúpanie
+okúsi	okúsia	okús	okúsil	okúsiac		okúsivší	okúsený	okúsenie
+okúša	okúšajú	okúšaj	okúšal	okúšajúc	okúšajúci		okúšaný	okúšanie
+okúva	okúvajú	okúvaj	okúval	okúvajúc	okúvajúci		okúvaný	okúvanie
+okydá	okydajú	okydaj	okydal	okydajúc		okydavší	okydaný	okydanie
+oláme	olámu	olám	olámal	olámuc		olámavší	olámaný	olámanie
+olepí	olepia	olep	olepil	olepiac		olepivší	olepený	olepenie
+olíči	olíčia	olíč	olíčil	olíčiac		olíčivší	olíčený	olíčenie
+olíže	olížu	olíž	olízal	olížuc		olízavší	olízaný	olízanie
+olúpe	olúpu	olúp	olúpal	olúpuc		olúpavší	olúpaný	olúpanie
+olúpi	olúpia	olúp	olúpil	olúpiac		olúpivší	olúpený	olúpenie
+omacia	omacajú	omacaj	omacal	omacajúc		omacavší	omacaný	omacanie
+omáča	omáčajú	omáčaj	omáčal	omáčajúc	omáčajúci		omáčaný	omáčanie
+omaká	omakajú	omakaj	omakal	omakajúc		omakavší	omakaný	omakanie
+omáľa	omáľajú	omáľaj	omáľal	omáľajúc	omáľajúci		omáľaný	omáľanie
+omámi	omámia	omám	omámil	omámiac		omámivší	omámený	omámenie
+omára	omárajú	omáraj	omáral	omárajúc	omárajúci		omáraný	omáranie
+omarí	omaria	omar	omaril	omariac		omarivší	omarený	omarenie
+omaže	omažú	omaž	omazal	omažúc		omazavší	omazaný	omazanie
+omedí	omedia	omeď	omedil	omediac		omedivší	omedený	omedenie
+ometá	ometajú	ometaj	ometal	ometajúc	ometajúci		ometaný	ometanie
+ometie	ometú	omeť	omietol	ometúc			ometený	ometenie
+omína	omínajú	omínaj	omínal	omínajúc	omínajúci		omínaný	omínanie
+omelie	omelú	omeľ	omlel	omelúc		omlevší	omletý	omletie
+omočí	omočia	omoč	omočil	omočiac		omočivší	omočený	omočenie
+omoce / omotá	omocú / omotajú	omoc / omotaj	omotal	omotajúc		omotavší	omotaný	omotanie
+omrví	omrvia	omrv	omrvil	omrviac		omrvivší	omrvený	omrvenie
+omŕza	omŕzajú	omŕzaj	omŕzal	omŕzajúc	omŕzajúci		omŕzaný	omŕzanie
+omýva	omývajú	omývaj	omýval	omývajúc	omývajúci		omývaný	omývanie
+onačí	onačia	onač	onačil	onačiac	onačiaci		onačený	onačenie
+ondie	ondejú	ondi / ondej	ondial	ondejúc	ondejúci		ondiaty	ondiatie
+ondie	ondejú	ondi / ondej	ondel	ondejúc	ondejúci		ondený	ondenie
+onemí	onemia	onem	onemil	onemiac		onemivší	onemený	onemenie
+oniká	onikajú	onikaj	onikal	onikajúc	onikajúci			onikanie
+oondí	oondia	oondi	oondil	oondiac		oondivší	oondený	oondenie
+opáči	opáčia	opáč	opáčil	opáčiac		opáčivší	opáčený	opáčenie
+opadá	opadajú	opadaj	opadal	opadajúc	opadajúci	opadavší	opadaný	opadanie
+opája	opájajú	opájaj	opájal	opájajúc	opájajúci		opájaný	opájanie
+opála	opálajú	opálaj	opálal	opálajúc	opálajúci		opálaný	opálanie
+opáli	opália	opáľ	opálil	opáliac		opálivší	opálený	opálenie
+opára	opárajú	opáraj	opáral	opárajúc	opárajúci		opáraný	opáranie
+oparí	oparia	opar	oparil	opariac		oparivší	oparený	oparenie
+opáše	opášu	opáš	opásal	opášuc		opásavší	opásaný	opásanie
+opeká	opekajú	opekaj	opekal	opekajúc	opekajúci		opekaný	opekanie
+opelí	opelia	opeľ	opelil	opeliac		opelivší	opelený	opelenie
+operí	operia	oper	operil	operiac		operivší	operený	operenie
+opičí	opičia	opič	opičil	opičiac	opičiaci			opičenie
+opečie	opečú	opeč	opiekol	opečúc			opečený	opečenie
+opíja	opíjajú	opíjaj	opíjal	opíjajúc	opíjajúci		opíjaný	opíjanie
+opíli	opília	opíľ	opílil	opíliac		opílivší	opílený	opílenie
+opíše	opíšu	opíš	opísal	opíšuc		opísavší	opísaný	opísanie
+oplie	oplejú	oplej	oplel	oplejúc		oplevší	opletý	opletie
+opojí	opoja	opoj	opojil	opojac		opojivší	opojený	opojenie
+oprie	oprú	opri	oprel	oprúc		oprevší	opretý/oprený	opretie/oprenie
+oprší	opršia	oprš	opršal	opršiac		opršavší	opršaný	opršanie
+opuká	opukajú	opukaj	opukal	opukajúc		opukavší	opukaný	opukanie
+opýta	opýtajú	opýtaj	opýtal	opýtajúc		opýtavší	opýtaný	opýtanie
+orafe	orafú/orafajú	orafaj	orafal	orafajúc		orafavší	orafaný	orafanie
+oráňa	oráňajú	oráňaj	oráňal	oráňajúc		oráňavší	oráňaný	oráňanie
+oráva	orávajú	orávaj	orával	orávajúc	orávajúci			orávanie
+oreže	orežú	orež	orezal	orežúc		orezavší	orezaný	orezanie
+orosí	orosia	oros	orosil	orosiac		orosivší	orosený	orosenie
+orúbe	orúbu	orúb	orúbal	orúbuc		orúbavší	orúbaný	orúbanie
+orýpe	orýpu	orýp	orýpal	orýpuc		orýpavší	orýpaný	orýpanie
+osadí	osadia	osaď	osadil	osadiac		osadivší	osadený	osadenie
+osáľa	osáľajú	osáľaj	osáľal	osáľajúc	osáľajúci		osáľaný	osáľanie
+oseká	osekajú	osekaj	osekal	osekajúc		osekavší	osekaný	osekanie
+osíka	osíkajú	osíkaj	osíkal	osíkajúc		osíkavší	osíkaný	osíkanie
+osinie	osinú	osiň	osinul	osinúc		osinuvší	osinutý	osinutie
+oslní	oslnia	oslň	oslnil	oslniac		oslnivší	oslnený	oslnenie
+osočí	osočia	osoč	osočil	osočiac		osočivší	osočený	osočenie
+osolí	osolia	osoľ	osolil	osoliac		osolivší	osolený	osolenie
+osopí	osopia	osop	osopil	osopiac		osopivší	osopený	osopenie
+osoží	osožia	osož	osožil	osožiac	osožiaci			osoženie
+osŕka	osŕkajú	osŕkaj	osŕkal	osŕkajúc	osŕkajúci			osŕkanie
+ostrí	ostria	ostri	ostril	ostriac	ostriaci		ostrený	ostrenie
+osúša	osúšajú	osúšaj	osúšal	osúšajúc	osúšajúci		osúšaný	osúšanie
+osuší	osušia	osuš	osušil	osušiac		osušivší	osušený	osušenie
+osype	osypú	osyp	osypal	osypúc		osypavší	osypaný	osypanie
+osýpa	osýpajú	osýpaj	osýpal	osýpajúc	osýpajúci			osýpanie
+ošatí	ošatia	ošať	ošatil	ošatiac		ošativší	ošatený	ošatenie
+ošíva	ošívajú	ošívaj	ošíval	ošívajúc	ošívajúci			ošívanie
+ošudí	ošudia	ošuď	ošudil	ošudiac		ošudivší	ošudený	ošudenie
+ošúpe	ošúpu	ošúp	ošúpal	ošúpuc		ošúpavší	ošúpaný	ošúpanie
+otáča	otáčajú	otáčaj	otáčal	otáčajúc	otáčajúci		otáčaný	otáčanie
+otáľa	otáľajú	otáľaj	otáľal	otáľajúc		otáľavší		otáľanie
+oťapí	oťapia	oťap	oťapil	oťapiac		oťapivší	oťapený	oťapenie
+otaví	otavia	otav	otavil	otaviac		otavivší	otavený	otavenie
+otelí	otelia	oteľ	otelil	oteliac		otelivší	otelený	otelenie
+oteše/otesá	otešú/otesajú	oteš/otesaj	otesal	otešúc/otesajúc		otesavší	otesaný	otesanie
+otĺka	otĺkajú	otĺkaj	otĺkal	otĺkajúc	otĺkajúci		otĺkaný	otĺkanie
+otočí	otočia	stoč	stočil	otočiac		otočivší	otočený	otočenie
+otŕča	otŕčajú	otŕčaj	otŕčal	otŕčajúc	otŕčajúci		otŕčaný	otŕčanie
+otrčí	otrčia	otrč	otrčil	otrčiac		otrčivší	otrčený	otrčenie
+otrhá	otrhajú	otrhaj	otrhal	otrhajúc		otrhavší	otrhaný	otrhanie
+otrie	otrú	otri	otrel	otrúc		otrevší	otrený/otretý	otrenie/otretie
+oťuká	oťukajú	oťukaj	oťukal	oťukajúc		oťukavší	oťukaný	oťukanie
+otupí	otupia	otup	otupil	otupiac		otupivší	otupený	otupenie
+otuží	otužia	otuž	otužil	otužiac		otuživší	otužený	otuženie
+ovalí	ovalia	ovaľ	ovalil	ovaliac		ovalivší	ovalený	ovalenie
+ovanie	ovanú	ovaň	ovanul	ovanúc		ovanuvší	ovanutý	ovanutie
+ovädá	ovädajú	ovädaj	ovädol	ovädajúc	ovädajúci			ovädanie
+overí	overia	over	overil	overiac		overivší	overený	overenie
+ovesí	ovesia	oves	ovesil	ovesiac		ovesivší	ovesený	ovesenie
+ovešia	ovešajú	ovešaj	ovešal	ovešajúc		ovešavší	ovešaný	ovešanie
+ovíja	ovíjajú	ovíjaj	ovíjal	ovíjajúc	ovíjajúci		ovíjaný	ovíjanie
+ovíňa	ovíňajú	ovíňaj	ovíňal	ovíňajúc	ovíňajúci		ovíňaný	ovíňanie
+ovinie	ovinú	oviň	ovinul	ovinúc		ovinuvší	ovinutý	ovinutie
+ovisá	ovisajú	ovisaj	ovisal	ovisajúc	ovisajúci		ovisaný	ovisanie
+ovísa	ovísajú	ovísaj	ovísal	ovísajúc	ovísajúci		ovísaný	ovísanie
+ovonia	ovoňajú	ovoňaj	ovoňal	ovoňajúc		ovoňavší	ovoňaný	ovoňanie
+ozobe	ozobú	ozob	ozobal	ozobúc		ozobavší	ozobaný	ozobanie
+ozubí	ozubia	ozub	ozubil	ozubiac		ozubivší	ozubený	ozubenie
+ozýva	ozývajú	ozývaj	ozýval	ozývajúc	ozývajúci			ozývanie
+ožení	oženia	ožeň	oženil	oženiac		oženivší	oženený	oženenie
+ožíva	ožívajú	ožívaj	ožíval	ožívajúc	ožívajúci		ožívaný	ožívanie
+oživí	oživia	oživ	oživil	oživiac		oživivší	oživený	oživenie
+ožúva	ožúvajú	ožúvaj	ožúval	ožúvajúc	ožúvajúci		ožúvaný	ožúvanie
+packá	packajú	packaj	packal	packajúc	packajúci		packaný	packanie
+pacne	pacnú	pacni	pacol	pacnúc		pacnuvší	pacnutý	pacnutie
+padne	padnú	padni	padol	padnúc		padnuvší	padnutý	padnutie
+pácha / páše	páchajú / pášu	páchaj / páš	páchal	páchajúc/pášuc	pášuci/páchajúci		páchaný	páchanie
+pance / pantá	pancú / pantajú	panci / pantaj	pantal	pantajúc	pantajúci			pantanie
+papká	papkajú	papkaj	papkal	papkajúc	papkajúci		papkaný	papkanie
+papre	paprú	papri	papral	paprúc	paprúci			papranie
+pátra	pátrajú	pátraj	pátral	pátrajúc	pátrajúci			pátranie
+patrí	patria	patri	patril	patriac	patriaci			patrenie
+peľhá	peľhajú	peľhaj	peľhal	peľhajúc	peľhajúci		peľhaný	peľhanie
+perlí	perlia	perli	perlil	perliac	perliaci			perlenie
+pichá	pichajú	pichaj	pichal	pichajúc	pichajúci		pichaný	pichanie
+pindá	pindajú	pindaj	pindal	pindajúc	pindajúci			pindanie
+pinká	pinkajú	pinkaj	pinkal	pinkajúc	pinkajúci		pinkaný	pinkanie
+pipká	pipkajú	pipkaj	pipkal	pipkajúc	pipkajúci			pipkanie
+piple/piplá	piplú/piplajú	pipli/piplaj	piplal	piplúc/piplajúc	piplúci/piplajúci			piplanie
+pípne	pípnu	pípni	pípol	pípnuc		pípnuvší		pípnutie
+píska	pískajú	pískaj	pískal	pískajúc	pískajúci		pískaný	pískanie
+pišká	piškajú	piškaj	piškal	piškajúc	piškajúci			piškanie
+piští	pištia	pišť / pišti	pišťal	pištiac	pištiaci			pišťanie
+pitve/pitvá	pitvú/pitvajú	pitvaj/pitvi	pitval	pitvúc/pitvajúc	pitvúci/pitvajúci		pitvaný	pitvanie
+plače	plačú	plač	plakal	plačúc	plačúci			plakanie
+pláka	plákajú	plákaj	plákal	plákajúc	plákajúci		plákaný	plákanie
+planie	planú	plaň	planul	planúc	planúci			planutie
+plaší	plašia	plaš	plašil	plašiac	plašiaci		plašený	plašenie
+pláta	plátajú	plátaj	plátal	plátajúc	plátajúci		plátaný	plátanie
+platí	platia	plať	platil	platiac	platiaci		platený	platenie
+pláva	plávajú	plávaj	plával	plávajúc	plávajúci			plávanie
+plaví	plavia	plav	plavil	plaviac	plaviaci		plavený	plavenie
+plazí	plazia	plaz	plazil	plaziac	plaziaci			plazenie
+pleká	plekajú	plekaj	plekal	plekajúc	plekajúci		plekaný	plekanie
+plesá	plesajú	plesaj	plesal	plesajúc	plesajúci			plesanie
+pletie	pletú	pleť	plietol	pletúc	pletúci		pletený	pletenie
+plodí	plodia	ploď	plodil	plodiac	plodiaci		plodený	plodenie
+plstí	plstia	plsti/plsť	plstil	plstiac	plstiaci		plstený	plstenie
+pľuje	pľujú	pľuj	pľuval	pľujúc	pľujúci		pľuvaný	pľuvanie
+plynie	plynú	plyň	plynul	plynúc	plynúci			plynutie
+pĺzne	pĺznu	pĺzni	pĺzol	pĺznuc	pĺznuci			pĺznutie
+poberie	poberú	pober	pobral	poberúc		pobravší	pobratý/pobraný	pobratie/pobranie
+poctí	poctia	pocti	poctil	poctiac		poctivší	poctený	poctenie
+počká	počkajú	počkaj	počkal	počkajúc		počkavší	počkaný	počkanie
+podbá	podbajú	podbaj	podbal	podbajúc		podbavší	podbaný	podbanie
+podbije	podbijú	podbi	podbil	podbijúc		podbivší	podbitý	podbitie
+poddá	poddajú	poddaj	poddal	poddajúc		poddavší	poddaný	poddanie
+podeje	podejú	podej	podel	podejúc		podevší	podený/podetý	podenie/podetie
+podíde	podídu	podíď	podišiel	podíduc			podídený	podídenie
+podkuje	podkujú	podkuj	podkul	podkujúc		podkuvší	podkutý	podkutie
+podmyje	podmyjú	podmy	podmyl	podmyjúc		podmyvší	podmytý	podmytie
+poderie	poderú	poder	podral	poderúc		podravší	podratý/podraný	podratie/podranie
+podryje	podryjú	podry	podryl	podryjúc		podryvší	podrytý	podrytie
+podšije	podšijú	podši	podšil	podšijúc		podšivší	podšitý	podšitie
+podtne	podtnú	podtni	podťal	podtnúc		podťavší	podťatý	podťatie
+poženie	poženú	požeň	pohnal	poženúc		pohnavší	pohnaný	pohnanie
+pohnije	pohnijú	pohni	pohnil	pohnijúc		pohnivší	pohnitý	pohnitie
+pohne	pohnú	pohni	pohol	pohnúc		pohnuvší	pohnutý	pohnutie
+pohrá	pohrajú	pohraj	pohral	pohrajúc		pohravší	pohratý/pohraný	pohranie/pohratie
+poje	pojedia	pojedz	pojedol	pojediac			pojedený	pojedenie
+pokryje	pokryjú	pokry	pokryl	pokryjúc		pokryvší	pokrytý	pokrytie
+poleje	polejú	polej	polial	polejúc		poliavší	poliaty	poliatie
+poltí	poltia	polť / polti	poltil	poltiac	poltiaci		poltený	poltenie
+pomôže	pomôžu	pomôž	pomohol	pomôžuc				
+poorie	poorú	poor	pooral	poorúc		pooravší	pooraný	pooranie
+popasie	popasú	popas	popásol	popasúc			popasený	popasenie
+popľuje	popľujú	popľuj	popľul	popľujúc		popľuvší	popľutý	popľutie
+popsuje	popsujú	popsuj	popsul	popsujúc		popsuvší	popsutý	popsutie
+porastie	porastú	porasť / porasti	porástol	porastúc			porastený	porastenie
+poseje	posejú	posej	posial	posejúc		posiavší	posiaty	posiatie
+pošle	pošlú	pošli	poslal	pošlúc		poslavší	poslaný	poslanie
+pospí	pospia	pospi	pospal	pospiac		pospavší	pospatý/pospaný	pospanie/pospatie
+poserie	poserú	poser	posral	poserúc		posravší	posraný/posratý	posranie/posratie
+postojí	postoja	postoj	postál	postojac		postávší	postáty	postátie
+postí	postia	posť / posti	postil	postiac	postiaci			postenie
+poští	poštia	pošti	pošťal	poštiac		pošťavší	pošťaný	pošťatie
+potlčie	potlčú	potlč	potĺkol	potlčúc			potlčený	potlčenie
+poúča	poúčajú	poúčaj	poúčal	poúčajúc	poúčajúci		poúčaný	poúčanie
+poučí	poučia	pouč	poučil	poučiac		poučivší	poučený	poučenie
+použije	použijú	použi	použil	použijúc		použivší	použitý	použitie
+pozdá	pozdajú	pozdaj	pozdal	pozdajúc		pozdavší		pozdanie
+pozná	poznajú	poznaj	poznal	poznajúc	poznajúci		poznaný	poznanie
+pozve	pozvú	pozvi	pozval	pozvúc		pozvavší	pozvaný	pozvanie
+požerie	požerú	požer	požral	požerúc		požravší	požraný/požratý	požranie/požratie
+prasí	prasia	pras	prasil	prasiac	prasiaci			prasenie
+práši	prášia	práš	prášil	prášiac	prášiaci		prášený	prášenie
+prace	pracú	prac	pratal	pratajúc	pratajúci		prataný	pratanie
+práva	právajú	právaj	prával	právajúc	právajúci			právanie
+praží	pražia	praž	pražil	pražiac	pražiaci		pražený	praženie
+prdí	prdia	prď	prdel	prdiac	prdiaci			prdenie
+prdne	prdnú	prdni	prdol	prdnúc		prdnuvší		prdnutie
+prebije	prebijú	prebi	prebil	prebijúc		prebivší	prebitý	prebitie
+predá	predajú	predaj	predal	predajúc		predavší	predaný	predanie
+prejde	prejdú	prejdi	prešiel	prejdúc			prejdený	prejdenie
+prekuje	prekujú	prekuj	prekul	prekujúc		prekuvší	prekutý	prekutie
+premyje	premyjú	premy	premyl	premyjúc		premyvší	premytý	premytie
+prepne	prepnú	prepni	prepäl	prepnúc		prepävší	prepätý	prepätie
+prepije	prepijú	prepi	prepil	prepijúc		prepivší	prepitý	prepitie
+preryje	preryjú	prery	preryl	preryjúc		preryvší	prerytý	prerytie
+prešije	prešijú	preši	prešil	prešijúc		prešivší	prešitý	prešitie
+pretne	pretnú	pretni	preťal	pretnúc		preťavší	preťatý	preťatie
+previje	previjú	previ	previl	previjúc		previvší	previtý	previtie
+prezuje	prezujú	prezuj	prezul	prezujúc		prezuvší	prezutý	prezutie
+prežije	prežijú	preži	prežil	prežijúc		preživší	prežitý	prežitie
+prežuje	prežujú	prežuj	prežul	prežujúc		prežuvší	prežutý	prežutie
+pŕhli	pŕhlia	pŕhli	pŕhlil	pŕhliac	pŕhliaci		pŕhlený	pŕhlenie
+prchá	prchajú	prchaj	prchal	prchajúc	prchajúci			prchanie
+pradie	pradú	praď	priadol	pradúc	pradúci		pradený	pradenie
+pribije	pribijú	pribi	pribil	pribijúc		pribivší	pribitý	pribitie
+pridá	pridajú	pridaj	pridal	pridajúc		pridavší	pridaný	pridanie
+prijme	prijmú	prijmi	prijal	prijmúc		prijavší	prijatý	prijatie
+prikuje	prikujú	prikuj	prikul	prikujúc		prikuvší	prikutý	prikutie
+pripne	pripnú	pripni	pripäl	pripnúc		pripävší	pripätý	pripätie
+pripije	pripijú	pripi	pripil	pripijúc		pripivší		pripitie
+prisaje	prisajú	prisaj	prisal	prisajúc		prisavší	prisatý	prisatie
+prišije	prišijú	priši	prišil	prišijúc		prišivší	prišitý	prišitie
+prosí	prosia	pros	prosil	prosiac	prosiaci		prosený	prosenie
+prple	prplú	prpli	prplal	prplúc/prplajúc	prplajúci		prplaný	prplanie
+prská	prskajú	prskaj	prskal	prskajúc	prskajúci		prskaný	prskanie
+prúdi	prúdia	prúď	prúdil	prúdiac	prúdiaci			prúdenie
+pruží	pružia	pruž	pružil	pružiac	pružiaci			pruženie
+przní	prznia	przni	prznil	przniac	przniaci		prznený	prznenie
+pufká	pufkajú	pufkaj	pufkal	pufkajúc	pufkajúci		pufkaný	pufkanie
+pukne	puknú	pukni	pukol	puknúc		puknuvší	puknutý	puknutie
+pustí	pustia	pusť / pusti	pustil	pustiac		pustivší	pustený	pustenie
+púšťa	púšťajú	púšťaj	púšťal	púšťajúc	púšťajúci		púšťaný	púšťanie
+rafne	rafnú	rafni	rafol	rafnúc		rafnuvší	rafnutý	rafnutie
+rajbe	rajbú	rajbi	rajbal	rajbúc/rajbajúc	rajbúci/rajbajúci		rajbaný	rajbanie
+randí	randia	randi	randil	randiac	randiaci			randenie
+rapčí	rapčia	rapči	rapčal	rapčiac	rapčiaci			rapčanie
+rapká	rapkajú	rapkaj	rapkal	rapkajúc	rapkajúci			rapkanie
+reční	rečnia	rečni	rečnil	rečniac	rečniaci			rečnenie
+redne	rednú	redni	redol	rednúc	rednúci			rednutie
+rehlí	rehlia	rehli	rehlil	rehliac	rehliaci			rehlenie
+repce / reptá	repcú / reptajú	repci / reptaj	reptal	reptajúc	reptajúci			reptanie
+riadi	riadia	riaď	riadil	riadiac	riadiaci		riadený	riadenie
+riasi	riasia	rias	riasil	riasiac	riasiaci		riasený	riasenie
+riedi	riedia	rieď	riedil	riediac	riediaci		riedený	riedenie
+rieši	riešia	rieš	riešil	riešiac	riešiaci		riešený	riešenie
+rihne	rihnú	rihni	rihol	rihnúc		rihnuvší		rihnutie
+rinčí	rinčia	rinč/rinči	rinčal	rinčiac	rinčiaci			rinčanie
+rojčí	rojčia	rojč / rojči	rojčil	rojčiac	rojčiaci		rojčený	rojčenie
+rovná	rovnajú	rovnaj	rovnal	rovnajúc	rovnajúci		rovnaný	rovnanie
+rozbije	rozbijú	rozbi	rozbil	rozbijúc		rozbivší	rozbitý	rozbitie
+rozdá	rozdajú	rozdaj	rozdal	rozdajúc		rozdavší	rozdaný	rozdanie
+rozduje	rozdujú	rozduj	rozdul	rozdujúc		rozduvší	rozdutý	rozdutie
+rozíde	rozídu	rozíď	rozišiel	rozíduc			rozídený	rozídenie
+rozkuje	rozkujú	rozkuj	rozkul	rozkujúc		rozkuvší	rozkutý	rozkutie
+rozpne	rozpnú	rozpni	rozpäl	rozpnúc		rozpävší	rozpätý	rozpätie
+rozpije	rozpijú	rozpi	rozpil	rozpijúc		rozpivší	rozpitý	rozpitie
+rozryje	rozryjú	rozry	rozryl	rozryjúc		rozryvší	rozrytý	rozrytie
+rozšije	rozšijú	rozši	rozšil	rozšijúc		rozšivší	rozšitý	rozšitie
+roztne / rozotne	roztnú / rozotnú	roztni / rozotni	rozťal	roztnúc/rozotnúc		rozťavší	rozťatý	rozťatie
+rozvije	rozvijú	rozvi	rozvil	rozvijúc		rozvivší	rozvitý	rozvitie
+rozžne	rozžnú	rozžni	rozžal	rozžnúc		rozžavší	rozžatý	rozžatie
+rozžuje	rozžujú	rozžuj	rozžul	rozžujúc		rozžuvší	rozžutý	rozžutie
+rôzni	rôznia	rôzni	rôznil	rôzniac	rôzniaci			rôznenie
+rupne	rupnú	rupni	rupol	rupnúc		rupnuvší	rupnutý	rupnutie
+rypne	rypnú	rypni	rypol	rypnúc		rypnuvší	rypnutý	rypnutie
+sadká	sadkajú	sadkaj	sadkal	sadkajúc		sadkavší	sadkaný	sadkanie
+sadne	sadnú	sadni	sadol	sadnúc		sadnuvší	sadnutý	sadnutie
+sádže/sádza	sádžu/sádzajú	sádž/sádzaj	sádzal	sádžuc/sádzajúc	sádžuci/sádzajúci		sádzaný	sádzanie
+sadzí	sadzia	sadz	sadzil	sadziac	sadziaci		sadzený	sadzenie
+scedí	scedia	sceď	scedil	scediac		scedivší	scedený	scedenie
+scelí	scelia	sceľ	scelil	sceliac		scelivší	scelený	scelenie
+sčerí	sčeria	sčer	sčeril	sčeriac		sčerivší	sčerený	sčerenie
+sčeše	sčešú	sčeš	sčesal	sčešúc		sčesavší	sčesaný	sčesanie
+sčíta	sčítajú	sčítaj	sčítal	sčítajúc		sčítavší	sčítaný	sčítanie
+sčupí	sčupia	sčup	sčupil	sčupiac		sčupivší	sčupený	sčupenie
+sedí	sedia	seď	sedel	sediac	sediaci			sedenie
+sedká	sedkajú	sedkaj	sedkal	sedkajúc	sedkajúci			sedkanie
+sedlá	sedlajú	sedlaj	sedlal	sedlajúc	sedlajúci		sedlaný	sedlanie
+sekne	seknú	sekni	sekol	seknúc		seknuvší	seknutý	seknutie
+sfára	sfárajú	sfáraj	sfáral	sfárajúc		sfáravší	sfáraný	sfáranie
+sfotí	sfotia	sfoť	sfotil	sfotiac		sfotivší	sfotený	sfotenie
+sfúka	sfúkajú	sfúkaj	sfúkal	sfúkajúc		sfúkavší	sfúkaný	sfúkanie
+schne	schnú	schni	schol	schnúc	schnúci			schnutie
+siaha	siahajú	siahaj	siahal	siahajúc	siahajúci			siahanie
+siaka	siakajú	siakaj	siakal	siakajúc	siakajúci		siakaný	siakanie
+sídli	sídlia	sídli	sídlil	sídliac	sídliaci			sídlenie
+sipí	sipia	sip	sipel	sipiac	sipiaci			sipenie
+sivie	sivejú	sivej	sivel	sivejúc	sivejúci			sivenie
+skáče	skáču	skáč	skákal	skáčuc/skákajúc	skáčuci/skákajúci			skákanie
+skalí	skalia	skaľ	skalil	skaliac		skalivší	skalený	skalenie
+skanie	skanú	skaň	skanul	skanúc		skanuvší	skanutý	skanutie
+skape	skapú	skap	skapal	skapúc		skapavší	skapatý/skapaný	skapanie
+skára	skárajú	skáraj	skáral	skárajúc		skáravší	skáraný	skáranie
+skáša	skášajú	skášaj	skášal	skášajúc	skášajúci		skášaný	skášanie
+skazí	skazia	skaz	skazil	skaziac		skazivší	skazený	skazenie
+skĺbi	skĺbia	skĺb	skĺbil	skĺbiac		skĺbivší	skĺbený	skĺbenie
+skĺza	skĺzajú	skĺzaj	skĺzal	skĺzajúc	skĺzajúci			skĺzanie
+skočí	skočia	skoč	skočil	skočiac		skočivší	skočený	skočenie
+skolí	skolia	skoľ	skolil	skoliac		skolivší	skolený	skolenie
+skoná	skonajú	skonaj	skonal	skonajúc		skonavší	skonaný	skonanie
+skope	skopú	skop	skopal	skopúc		skopavší	skopaný	skopanie
+skosí	skosia	skos	skosil	skosiac		skosivší	skosený	skosenie
+skuje	skujú	skuj	skoval	skujúc		skovavší	skovaný	skovanie
+skrčí	skrčia	skrč	skrčil	skrčiac		skrčivší	skrčený	skrčenie
+skŕmi	skŕmia	skŕm	skŕmil	skŕmiac		skŕmivší	skŕmený	skŕmenie
+skučí	skučia	skuč	skučal	skučiac	skučiaci			skučanie
+skúma	skúmajú	skúmaj	skúmal	skúmajúc	skúmajúci		skúmaný	skúmanie
+skúpi	skúpia	skúp	skúpil	skúpiac		skúpivší	skúpený	skúpenie
+skúsi	skúsia	skús	skúsil	skúsiac		skúsivší	skúsený	skúsenie
+skúša	skúšajú	skúšaj	skúšal	skúšajúc	skúšajúci		skúšaný	skúšanie
+skúva	skúvajú	skúvaj	skúval	skúvajúc	skúvajúci		skúvaný	skúvanie
+skvie	skvejú	skvej	skvel	skvejúc	skvejúci			skvenie
+skýši	skýšia	skýš	skýšil	skýšiac		skýšivší	skýšený	skýšenie
+sladí	sladia	slaď	sladil	sladiac	sladiaci		sladený	sladenie
+slávi	slávia	sláv	slávil	sláviac	sláviaci		slávený	slávenie
+slepí	slepia	slep	slepil	slepiac	slepiaci			slepenie
+sliní	slinia	sliň	slinil	sliniac	sliniaci		slinený	slinenie
+slope	slopú	slop	slopal	slopúc/slopajúc	slopúci/slopajúci		slopaný	slopanie
+sľúbi	sľúbia	sľúb	sľúbil	sľúbiac		sľúbivší	sľúbený	sľúbenie
+sluší	slušia	sluš	slušal	slušiac	slušiaci			slušanie
+slúži	slúžia	slúž	slúžil	slúžiac	slúžiaci		slúžený	slúženie
+smaží	smažia	smaž	smažil	smažiac	smažiaci		smažený	smaženie
+smädí			smädilo					smädenie
+smetí	smetia	smeť	smetil	smetiac	smetiaci			smetenie
+smolí	smolia	smoľ	smolil	smoliac	smoliaci		smolený	smolenie
+smrká	smrkajú	smrkaj	smrkal	smrkajúc	smrkajúci			smrkanie
+smúti	smútia	smúť	smútil	smútiac	smútiaci			smútenie
+snaží	snažia	snaž	snažil	snažiac	snažiaci			snaženie
+sneží	snežia	snež	snežil	snežiac	snežiaci			sneženie
+sníme	snímu	sním	snímal	snímajúc	snímajúci		snímaný	snímanie
+sníva	snívajú	snívaj	sníval	snívajúc	snívajúci		snívaný	snívanie
+snorí	snoria	snor	snoril	snoriac	snoriaci			snorenie
+snuje	snujú	snuj	snoval	snujúc	snujúci		snovaný	snovanie
+snúbi	snúbia	snúb	snúbil	snúbiac	snúbiaci			snúbenie
+soptí	soptia	sopti	soptil	soptiac	soptiaci		soptený	soptenie
+spadá	spadajú	spadaj	spadal	spadajúc	spadajúci			spadanie
+spája	spájajú	spájaj	spájal	spájajúc	spájajúci		spájaný	spájanie
+spáli	spália	spáľ	spálil	spáliac		spálivší	spálený	spálenie
+spapá	spapajú	spapaj	spapal	spapajúc		spapavší	spapaný	spapanie
+sparí	sparia	spar	sparil	spariac		sparivší	sparený	sparenie
+spári	spária	spár	spáril	spáriac		spárivší	spárený	spárenie
+spása	spásajú	spásaj	spásal	spásajúc	spásajúci		spásaný	spásanie
+spasí	spasia	spas	spasil	spasiac		spasivší	spasený	spasenie
+spáva	spávajú	spávaj	spával	spávajúc	spávajúci			spávanie
+spätí	spätia	späť	spätil	spätiac		spätivší	spätený	spätenie
+speká	spekajú	spekaj	spekal	spekajúc	spekajúci		spekaný	spekanie
+spení	spenia	speň	spenil	speniac		spenivší	spenený	spenenie
+spečie	spečú	speč	spiekol	spečúc			spečený	spečenie
+spíja	spíjajú	spíjaj	spíjal	spíjajúc	spíjajúci		spíjaný	spíjanie
+spíli	spília	spíľ	spílil	spíliac		spílivší	spílený	spílenie
+spína	spínajú	spínaj	spínal	spínajúc	spínajúci		spínaný	spínanie
+spíše	spíšu	spíš	spísal	spíšuc		spísavší	spísaný	spísanie
+spĺňa	spĺňajú	spĺňaj	spĺňal	spĺňajúc	spĺňajúci		spĺňaný	spĺňanie
+splní	splnia	splň	splnil	splniac		splnivší	splnený	splnenie
+spojí	spoja	spoj	spojil	spojac		spojivší	spojený	spojenie
+sporí	sporia	spor	sporil	sporiac	sporiaci		sporený	sporenie
+spotí	spotia	spoť	spotil	spotiac		spotivší	spotený	spotenie
+spúta	spútajú	spútaj	spútal	spútajúc		spútavší	spútaný	spútanie
+spýta	spýtajú	spýtaj	spýtal	spýtajúc		spýtavší	spýtaný	spýtanie
+srkne	srknú	srkni	srkol	srknúc		srknuvší	srknutý	srknutie
+stáča	stáčajú	stáčaj	stáčal	stáčajúc	stáčajúci		stáčaný	stáčanie
+stačí	stačia	stač	stačil	stačiac	stačiaci	stačivší		stačenie
+stápa	stápajú	stápaj	stápal	stápajúc	stápajúci		stápaný	stápanie
+stará	starajú	staraj	staral	starajúc	starajúci			staranie
+stavia	stavajú	stavaj	staval	stavajúc	stavajúci		stavaný	stavanie
+stáva	stávajú	stávaj	stával	stávajúc	stávajúci		stávaný	stávanie
+staví	stavia	stav	stavil	staviac		stavivší	stavený	stavenie
+sťaží	sťažia	sťaž	sťažil	sťažiac		sťaživší	sťažený	sťaženie
+steká	stekajú	stekaj	stekal	stekajúc	stekajúci		stekaný	stekanie
+stená / stene	stenajú / stenú	steň / stenaj	stenal	stenajúc	stenajúci			stenanie
+stečie	stečú	steč	stiekol	stečúc			stečený	stečenie
+stíha	stíhajú	stíhaj	stíhal	stíhajúc	stíhajúci		stíhaný	stíhanie
+stína	stínajú	stínaj	stínal	stínajúc	stínajúci		stínaný	stínanie
+stíši	stíšia	stíš	stíšil	stíšiac		stíšivší	stíšený	stíšenie
+stlie	stlejú	stlej	stlel	stlejúc		stlevší	stlený/stletý	stlenie/stletie
+stĺka	stĺkajú	stĺkaj	stĺkal	stĺkajúc	stĺkajúci		stĺkaný	stĺkanie
+stlmí	stlmia	stlm	stlmil	stlmiac		stlmivší	stlmený	stlmenie
+stmí			stmelo				stmené	stmenie
+stočí	stočia	stoč	stočil	stočiac		stočivší	stočený	stočenie
+stoná / stone	stonajú / stonú	stoň / stonaj	stonal	stonajúc	stonajúci			stonanie
+stopí	stopia	stop	stopil	stopiac		stopivší	stopený	stopenie
+strčí	strčia	strč	strčil	strčiac		strčivší	strčený	strčenie
+strhá	strhajú	strhaj	strhal	strhajúc		strhavší	strhaný	strhanie
+stŕha	stŕhajú	stŕhaj	stŕhal	stŕhajúc	stŕhajúci		stŕhaný	stŕhanie
+strie	strú	stri	strel	strúc	strúci			strenie/stretie
+strká	strkajú	strkaj	strkal	strkajúc	strkajúci		strkaný	strkanie
+strmí	strmia	strm	strmil	strmiac	strmiaci			strmenie
+strnie	strnú	strň	strnul	strnúc		strnuvší	strnutý	strnutie
+stŕpa	stŕpajú	stŕpaj	stŕpal	stŕpajúc	stŕpajúci		stŕpaný	stŕpanie
+stŕži	stŕžia	stŕž	stŕžil	stŕžiac		stŕživší	stŕžený	stŕženie
+stúli	stúlia	stúľ	stúlil	stúliac		stúlivší	stúlený	stúlenie
+stúpa	stúpajú	stúpaj	stúpal	stúpajúc	stúpajúci			stúpanie
+stupí	stupia	stup	stupil	stupiac		stupivší	stupený	stupenie
+stúpi	stúpia	stúp	stúpil	stúpiac		stúpivší		stúpenie
+stuží	stužia	stuž	stužil	stužiac		stuživší	stužený	stuženie
+stýka	stýkajú	stýkaj	stýkal	stýkajúc	stýkajúci			stýkanie
+stýra	stýrajú	stýraj	stýral	stýrajúc		stýravší	stýraný	stýranie
+svári	svária	svár	sváril	sváriac	sváriaci			svárenie
+svätí	svätia	sväť	svätil	svätiac	svätiaci		svätený	svätenie
+sviní	svinia	sviň	svinil	sviniac	sviniaci		svinený	svinenie
+svitá	svitajú		svital					svitanie
+svrká	svrkajú	svrkaj	svrkal	svrkajúc	svrkajúci			svrkanie
+sykne	syknú	sykni	sykol	syknúc		syknuvší		syknutie
+šalie	šalejú	šalej	šalel	šalejúc	šalejúci			šalenie
+šantí	šantia	šanť / šanti	šantil	šantiac	šantiaci			šantenie
+šepká	šepkajú	šepkaj	šepkal	šepkajúc	šepkajúci		šepkaný	šepkanie
+šepne	šepnú	šepni	šepol	šepnúc		šepnuvší	šepnutý	šepnutie
+šepce / šeptá	šepcú / šeptajú	šepci / šeptaj	šeptal	šeptajúc	šeptajúci		šeptaný	šeptanie
+šetrí	šetria	šetri	šetril	šetriac	šetriaci		šetrený	šetrenie
+šiali	šialia	šiaľ	šialil	šialiac	šialiaci		šialený	šialenie
+šiana	šianajú	šianaj	šianal	šianajúc	šianajúci		šiananý	šiananie
+šibká	šibkajú	šibkaj	šibkal	šibkajúc	šibkajúci		šibkaný	šibkanie
+šibne	šibnú	šibni	šibol	šibnúc		šibnuvší	šibnutý	šibnutie
+šikne	šiknú	šikni	šikol	šiknúc		šiknuvší		šiknutie
+šimre	šimrú	šimri	šimral	šimrúc/šimrajúc	šimrúci/šimrajúci		šimraný	šimranie
+šiple	šiplú	šipli	šiplal	šiplúc/šiplajúc	šiplúci			šiplanie
+škerí	škeria	šker	škeril	škeriac	škeriaci		škerený	škerenie
+šklbe	šklbú	šklb/šklbaj	šklbal	šklbúc/šklbajúc	šklbúci/šklbajúci		šklbaný	šklbanie
+škodí	škodia	škoď	škodil	škodiac	škodiaci			škodenie
+školí	školia	škoľ	školil	školiac	školiaci		školený	školenie
+škopí	škopia	škop	škopil	škopiac	škopiaci		škopený	škopenie
+škrčí	škrčia	škrč	škrčal	škrčiac	škrčiaci			škrčanie
+škrie	škrú	škri	škrel	škrúc	škrúci			škrenie
+škŕka	škŕkajú	škŕkaj	škŕkal	škŕkajúc	škŕkajúci			škŕkanie
+škrtá	škrtajú	škrtaj	škrtal	škrtajúc	škrtajúci		škrtaný	škrtanie
+škrtí	škrtia	škrť	škrtil	škrtiac	škrtiaci		škrtený	škrtenie
+škúli	škúlia	škúľ	škúlil	škúliac	škúliaci			škúlenie
+šľahá	šľahajú	šľahaj	šľahal	šľahajúc	šľahajúci		šľahaný	šľahanie
+šmára	šmárajú	šmáraj	šmáral	šmárajúc	šmárajúci		šmáraný	šmáranie
+šmarí	šmaria	šmar	šmaril	šmariac		šmarivší	šmarený	šmarenie
+šmýka	šmýkajú	šmýkaj	šmýkal	šmýkajúc	šmýkajúci		šmýkaný	šmýkanie
+šnupe	šnupú/šnupajú	šnup/šnupaj	šnupal	šnupajúc	šnupajúci		šnupaný	šnupanie
+šomre	šomrú	šomri	šomral	šomrúc/šomrajúc	šomrúci/šomrajúci		šomraný	šomranie
+špára	špárajú	špáraj	špáral	špárajúc	špárajúci		špáraný	špáranie
+špatí	špatia	špať	špatil	špatiac	špatiaci		špatený	špatenie
+špiní	špinia	špiň	špinil	špiniac	špiniaci		špinený	špinenie
+šplhá	šplhajú	šplhaj	šplhal	šplhajúc	šplhajúci			šplhanie
+šporí	šporia	špor	šporil	šporiac	šporiaci		šporený	šporenie
+šprtá	šprtajú	šprtaj	šprtal	šprtajúc	šprtajúci			šprtanie
+špúli	špúlia	špúľ	špúlil	špúliac	špúliaci		špúlený	špúlenie
+šťaví	šťavia	šťav	šťavil	šťaviac	šťaviaci			šťavenie
+šteká	štekajú	štekaj	štekal	štekajúc	štekajúci			štekanie
+štepí	štepia	štep	štepil	štepiac	štepiaci		štepený	štepenie
+štiká	štikajú	štikaj	štikal	štikajúc	štikajúci		štikaný	štikanie
+štípe	štípu	štíp	štípal	štípajúc	štípajúci		štípaný	štípanie
+štíti	štítia	štíť	štítil	štítiac	štítiaci			štítenie
+štope	štopú	štop	štopal	štopúc	štopúci		štopaný	štopanie
+štrbí	štrbia	štrb	štrbil	štrbiac	štrbiaci		štrbený	štrbenie
+štrká	štrkajú	štrkaj	štrkal	štrkajúc	štrkajúci			štrkanie
+šťuká	šťukajú	šťukaj	šťukal	šťukajúc	šťukajúci			šťukanie
+štúra	štúrajú	štúraj	štúral	štúrajúc	štúrajúci		štúraný	štúranie
+štúri	štúria	štúr	štúril	štúriac		štúrivší	štúrený	štúrenie
+šuchá	šuchajú	šuchaj	šuchal	šuchajúc	šuchajúci		šuchaný	šuchanie
+šúcha	šúchajú	šúchaj	šúchal	šúchajúc	šúchajúci		šúchaný	šúchanie
+šumí	šumia	šum	šumel	šumiac	šumiaci			šumenie
+šupí			šupelo					šupenie
+šupne	šupnú	šupni	šupol	šupnúc		šupnuvší	šupnutý	šupnutie
+šústa	šústajú	šústaj	šústal	šústajúc	šústajúci		šústaný	šústanie
+šušká	šuškajú	šuškaj	šuškal	šuškajúc	šuškajúci		šuškaný	šuškanie
+šušle	šušlú	šušli	šušlal	šušlajúc	šušlajúci			šušlanie
+šuští	šuštia	šušť / šušti	šušťal	šuštiac	šuštiaci			šušťanie
+šváca	švácajú	švácaj	švácal	švácajúc	švácajúci		švácaný	švácanie
+švihá	švihajú	švihaj	švihal	švihajúc	švihajúci		švihaný	švihanie
+tacká	tackajú	tackaj	tackal	tackajúc	tackajúci			tackanie
+ťapká	ťapkajú	ťapkaj	ťapkal	ťapkajúc	ťapkajúci		ťapkaný	ťapkanie
+ťapne	ťapnú	ťapni	ťapol	ťapnúc		ťapnuvší	ťapnutý	ťapnutie
+ťarbe	ťarbú	ťarbi	ťarbal	ťarbúc	ťarbúci			ťarbanie
+ťažie	ťažejú	ťažej	ťažel	ťažejúc	ťažejúci			ťaženie
+ťažká	ťažkajú	ťažkaj	ťažkal	ťažkajúc	ťažkajúci		ťažkaný	ťažkanie
+tenčí	tenčia	tenč/tenči	tenčil	tenčiac	tenčiaci			tenčenie
+tesní	tesnia	tesni	tesnil	tesniac	tesniaci		tesnený	tesnenie
+tieni	tienia	tieň	tienil	tieniac	tieniaci		tienený	tienenie
+tíska	tískajú	tískaj	tískal	tískajúc	tískajúci		tískaný	tískanie
+tisne	tisnú	tisni	tisol	tisnúc	tisnúci		tisnutý	tisnutie
+tkáva	tkávajú	tkávaj	tkával	tkávajúc	tkávajúci			tkávanie
+tkvie	tkvejú	tkvej	tkvel	tkvejúc	tkvejúci			tkvenie
+tlačí	tlačia	tlač	tlačil	tlačiac	tlačiaci		tlačený	tlačenie
+tmelí	tmelia	tmeľ	tmelil	tmeliac	tmeliaci		tmelený	tmelenie
+tmolí	tmolia	tmoľ	tmolil	tmoliac	tmoliaci			tmolenie
+trafí	trafia	traf	trafil	trafiac		trafivší	trafený	trafenie
+trápi	trápia	tráp	trápil	trápiac	trápiaci		trápený	trápenie
+tratí	tratia	trať	tratil	tratiac	tratiaci		tratený	tratenie
+trávi	trávia	tráv	trávil	tráviac	tráviaci		trávený	trávenie
+trepe	trepú	trep	trepal	trepúc/trepajúc	trepúci/trepajúci		trepaný	trepanie
+trhne	trhnú	trhni	trhol	trhnúc		trhnuvší	trhnutý	trhnutie
+trasie	trasú	tras	triasol	trasúc	trasúci		trasený	trasenie
+tríme / tríma	trímu / trímajú	trím / trímaj	trímal	trímuc/trímajúc	trímuci/trímajúci		trímaný	trímanie
+trkne	trknú	trkni	trkol	trknúc		trknuvší	trknutý	trknutie
+trmne	trmnú	trmni	trmol	trmnúc		trmnuvší	trmnutý	trmnutie
+tróni	trónia	tróň	trónil	tróniac	tróniaci			trónenie
+troví	trovia	trov	trovil	troviac	troviaci		trovený	trovenie
+trpí	trpia	trp	trpel	trpiac	trpiaci		trpený	trpenie
+tŕpne	tŕpnu	tŕpni	tŕpol	tŕpnuc	tŕpnuci			tŕpnutie
+trúbi	trúbia	trúb	trúbil	trúbiac	trúbiaci		trúbený	trúbenie
+trudí	trudia	truď	trudil	trudiac	trudiaci			trudenie
+trúfa	trúfajú	trúfaj	trúfal	trúfajúc	trúfajúci			trúfanie
+trúsi	trúsia	trús	trúsil	trúsiac	trúsiaci		trúsený	trúsenie
+tuhne	tuhnú	tuhni	tuhol	tuhnúc	tuhnúci			tuhnutie
+ťukne	ťuknú	ťukni	ťukol	ťuknúc		ťuknuvší	ťuknutý	ťuknutie
+tuľká	tuľkajú	tuľkaj	tuľkal	tuľkajúc	tuľkajúci		tuľkaný	tuľkanie
+tutlá/tutle	tutlú	tutli/tutlaj	tutlal	tutlajúc	tutlajúci		tutlaný	tutlanie
+tvári	tvária	tvár	tváril	tváriac	tváriaci			tvárenie
+tvorí	tvoria	tvor	tvoril	tvoriac	tvoriaci		tvorený	tvorenie
+tvrdí	tvrdia	tvrď	tvrdil	tvrdiac	tvrdiaci		tvrdený	tvrdenie
+uberá	uberajú	uberaj	uberal	uberajúc	uberajúci		uberaný	uberanie
+ubíja	ubíjajú	ubíjaj	ubíjal	ubíjajúc	ubíjajúci		ubíjaný	ubíjanie
+ubodá	ubodajú	ubodaj	ubodal	ubodajúc		ubodavší	ubodaný	ubodanie
+ubúda	ubúdajú	ubúdaj	ubúdal	ubúdajúc	ubúdajúci			ubúdanie
+ucíti	ucítia	ucíť	ucítil	ucítiac		ucítivší	ucítený	ucítenie
+učeše	učešú	učeš	učesal	učešúc		učesavší	učesaný	učesanie
+učiní	učinia	učiň	učinil	učiniac		učinivší	učinený	učinenie
+učupí	učupia	učup	učupil	učupiac		učupivší	učupený	učupenie
+udáva	udávajú	udávaj	udával	udávajúc	udávajúci		udávaný	udávanie
+udelí	udelia	udeľ	udelil	udeliac		udelivší	udelený	udelenie
+uderí	uderia	uder	uderil	uderiac		uderivší	uderený	uderenie
+udiví	udivia	udiv	udivil	udiviac		udivivší	udivený	udivenie
+udrie	udrú	udri	udrel	udrúc		udrevší	udretý/udrený	udretie/udrenie
+udrží	udržia	udrž	udržal	udržiac		udržavší	udržaný	udržanie
+udupe / udupá	udupú / udupajú	udup / udupaj	udupal	udupúc/udupajúc		udupavší	udupaný	udupanie
+udusí	udusia	udus	udusil	udusiac		udusivší	udusený	udusenie
+udúša	udúšajú	udúšaj	udúšal	udúšajúc	udúšajúci		udúšaný	udúšanie
+ufúľa	ufúľajú	ufúľaj	ufúľal	ufúľajúc		ufúľavší	ufúľaný	ufúľanie
+uháji	uhája	uháj	uhájil	uhájac		uhájivší	uhájený	uhájenie
+uháňa	uháňajú	uháňaj	uháňal	uháňajúc	uháňajúci			uháňanie
+uhasí	uhasia	uhas	uhasil	uhasiac		uhasivší	uhasený	uhasenie
+uháša	uhášajú	uhášaj	uhášal	uhášajúc	uhášajúci		uhášaný	uhášanie
+uhmká	uhmkajú	uhmkaj	uhmkal	uhmkajúc	uhmkajúci			uhmkanie
+úhorí	úhoria	úhor	úhoril	úhoriac	úhoriaci		úhorený	úhorenie
+uhúka	uhúkajú	uhúkaj	uhúkal	uhúkajúc	uhúkajúci			uhúkanie
+uhýba	uhýbajú	uhýbaj	uhýbal	uhýbajúc	uhýbajúci			uhýbanie
+uhýna	uhýnajú	uhýnaj	uhýnal	uhýnajúc	uhýnajúci			uhýnanie
+uhynie	uhynú	uhyň	uhynul	uhynúc		uhynuvší	uhynutý	uhynutie
+uchne	uchnú	uchni	uchol	uchnúc		uchnuvší		uchnutie
+uistí	uistia	uisť / uisti	uistil	uistiac		uistivší	uistený	uistenie
+ujedá	ujedajú	ujedaj	ujedal	ujedajúc	ujedajúci		ujedaný	ujedanie
+ujíma	ujímajú	ujímaj	ujímal	ujímajúc	ujímajúci			ujímanie
+ujúka	ujúkajú	ujúkaj	ujúkal	ujúkajúc	ujúkajúci			ujúkanie
+ukája	ukájajú	ukájaj	ukájal	ukájajúc	ukájajúci		ukájaný	ukájanie
+ukáže	ukážu	ukáž	ukázal	ukážuc		ukázavší	ukázaný	ukázanie
+ukojí	ukoja	ukoj	ukojil	ukojac		ukojivší	ukojený	ukojenie
+ukuje	ukujú	ukuj	ukoval	ukujúc		ukovavší	ukovaný	ukovanie
+ukrká	ukrkajú	ukrkaj	ukrkal	ukrkajúc		ukrkavší	ukrkaný	ukrkanie
+ukúva	ukúvajú	ukúvaj	ukúval	ukúvajúc	ukúvajúci		ukúvaný	ukúvanie
+ulapí	ulapia	ulap	ulapil	ulapiac		ulapivší	ulapený	ulapenie
+uľaví	uľavia	uľav	uľavil	uľaviac		uľavivší		uľavenie
+ulepí	ulepia	ulep	ulepil	ulepiac		ulepivší	ulepený	ulepenie
+uleží	uležia	ulež	uležal	uležiac		uležavší	uležaný	uležanie
+ulíha	ulíhajú	ulíhaj	ulíhal	ulíhajúc	ulíhajúci		ulíhaný	ulíhanie
+ulomí	ulomia	ulom	ulomil	ulomiac		ulomivší	ulomený	ulomenie
+uloví	ulovia	ulov	ulovil	uloviac		ulovivší	ulovený	ulovenie
+uloží	uložia	ulož	uložil	uložiac		uloživší	uložený	uloženie
+ulúpi	ulúpia	ulúp	ulúpil	ulúpiac		ulúpivší	ulúpený	ulúpenie
+uľúti			uľútilo					uľútenie
+umáča	umáčajú	umáčaj	umáčal	umáčajúc		umáčavší	umáčaný	umáčanie
+umára	umárajú	umáraj	umáral	umárajúc	umárajúci		umáraný	umáranie
+umaže	umažú	umaž	umazal	umažúc		umazavší	umazaný	umazanie
+umlčí	umlčia	umlč	umlčal	umlčiac		umlčavší	umlčaný	umlčanie
+umĺka	umĺkajú	umĺkaj	umĺkal	umĺkajúc	umĺkajúci			umĺkanie
+umorí	umoria	umor	umoril	umoriac		umorivší	umorený	umorenie
+umrie	umrú	umri	umrel	umrúc		umrevší	umretý	umretie
+umučí	umučia	umuč	umučil	umučiac		umučivší	umučený	umučenie
+umýva	umývajú	umývaj	umýval	umývajúc	umývajúci		umývaný	umývanie
+unáša	unášajú	unášaj	unášal	unášajúc	unášajúci		unášaný	unášanie
+unaví	unavia	unav	unavil	unaviac		unavivší	unavený	unavenie
+unesie	unesú	unes	uniesol	unesúc			unesený	unesenie
+uniká	unikajú	unikaj	unikal	unikajúc	unikajúci			unikanie
+unoží	unožia	unož	unožil	unožiac		unoživší	unožený	unoženie
+unúva	unúvajú	unúvaj	unúval	unúvajúc	unúvajúci		unúvaný	unúvanie
+upadá	upadajú	upadaj	upadal	upadajúc	upadajúci			upadanie
+upáli	upália	upáľ	upálil	upáliac		upálivší	upálený	upálenie
+upaží	upažia	upaž	upažil	upažiac		upaživší	upažený	upaženie
+upchá	upchajú	upchaj	upchal	upchajúc		upchavší	upchaný/upchatý	upchanie/upchatie
+upečie	upečú	upeč	upiekol	upečúc			upečený	upečenie
+upíja	upíjajú	upíjaj	upíjal	upíjajúc	upíjajúci		upíjaný	upíjanie
+upína	upínajú	upínaj	upínal	upínajúc	upínajúci		upínaný	upínanie
+upíše	upíšu	upíš	upísal	upíšuc		upísavší	upísaný	upísanie
+upotí	upotia	upoť	upotil	upotiac		upotivší	upotený	upotenie
+uprie	uprú	upri	uprel	uprúc		uprevší	upretý/uprený	upretie/uprenie
+upúta	upútajú	upútaj	upútal	upútajúc		upútavší	upútaný	upútanie
+uráči	uráčia	uráč	uráčil	uráčiac		uráčivší	uráčený	uráčenie
+urazí	urazia	uraz	urazil	uraziac	uraziaci	urazivší	urazený	urazenie
+uráža	urážajú	urážaj	urážal	urážajúc	urážajúci		urážaný	urážanie
+urobí	urobia	urob	urobil	urobiac		urobivší	urobený	urobenie
+úročí	úročia	úroč	úročil	úročiac	úročiaci		úročený	úročenie
+urodí	urodia	uroď	urodil	urodiac		urodivší	urodený	urodenie
+usadá	usadajú	usadaj	usadal	usadajúc	usadajúci			usadanie
+usadí	usadia	usaď	usadil	usadiac		usadivší	usadený	usadenie
+usedá	usedajú	usedaj	usedal	usedajúc	usedajúci			usedanie
+usína	usínajú	usínaj	usínal	usínajúc	usínajúci			usínanie
+usmeje	usmejú	usmej	usmial	usmejúc		usmiavší	usmiaty	usmiatie
+uspeje	uspejú	uspej	uspel	uspejúc		uspevší		uspenie
+usŕka	usŕkajú	usŕkaj	usŕkal	usŕkajúc	usŕkajúci			usŕkanie
+ustelie	ustelú	usteľ	ustlal	ustelúc		ustlavší	ustlatý/ustlaný	ustlatie/ustlanie
+usúdi	usúdia	usúď	usúdil	usúdiac		usúdivší	usúdený	usúdenie
+usúka	usúkajú	usúkaj	usúkal	usúkajúc		usúkavší	usúkaný	usúkanie
+usuší	usušia	usuš	usušil	usušiac		usušivší	usušený	usušenie
+usúži	usúžia	usúž	usúžil	usúžiac		usúživší	usúžený	usúženie
+uštve	uštvú	uštvi	uštval	uštvúc		uštvavší	uštvaný	uštvanie
+ušúľa	ušúľajú	ušúľaj	ušúľal	ušúľajúc		ušúľavší	ušúľaný	ušúľanie
+utají	utaja	utaj	utajil	utajac		utajivší	utajený	utajenie
+utápa	utápajú	utápaj	utápal	utápajúc	utápajúci		utápaný	utápanie
+uteká	utekajú	utekaj	utekal	utekajúc	utekajúci			utekanie
+uteší	utešia	uteš	utešil	utešiac		utešivší	utešený	utešenie
+utečie	utečú	uteč	utiekol	utečúc			utečený	utečenie
+utína	utínajú	utínaj	utínal	utínajúc	utínajúci		utínaný	utínanie
+utíši	utíšia	utíš	utíšil	utíšiac		utíšivší	utíšený	utíšenie
+utĺka	utĺkajú	utĺkaj	utĺkal	utĺkajúc	utĺkajúci		utĺkaný	utĺkanie
+utlmí	utlmia	utlm	utlmil	utlmiac		utlmivší	utlmený	utlmenie
+útočí	útočia	útoč	útočil	útočiac	útočiaci			útočenie
+utonie	utonú	utoň	utonul	utonúc		utonuvší	utonutý	utonutie
+utopí	utopia	utop	utopil	utopiac		utopivší	utopený	utopenie
+utŕha	utŕhajú	utŕhaj	utŕhal	utŕhajúc	utŕhajúci		utŕhaný	utŕhanie
+utrie	utrú	utri	utrel	utrúc		utrevší	utrený/utretý	utrenie/utretie
+utŕži	utŕžia	utŕž	utŕžil	utŕžiac		utŕživší	utŕžený	utŕženie
+utuží	utužia	utuž	utužil	utužiac		utuživší	utužený	utuženie
+utýra	utýrajú	utýraj	utýral	utýrajúc		utýravší	utýraný	utýranie
+uváľa	uváľajú	uváľaj	uváľal	uváľajúc		uváľavší	uváľaný	uváľanie
+uvalí	uvalia	uvaľ	uvalil	uvaliac		uvalivší	uvalený	uvalenie
+uvarí	uvaria	uvar	uvaril	uvariac		uvarivší	uvarený	uvarenie
+uváži	uvážia	uváž	uvážil	uvážiac		uváživší	uvážený	uváženie
+uvädá	uvädajú	uvädaj	uvädal	uvädajúc	uvädajúci			uvädanie
+uverí	uveria	uver	uveril	uveriac		uverivší	uverený	uverenie
+uvedie	uvedú	uveď	uviedol	uvedúc			uvedený	uvedenie
+uvezie	uvezú	uvez	uviezol	uvezúc			uvezený	uvezenie
+uvíta	uvítajú	uvítaj	uvítal	uvítajúc		uvítavší	uvítaný	uvítanie
+uzrie	uzrú	uzri	uzrel	uzrúc		uzrevší	uzretý	uzretie
+užíva	užívajú	užívaj	užíval	užívajúc	užívajúci		užívaný	užívanie
+uživí	uživia	uživ	uživil	uživiac		uživivší	uživený	uživenie
+užuje	užujú	užuj	užuval	užujúc		užuvavší	užuvaný	užuvanie
+vaľká	vaľkajú	vaľkaj	vaľkal	vaľkajúc	vaľkajúci		vaľkaný	vaľkanie
+vápni	vápnia	vápni	vápnil	vápniac	vápniaci		vápnený	vápnenie
+vädne	vädnú	vädni	vädol	vädnúc	vädnúci			vädnutie
+väzí	väzia	väz	väzel	väziac 	väziaci 			väzenie
+väzní	väznia	väzni	väznil	väzniac	väzniaci		väznený	väznenie
+vbíja	vbíjajú	vbíjaj	vbíjal	vbíjajúc	vbíjajúci		vbíjaný	vbíjanie
+vborí	vboria	vbor	vboril	vboriac		vborivší	vborený	vborenie
+vcíti	vcítia	vcíť	vcítil	vcítiac		vcítivší	vcítený	vcítenie
+vďačí	vďačia	vďač	vďačil	vďačiac	vďačiaci			vďačenie
+vie	vedia	vedz	vedel	vediac	vediaci			vedenie
+venčí	venčia	venči	venčil	venčiac	venčiaci		venčený	venčenie
+veští	veštia	vešť / vešti	veštil	veštiac	veštiaci		veštený	veštenie
+vetrá	vetrajú	vetraj	vetral	vetrajúc	vetrajúci		vetraný	vetranie
+vetrí	vetria	vetri	vetril	vetriac	vetriaci		vetrený	vetrenie
+vetví	vetvia	vetvi	vetvil	vetviac	vetviaci			vetvenie
+vháňa	vháňajú	vháňaj	vháňal	vháňajúc	vháňajúci		vháňaný	vháňanie
+vhĺbi	vhĺbia	vhĺb	vhĺbil	vhĺbiac		vhĺbivší	vhĺbený	vhĺbenie
+vhodí	vhodia	vhoď	vhodil	vhodiac		vhodivší	vhodený	vhodenie
+vhrnie	vhrnú	vhrň	vhrnul	vhrnúc		vhrnuvší	vhrnutý	vhrnutie
+viaže	viažu	viaž	viazal	viažuc	viažuci		viazaný	viazanie
+vidí	vidia	viď	videl	vidiac 	vidiaci		videný	videnie
+virgá	virgajú	virgaj	virgal	virgajúc	virgajúci			virganie
+visí	visia	vis	visel	visiac 	visiaci 			visenie
+vláči	vláčia	vláč	vláčil	vláčiac	vláčiaci		vláčený	vláčenie
+vládze	vládzu	vládz	vládal	vládzuc	vládzuci			vládanie
+vláka	vlákajú	vlákaj	vlákal	vlákajúc		vlákavší	vlákaný	vlákanie
+vláme	vlámu	vlám	vlámal	vlámuc		vlámavší	vlámaný	vlámanie
+vlepí	vlepia	vlep	vlepil	vlepiac		vlepivší	vlepený	vlepenie
+vlhčí	vlhčia	vlhč / vlhči	vlhčil	vlhčiac	vlhčiaci		vlhčený	vlhčenie
+vlhne	vlhnú	vlhni	vlhol	vlhnúc	vlhnúci			vlhnutie
+vlečie	vlečú	vleč	vliekol	vlečúc	vlečúci		vlečený	vlečenie
+vlezie	vlezú	vlez	vliezol	vlezúc			vlezený	vlezenie
+vloží	vložia	vlož	vložil	vložiac		vloživší	vložený	vloženie
+vmetie	vmetú	vmeť	vmietol	vmetúc			vmetený	vmiesenie
+vnadí	vnadia	vnaď	vnadil	vnadiac	vnadiaci		vnadený	vnadenie
+vnára	vnárajú	vnáraj	vnáral	vnárajúc	vnárajúci		vnáraný	vnáranie
+vnáša	vnášajú	vnášaj	vnášal	vnášajúc	vnášajúci		vnášaný	vnášanie
+vnesie	vnesú	vnes	vniesol	vnesúc			vnesený	vnesenie
+vniká	vnikajú	vnikaj	vnikal	vnikajúc	vnikajúci			vnikanie
+vníma	vnímajú	vnímaj	vnímal	vnímajúc	vnímajúci		vnímaný	vnímanie
+vnorí	vnoria	vnor	vnoril	vnoriac		vnorivší	vnorený	vnorenie
+vnuká	vnukajú	vnukaj	vnukal	vnukajúc	vnukajúci		vnukaný	vnukanie
+vnúti	vnútia	vnúť	vnútil	vnútiac		vnútivší	vnútený	vnútenie
+vderie	vderú	vder	vodral	vderúc		vodravší	vodraný/vodratý	vodranie/vodratie
+vženie	vženú	vžeň	vohnal	vženúc		vohnavší	vohnaný	vohnanie
+voľká	voľkajú	voľkaj	voľkal	voľkajúc	voľkajúci			voľkanie
+votká	votkajú	votkaj	votkal	votkajúc		votkavší	votkaný	votkanie
+vpáli	vpália	vpáľ	vpálil	vpáliac		vpálivší	vpálený	vpálenie
+vpíja	vpíjajú	vpíjaj	vpíjal	vpíjajúc	vpíjajúci		vpíjaný	vpíjanie
+vpíše	vpíšu	vpíš	vpísal	vpíšuc		vpísavší	vpísaný	vpísanie
+vracia	vracajú	vracaj	vracal	vracajúc	vracajúci		vracaný	vracanie
+vráti	vrátia	vráť	vrátil	vrátiac		vrátivší	vrátený	vrátenie
+vrazí	vrazia	vraz	vrazil	vraziac		vrazivší	vrazený	vrazenie
+vráža	vrážajú	vrážaj	vrážal	vrážajúc	vrážajúci		vrážaný	vrážanie
+vreže	vrežú	vrež	vrezal	vrežúc		vrezavší	vrezaný	vrezanie
+vrhne	vrhnú	vrhni	vrhol	vrhnúc		vrhnuvší	vrhnutý	vrhnutie
+vrodí	vrodia	vroď	vrodil	vrodiac		vrodivší	vrodený	vrodenie
+vrtí	vrtia	vrť	vrtel	vrtiac	vrtiaci		vrtený	vrtenie
+vrúbi	vrúbia	vrúb	vrúbil	vrúbiac	vrúbiaci		vrúbený	vrúbenie
+vrúti	vrútia	vrúť	vrútil	vrútiac		vrútivší	vrútený	vrútenie
+vrýva	vrývajú	vrývaj	vrýval	vrývajúc	vrývajúci		vrývaný	vrývanie
+vŕzga	vŕzgajú	vŕzgaj	vŕzgal	vŕzgajúc	vŕzgajúci			vŕzganie
+vrzne	vrznú	vrzni	vrzol	vrznúc		vrznuvší		vrznutie
+vrždí	vrždia	vržď / vrždi	vržďal	vrždiac	vrždiaci			vržďanie
+vsadí	vsadia	vsaď	vsadil	vsadiac		vsadivší	vsadený	vsadenie
+vsáva	vsávajú	vsávaj	vsával	vsávajúc	vsávajúci		vsávaný	vsávanie
+vsotí	vsotia	vsoť	vsotil	vsotiac		vsotivší	vsotený	vsotenie
+vsunie	vsunú	vsuň	vsunul	vsunúc		vsunuvší	vsunutý	vsunutie
+vsúva	vsúvajú	vsúvaj	vsúval	vsúvajúc	vsúvajúci		vsúvaný	vsúvanie
+vsype	vsypú	vsyp	vsypal	vsypúc		vsypavší	vsypaný	vsypanie
+vsýpa	vsýpajú	vsýpaj	vsýpal	vsýpajúc	vsýpajúci		vsýpaný	vsýpanie
+všíma	všímajú	všímaj	všímal	všímajúc	všímajúci		všímaný	všímanie
+všíva	všívajú	všívaj	všíval	všívajúc	všívajúci		všívaný	všívanie
+vteká	vtekajú	vtekaj	vtekal	vtekajúc	vtekajúci			vtekanie
+vtelí	vtelia	vteľ	vtelil	vteliac		vtelivší	vtelený	vtelenie
+vtečie	vtečú	vteč	vtiekol	vtečúc			vtečený	vtečenie
+vtĺka	vtĺkajú	vtĺkaj	vtĺkal	vtĺkajúc	vtĺkajúci		vtĺkaný	vtĺkanie
+vtrie	vtrú	vtri	vtrel	vtrúc		vtrevší	vtrený/vtretý	vtrenie/vtretie
+vústi	vústia	vúsť / vústi	vústil	vústiac		vústivší	vústený	vústenie
+vyberie	vyberú	vyber	vybral	vyberúc		vybravší	vybratý/vybraný	vybratie/vybranie
+vyclí	vyclia	vycli	vyclil	vycliac		vyclivší	vyclený	vyclenie
+vyčká	vyčkajú	vyčkaj	vyčkal	vyčkajúc		vyčkavší	vyčkaný	vyčkanie
+vyderie	vyderú	vyder	vydral	vyderúc		vydravší	vydraný/vydratý	vydranie/vydratie
+vyženie	vyženú	vyžeň	vyhnal	vyženúc		vyhnavší	vyhnaný	vyhnanie
+vyhne	vyhnú	vyhni	vyhol	vyhnúc		vyhnuvší	vyhnutý	vyhnutie
+vyhrá	vyhrajú	vyhraj	vyhral	vyhrajúc		vyhravší	vyhratý/vyhraný	vyhratie/vyhranie
+vyje	vyjedia	vyjedz	vyjedol	vyjediac			vyjedený	vyjedenie
+vykole	vykolú	vykoľ	vyklal	vykolúc		vyklavší	vyklaný	vyklanie
+vykľuje	vykľujú	vykľuj	vykľul	vykľujúc		vykľuvší	vykľutý	vykľutie
+vykryje	vykryjú	vykry	vykryl	vykryjúc		vykryvší	vykrytý	vykrytie
+vyleje	vylejú	vylej	vylial	vylejúc		vyliavší	vyliaty	vyliatie
+vymôže	vymôžu	vymôž	vymohol	vymôžuc			vymožený	vymoženie
+vyočí	vyočia	vyoč	vyočil	vyočiac		vyočivší	vyočený	vyočenie
+vyorie	vyorú	vyor	vyoral	vyorúc		vyoravší	vyoraný	vyoranie
+vyosí	vyosia	vyos	vyosil	vyosiac		vyosivší	vyosený	vyosenie
+vypasie	vypasú	vypas	vypásol	vypasúc			vypasený	vypasenie
+vypľuje	vypľujú	vypľuj	vypľul	vypľujúc		vypľuvší	vypľutý	vypľutie
+vypne	vypnú	vypni	vypol	vypnúc		vypnuvší	vypnutý	vypnutie
+vyrastie	vyrastú	vyrasť / vyrasti	vyrástol	vyrastúc			vyrastený	vyrastenie
+vyrve	vyrvú	vyrvi	vyrval	vyrvúc		vyrvavší	vyrvaný	vyrvanie
+vyseje	vysejú	vysej	vysial	vysejúc		vysiavší	vysiaty	vysiatie
+výska	výskajú	výskaj	výskal	výskajúc	výskajúci			výskanie
+vyšle	vyšlú	vyšli	vyslal	vyšlúc		vyslavší	vyslaný	vyslanie
+vyspí	vyspia	vyspi	vyspal	vyspiac		vyspavší	vyspaný/vyspatý	vyspanie/vyspatie
+vyserie	vyserú	vyser	vysral	vyserúc		vysravší	vysraný/vysratý	vysranie/vysratie
+vystane	vystanú	vystaň	vystal	vystanúc		vystavší		vystanie
+vystojí	vystoja	vystoj	vystál	vystojac		vystávší	vystáty	vystátie
+vytlčie	vytlčú	vytlč	vytĺkol	vytlčúc			vytlčený	vytlčenie
+vyučí	vyučia	vyuč	vyučil	vyučiac		vyučivší	vyučený	vyučenie
+vyúdi	vyúdia	vyúď	vyúdil	vyúdiac		vyúdivší	vyúdený	vyúdenie
+využije	využijú	využi	využil	využijúc		využivší	využitý	využitie
+vyzná	vyznajú	vyznaj	vyznal	vyznajúc	vyznajúci	vyznavší	vyznaný	vyznanie
+vyzve	vyzvú	vyzvi	vyzval	vyzvúc		vyzvavší	vyzvaný	vyzvanie
+vyžerie	vyžerú	vyžer	vyžral	vyžerúc		vyžravší	vyžraný/vyžratý	vyžranie/vyžratie
+vzmôže	vzmôžu	vzmôž	vzmohol	vzmôžuc			vzmožený	vzmoženie
+vzopne	vzopnú	vzopni	vzopäl	vzopnúc		vzopävší	vzopätý	vzopätie
+vzrastie	vzrastú	vzrasť / vzrasti	vzrástol	vzrastúc			vzrastený	vzrastenie
+vzýva	vzývajú	vzývaj	vzýval	vzývajúc	vzývajúci		vzývaný	vzývanie
+vžíva	vžívajú	vžívaj	vžíval	vžívajúc	vžívajúci			vžívanie
+zaberie	zaberú	zaber	zabral	zaberúc		zabravší	zabratý/zabraný	zabratie/zabranie
+začká	začkajú	začkaj	začkal	začkajúc		začkavší		začkanie
+zaženie	zaženú	zažeň	zahnal	zaženúc		zahnavší	zahnaný	zahnanie
+zahne	zahnú	zahni	zahol	zahnúc		zahnuvší	zahnutý	zahnutie
+zahrá	zahrajú	zahraj	zahral	zahrajúc		zahravší	zahratý/zahraný	zahratie/zahranie
+zahudie	zahudú	zahuď	zahúdol	zahudúc			zahudený	zahudenie
+zaje	zajedia	zajedz	zajedol	zajediac			zajedený	zajedenie
+zakole	zakolú	zakoľ	zaklal	zakolúc		zaklavší	zaklaný	zaklanie
+zakryje	zakryjú	zakry	zakryl	zakryjúc		zakryvší	zakrytý	zakrytie
+zaleje	zalejú	zalej	zalial	zalejúc		zaliavší	zaliaty	zaliatie
+zaobuje	zaobujú	zaobuj	zaobul	zaobujúc		zaobuvší	zaobutý	zaobutie
+zaorie	zaorú	zaor	zaoral	zaorúc		zaoravší	zaoraný	zaoranie
+zapľuje	zapľujú	zapľuj	zapľul	zapľujúc		zapľuvší	zapľutý	zapľutie
+zapne	zapnú	zapni	zapol	zapnúc		zapnuvší	zapnutý	zapnutie
+zaperie	zaperú	zaper	zapral	zaperúc		zapravší	zapraný/zapratý	zapranie/zapratie
+zarastie	zarastú	zarasť / zarasti	zarástol	zarastúc			zarastený	zarastenie
+zaseje	zasejú	zasej	zasial	zasejúc		zasiavší	zasiaty	zasiatie
+zašle	zašlú	zašli	zaslal	zašlúc		zaslavší	zaslaný	zaslanie
+zasní	zasnia	zasni	zasnil	zasniac		zasnivší	zasnený	zasnenie
+zaspí	zaspia	zaspi	zaspal	zaspiac		zaspavší	zaspaný/zaspatý	zaspanie/zaspatie
+zastane	zastanú	zastaň	zastal	zastanúc		zastavší	zastaný	zastanie
+zatlčie	zatlčú	zatlč	zatĺkol	zatlčúc			zatlčený	zatlčenie
+zatmí			zatmilo				zatmené	zatmenie
+zatne	zatnú	zatni	zaťal	zatnúc		zatnuvší	zatnutý	zatnutie
+zaúča	zaúčajú	zaúčaj	zaúčal	zaúčajúc	zaúčajúci		zaúčaný	zaúčanie
+zaučí	zaučia	zauč	zaučil	zaučiac		zaučivší	zaučený	zaučenie
+zaúdi	zaúdia	zaúď	zaúdil	zaúdiac		zaúdivší	zaúdený	zaúdenie
+zaujme	zaujmú	zaujmi	zaujal	zaujmúc		zaujavší	zaujatý	zaujatie
+zaveje	zavejú	zavej	zavial	zavejúc		zaviavší	zaviaty	zaviatie
+zazdá	zazdajú	zazdaj	zazdal	zazdajúc		zazdavší		zazdanie
+zažerie	zažerú	zažer	zažral	zažerúc		zažravší	zažratý/zažraný	zažratie/zažranie
+zbadá	zbadajú	zbadaj	zbadal	zbadajúc		zbadavší	zbadaný	zbadanie
+zbalí	zbalia	zbaľ	zbalil	zbaliac		zbalivší	zbalený	zbalenie
+zbaví	zbavia	zbav	zbavil	zbaviac		zbavivší	zbavený	zbavenie
+zberá	zberajú	zberaj	zberal	zberajúc	zberajúci		zberaný	zberanie
+zbíja	zbíjajú	zbíjaj	zbíjal	zbíjajúc	zbíjajúci		zbíjaný	zbíjanie
+zblčí	zblčia	zblč	zblčal	zblčiac		zblčavší	zblčaný	zblčanie
+zborí	zboria	zbor	zboril	zboriac		zborivší	zborený	zborenie
+zbúra	zbúrajú	zbúraj	zbúral	zbúrajúc		zbúravší	zbúraný	zbúranie
+zdaní	zdania	zdaň	zdanil	zdaniac		zdanivší	zdanený	zdanenie
+zdedí	zdedia	zdeď	zdedil	zdediac		zdedivší	zdedený	zdedenie
+zdesí	zdesia	zdes	zdesil	zdesiac		zdesivší	zdesený	zdesenie
+zdĺži	zdĺžia	zdĺž	zdĺžil	zdĺžiac		zdĺživší	zdĺžený	zdĺženie
+zdobí	zdobia	zdob	zdobil	zdobiac	zdobiaci		zdobený	zdobenie
+zdolá	zdolajú	zdolaj	zdolal	zdolajúc		zdolavší	zdolaný	zdolanie
+zdrví	zdrvia	zdrv	zdrvil	zdrviac		zdrvivší	zdrvený	zdrvenie
+zdrží	zdržia	zdrž	zdržal	zdržiac		zdržavší	zdržaný	zdržanie
+zdurí	zduria	zdur	zduril	zduriac		zdurivší	zdurený	zdurenie
+zdusí	zdusia	zdus	zdusil	zdusiac		zdusivší	zdusený	zdusenie
+zdúva	zdúvajú	zdúvaj	zdúval	zdúvajúc	zdúvajúci		zdúvaný	zdúvanie
+zgúľa	zgúľajú	zgúľaj	zgúľal	zgúľajúc		zgúľavší	zgúľaný	zgúľanie
+zhabe	zhabú	zhab	zhabal	zhabúc		zhabavší	zhabaný	zhabanie
+zháči	zháčia	zháč	zháčil	zháčiac		zháčivší	zháčený	zháčenie
+zháňa	zháňajú	zháňaj	zháňal	zháňajúc	zháňajúci		zháňaný	zháňanie
+zhára	zhárajú	zháraj	zháral	zhárajúc	zhárajúci		zháraný	zháranie
+zhasí	zhasia	zhas	zhasil	zhasiac		zhasivší	zhasený	zhasenie
+zháša	zhášajú	zhášaj	zhášal	zhášajúc	zhášajúci		zhášaný	zhášanie
+zhatí	zhatia	zhať	zhatil	zhatiac		zhativší	zhatený	zhatentie
+zhmlí	zhmlia	zhmli	zhmlil	zhmliac		zhmlivší	zhmlený	zhmlenie
+zhodí	zhodia	zhoď	zhodil	zhodiac		zhodivší	zhodený	zhodenie
+zhojí	zhoja	zhoj	zhojil	zhojac		zhojivší	zhojený	zhojenie
+zhrbí	zhrbia	zhrb	zhrbil	zhrbiac		zhrbivší	zhrbený	zhrbenie
+zhrčí	zhrčia	zhrč	zhrčal	zhrčiac		zhrčavší	zhrčaný	zhrčanie
+zhrčí	zhrčia	zhrč	zhrčil	zhrčiac		zhrčivší	zhrčený	zhrčenie
+zhŕňa	zhŕňajú	zhŕňaj	zhŕňal	zhŕňajúc	zhŕňajúci		zhŕňaný	zhŕňanie
+zhrnie	zhrnú	zhrň	zhrnul	zhrnúc		zhrnuvší	zhrnutý	zhrnutie
+zhryzie	zhryzú	zhryz	zhrýzol	zhryzúc			zhryzený	zhryzenie
+zhubí	zhubia	zhub	zhubil	zhubiac		zhubivší	zhubený	zhubentie
+zhynie	zhynú	zhyň	zhynul	zhynúc		zhynuvší	zhynutý	zhynutie
+ziape	ziapu	ziap	ziapal	ziapuc/ziapajúc	ziapuci/ziapajúci		ziapaný	ziapanie
+získa	získajú	získaj	získal	získajúc		získavší	získaný	získanie
+zistí	zistia	zisť / zisti	zistil	zistiac		zistivší	zistený	zistenie
+zívne	zívnu	zívni	zívol	zívnuc		zívnuvší		zívnutie
+zjačí	zjačia	zjač	zjačal	zjačiac		zjačavší		zjačanie
+zjasá	zjasajú	zjasaj	zjasal	zjasajúc		zjasavší		zjasanie
+zjaší	zjašia	zjaš	zjašil	zjašiac		zjašivší	zjašený	zjašenie
+zjaví	zjavia	zjav	zjavil	zjaviac		zjavivší	zjavený	zjavenie
+zjedá	zjedajú	zjedaj	zjedal	zjedajúc	zjedajúci		zjedaný	zjedanie
+zježí	zježia	zjež	zježil	zježiac		zježivší	zježený	zježenie
+zladí	zladia	zlaď	zladil	zladiac		zladivší	zladený	zladenie
+zláka	zlákajú	zlákaj	zlákal	zlákajúc		zlákavší	zlákaný	zlákanie
+zláme	zlámu	zlám	zlámal	zlámuc		zlámavší	zlámaný	zlámanie
+zlapá	zlapajú	zlapaj	zlapal	zlapajúc		zlapavší	zlapaný	zlapanie
+zláta / zláce	zlátajú / zlácu	zlátaj / zlác	zlátal	zlácuc/zlátajúc		zlátavší	zlátaný	zlátanie
+zláti	zlátia	zláť	zlátil	zlátiac	zlátiaci		zlátený	zlátenie
+zľaví	zľavia	zľav	zľavil	zľaviac		zľavivší	zľavený	zľavenie
+zlepí	zlepia	zlep	zlepil	zlepiac		zlepivší	zlepený	zlepenie
+zlezie	zlezú	zlez	zliezol	zlezúc			zlezený	zlezenie
+zlíže	zlížu	zlíž	zlízal	zlížuc		zlízavší	zlízaný	zlízanie
+zlomí	zlomia	zlom	zlomil	zlomiac		zlomivší	zlomený	zlomenie
+zloží	zložia	zlož	zložil	zložiac		zloživší	zložený	zloženie
+zlúči	zlúčia	zlúč	zlúčil	zlúčiac		zlúčivší	zlúčený	zlúčenie
+zlúpe	zlúpu	zlúp	zlúpal	zlúpuc		zlúpavší	zlúpaný	zlúpanie
+zlúpi	zlúpia	zlúp	zlúpil	zlúpiac		zlúpivší	zlúpený	zlúpenie
+zlyhá	zlyhajú	zlyhaj	zlyhal	zlyhajúc		zlyhavší		zlyhanie
+zmáča	zmáčajú	zmáčaj	zmáčal	zmáčajúc		zmáčavší	zmáčaný	zmáčanie
+zmáha	zmáhajú	zmáhaj	zmáhal	zmáhajúc	zmáhajúci		zmáhaný	zmáhanie
+zmámi	zmámia	zmám	zmámil	zmámiac		zmámivší	zmámený	zmámenie
+zmára	zmárajú	zmáraj	zmáral	zmárajúc	zmárajúci		zmáraný	zmáranie
+zmarí	zmaria	zmar	zmaril	zmariac		zmarivší	zmarený	zmarenie
+zmáta	zmátajú	zmátaj	zmátal	zmátajúc		zmátavší	zmátaný	zmátanie
+zmaže	zmažú	zmaž	zmazal	zmažúc		zmazavší	zmazaný	zmazanie
+zmení	zmenia	zmeň	zmenil	zmeniac		zmenivší	zmenený	zmenenie
+zmeria	zmerajú	zmeraj	zmeral	zmerajúc		zmeravší	zmeraný	zmeranie
+zmetá	zmetajú	zmetaj	zmetal	zmetajúc	zmetajúci		zmetaný	zmetanie
+zmätie	zmätú	zmäť	zmiatol	zmätúc			zmätený	zmätenie
+zmetie	zmetú	zmeť	zmietol	zmetúc			zmetený	zmetenie
+zmelie	zmelú	zmeľ	zmlel	zmelúc		zmlevší	zmletý	zmletie
+zmĺka	zmĺkajú	zmĺkaj	zmĺkal	zmĺkajúc	zmĺkajúci			zmĺkanie
+zmočí	zmočia	zmoč	zmočil	zmočiac		zmočivší	zmočený	zmočenie
+zmorí	zmoria	zmor	zmoril	zmoriac		zmorivší	zmorený	zmorenie
+zmoce / zmotá	zmocú / zmotajú	zmoc / zmotaj	zmotal	zmotajúc		zmotavší	zmotaný	zmotanie
+zmrhá	zmrhajú	zmrhaj	zmrhal	zmrhajúc		zmrhavší	zmrhaný	zmrhanie
+zmrká			zmrkalo					zmrkanie
+zmrví	zmrvia	zmrv	zmrvil	zmrviac		zmrvivší	zmrvený	zmrvenie
+zmŕza	zmŕzajú	zmŕzaj	zmŕzal	zmŕzajúc	zmŕzajúci			zmŕzanie
+zmúti	zmútia	zmúť	zmútil	zmútiac		zmútivší	zmútený	zmútenie
+zmýli	zmýlia	zmýľ	zmýlil	zmýliac		zmýlivší	zmýlený	zmýlenie
+zmyší	zmyšia	zmyš	zmyšil	zmyšiac		zmyšivší	zmyšený	zmyšenie
+zmýva	zmývajú	zmývaj	zmýval	zmývajúc	zmývajúci		zmývaný	zmývanie
+značí	značia	znač	značil	značiac	značiaci		značený	značenie
+znáša	znášajú	znášaj	znášal	znášajúc	znášajúci		znášaný	znášanie
+zničí	zničia	znič	zničil	zničiac		zničivší	zničený	zničenie
+znesie	znesú	znes	zniesol	znesúc			znesený	znesenie
+zníži	znížia	zníž	znížil	znížiac		zníživší	znížený	zníženie
+znosí	znosia	znos	znosil	znosiac		znosivší	znosený	znosenie
+znoží	znožia	znož	znožil	znožiac		znoživší	znožený	znoženie
+zobká	zobkajú	zobkaj	zobkal	zobkajúc	zobkajúci		zobkaný	zobkanie
+zobne	zobnú	zobni	zobol	zobnúc		zobnuvší	zobnutý	zobnutie
+zoberie	zoberú	zober	zobral	zoberúc		zobravší	zobratý/zobraný	zobratie/zobranie
+zoderie	zoderú	zoder	zodral	zoderúc		zodravší	zodratý/zodraný	zodratie/zodranie
+zoženie	zoženú	zožeň	zohnal	zoženúc		zohnavší	zohnaný	zohnanie
+zohne	zohnú	zohni	zohol	zohnúc		zohnuvší	zohnutý	zohnutie
+zohrá	zohrajú	zohraj	zohral	zohrajúc		zohravší	zohratý/zohraný	zohratie/zohranie
+zopne	zopnú	zopni	zopol	zopnúc		zopnuvší	zopnutý	zopnutie
+zopsuje	zopsujú	zopsuj	zopsul	zopsujúc		zopsuvší	zopsutý	zopsutie
+zošle	zošlú	zošli	zoslal	zošlúc		zoslavší	zoslaný	zoslanie
+zostane	zostanú	zostaň	zostal	zostanúc		zostavší		zostanie
+zotmí			zotmilo				zotmené	zotmenie
+zožerie	zožerú	zožer	zožral	zožerúc		zožravší	zožratý/zožraný	zožratie/zožranie
+zračí	zračia	zrač	zračil	zračiac				zračenie
+zradí	zradia	zraď	zradil	zradiac		zračivší	zradený	zradenie
+zráňa	zráňajú	zráňaj	zráňal	zráňajúc		zráňavší	zráňaný	zráňanie
+zraní	zrania	zraň	zranil	zraniac		zranivší	zranený	zranenie
+zráta / zráce	zrátajú / zrácu	zrátaj / zrác	zrátal	zrátajúc		zrátavší	zrátaný	zrátanie
+zrazí	zrazia	zraz	zrazil	zraziac		zrazivší	zrazený	zrazenie
+zráža	zrážajú	zrážaj	zrážal	zrážajúc	zrážajúci		zrážaný	zrážanie
+zreve	zrevú	zrev	zreval	zrevúc		zrevavší	zrevaný	zrevanie
+zreže	zrežú	zrež	zrezal	zrežúc		zrezavší	zrezaný	zrezanie
+zriekne	zrieknu	zriekni	zriekol	zrieknuc				zrieknutie
+zrobí	zrobia	zrob	zrobil	zrobiac		zrobivší	zrobený	zrobenie
+zrodí	zrodia	zroď	zrodil	zrodiac		zrodivší	zrodený	zrodenie
+zroní	zronia	zroň	zronil	zroniac		zronivší	zronený	zronenie
+zrosí	zrosia	zros	zrosil	zrosiac		zrosivší	zrosený	zrosenie
+zrúbe	zrúbu	zrúb	zrúbal	zrúbuc		zrúbavší	zrúbaný	zrúbanie
+zrubí	zrubia	zrub	zrubil	zrubiac	zrubiaci		zrubený	zrubenie
+zráca	zrúcajú	zrúcaj	zrúcal	zrúcajúc		zrúcavší	zrúcaný	zrúcanie
+zručí	zručia	zruč	zručal	zručiac		zručavší		zručanie
+zruší	zrušia	zruš	zrušil	zrušiac		zrušivší	zrušený	zrušenie
+zrúti	zrútia	zrúť	zrútil	zrútiac		zrútivší	zrútený	zrútenie
+zryčí	zryčia	zryč	zryčal	zryčiac		zryčavší		zryčanie
+zrýpe	zrýpu	zrýp	zrýpal	zrýpuc		zrýpavší	zrýpaný	zrýpanie
+zuní	zunia	zuň	zunel	zuniac	zuniaci			zunenie
+zurčí	zurčia	zurč/zurči	zurčal	zurčiac	zurčiaci			zurčanie
+zvábi	zvábia	zváb	zvábil	zvábiac		zvábivší	zvábený	zvábenie
+zváľa	zváľajú	zváľaj	zváľal	zváľajúc		zváľavší	zváľaný	zváľanie
+zvalí	zvalia	zvaľ	zvalil	zvaliac		zvalivší	zvalený	zvalenie
+zvára	zvárajú	zváraj	zváral	zvárajúc	zvárajúci		zváraný	zváranie
+zvarí	zvaria	zvar	zvaril	zvariac		zvarivší	zvarený	zvarenie
+zváža	zvážajú	zvážaj	zvážal	zvážajúc	zvážajúci		zvážaný	zvážanie
+zváži	zvážia	zváž	zvážil	zvážiac		zváživší	zvážený	zváženie
+zverí	zveria	zver	zveril	zveriac		zverivší	zverený	zverenie
+zvesí	zvesia	zves	zvesil	zvesiac		zvesivší	zvesený	zvesenie
+zvešia	zvešajú	zvešaj	zvešal	zvešajúc		zvešavší	zvešaný	zvešanie
+zvedie	zvedú	zveď	zviedol	zvedúc			zvedený	zvedenie
+zvezie	zvezú	zvez	zviezol	zvezúc			zvezený	zvezenie
+zvíja	zvíjajú	zvíjaj	zvíjal	zvíjajúc	zvíjajúci		zvíjaný	zvíjanie
+zvinie	zvinú	zviň	zvinul	zvinúc		zvinuvší	zvinutý	zvinutie
+zvíri	zvíria	zvír	zvíril	zvíriac		zvírivší	zvírený	zvírenie
+zvíta	zvítajú	zvítaj	zvítal	zvítajúc		zvítavší		zvítanie
+zvlčí	zvlčia	zvlč / zvlči	zvlčil	zvlčiac		zvlčivší	zvlčený	zvlčenie
+zvlní	zvlnia	zvlň	zvlnil	zvlniac		zvlnivší	zvlnený	zvlnenie
+zvolá	zvolajú	zvolaj	zvolal	zvolajúc		zvolavší	zvolaný	zvolanie
+zvolí	zvolia	zvoľ	zvolil	zvoliac		zvolivší	zvolený	zvolenie
+zvoní	zvonia	zvoň	zvonil	zvoniac	zvoniaci		zvonený	zvonenie
+zvozí	zvozia	zvoz	zvozil	zvoziac		zvozivší	zvozený	zvozenie
+zvŕha	zvŕhajú	zvŕhaj	zvŕhal	zvŕhajúc	zvŕhajúci		zvŕhaný	zvŕhanie
+zvrie	zvrú	zvri	zvrel	zvrúc		zvrevší	zvretý	zvretie
+zvŕta	zvŕtajú	zvŕtaj	zvŕtal	zvŕtajúc	zvŕtajúci		zvŕtaný	zvŕtanie
+zvučí	zvučia	zvuč	zvučal	zvučiac	zvučiaci			zvučanie
+zvyká	zvykajú	zvykaj	zvykal	zvykajúc	zvykajúci		zvykaný	zvykanie
+zvýši	zvýšia	zvýš	zvýšil	zvýšiac		zvýšivší	zvýšený	zvýšenie
+zžíva	zžívajú	zžívaj	zžíval	zžívajúc	zžívajúci			zžívanie
+žasne	žasnú	žasni	žasol	žasnúc	žasnúci			žasnutie
+žehlí	žehlia	žehli	žehlil	žehliac	žehliaci		žehlený	žehlenie
+žehná	žehnajú	žehnaj	žehnal	žehnajúc	žehnajúci		žehnaný	žehnanie
+želie	želejú	želej	želel	želejúc	želejúci		želený	želenie
+žgrlí	žgrlia	žgrľ	žgrlil	žgrliac	žgrliaci			žgrlenie
+žiada	žiadajú	žiadaj	žiadal	žiadajúc	žiadajúci		žiadaný	žiadanie
+žiali	žialia	žiaľ	žialil	žialiac	žialiaci		žialený	žialenie
+žiari	žiaria	žiar	žiaril	žiariac	žiariaci			žiarenie
+žltie	žltejú	žltej	žltel	žltejúc	žltejúci			žltenie
+žltne	žltnú	žltni	žltol	žltnúc	žltnúci			žltnutie
+žmolí	žmolia	žmoľ	žmolil	žmoliac	žmoliaci		žmolený	žmolenie
+žmúri	žmúria	žmúr	žmúril	žmúriac	žmúriaci		žmúrený	žmúrenie
+žmýka	žmýkajú	žmýkaj	žmýkal	žmýkajúc	žmýkajúci		žmýkaný	žmýkanie
+žobre	žobrú	žobri	žobral	žobrajúc	žobrajúci		žobraný	žobranie
+žráva	žrávajú	žrávaj	žrával	žrávajúc	žrávajúci			žrávanie
+žrebí	žrebia	žreb	žrebil	žrebiac	žrebiaci			žrebenie

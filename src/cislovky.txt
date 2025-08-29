@@ -1,0 +1,56 @@
+nula	nultý			nula	
+jeden, jedna, jedno, jedni, jedny	prvý		jedenkrát	jednotka	
+dva, dvaja, dve	druhý	pol, polovica, polovina	dvakrát	dvojka	dvoje
+tri, traja	tretí	tretina	trikrát	trojka	troje
+štyri, štyria	štvrtý	štvrť, štvrtina	štyrikrát	štvorka	štvoro
+päť, piati	piaty	pätina	päťkrát	päťka	pätoro
+šesť, šiesti	šiesty	šestina	šesťkrát	šestka	šestoro
+sedem, siedmi	siedmy	sedmina	sedemkrát	sedmička	sedmoro
+osem, ôsmi	ôsmy	osmina	osemkrát	osmička	osmoro
+deväť, deviati	deviaty	devätina	deväťkrát	deviatka	devätoro
+desať, desiati	desiaty	desatina	desaťkrát	desiatka	desatoro
+jedenásť, jedenásti	jedenásty	jedenástina	jedenásťkrát	jedenástka	jedenástoro
+dvanásť, dvanásti	dvanásty	dvanástina	dvanásťkrát	dvanástka	
+trinásť, trinásti	trinásty	trinástina	trinásťkrát	trinástka	
+štrnásť, štrnásti	štrnásty	štrnástina	štrnásťkrát	štrnástka	
+pätnásť, pätnásti	pätnásty	pätnástina	pätnásťkrát	pätnástka	
+šestnásť, šestnásti	šestnásty	šestnástina	šestnásťkrát	šestnástka	
+sedemnásť, sedemnásti	sedemnásty	sedemnástina	sedemnásťkrát	sedemnástka	
+osemnásť, osemnásti	osemnásty	osemnástina	osemnásťkrát	osemnástka	
+devätnásť, devätnásti	devätnásty	devätnástina	devätnásťkrát	devätnástka	
+dvadsať, dvadsiati	dvadsiaty	dvadsatina	dvadsaťkrát	dvadsiatka	dvadsatoro
+dvadsaťjeden	dvadsiatyprvý	jedenadvadsatina	dvadsaťjedenkrát	dvadsaťjednotka	
+dvadsaťdva, (dvadsiati dvaja)	dvadsiatydruhý	dvaadvadsatina	dvadsaťdvakrát	dvadsaťdvojka	
+dvadsaťtri, (dvadsiati traja)	dvadsiatytretí	dvadsaťtretina	dvadsaťtrikrát	dvadsaťtrojka	
+tridsať, tridsiati	tridsiaty	tridsatina	tridsaťkrát	tridsiatka	
+tridsaťjeden	tridsiatyprvý	jedenatridsatina	tridsaťjedenkrát	tridsaťjednotka	
+tridsaťdva, (tridsiati dvaja)	tridsiatydruhý	dvaatridsatina	tridsaťdvakrát	tridsaťdvojka	
+tridsaťtri, (tridsiati traja)	tridsiatytretí	tridsaťtretina	tridsaťtrikrát	tridsaťtrojka	
+štyridsať, štyridsiati	štyridsiaty	štyridsatina	štyridsaťkrát	štyridsiatka	
+štyridsaťštyri, (štyridsiati štyria) 	štyridsiatyštvrtý	štyridsaťštvrtina	štyridsaťštyrikrát	štyridsaťštvorka	
+päťdesiat, päťdesiati	päťdesiaty	päťdesiatina	päťdesiatkrát	päťdesiatka	
+päťdesiatpäť, (päťdesiati piati)	päťdesiatypiaty	päťdesiatpätina	päťdesiatpäťkrát	päťdesiatpäťka	
+šesťdesiat, šesťdesiati	šesťdesiaty	šesťdesiatina	šesťdesiatkrát	šesťdesiatka	
+šesťdesiatšesť (šesťdesiati šiesti)	šesťdesiatyšiesty	šesťdesiatšestina	šesťdesiatšesťkrát	šesťdesiatšestka	
+sedemdesiat, sedemdesiati	sedemdesiaty	sedemdesiatina	sedemdesiatkrát	sedemdesiatka	
+sedemdesiatsedem, (sedemdesiati siedmi)	sedemdesiatysiedmy	sedemdesiatsedmina	sedemdesiatsedemkrát	sedemdesiatsedmička	
+osemdesiat, osemdesiati	osemdesiaty	osemdesiatina	osemdesiatkrát	osemdesiatka	
+osemdesiatosem, (osemdesiati ôsmi)	osemdesiatyôsmy	osemdesiatosmina	osemdesiatosemkrát	osemdesiatosmička	
+deväťdesiat, deväťdesiati	deväťdesiaty	deväťdesiatina	deväťdesiatkrát	deväťdesiatka	
+deväťdesiatdeväť, (deväťdesiati deviati)	deväťdesiatydeviaty	deväťdesiatdevätina	deväťdesiatdeväťkrát	deväťdesiatdeviatka	
+sto, stá	stý	stotina	stokrát	stovka	
+stopäť, (sto piati)	stopiaty	stopätina	stopäťkrát	stopäťka	
+stodvadsaťosem, (sto dvadsiati ôsmi)	stodvadsiatyôsmy	stodvadsaťosmina	stodvadsaťosemkrát	stodvadsaťosmička	
+dvesto	dvojstý	dvestotina	dvestokrát	dvestovka, dvojstovka	
+dvestotri, (dvesto traja)	dvestotretí	dvestotretina	dvestotrikrát	dvestotrojka	
+tristo	trojstý	tristotina	tristokrát	tristovka, trojstovka	
+tristodesať, (tristo desiati)	tristodesiaty	tristodesatina	tristodesaťkrát	tristodesiatka	
+štyristo	štvorstý	štyristotina	štyristokrát	štyristovka, štvorstovka	
+štyristošesť (štyristo šiesti)	štyristošiesty	štyristošestina	štyristošesťkrát	štyristošestka	
+tisíc	tisíci	tisícina	tisíckrát	tisícka	tisícoro
+desaťtisíc	desaťtisíci	desaťtisícina	desaťtisíckrát	desaťtisícka	
+stotisíc	stotisíci	stotisícina	stotisíckrát	stotisícka	
+milión	miliónty	milióntina	miliónkrát	milión	
+miliarda	miliardtý	miliardtina	miliardkrát	miliarda	
+bilión	biliónty	bilióntina	biliónkrát	bilión	
+biliarda	biliardtý	biliardtina	biliardkrát	biliarda	
