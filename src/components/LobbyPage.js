@@ -80,6 +80,7 @@ function LobbyPage({ userId, currentUserNickname, onStartGame, db, appId }) {
     };
 
     const handleJoinGame = async (gameId, existingPlayers) => {
+        console.time('NacitanieHry');
         if (!userId) {
             setError("Nie si prihlásený. Skús sa znova prihlásiť.");
             return;

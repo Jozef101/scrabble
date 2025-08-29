@@ -78,6 +78,10 @@ function GamePage({ gameId, userId, onGoToLobby, slovakWordsSet, db }) {
     waitingForSecondPlayer,
   } = useSocketConnection(gameId, userId, handleGameStateUpdate);
 
+  useEffect(() => {
+    console.log('GamePage: Komponent pripojený (mounted)');
+  }, []); // Prázdne pole znamená, že sa spustí iba raz
+
   // useEffect na posun okna na hernú dosku po načítaní a pripravenosti hry
   useEffect(() => {
     if (boardRef.current && myPlayerIndex !== null) {
@@ -199,6 +203,12 @@ function GamePage({ gameId, userId, onGoToLobby, slovakWordsSet, db }) {
 }, [db, playerNicknames, gameState.players]);
 
   const isGameReadyToRender = gameState.hasInitialGameStateReceived;
+  useEffect(() => {
+    if (isGameReadyToRender) {
+        console.log('GamePage: Hra je pripravená na vykreslenie');
+        console.timeEnd('NacitanieHry'); // Zastaví stopky a vypíše výsledok
+    }
+  }, [isGameReadyToRender]);
 
   const handleSendChatMessage = () => {
     if (isSpectator) return;
