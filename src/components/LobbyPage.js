@@ -211,7 +211,7 @@ function LobbyPage({ userId, currentUserNickname, onStartGame, db, appId }) {
                         className={`tab-button ${filter === 'allOngoingGames' ? 'active' : ''}`}
                         onClick={() => setFilter('allOngoingGames')}
                     >
-                        Všetky rozohrané {gameLists.allOngoingGames.length > 0 ? `(${gameLists.allOngoingGames.length})` : ''}
+                        Prebiehajúce hry {gameLists.allOngoingGames.length > 0 ? `(${gameLists.allOngoingGames.length})` : ''}
                     </button>
                     <button 
                         className={`tab-button ${filter === 'myFinishedGames' ? 'active' : ''}`}
