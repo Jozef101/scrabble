@@ -29,7 +29,7 @@ import { sendPlayerAction } from '../utils/socketHandlers';
 import '../styles/GamePage.css';
 
 function GamePage({ gameId, userId, onGoToLobby, slovakWordsSet, db }) {
-  console.log('GamePage: userId prop value at render:', userId);
+  // console.log('GamePage: userId prop value at render:', userId);
 
   // Ref pre hernú dosku
   const boardRef = useRef(null);
@@ -78,7 +78,7 @@ function GamePage({ gameId, userId, onGoToLobby, slovakWordsSet, db }) {
   } = useSocketConnection(gameId, userId, handleGameStateUpdate);
 
   useEffect(() => {
-    console.log('GamePage: Komponent pripojený (mounted)');
+    // console.log('GamePage: Komponent pripojený (mounted)');
   }, []); // Prázdne pole znamená, že sa spustí iba raz
 
   // useEffect na posun okna na hernú dosku po načítaní a pripravenosti hry
@@ -165,15 +165,15 @@ function GamePage({ gameId, userId, onGoToLobby, slovakWordsSet, db }) {
             for (const playerIndex of Object.keys(playerNicknames)) {
                 try {
                     const player = gameState.players.find(p => p && p.playerIndex === parseInt(playerIndex, 10));
-                    console.log(`GamePage: Hľadá sa player ${playerIndex}, nájdený objekt:`, player);
+                    // console.log(`GamePage: Hľadá sa player ${playerIndex}, nájdený objekt:`, player);
                     if (player && player.userId) {
                         const userDocRef = doc(db, 'users', player.userId);
                         const userDocSnap = await getDoc(userDocRef);
-                        console.log(`GamePage: Načítaný dokument pre userId ${player.userId}, existuje?`, userDocSnap.exists());
+                        // console.log(`GamePage: Načítaný dokument pre userId ${player.userId}, existuje?`, userDocSnap.exists());
                         
                         if (userDocSnap.exists()) {
                            const userData = userDocSnap.data();
-                           console.log(`GamePage: Načítané dáta používateľa:`, userData);
+                          //  console.log(`GamePage: Načítané dáta používateľa:`, userData);
                            if (userData && userData.elo) {
                                eloScores[playerIndex] = userData.elo;
                            } else {
@@ -191,12 +191,12 @@ function GamePage({ gameId, userId, onGoToLobby, slovakWordsSet, db }) {
                     eloScores[playerIndex] = null;
                 }
             }
-            console.log('GamePage: Načítané ELO skóre:', eloScores);
+            // console.log('GamePage: Načítané ELO skóre:', eloScores);
             setPlayerElo(eloScores);
         };
         fetchEloScores();
     } else {
-      console.log('GamePage: Podmienka na načítanie ELO nie je splnená.');
+      // console.log('GamePage: Podmienka na načítanie ELO nie je splnená.');
       setPlayerElo({});
     }
 }, [db, playerNicknames, gameState.players]);

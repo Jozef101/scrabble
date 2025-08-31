@@ -32,7 +32,7 @@ function useSocketConnection(gameId, userId, setGameState, displayMessage) {
       return;
     }
 
-    console.log(`useSocketConnection: Inicializujem socket pre gameId: ${gameId}, userId: ${userId}`);
+    // console.log(`useSocketConnection: Inicializujem socket pre gameId: ${gameId}, userId: ${userId}`);
     const newSocket = io(SERVER_URL, {
       query: { gameId, userId },
       transports: ['websocket', 'polling'] // Zabezpečíme fallback na polling
@@ -53,17 +53,17 @@ function useSocketConnection(gameId, userId, setGameState, displayMessage) {
 
     // Pripojenie k hre po úspešnom pripojení socketu
     newSocket.on('connect', () => {
-      console.log('useSocketConnection: Socket pripojený.');
+      // console.log('useSocketConnection: Socket pripojený.');
       setConnectionStatus('Pripojený');
       if (userId && gameId && !hasJoinedGameRef.current) {
-        console.log(`useSocketConnection: Emitting joinGame pre ID: ${gameId}, User ID: ${userId}`);
+        // console.log(`useSocketConnection: Emitting joinGame pre ID: ${gameId}, User ID: ${userId}`);
         newSocket.emit('joinGame', { gameId: gameId, userId: userId });
         hasJoinedGameRef.current = true;
       }
     });
 
     newSocket.on('disconnect', (reason) => {
-      console.log('useSocketConnection: Socket odpojený, dôvod:', reason);
+      // console.log('useSocketConnection: Socket odpojený, dôvod:', reason);
       setConnectionStatus('Odpojený');
       setMyPlayerIndex(null);
       hasJoinedGameRef.current = false; // Resetujeme pri odpojení
@@ -80,7 +80,7 @@ function useSocketConnection(gameId, userId, setGameState, displayMessage) {
 
     // Clean-up funkcia pri unmountovaní komponentu alebo zmene závislostí
     return () => {
-      console.log('useSocketConnection: Čistím socket pripojenie...');
+      // console.log('useSocketConnection: Čistím socket pripojenie...');
       newSocket.offAny(); // Odstránime všetky poslucháče
       newSocket.disconnect();
       setSocket(null); // Resetujeme stav socketu

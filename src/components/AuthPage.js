@@ -45,7 +45,7 @@ function AuthPage({ auth, db }) { // KLÚČOVÁ ZMENA: Prijímame aj db ako prop
         setSuccessMessage('');
         try {
             await signInWithEmailAndPassword(auth, email, password);
-            console.log("Prihlásenie úspešné pre:", email);
+            // console.log("Prihlásenie úspešné pre:", email);
         } catch (error) {
             console.error("Chyba pri prihlasovaní:", error);
             let message = "Chyba pri prihlasovaní. Skúste to znova.";

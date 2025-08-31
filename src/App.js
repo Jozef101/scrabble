@@ -46,7 +46,7 @@ export const useToastContext = () => useContext(ToastContext)
 const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
 
 // DEBUG LOG: Skontroluj, aká konfigurácia sa používa
-console.log("Firebase konfigurácia použitá v App.js:", firebaseConfig);
+// console.log("Firebase konfigurácia použitá v App.js:", firebaseConfig);
 
 // Inicializácia Firebase aplikácie
 const firebaseApp = initializeApp(firebaseConfig);
@@ -54,7 +54,7 @@ const auth = getAuth(firebaseApp);
 const db = getFirestore(firebaseApp);
 
 // DEBUG LOG: Skontroluj, či je inštancia Firestore databázy platná
-console.log("Firestore DB inštancia v App.js:", db);
+// console.log("Firestore DB inštancia v App.js:", db);
 
 
 function App() {
@@ -73,7 +73,7 @@ function App() {
         // Slovník je už importovaný ako 'slovakWords'
         const wordsSet = new Set(slovakWords.map(word => word.toUpperCase()));
         setSlovakWordsSet(wordsSet);
-        console.log("App.js: Slovník načítaný a spracovaný do Set. Veľkosť:", wordsSet.size);
+        // console.log("App.js: Slovník načítaný a spracovaný do Set. Veľkosť:", wordsSet.size);
     }, []); // Prázdne pole závislostí zabezpečí, že sa vykoná len raz
 
     // Effect pre Firebase Authentication
@@ -84,7 +84,7 @@ function App() {
                     await signInWithCustomToken(auth, initialAuthToken);
                     console.log("App.js: Prihlásený pomocou vlastného tokenu (Canvas).");
                 } else {
-                    console.log("App.js: Žiadny Canvas token. Čakám na prihlásenie/registráciu používateľa cez AuthPage.");
+                    // console.log("App.js: Žiadny Canvas token. Čakám na prihlásenie/registráciu používateľa cez AuthPage.");
                     if (!auth.currentUser && location.pathname !== '/' && location.pathname !== '/verify-email') {
                         navigate('/');
                     }
@@ -98,15 +98,15 @@ function App() {
         };
 
         const unsubscribe = onAuthStateChanged(auth, async (user) => {
-            console.log("App.js: onAuthStateChanged - Spustený.");
+            // console.log("App.js: onAuthStateChanged - Spustený.");
             if (user) {
                 setUserId(user.uid);
                 // setCurrentUserEmail(user.email);
-                console.log("App.js: Aktuálny používateľ:", user.uid, "Email:", user.email, "Email Verified (pred reload):", user.emailVerified);
+                // console.log("App.js: Aktuálny používateľ:", user.uid, "Email:", user.email, "Email Verified (pred reload):", user.emailVerified);
 
                 try {
                     await user.reload();
-                    console.log("App.js: Používateľské dáta prečítané znova.");
+                    // console.log("App.js: Používateľské dáta prečítané znova.");
 
                     // Načítanie prezývky používateľa z Firestore
                     if (db) {
@@ -115,7 +115,7 @@ function App() {
                         if (userDocSnap.exists()) {
                             const userData = userDocSnap.data();
                             setCurrentUserNickname(userData.nickname);
-                            console.log("App.js: Načítaná prezývka používateľa:", userData.nickname);
+                            // console.log("App.js: Načítaná prezývka používateľa:", userData.nickname);
                         } else {
                             console.warn("App.js: Dokument používateľa pre ID", user.uid, "nebol nájdený. Prezývka nenastavená.");
                             setCurrentUserNickname(null);
@@ -130,16 +130,16 @@ function App() {
                     setCurrentUserNickname(null); // Reset prezývky pri chybe
                 }
 
-                console.log("App.js: User emailVerified (po reload):", user.emailVerified);
+                // console.log("App.js: User emailVerified (po reload):", user.emailVerified);
                 // setIsEmailVerified(user.emailVerified);
 
                 if (user.emailVerified) {
-                    console.log("App.js: E-mail je overený. Navigácia do lobby.");
+                    // console.log("App.js: E-mail je overený. Navigácia do lobby.");
                     if (!location.pathname.startsWith('/game/') && location.pathname !== '/lobby') {
                         navigate('/lobby');
                     }
                 } else {
-                    console.log("App.js: E-mail NIE JE overený. Navigácia na /verify-email.");
+                    // console.log("App.js: E-mail NIE JE overený. Navigácia na /verify-email.");
                     if (location.pathname !== '/verify-email') {
                         navigate('/verify-email');
                     }
@@ -149,13 +149,13 @@ function App() {
                 // setIsEmailVerified(false);
                 // setCurrentUserEmail(null);
                 setCurrentUserNickname(null); // Reset prezývky pri odhlásení
-                console.log("App.js: Používateľ odhlásený z Firebase. Navigácia na /.");
+                // console.log("App.js: Používateľ odhlásený z Firebase. Navigácia na /.");
                 if (location.pathname !== '/') {
                     navigate('/');
                 }
             }
             setIsAuthReady(true);
-            console.log("App.js: onAuthStateChanged - Dokončený.");
+            // console.log("App.js: onAuthStateChanged - Dokončený.");
         });
 
         authenticateFirebase();

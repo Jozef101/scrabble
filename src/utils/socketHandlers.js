@@ -9,7 +9,7 @@ export const setupSocketListeners = (socket, setConnectionStatus, setMyPlayerInd
 
     socket.on('disconnect', (reason) => {
         setConnectionStatus('Odpojený');
-        console.log('Odpojený od servera Socket.IO. Dôvod:', reason);
+        // console.log('Odpojený od servera Socket.IO. Dôvod:', reason);
         // Pri odpojení servera alebo hráča resetujeme stav hry
         setGameState({
             letterBag: [],
@@ -39,12 +39,12 @@ export const setupSocketListeners = (socket, setConnectionStatus, setMyPlayerInd
 
     socket.on('playerAssigned', (playerIndex) => {
         setMyPlayerIndex(playerIndex);
-        console.log(`Bol si priradený ako Hráč ${playerIndex + 1}.`);
-        console.log(`DEBUG: myPlayerIndex po priradení: ${playerIndex}`);
+        // console.log(`Bol si priradený ako Hráč ${playerIndex + 1}.`);
+        // console.log(`DEBUG: myPlayerIndex po priradení: ${playerIndex}`);
     });
 
     socket.on('gameStateUpdate', (serverGameState) => {
-        console.log('Prijatá aktualizácia stavu hry (RAW):', serverGameState);
+        // console.log('Prijatá aktualizácia stavu hry (RAW):', serverGameState);
         if (!serverGameState || typeof serverGameState !== 'object') {
             console.warn("Prijatý neplatný (undefined, null alebo nie objekt) stav hry zo servera cez Socket.IO. Preskakujem aktualizáciu v socketHandlers.");
             return; // Preskočíme aktualizáciu, ak je stav neplatný
@@ -52,7 +52,7 @@ export const setupSocketListeners = (socket, setConnectionStatus, setMyPlayerInd
         
         // DÔLEŽITÁ OPRAVA: Kontrolujeme počet hráčov pri každej aktualizácii stavu hry
         const connectedPlayersCount = serverGameState.players.filter(p => p !== null && p.socketId !== null).length;
-        console.log("Počet aktívnych hráčov v gameStateUpdate:", connectedPlayersCount);
+        // console.log("Počet aktívnych hráčov v gameStateUpdate:", connectedPlayersCount);
         if (connectedPlayersCount < 2) {
             setWaitingForSecondPlayer(true);
         } else {
@@ -77,7 +77,7 @@ export const setupSocketListeners = (socket, setConnectionStatus, setMyPlayerInd
     });
 
     socket.on('waitingForPlayers', (message) => {
-        console.log(`Čakám na hráčov: ${message}`);
+        // console.log(`Čakám na hráčov: ${message}`);
         setWaitingForSecondPlayer(true);
         if (displayMessage) {
             displayMessage(message, 'info');
@@ -133,13 +133,13 @@ export const setupSocketListeners = (socket, setConnectionStatus, setMyPlayerInd
     });
 
     socket.on('chatHistory', (history) => {
-        console.log('socketHandlers: chatHistory event received, history length:', history.length);
+        // console.log('socketHandlers: chatHistory event received, history length:', history.length);
         const normalizedHistory = history.map(msg => ({
             ...msg,
             text: typeof msg.text === 'object' ? msg.text.text : msg.text
         }));
         setChatMessages(normalizedHistory);
-        console.log('socketHandlers: Chat history applied to state.');
+        // console.log('socketHandlers: Chat history applied to state.');
     });
 };
 

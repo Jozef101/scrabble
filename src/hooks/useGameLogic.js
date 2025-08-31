@@ -32,7 +32,7 @@ function useGameLogic(socket, gameId, myPlayerIndex, slovakWordsSet, gameState, 
 
     // Listener pre plnú aktualizáciu stavu (zostáva pre akcie ako confirmTurn, pass, atď.)
     const handleGameStateUpdate = (newGameState) => {
-      console.log('useGameLogic: Received full gameStateUpdate');
+      // console.log('useGameLogic: Received full gameStateUpdate');
       setGameState(newGameState);
       setIsActionInProgress(false);
     };
