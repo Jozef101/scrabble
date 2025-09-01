@@ -20,7 +20,7 @@ function UserMenuIcon({ userId, auth }) {
     const handleLogout = async () => {
         try {
             await signOut(auth); // Volanie funkcie odhlásenia z Firebase Auth
-            console.log("Používateľ bol úspešne odhlásený.");
+            // console.log("Používateľ bol úspešne odhlásený.");
             // App.js sa postará o presmerovanie na prihlasovaciu stránku
         } catch (e) {
             console.error("Chyba pri odhlasovaní: ", e);

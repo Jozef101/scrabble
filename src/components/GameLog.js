@@ -31,15 +31,14 @@ function GameLog({ db, gameId, playerNicknames }) {
                 ) : (
                     <ul className="turn-list">
                         {turnLog.map((turn, index) => {
-                            // Upravené: Netreba parsovať, data sú už vo formáte poľa
                             let newWords = turn.newWords || [];
                             let exchangedLetters = turn.exchangedLetters || [];
                             let placedLetters = turn.placedLetters || [];
 
                             return (
-                                <>
+                                <React.Fragment key={turn.id || index}>
                                     {turn.actionType !== 'draw_result' && (
-                                        <li key={index} className="turn-item">
+                                        <li className="turn-item">
                                             {turn.actionType === 'placeLetters' && (
                                                 <>
                                                     <span className="player-info">
@@ -88,8 +87,9 @@ function GameLog({ db, gameId, playerNicknames }) {
                                             )}
                                         </li>
                                     )}
+
                                     {turn.actionType === 'draw_result' && (
-                                        <li key={index} className="turn-item log-draw-result">
+                                        <li className="turn-item log-draw-result">
                                             <span className="log-icon">🎲</span>
                                             <span>
                                                 Losovanie: 
@@ -99,26 +99,27 @@ function GameLog({ db, gameId, playerNicknames }) {
                                             </span>
                                         </li>
                                     )}
+
                                     {turn.actionType === 'game_over' && (
-                                        <li key={index} className="turn-item log-game-over">
+                                        <li className="turn-item log-game-over">
                                             <span className="log-icon">🏁</span>
                                             <div>
                                                 <strong>Hra sa skončila!</strong>
 
-                                                {/* Zobrazíme správu podľa toho, ako hra skončila */}
                                                 <div className="game-over-details">
                                                     {turn.reason === 'surrender' ? (
                                                         <span>
-                                                            Hráč <strong>{playerNicknames[turn.loserIndex]}</strong> sa vzdal. Víťazom je <strong>{playerNicknames[turn.winnerIndex]}</strong>.
+                                                            Hráč <strong>{playerNicknames[turn.loserIndex]}</strong> sa vzdal. 
+                                                            Víťazom je <strong>{playerNicknames[turn.winnerIndex]}</strong>.
                                                         </span>
                                                     ) : (
                                                         <span>
-                                                            Víťazom je <strong>{playerNicknames[turn.winnerIndex] || 'Neznámy hráč'}</strong> s finálnym skóre <strong>{turn.finalScores[0]} : {turn.finalScores[1]}</strong>.
+                                                            Víťazom je <strong>{playerNicknames[turn.winnerIndex] || 'Neznámy hráč'}</strong> 
+                                                            s finálnym skóre <strong>{turn.finalScores[0]} : {turn.finalScores[1]}</strong>.
                                                         </span>
                                                     )}
                                                 </div>
 
-                                                {/* Detailné skóre zobrazíme len ak nešlo o vzdanie sa */}
                                                 {(turn.reason === 'standard_end' || turn.reason === 'pass_end') && (
                                                     <div className="game-over-deductions">
                                                         <span>Upravené skóre:</span>
@@ -126,12 +127,14 @@ function GameLog({ db, gameId, playerNicknames }) {
                                                             <li>
                                                                 {playerNicknames[0] || 'Hráč 1'}: 
                                                                 {turn.initialScores[0]} - {turn.deductions[0]} bodov
-                                                                {turn.bonus > 0 && turn.finishingPlayerIndex === 0 ? ` + ${turn.bonus} (bonus)` : ''} = <strong>{turn.finalScores[0]}</strong>
+                                                                {turn.bonus > 0 && turn.finishingPlayerIndex === 0 ? ` + ${turn.bonus} (bonus)` : ''} 
+                                                                = <strong>{turn.finalScores[0]}</strong>
                                                             </li>
                                                             <li>
                                                                 {playerNicknames[1] || 'Hráč 2'}: 
                                                                 {turn.initialScores[1]} - {turn.deductions[1]} bodov 
-                                                                {turn.bonus > 0 && turn.finishingPlayerIndex === 1 ? ` + ${turn.bonus} (bonus)` : ''} = <strong>{turn.finalScores[1]}</strong>
+                                                                {turn.bonus > 0 && turn.finishingPlayerIndex === 1 ? ` + ${turn.bonus} (bonus)` : ''} 
+                                                                = <strong>{turn.finalScores[1]}</strong>
                                                             </li>
                                                         </ul>
                                                     </div>
@@ -139,7 +142,7 @@ function GameLog({ db, gameId, playerNicknames }) {
                                             </div>
                                         </li>
                                     )}
-                                </>
+                                </React.Fragment>
                             );
                         })}
                     </ul>
