@@ -122,7 +122,8 @@ function AuthPage({ auth, db }) { // KLÚČOVÁ ZMENA: Prijímame aj db ako prop
                     email: email, // Uložíme aj e-mail pre referenciu
                     createdAt: new Date(),
                     userId: user.uid, // Uložíme aj userId pre ľahší prístup
-                    elo: 1600 // NOVINKA: Predvolená hodnota ELO
+                    elo: 1600, // Predvolená hodnota ELO
+                    role: 'player'
                 });
 
                 // Zaznamenáme nickname ako obsadený
