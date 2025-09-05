@@ -39,8 +39,6 @@ function useGameLogic(socket, gameId, myPlayerIndex, slovakWordsSet, gameState, 
 
     // NOVÝ LISTENER: Pre malé, rýchle akcie presunu písmena
     const handleMoveLetterAction = (action) => {
-    console.log('useGameLogic: Received moveLetter action:', action);
-      console.log('useGameLogic: Received moveLetter action:', action);
       
       // Akciu aplikujeme iba vtedy, ak prišla od iného hráča.
       // Naše vlastné pohyby sú už aplikované lokálne ("optimisticky").
@@ -209,58 +207,64 @@ function useGameLogic(socket, gameId, myPlayerIndex, slovakWordsSet, gameState, 
         setIsActionInProgress(false);
         return;
     }
+    let turnScore = 0;
+      allFormedWords.forEach(wordObj => {
+        turnScore += calculateWordScore(wordObj.letters, gameState.boardAtStartOfTurn);
+      });
+
+      if (actualPlacedLetters.length === 7) {
+        turnScore += 50;
+        addToast("BINGO! +50 bodov!");
+      }
 
     // Ak sme našli dlhé, neoverené slová, iba zobrazíme varovanie, ale pokračujeme.
     if (unverifiedWords.length > 0) {
-        addToast(`Platnosť slova (slov) nie je možné overiť: ${unverifiedWords.join(', ')}`, 'info');
-    }
+      // Ak existujú neoverené slová, pošleme ťah na schválenie súperovi
+      addToast(`Slová "${unverifiedWords.join(', ')}" neboli v slovníku. Súper musí ťah schváliť.`, 'info');
+      sendPlayerAction(socket, gameId, 'submitTurnForApproval', {
+        placedLetters: actualPlacedLetters,
+        unverifiedWords: unverifiedWords,
+        turnScore: turnScore,
+        allFormedWords: allFormedWords.map(w => w.wordString)
+      });
+      return;
+    } else {
+      let newScores = [...gameState.playerScores];
+      newScores[gameState.currentPlayerIndex] += turnScore;
+      addToast(`Ťah je platný! Získal si ${turnScore} bodov. Vytvorené slová: ${allFormedWords.map(w => w.wordString).join(', ')}`);
 
-    let turnScore = 0;
-    allFormedWords.forEach(wordObj => {
-      turnScore += calculateWordScore(wordObj.letters, gameState.boardAtStartOfTurn);
-    });
+      const newBoardAtStartOfTurn = gameState.board.map(row => [...row]);
 
-    if (actualPlacedLetters.length === 7) {
-      turnScore += 50;
-      addToast("BINGO! +50 bodov!");
-    }
+      const numToDraw = actualPlacedLetters.length;
+      const { drawnLetters: newLetters, remainingBag: updatedBagAfterTurn, bagEmpty: currentBagEmpty } = drawLetters(gameState.letterBag, numToDraw);
 
-    let newScores = [...gameState.playerScores];
-    newScores[gameState.currentPlayerIndex] += turnScore;
+      let tempRack = [...gameState.playerRacks[gameState.currentPlayerIndex]];
+      let newRackForCurrentPlayer = [];
+      
+      tempRack.forEach(letter => {
+        const isLetterPlaced = actualPlacedLetters.some(placed => placed.letterData.id === letter?.id);
+        if (letter !== null && !isLetterPlaced) {
+          newRackForCurrentPlayer.push(letter);
+        }
+      });
 
-    addToast(`Ťah je platný! Získal si ${turnScore} bodov. Vytvorené slová: ${allFormedWords.map(w => w.wordString).join(', ')}`);
-
-    const newBoardAtStartOfTurn = gameState.board.map(row => [...row]);
-
-    const numToDraw = actualPlacedLetters.length;
-    const { drawnLetters: newLetters, remainingBag: updatedBagAfterTurn, bagEmpty: currentBagEmpty } = drawLetters(gameState.letterBag, numToDraw);
-
-    let tempRack = [...gameState.playerRacks[gameState.currentPlayerIndex]];
-    let newRackForCurrentPlayer = [];
-
-    tempRack.forEach(letter => {
-      const isLetterPlaced = actualPlacedLetters.some(placed => placed.letterData.id === letter?.id);
-      if (letter !== null && !isLetterPlaced) {
-        newRackForCurrentPlayer.push(letter);
+      newLetters.forEach(letter => {
+        if (newRackForCurrentPlayer.length < RACK_SIZE) {
+          newRackForCurrentPlayer.push(letter);
+        }
+      });
+      
+      while (newRackForCurrentPlayer.length < RACK_SIZE) {
+        newRackForCurrentPlayer.push(null);
       }
-    });
+          
+      newRackForCurrentPlayer = newRackForCurrentPlayer.slice(0, RACK_SIZE);
 
-    newLetters.forEach(letter => {
-      if (newRackForCurrentPlayer.length < RACK_SIZE) {
-        newRackForCurrentPlayer.push(letter);
-      }
-    });
+      const finalRackAfterPlay = newRackForCurrentPlayer.filter(l => l !== null);
+      const newHighlightedLetters = actualPlacedLetters.map(letter => ({ x: letter.x, y: letter.y }));
 
-    while (newRackForCurrentPlayer.length < RACK_SIZE) {
-      newRackForCurrentPlayer.push(null);
-    }
-    newRackForCurrentPlayer = newRackForCurrentPlayer.slice(0, RACK_SIZE);
-
-    const finalRackAfterPlay = newRackForCurrentPlayer.filter(l => l !== null);
-    const newHighlightedLetters = actualPlacedLetters.map(letter => ({ x: letter.x, y: letter.y }));
-
-    let updatedGameState;
-    if (currentBagEmpty && finalRackAfterPlay.length === 0) {
+      let updatedGameState;
+      if (currentBagEmpty && finalRackAfterPlay.length === 0) {
         // Hra skončila, vypočítame finálne skóre a všetky detaily
         const finalScoresData = calculateFinalScores(gameState.currentPlayerIndex, newScores, gameState.playerRacks, gameState.players);
 
@@ -275,29 +279,28 @@ function useGameLogic(socket, gameId, myPlayerIndex, slovakWordsSet, gameState, 
         // Zmažeme starú 'updateGameState' akciu, aby sme neposielali dáta duplicitne
         // sendPlayerAction(socket, gameId, 'updateGameState', updatedGameState);
         return; // DÔLEŽITÉ: Ukončíme funkciu tu
-    } else {
-      updatedGameState = {
-        ...gameState,
-        letterBag: updatedBagAfterTurn,
-        playerRacks: gameState.playerRacks.map((rack, idx) => idx === gameState.currentPlayerIndex ? newRackForCurrentPlayer : rack),
-        board: gameState.board,
-        boardAtStartOfTurn: newBoardAtStartOfTurn,
-        isFirstTurn: false,
-        playerScores: newScores,
-        currentPlayerIndex: (gameState.currentPlayerIndex === 0 ? 1 : 0),
-        exchangeZoneLetters: [],
-        hasPlacedOnBoardThisTurn: false,
-        hasMovedToExchangeZoneThisTurn: false,
-        consecutivePasses: 0,
-        isGameOver: false,
-        isBagEmpty: currentBagEmpty,
-        highlightedLetters: newHighlightedLetters,
-        turnNumber: (gameState.turnNumber || 0) + 1,
-      };
-    }
-    
-    // --- ÚPRAVA: Uložíme log ťahu s novými informáciami. ---
-    const turnDetails = {
+      } else {
+        updatedGameState = {
+          ...gameState,
+          letterBag: updatedBagAfterTurn,
+          playerRacks: gameState.playerRacks.map((rack, idx) => idx === gameState.currentPlayerIndex ? newRackForCurrentPlayer : rack),
+          board: gameState.board,
+          boardAtStartOfTurn: newBoardAtStartOfTurn,
+          isFirstTurn: false,
+          playerScores: newScores,
+          currentPlayerIndex: (gameState.currentPlayerIndex === 0 ? 1 : 0),
+          exchangeZoneLetters: [],
+          hasPlacedOnBoardThisTurn: false,
+          hasMovedToExchangeZoneThisTurn: false,
+          consecutivePasses: 0,
+          isGameOver: false,
+          isBagEmpty: currentBagEmpty,
+          highlightedLetters: newHighlightedLetters,
+          turnNumber: (gameState.turnNumber || 0) + 1,
+        };
+      }
+      // --- ÚPRAVA: Uložíme log ťahu s novými informáciami. ---
+      const turnDetails = {
         actionType: 'placeLetters',
         placedLetters: actualPlacedLetters.map(l => ({
             x: l.x,
@@ -317,12 +320,13 @@ function useGameLogic(socket, gameId, myPlayerIndex, slovakWordsSet, gameState, 
         boardAfterTurn: JSON.stringify(updatedGameState.board),
         letterBagBeforeTurn: gameState.letterBag,
         letterBagAfterTurn: updatedBagAfterTurn,
-         // Uložíme stav dosky po ťahu
-    };
-    sendPlayerAction(socket, gameId, 'turnSubmitted', turnDetails);
-    // ----------------------------
+        // Uložíme stav dosky po ťahu
+      };
+      sendPlayerAction(socket, gameId, 'turnSubmitted', turnDetails);
+      // ----------------------------
 
-    sendPlayerAction(socket, gameId, 'updateGameState', updatedGameState);
+      sendPlayerAction(socket, gameId, 'updateGameState', updatedGameState);
+    }
   }, [gameState, myPlayerIndex, socket, gameId, validWordsSet, isActionInProgress]);
 
   const handleExchangeLetters = useCallback(() => {

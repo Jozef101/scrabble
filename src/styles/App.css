@@ -189,38 +189,6 @@ h1 {
     font-style: italic;
 }
 
-.game-controls {
-    margin-top: 0;
-    display: flex;
-    gap: 15px;
-    flex-wrap: wrap;
-    justify-content: center;
-    width: 100%;
-}
-
-.game-controls button {
-    padding: 10px 20px;
-    font-size: 1em;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    background-color: #2196F3;
-    color: white;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    transition: background-color 0.3s ease, transform 0.1s ease;
-}
-
-.game-controls button:hover {
-    background-color: #1976D2;
-    transform: translateY(-1px);
-}
-
-.game-controls button:disabled {
-    background-color: #cccccc;
-    cursor: not-allowed;
-    box-shadow: none;
-}
-
 /* Modálne okno pre výber písmena žolíka */
 .modal-overlay {
     position: fixed;

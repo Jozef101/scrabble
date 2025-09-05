@@ -1,5 +1,5 @@
 // src/components/GamePage.js
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState, useCallback } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { doc, getDoc } from 'firebase/firestore'; 
@@ -140,6 +140,18 @@ function GamePage({ gameId, userId, onGoToLobby, slovakWordsSet, db }) {
     handleTapLetter,
     handleTapSlot,
   } = useTapToMove(moveLetter, gameState, myPlayerIndex, isActionInProgress, setIsActionInProgress);
+
+  const handleApproveTurn = useCallback(() => {
+    if (socket) {
+      sendPlayerAction(socket, gameId, 'resolveTurnValidation', { approved: true });
+    }
+  }, [socket, gameId]);
+
+  const handleRejectTurn = useCallback(() => {
+    if (socket) {
+      sendPlayerAction(socket, gameId, 'resolveTurnValidation', { approved: false });
+    }
+  }, [socket, gameId]);
 
   const {
     letterBag,
@@ -377,7 +389,6 @@ function GamePage({ gameId, userId, onGoToLobby, slovakWordsSet, db }) {
             </div>
             ) : (
             <div className="main-game-layout">
-              {/* Prvý stĺpec - Hracia doska */}
               <div className="board-column" ref={boardRef}>
                 <Board
                   board={board}
@@ -411,37 +422,53 @@ function GamePage({ gameId, userId, onGoToLobby, slovakWordsSet, db }) {
                           isGameOver={isGameOver}
                       />
                   </div>
-
-                  {/* DOLE: Stojan pre súpera (alebo Hráča 2 pre diváka) */}
-                  <div className="player-rack-section">
-                      <h3>{playerNicknames[bottomPlayerIndex] || `Hráč ${bottomPlayerIndex + 1}`} Rack:</h3>
-                      <PlayerRack
-                          letters={playerRacks[bottomPlayerIndex]}
-                          moveLetter={moveLetter}
-                          playerIndex={bottomPlayerIndex}
-                          myPlayerIndex={myPlayerIndex}
-                          currentPlayerIndex={currentPlayerIndex}
-                          selectedLetter={selectedLetter}
-                          onTapLetter={handleTapLetter}
-                          onTapSlot={handleTapSlot}
-                          isActionInProgress={isActionInProgress}
-                          isGameOver={isGameOver}
-                      />
+                  
+                  {gameState.gameStatus === 'AWAITING_WORD_VALIDATION' ? (
+                  <div className="validation-controls">
+                    {myPlayerIndex !== null && myPlayerIndex !== gameState.pendingTurn.playerIndex ? (
+                      <>
+                        <h4>Súper zahral slovo, ktoré nie je v slovníku: "{gameState.pendingTurn.unverifiedWords.join(', ')}"</h4>
+                        <p>Prajete si tento ťah schváliť?</p>
+                        <div className='validation-buttons'>
+                          <button onClick={handleApproveTurn} className="approve-turn-button">Schváliť</button>
+                        <button onClick={handleRejectTurn} className="reject-turn-button">Zamietnuť</button>
+                        </div>
+                        
+                      </>
+                    ) : (
+                    <p>Čaká sa na schválenie ťahu od súpera...</p>
+                    )}
                   </div>
-              </div>
-
-                <ExchangeZone
-                  lettersInZone={exchangeZoneLetters}
-                  moveLetter={moveLetter}
-                  myPlayerIndex={myPlayerIndex}
-                  currentPlayerIndex={currentPlayerIndex}
-                  selectedLetter={selectedLetter}
-                  onTapLetter={handleTapLetter}
-                  onTapSlot={handleTapSlot}
-                  onRightClick={handleRightClickFromExchangeZone}
-                  isActionInProgress={isActionInProgress}
-                />
-
+                  ) : (
+                    <ExchangeZone
+                      lettersInZone={exchangeZoneLetters}
+                      moveLetter={moveLetter}
+                      myPlayerIndex={myPlayerIndex}
+                      currentPlayerIndex={currentPlayerIndex}
+                      selectedLetter={selectedLetter}
+                      onTapLetter={handleTapLetter}
+                      onTapSlot={handleTapSlot}
+                      onRightClick={handleRightClickFromExchangeZone}
+                      isActionInProgress={isActionInProgress}
+                    />
+                  )}
+                  <div className="player-rack-section">
+                    <h3>{playerNicknames[bottomPlayerIndex] || `Hráč ${bottomPlayerIndex + 1}`} Rack:</h3>
+                    <PlayerRack
+                      letters={playerRacks[bottomPlayerIndex]}
+                      moveLetter={moveLetter}
+                      playerIndex={bottomPlayerIndex}
+                      myPlayerIndex={myPlayerIndex}
+                      currentPlayerIndex={currentPlayerIndex}
+                      selectedLetter={selectedLetter}
+                      onTapLetter={handleTapLetter}
+                      onTapSlot={handleTapSlot}
+                      isActionInProgress={isActionInProgress}
+                      isGameOver={isGameOver}
+                    />
+                  </div>
+                </div>
+                
                 <div className="game-controls">
                   <button
                     className="confirm-turn-button"

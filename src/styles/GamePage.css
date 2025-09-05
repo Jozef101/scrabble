@@ -305,3 +305,96 @@
     background-color: #a0c3e6;
     /* Farba sa pri prejdení myšou nezmení */
 }
+.game-controls {
+    margin-top: 0;
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 100%;
+}
+
+.game-controls button {
+    padding: 10px 20px;
+    font-size: 1em;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: #2196F3;
+    color: white;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s ease, transform 0.1s ease;
+}
+
+.game-controls button:hover {
+    background-color: #1976D2;
+    transform: translateY(-1px);
+}
+
+.game-controls button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+.validation-controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    margin-top: 20px;
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+
+.validation-controls h4,
+.validation-controls p {
+    text-align: center;
+    margin: 0;
+    color: #333;
+}
+
+.validation-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    width: 100%;
+}
+
+/* Aplikujeme ZÁKLADNÉ štýly z .game-controls button na NOVÉ tlačidlá */
+.approve-turn-button,
+.reject-turn-button {
+    padding: 10px 20px;
+    font-size: 1em;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    color: white;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s ease, transform 0.1s ease;
+    flex-grow: 1;
+    font-weight: bold;
+}
+
+.approve-turn-button:hover,
+.reject-turn-button:hover {
+    transform: translateY(-1px);
+}
+
+/* A teraz ŠPECIFICKÉ farby */
+.approve-turn-button {
+    background-color: #28a745; /* Zelená */
+}
+.approve-turn-button:hover {
+    background-color: #218838; /* Tmavšia zelená */
+}
+
+.reject-turn-button {
+    background-color: #dc3545; /* Červená */
+}
+.reject-turn-button:hover {
+    background-color: #c82333; /* Tmavšia červená */
+}
