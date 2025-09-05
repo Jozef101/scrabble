@@ -268,6 +268,28 @@ function useGameLogic(socket, gameId, myPlayerIndex, slovakWordsSet, gameState, 
         // Hra skončila, vypočítame finálne skóre a všetky detaily
         const finalScoresData = calculateFinalScores(gameState.currentPlayerIndex, newScores, gameState.playerRacks, gameState.players);
 
+        const turnDetails = {
+          actionType: 'placeLetters',
+          placedLetters: actualPlacedLetters.map(l => ({
+            x: l.x,
+            y: l.y,
+            letterData: l.letterData
+          })),
+          newWords: allFormedWords.map(w => w.wordString),
+          score: turnScore,
+          turnNumber: (gameState.turnNumber || 0) + 1,
+          playerIndex: myPlayerIndex,
+          timestamp: Date.now(),
+          exchangedLetters: null,
+          rackBeforeTurn: gameState.playerRacks[myPlayerIndex],
+          lettersDrawn: newLetters,
+          boardBeforeTurn: JSON.stringify(gameState.boardAtStartOfTurn),
+          boardAfterTurn: JSON.stringify(gameState.board), // Doska sa už v tomto bode nemení
+          letterBagBeforeTurn: gameState.letterBag,
+          letterBagAfterTurn: updatedBagAfterTurn,
+        };
+        sendPlayerAction(socket, gameId, 'turnSubmitted', turnDetails);
+
         // Pošleme JEDNU akciu so všetkými detailmi
         sendPlayerAction(socket, gameId, 'gameOver', {
             ...finalScoresData, // Tu sú: finalScores, deductions, bonus, winnerId, loserId, winnerIndex
