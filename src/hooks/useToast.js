@@ -10,7 +10,7 @@ export function useToast() {
   const addToast = useCallback((message, type = 'info') => {
     // Vytvoríme nový objekt notifikácie s unikátnym ID (na základe času)
     const newToast = {
-      id: Date.now(),
+      id: Date.now() + Math.random(),
       message,
       type,
     };
