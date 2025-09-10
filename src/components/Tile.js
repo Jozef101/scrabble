@@ -6,7 +6,7 @@ import { getBonusType, BONUS_TYPES } from '../utils/boardUtils';
 import '../styles/Tile.css';
 
 // Tile teraz prijíma aj myPlayerIndex, currentPlayerIndex, selectedLetter, onTapLetter, onTapSlot
-function Tile({ x, y, letter, moveLetter, boardAtStartOfTurn, myPlayerIndex, currentPlayerIndex, selectedLetter, onTapLetter, onTapSlot, isHighlighted, isActionInProgress }) {
+function Tile({ x, y, letter, moveLetter, boardAtStartOfTurn, myPlayerIndex, currentPlayerIndex, selectedLetter, onTapLetter, onTapSlot, isHighlighted, isActionInProgress, gameStatus }) {
   const bonusType = getBonusType(x, y);
 
   // isDraggable logika pre písmená na doske
@@ -19,6 +19,10 @@ function Tile({ x, y, letter, moveLetter, boardAtStartOfTurn, myPlayerIndex, cur
   const [{ isOver, canDrop }, drop] = useDrop({
     accept: 'LETTER',
     canDrop: (item) => {
+      if (gameStatus === 'AWAITING_WORD_VALIDATION') {
+        return false;
+      }
+
       // Môžeš dropnúť na políčko, ak je prázdne
       if (letter === null) return true;
       

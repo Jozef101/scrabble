@@ -401,6 +401,7 @@ function GamePage({ gameId, userId, onGoToLobby, slovakWordsSet, db }) {
                   onTapSlot={handleTapSlot}
                   highlightedLetters={highlightedLetters}
                   isActionInProgress={isActionInProgress}
+                  gameStatus={gameState.gameStatus}
                 />
               </div>
 
@@ -468,7 +469,7 @@ function GamePage({ gameId, userId, onGoToLobby, slovakWordsSet, db }) {
                     />
                   </div>
                 </div>
-                
+
                 <div className="game-controls">
                   <button
                     className="confirm-turn-button"
