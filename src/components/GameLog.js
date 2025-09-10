@@ -44,7 +44,7 @@ function GameLog({ db, gameId, playerNicknames }) {
                                                     <span className="player-info">
                                                         {playerNicknames?.[turn.playerIndex] || `Hráč ${turn.playerIndex + 1}`}
                                                     </span>
-                                                    <span> položil </span>
+                                                    <span> položil(a) </span>
                                                     <span className="placed-letters-info">
                                                         {placedLetters.map(l => l.letterData.letter || l.letterData.assignedLetter).join('')}
                                                     </span>
@@ -147,12 +147,21 @@ function GameLog({ db, gameId, playerNicknames }) {
                                         <li className='turn-item log-validation-pending'>
                                             <span className="log-icon">⏳</span>
                                             <span>
-                                                <span className="player-info">{playerNicknames[turn.playerIndex]}</span> položil slovo
+                                                <span className="player-info">{playerNicknames[turn.playerIndex]}</span> položil(a) slovo
                                                 <strong> "{turn.unverifiedWords.join(', ')}"</strong>. Čaká sa na schválenie od hráča{' '}
                                                 <span className="player-info">{playerNicknames[turn.opponentIndex]}</span>.
                                             </span>
                                         </li>
                                     )}
+
+                                    {turn.actionType === 'turn_rejected' && (
+                                    <li className="turn-item log-turn-rejected">
+                                        <span className="log-icon">❌</span>
+                                        <span>
+                                            <span className="player-info">{playerNicknames[turn.playerIndex]}</span> neschválil(a) predchádzajúci ťah.
+                                        </span>
+                                    </li>
+                                )}
                                 </React.Fragment>
                             );
                         })}
