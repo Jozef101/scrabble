@@ -142,6 +142,17 @@ function GameLog({ db, gameId, playerNicknames }) {
                                             </div>
                                         </li>
                                     )}
+
+                                    {turn.actionType === 'turn_validation_pending' && (
+                                        <li className='turn-item log-validation-pending'>
+                                            <span className="log-icon">⏳</span>
+                                            <span>
+                                                <span className="player-info">{playerNicknames[turn.playerIndex]}</span> položil slovo
+                                                <strong> "{turn.unverifiedWords.join(', ')}"</strong>. Čaká sa na schválenie od hráča{' '}
+                                                <span className="player-info">{playerNicknames[turn.opponentIndex]}</span>.
+                                            </span>
+                                        </li>
+                                    )}
                                 </React.Fragment>
                             );
                         })}
