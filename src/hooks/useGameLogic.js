@@ -588,6 +588,14 @@ function useGameLogic(socket, gameId, myPlayerIndex, slovakWordsSet, gameState, 
   
   }, [gameState.gameStatus, gameState.currentPlayerIndex, pendingBingo, myPlayerIndex, addToast]);
 
+  useEffect(() => {
+    // Zobrazí notifikáciu po tom, čo súper schváli ťah
+    if (gameState.lastTurnInfo && gameState.lastTurnInfo.playerIndex === myPlayerIndex && gameState.lastTurnInfo.type === 'approved') {
+      const { score, words } = gameState.lastTurnInfo;
+      addToast(`Súper ťah schválil. Dostávaš ${score} bodov za slovo(á) ${words.join(', ')}`, 'success');
+    }
+  }, [gameState.lastTurnInfo, myPlayerIndex, addToast]);
+
   return {
     gameState,
     setGameState,
