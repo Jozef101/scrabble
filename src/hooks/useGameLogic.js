@@ -23,6 +23,8 @@ function useGameLogic(socket, gameId, myPlayerIndex, slovakWordsSet, gameState, 
   const [showLetterSelectionModal, setShowLetterSelectionModal] = useState(false);
   const [jokerTileCoords, setJokerTileCoords] = useState(null);
   const [isActionInProgress, setIsActionInProgress] = useState(false);
+  const [pendingBingo, setPendingBingo] = useState(false);
+  const prevGameStatusRef = useRef(gameState.gameStatus);
 
   // Kľúčová zmena: slovník sa už nealokuje, ale použije sa prijatý parameter
   const validWordsSet = useRef(slovakWordsSet);
@@ -214,7 +216,8 @@ function useGameLogic(socket, gameId, myPlayerIndex, slovakWordsSet, gameState, 
 
       if (actualPlacedLetters.length === 7) {
         turnScore += 50;
-        addToast("BINGO! +50 bodov!");
+        // addToast("BINGO! +50 bodov!");
+        setPendingBingo(true);
       }
 
     // Ak sme našli dlhé, neoverené slová, iba zobrazíme varovanie, ale pokračujeme.
@@ -571,6 +574,19 @@ function useGameLogic(socket, gameId, myPlayerIndex, slovakWordsSet, gameState, 
     }
     sendPlayerAction(socket, gameId, 'drawForTurn', {});
   }, [socket, gameId, isActionInProgress]);
+
+  useEffect(() => {
+    if (prevGameStatusRef.current === 'AWAITING_WORD_VALIDATION' && gameState.gameStatus === 'in_progress') {
+      // Ak si pamätáme, že sme mali BINGO, a už nie sme na ťahu (náš ťah bol teda úspešne schválený), zobrazíme notifikáciu.
+      if (pendingBingo && myPlayerIndex !== gameState.currentPlayerIndex) {
+        addToast("BINGO! +50 bodov!");
+        setPendingBingo(false); // Vynulujeme pre ďalší ťah
+      }
+    }
+    // Na konci vždy aktualizujeme referenciu na aktuálny stav pre ďalšie porovnanie.
+    prevGameStatusRef.current = gameState.gameStatus;
+  
+  }, [gameState.gameStatus, gameState.currentPlayerIndex, pendingBingo, myPlayerIndex, addToast]);
 
   return {
     gameState,
