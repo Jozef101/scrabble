@@ -35,8 +35,23 @@ function useGameLogic(socket, gameId, myPlayerIndex, slovakWordsSet, gameState, 
 
     // Listener pre plnú aktualizáciu stavu (zostáva pre akcie ako confirmTurn, pass, atď.)
     const handleGameStateUpdate = (newGameState) => {
-      // console.log('useGameLogic: Received full gameStateUpdate');
-      setGameState(newGameState);
+      // Špeciálna logika pre hráča, ktorý práve zamietol ťah
+      if (
+        newGameState.lastTurnInfo &&
+        newGameState.lastTurnInfo.type === 'rejected' &&
+        newGameState.lastTurnInfo.opponentIndex === myPlayerIndex
+      ) {
+        // Pre seba nastavíme stav s "čistou" hracou doskou
+        const stateForMe = {
+          ...newGameState,
+          board: newGameState.boardAtStartOfTurn,
+        };
+        setGameState(stateForMe);
+      } else {
+        // Pre všetky ostatné prípady (vrátane hráča, ktorého ťah bol zamietnutý)
+        // použijeme stav tak, ako prišiel zo servera.
+        setGameState(newGameState);
+      }
       setIsActionInProgress(false);
     };
 
@@ -46,17 +61,17 @@ function useGameLogic(socket, gameId, myPlayerIndex, slovakWordsSet, gameState, 
       // Akciu aplikujeme iba vtedy, ak prišla od iného hráča.
       // Naše vlastné pohyby sú už aplikované lokálne ("optimisticky").
       // Server nám do akcie pridá 'playerIndex', aby sme to vedeli rozlíšiť.
-      if (action.playerIndex !== myPlayerIndex) {
-        setGameState(prevState => applyMoveLetter(prevState, action));
-      }
+      // if (action.playerIndex !== myPlayerIndex) {
+      //   setGameState(prevState => applyMoveLetter(prevState, action));
+      // }
     };
 
     socket.on('gameStateUpdate', handleGameStateUpdate);
-    socket.on('moveLetter', handleMoveLetterAction); // Pridali sme nový listener
+    // socket.on('moveLetter', handleMoveLetterAction); // Pridali sme nový listener
 
     return () => {
       socket.off('gameStateUpdate', handleGameStateUpdate);
-      socket.off('moveLetter', handleMoveLetterAction); // Nezabudneme ho pri odpojení odstrániť
+      // socket.off('moveLetter', handleMoveLetterAction); // Nezabudneme ho pri odpojení odstrániť
     };
   }, [socket, setGameState, myPlayerIndex]);
 
@@ -590,29 +605,29 @@ function useGameLogic(socket, gameId, myPlayerIndex, slovakWordsSet, gameState, 
   }, [gameState.gameStatus, gameState.currentPlayerIndex, pendingBingo, myPlayerIndex, addToast]);
 
   useEffect(() => {
-    // Tento efekt spracuje VŽDY NOVÚ informáciu o poslednom dokončenom ťahu
-    if (gameState.lastTurnInfo && gameState.lastTurnInfo !== prevTurnInfoRef.current) {
-      const { playerIndex, opponentIndex, score, words, type } = gameState.lastTurnInfo;
+    // Tento efekt spracuje VŽDY NOVÚ informáciu o poslednom dokončenom ťahu
+    if (gameState.lastTurnInfo && gameState.lastTurnInfo !== prevTurnInfoRef.current) {
+      const { playerIndex, opponentIndex, score, words, type } = gameState.lastTurnInfo;
 
-      // Notifikácia pre hráča, ktorého ťah bol práve vyhodnotený
-      if (playerIndex === myPlayerIndex) {
-        if (type === 'approved') {
-          addToast(`Súper ťah schválil. Dostávaš ${score} bodov za slovo(á) ${words.join(', ')}`, 'success');
-        } else if (type === 'rejected') {
-          addToast(`Súper zamietol tvoje slovo(á): "${words.join(', ')}"`, 'error');
-        }
-      } 
-      // Notifikácia pre súpera, ktorý práve rozhodol
-      else if (opponentIndex === myPlayerIndex) {
-        if (type === 'rejected') {
-          addToast('Zamietol si súperov ťah.', 'info');
-        }
-      }
+      // Notifikácia pre hráča, ktorého ťah bol práve vyhodnotený
+      if (playerIndex === myPlayerIndex) {
+        if (type === 'approved') {
+          addToast(`Súper ťah schválil. Dostávaš ${score} bodov za slovo(á) ${words.join(', ')}`, 'success');
+        } else if (type === 'rejected') {
+          addToast(`Súper zamietol tvoje slovo(á): "${words.join(', ')}"`, 'error');
+        }
+      }
+      // Notifikácia pre súpera, ktorý práve rozhodol
+      else if (opponentIndex === myPlayerIndex) {
+        if (type === 'rejected') {
+          addToast('Zamietol si súperov ťah.', 'info');
+        }
+      }
 
-      // Zapamätáme si, že sme túto informáciu už spracovali.
-      prevTurnInfoRef.current = gameState.lastTurnInfo;
-    }
-  }, [gameState.lastTurnInfo, myPlayerIndex, addToast]);
+      // Zapamätáme si, že sme túto informáciu už spracovali.
+      prevTurnInfoRef.current = gameState.lastTurnInfo;
+    }
+  }, [gameState.lastTurnInfo, myPlayerIndex, addToast]);
 
   return {
     gameState,
