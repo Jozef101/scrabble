@@ -155,13 +155,22 @@ function GameLog({ db, gameId, playerNicknames }) {
                                     )}
 
                                     {turn.actionType === 'turn_rejected' && (
-                                    <li className="turn-item log-turn-rejected">
-                                        <span className="log-icon">❌</span>
-                                        <span>
-                                            <span className="player-info">{playerNicknames[turn.playerIndex]}</span> neschválil(a) predchádzajúci ťah.
-                                        </span>
-                                    </li>
-                                )}
+                                        <li className="turn-item log-turn-rejected">
+                                            <span className="log-icon">❌</span>
+                                            <span>
+                                                <span className="player-info">{playerNicknames[turn.playerIndex]}</span> neschválil(a) predchádzajúci ťah.
+                                            </span>
+                                        </li>
+                                    )}
+
+                                    {turn.actionType === 'turn_approved' && (
+                                        <li className="turn-item log-turn-approved">
+                                            <span className="log-icon">✅</span>
+                                            <span>
+                                                <span className="player-info">{playerNicknames[turn.playerIndex]}</span> schválil(a) predchádzajúci ťah.
+                                            </span>
+                                        </li>
+                                    )}
                                 </React.Fragment>
                             );
                         })}
