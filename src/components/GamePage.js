@@ -421,6 +421,7 @@ function GamePage({ gameId, userId, onGoToLobby, slovakWordsSet, db }) {
                           onTapSlot={handleTapSlot}
                           isActionInProgress={isActionInProgress}
                           isGameOver={isGameOver}
+                          gameStatus={gameState.gameStatus}
                       />
                   </div>
                   
@@ -466,6 +467,7 @@ function GamePage({ gameId, userId, onGoToLobby, slovakWordsSet, db }) {
                       onTapSlot={handleTapSlot}
                       isActionInProgress={isActionInProgress}
                       isGameOver={isGameOver}
+                      gameStatus={gameState.gameStatus}
                     />
                   </div>
                 </div>

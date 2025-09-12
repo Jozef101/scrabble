@@ -4,7 +4,7 @@ import Letter from './Letter';
 import '../styles/RackSlot.css';
 
 // Pridávame isMyRack, myPlayerIndex, currentPlayerIndex, selectedLetter, onTapLetter, onTapSlot ako prop
-function RackSlot({ letter, index, playerIndex, moveLetter, isMyRack, myPlayerIndex, currentPlayerIndex, selectedLetter, onTapLetter, onTapSlot, isActionInProgress, isGameOver }) {
+function RackSlot({ letter, index, playerIndex, moveLetter, isMyRack, myPlayerIndex, currentPlayerIndex, selectedLetter, onTapLetter, onTapSlot, isActionInProgress, isGameOver, gameStatus }) {
   const [{ isOver, canDrop }, drop] = useDrop({
     accept: 'LETTER',
     canDrop: (item) => {
@@ -43,7 +43,7 @@ function RackSlot({ letter, index, playerIndex, moveLetter, isMyRack, myPlayerIn
 
   // Logika pre isDraggable a isVisible
   // KLÚČOVÁ ZMENA: isDraggable je teraz závislé aj od isActionInProgress
-  const shouldBeDraggable = isMyRack; // Iba vlastné písmená
+  const shouldBeDraggable = isMyRack && gameStatus === 'in_progress'; // Iba vlastné písmená a iba keď je hra v priebehu
   const shouldBeVisible = isMyRack || isGameOver; // Vlastné písmená sú vždy viditeľné, súperove až na konci hry
 
   // Triedy pre zvýraznenie drop zóny
@@ -65,7 +65,7 @@ function RackSlot({ letter, index, playerIndex, moveLetter, isMyRack, myPlayerIn
       return;
     }
     // Ak je to môj rack a je môj ťah
-    if (isMyRack && currentPlayerIndex === myPlayerIndex) {
+    if (isMyRack && currentPlayerIndex === myPlayerIndex && gameStatus === 'in_progress') {
       // Presunieme písmeno do výmennej zóny
       moveLetter(letterData, source, { type: 'exchangeZone' });
     } else {
@@ -88,6 +88,7 @@ function RackSlot({ letter, index, playerIndex, moveLetter, isMyRack, myPlayerIn
           onTapLetter={onTapLetter}     // NOVÉ: Posielame handler pre ťuknutie na písmeno
           onRightClick={handleLetterRightClick} // <--- PRIDANÉ: Posielame handler na pravé kliknutie
           isActionInProgress={isActionInProgress} // KLÚČOVÁ ZMENA: Posielame isActionInProgress
+          gameStatus={gameStatus} // Posielame stav hry do Letter
         />
       ) : (
         // Ak je slot prázdny, zobraz empty-rack-slot. Toto sa zobrazí pre oba racky.

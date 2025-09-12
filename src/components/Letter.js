@@ -4,7 +4,7 @@ import { useDrag } from 'react-dnd';
 import '../styles/Letter.css';
 
 // Pridávame nový prop `onRightClick`, `selectedLetter`, `onTapLetter` a `isActionInProgress`
-function Letter({ id, letter, value, assignedLetter, source, isDraggable = true, isVisible = true, onRightClick, selectedLetter, onTapLetter, isActionInProgress }) {
+function Letter({ id, letter, value, assignedLetter, source, isDraggable = true, isVisible = true, onRightClick, selectedLetter, onTapLetter, isActionInProgress, gameStatus }) {
     // Určíme originalRackIndex, ak zdrojom je rack
     const originalRackIndex = source.type === 'rack' ? source.index : undefined;
 
@@ -12,7 +12,7 @@ function Letter({ id, letter, value, assignedLetter, source, isDraggable = true,
         type: 'LETTER',
         // Pridávame originalRackIndex do item.letterData
         item: { letterData: { id, letter, value, assignedLetter, originalRackIndex }, source },
-        canDrag: isDraggable, 
+        canDrag: isDraggable && gameStatus === 'in_progress',
         collect: (monitor) => ({
             isDragging: monitor.isDragging(),
         }),

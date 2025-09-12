@@ -14,7 +14,7 @@ function Tile({ x, y, letter, moveLetter, boardAtStartOfTurn, myPlayerIndex, cur
   // 1. Je aktuálne na ťahu hráč (currentPlayerIndex === myPlayerIndex)
   // 2. A písmeno nebolo na doske na začiatku ťahu (tzn. bolo položené v tomto ťahu)
   // KLÚČOVÁ ZMENA: isActionInProgress ODSTRÁNENÉ z canTileBeDragged
-  const canTileBeDragged = letter !== null && (boardAtStartOfTurn[x][y] === null) && (myPlayerIndex === currentPlayerIndex);
+  const canTileBeDragged = letter !== null && (boardAtStartOfTurn[x][y] === null) && (myPlayerIndex === currentPlayerIndex) && gameStatus === 'in_progress';
 
   const [{ isOver, canDrop }, drop] = useDrop({
     accept: 'LETTER',
@@ -119,6 +119,7 @@ function Tile({ x, y, letter, moveLetter, boardAtStartOfTurn, myPlayerIndex, cur
           selectedLetter={selectedLetter} // NOVÉ: Posielame vybrané písmeno
           onTapLetter={onTapLetter}     // NOVÉ: Posielame handler pre ťuknutie na písmeno
           isActionInProgress={isActionInProgress} // KLÚČOVÁ ZMENA: Posielame isActionInProgress do Letter (stále potrebné pre pravé kliknutie v Letter)
+          gameStatus={gameStatus} // Posielame stav hry do Letter
         />
       )}
       {!letter && bonusType && (

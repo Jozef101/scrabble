@@ -25,6 +25,7 @@ function useGameLogic(socket, gameId, myPlayerIndex, slovakWordsSet, gameState, 
   const [isActionInProgress, setIsActionInProgress] = useState(false);
   const [pendingBingo, setPendingBingo] = useState(false);
   const prevGameStatusRef = useRef(gameState.gameStatus);
+  const prevTurnInfoRef = useRef();
 
   // Kľúčová zmena: slovník sa už nealokuje, ale použije sa prijatý parameter
   const validWordsSet = useRef(slovakWordsSet);
@@ -589,12 +590,29 @@ function useGameLogic(socket, gameId, myPlayerIndex, slovakWordsSet, gameState, 
   }, [gameState.gameStatus, gameState.currentPlayerIndex, pendingBingo, myPlayerIndex, addToast]);
 
   useEffect(() => {
-    // Zobrazí notifikáciu po tom, čo súper schváli ťah
-    if (gameState.lastTurnInfo && gameState.lastTurnInfo.playerIndex === myPlayerIndex && gameState.lastTurnInfo.type === 'approved') {
-      const { score, words } = gameState.lastTurnInfo;
-      addToast(`Súper ťah schválil. Dostávaš ${score} bodov za slovo(á) ${words.join(', ')}`, 'success');
-    }
-  }, [gameState.lastTurnInfo, myPlayerIndex, addToast]);
+    // Tento efekt spracuje VŽDY NOVÚ informáciu o poslednom dokončenom ťahu
+    if (gameState.lastTurnInfo && gameState.lastTurnInfo !== prevTurnInfoRef.current) {
+      const { playerIndex, opponentIndex, score, words, type } = gameState.lastTurnInfo;
+
+      // Notifikácia pre hráča, ktorého ťah bol práve vyhodnotený
+      if (playerIndex === myPlayerIndex) {
+        if (type === 'approved') {
+          addToast(`Súper ťah schválil. Dostávaš ${score} bodov za slovo(á) ${words.join(', ')}`, 'success');
+        } else if (type === 'rejected') {
+          addToast(`Súper zamietol tvoje slovo(á): "${words.join(', ')}"`, 'error');
+        }
+      } 
+      // Notifikácia pre súpera, ktorý práve rozhodol
+      else if (opponentIndex === myPlayerIndex) {
+        if (type === 'rejected') {
+          addToast('Zamietol si súperov ťah.', 'info');
+        }
+      }
+
+      // Zapamätáme si, že sme túto informáciu už spracovali.
+      prevTurnInfoRef.current = gameState.lastTurnInfo;
+    }
+  }, [gameState.lastTurnInfo, myPlayerIndex, addToast]);
 
   return {
     gameState,
