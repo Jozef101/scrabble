@@ -150,13 +150,13 @@ function LobbyPage({ userId, currentUserNickname, onStartGame, db, appId }) {
 
         return {
             myOngoingGames: games.filter(game =>
-                userIsInGame(game) && (game.status === 'waiting' || game.status === 'in-progress')
+                userIsInGame(game) && (game.status !== 'finished')
             ),
             waitingToJoin: games.filter(game =>
                 !userIsInGame(game) && game.status === 'waiting' && game.players.length < 2
             ),
             allOngoingGames: games.filter(game =>
-                game.status === 'waiting' || game.status === 'in-progress'
+                game.status !== 'finished'
             ),
             myFinishedGames: games.filter(game =>
                 userIsInGame(game) && game.status === 'finished'
