@@ -139,19 +139,19 @@ function GamePage({ gameId, userId, onGoToLobby, slovakWordsSet, db }) {
     selectedLetter,
     handleTapLetter,
     handleTapSlot,
-  } = useTapToMove(moveLetter, gameState, myPlayerIndex, isActionInProgress, setIsActionInProgress);
+  } = useTapToMove(moveLetter, gameState, myPlayerIndex, isActionInProgress, setIsActionInProgress, gameState.gameStatus);
 
   const handleApproveTurn = useCallback(() => {
-    if (socket) {
-      sendPlayerAction(socket, gameId, 'resolveTurnValidation', { approved: true });
-    }
-  }, [socket, gameId]);
+    if (socket) {
+      sendPlayerAction(socket, gameId, 'resolveTurnValidation', { approved: true });
+    }
+  }, [socket, gameId]);
 
-  const handleRejectTurn = useCallback(() => {
-    if (socket) {
-      sendPlayerAction(socket, gameId, 'resolveTurnValidation', { approved: false });
-    }
-  }, [socket, gameId]);
+  const handleRejectTurn = useCallback(() => {
+    if (socket) {
+      sendPlayerAction(socket, gameId, 'resolveTurnValidation', { approved: false });
+    }
+  }, [socket, gameId]);
 
   const {
     letterBag,

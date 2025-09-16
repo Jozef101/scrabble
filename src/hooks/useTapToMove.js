@@ -1,10 +1,14 @@
 // src/hooks/useTapToMove.js
 import { useState, useCallback } from 'react';
 
-function useTapToMove(moveLetter, gameState, myPlayerIndex) {
+function useTapToMove(moveLetter, gameState, myPlayerIndex, isActionInProgress, setIsActionInProgress, gameStatus) {
   const [selectedLetter, setSelectedLetter] = useState(null);
 
   const handleTapLetter = useCallback((letterData, source) => {
+    if (gameStatus === 'AWAITING_WORD_VALIDATION') {
+      return;
+    }
+
     console.log('useTapToMove: handleTapLetter called:', { letterData, source });
     if (gameState.isGameOver || myPlayerIndex === null) {
       console.log("Nemôžeš presúvať písmená (hra skončila, nie si pripojený alebo nie je tvoj ťah).");
@@ -49,9 +53,13 @@ function useTapToMove(moveLetter, gameState, myPlayerIndex) {
     } else if (source.type === 'exchangeZone' && gameState.currentPlayerIndex === myPlayerIndex) {
       setSelectedLetter({ letterData, source });
     }
-  }, [selectedLetter, moveLetter, gameState, myPlayerIndex]);
+  }, [selectedLetter, moveLetter, gameState, myPlayerIndex, gameStatus]);
 
   const handleTapSlot = useCallback((target) => {
+    if (gameStatus === 'AWAITING_WORD_VALIDATION') {
+      return;
+    }
+
     if (gameState.isGameOver || myPlayerIndex === null) {
       console.log("Nemôžeš presúvať písmená (hra skončila alebo nie si pripojený alebo nie je tvoj ťah).");
       setSelectedLetter(null);
@@ -71,7 +79,7 @@ function useTapToMove(moveLetter, gameState, myPlayerIndex) {
     } else {
       console.log("Ťukol(a) si na prázdny slot, ale nemáš vybrané žiadne písmeno.");
     }
-  }, [selectedLetter, moveLetter, gameState, myPlayerIndex]);
+  }, [selectedLetter, moveLetter, gameState, myPlayerIndex, gameStatus]);
 
   return {
     selectedLetter,
