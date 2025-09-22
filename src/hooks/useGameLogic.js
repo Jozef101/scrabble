@@ -66,12 +66,23 @@ function useGameLogic(socket, gameId, myPlayerIndex, slovakWordsSet, gameState, 
       // }
     };
 
+    const handleTimeUpdate = ({ playerTimes }) => {
+        setGameState((prevState) => ({
+            ...prevState,
+            playerTimes: playerTimes,
+        }));
+    };
+
     socket.on('gameStateUpdate', handleGameStateUpdate);
     // socket.on('moveLetter', handleMoveLetterAction); // Pridali sme nový listener
 
+    socket.on('timeUpdate', handleTimeUpdate);
+
     return () => {
-      socket.off('gameStateUpdate', handleGameStateUpdate);
-      // socket.off('moveLetter', handleMoveLetterAction); // Nezabudneme ho pri odpojení odstrániť
+        socket.off('gameStateUpdate', handleGameStateUpdate);
+        socket.off('timeUpdate', handleTimeUpdate);
+
+        // socket.off('moveLetter', handleMoveLetterAction); // Nezabudneme ho pri odpojení odstrániť
     };
   }, [socket, setGameState, myPlayerIndex]);
 

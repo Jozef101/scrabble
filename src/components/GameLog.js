@@ -105,36 +105,36 @@ function GameLog({ db, gameId, playerNicknames }) {
                                             <span className="log-icon">🏁</span>
                                             <div>
                                                 <strong>Hra sa skončila!</strong>
-
                                                 <div className="game-over-details">
-                                                    {turn.reason === 'surrender' ? (
-                                                        <span>
-                                                            Hráč <strong>{playerNicknames[turn.loserIndex]}</strong> sa vzdal. 
-                                                            Víťazom je <strong>{playerNicknames[turn.winnerIndex]}</strong>.
-                                                        </span>
-                                                    ) : (
-                                                        <span>
-                                                            Víťazom je <strong>{playerNicknames[turn.winnerIndex] || 'Neznámy hráč'}</strong> 
-                                                            s finálnym skóre <strong>{turn.finalScores[0]} : {turn.finalScores[1]}</strong>.
-                                                        </span>
-                                                    )}
+                                                    {(() => {
+                                                        const winner = playerNicknames[turn.winnerIndex];
+                                                        const loserIndex = turn.winnerIndex !== null ? 1 - turn.winnerIndex : null;
+                                                        const loser = playerNicknames[loserIndex];
+                                                        
+                                                        if (turn.reason === 'surrender') {
+                                                            return <span>Hráč <strong>{loser}</strong> sa vzdal. Víťazom je <strong>{winner}</strong>.</span>;
+                                                        }
+                                                        if (turn.reason === 'timeout') {
+                                                            return <span>Hra skončila, pretože hráčovi <strong>{loser}</strong> vypršal čas. Víťazom je <strong>{winner}</strong>.</span>;
+                                                        }
+                                                        // Predvolený prípad pre 'standard_end' alebo 'pass_end'
+                                                        return (
+                                                            <span>
+                                                                Víťazom je <strong>{winner || 'Hráč'}</strong> s finálnym skóre <strong>{turn.finalScores[0]} : {turn.finalScores[1]}</strong>.
+                                                            </span>
+                                                        );
+                                                    })()}
                                                 </div>
-
-                                                {(turn.reason === 'standard_end' || turn.reason === 'pass_end') && (
+                                                
+                                                {(turn.reason === 'standard_end' || turn.reason === 'pass_end' || turn.reason === 'timeout') && (
                                                     <div className="game-over-deductions">
                                                         <span>Upravené skóre:</span>
                                                         <ul>
                                                             <li>
-                                                                {playerNicknames[0] || 'Hráč 1'}: 
-                                                                {turn.initialScores[0]} - {turn.deductions[0]} bodov
-                                                                {turn.bonus > 0 && turn.finishingPlayerIndex === 0 ? ` + ${turn.bonus} (bonus)` : ''} 
-                                                                = <strong>{turn.finalScores[0]}</strong>
+                                                                {playerNicknames[0] || 'Hráč 1'}: {turn.initialScores[0]} - {turn.deductions[0]} bodov{turn.bonus > 0 && turn.finishingPlayerIndex === 0 ? ` + ${turn.bonus} (bonus)` : ''} = <strong>{turn.finalScores[0]}</strong>
                                                             </li>
                                                             <li>
-                                                                {playerNicknames[1] || 'Hráč 2'}: 
-                                                                {turn.initialScores[1]} - {turn.deductions[1]} bodov 
-                                                                {turn.bonus > 0 && turn.finishingPlayerIndex === 1 ? ` + ${turn.bonus} (bonus)` : ''} 
-                                                                = <strong>{turn.finalScores[1]}</strong>
+                                                                {playerNicknames[1] || 'Hráč 2'}: {turn.initialScores[1]} - {turn.deductions[1]} bodov {turn.bonus > 0 && turn.finishingPlayerIndex === 1 ? ` + ${turn.bonus} (bonus)` : ''} = <strong>{turn.finalScores[1]}</strong>
                                                             </li>
                                                         </ul>
                                                     </div>

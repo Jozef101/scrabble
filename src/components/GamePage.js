@@ -142,12 +142,14 @@ function GamePage({ gameId, userId, onGoToLobby, slovakWordsSet, db }) {
   } = useTapToMove(moveLetter, gameState, myPlayerIndex, isActionInProgress, setIsActionInProgress, gameState.gameStatus);
 
   const handleApproveTurn = useCallback(() => {
+    setIsActionInProgress(true);
     if (socket) {
       sendPlayerAction(socket, gameId, 'resolveTurnValidation', { approved: true });
     }
   }, [socket, gameId]);
 
   const handleRejectTurn = useCallback(() => {
+    setIsActionInProgress(true);
     if (socket) {
       sendPlayerAction(socket, gameId, 'resolveTurnValidation', { approved: false });
     }
@@ -315,6 +317,7 @@ function GamePage({ gameId, userId, onGoToLobby, slovakWordsSet, db }) {
               playerElo={playerElo}
               myPlayerIndex={myPlayerIndex}
               gameMode={gameState.gameMode}
+              playerTimes={gameState.playerTimes}
             />
             <LetterBag remainingLettersCount={letterBag.length} />
             {!gameState.gameStatus && (
@@ -432,8 +435,8 @@ function GamePage({ gameId, userId, onGoToLobby, slovakWordsSet, db }) {
                         <h4>Súper zahral slovo, ktoré nie je v slovníku: "{gameState.pendingTurn.unverifiedWords.join(', ')}"</h4>
                         <p>Prajete si tento ťah schváliť?</p>
                         <div className='validation-buttons'>
-                          <button onClick={handleApproveTurn} className="approve-turn-button">Schváliť</button>
-                        <button onClick={handleRejectTurn} className="reject-turn-button">Zamietnuť</button>
+                          <button onClick={handleApproveTurn} className="approve-turn-button" disabled={isActionInProgress}>Schváliť</button>
+                        <button onClick={handleRejectTurn} className="reject-turn-button" disabled={isActionInProgress}>Zamietnuť</button>
                         </div>
                         
                       </>

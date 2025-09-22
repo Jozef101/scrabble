@@ -20,6 +20,7 @@ function LobbyPage({ userId, currentUserNickname, onStartGame, db, appId }) {
     const [filter, setFilter] = useState('myOngoingGames');
     const [confirmation, setConfirmation] = useState({ isOpen: false, message: '', onConfirm: null });
     const [gameMode, setGameMode] = useState('competitive');
+    const [timeLimit, setTimeLimit] = useState(null);
 
     useEffect(() => {
         if (!db) {
@@ -71,6 +72,7 @@ function LobbyPage({ userId, currentUserNickname, onStartGame, db, appId }) {
                 scores: [0, 0],
                 progress: 0,
                 gameMode: gameMode,
+                timeLimitMinutes: timeLimit,
             });
             setError('');
             onStartGame(newGameRef.id);
@@ -185,6 +187,23 @@ function LobbyPage({ userId, currentUserNickname, onStartGame, db, appId }) {
                             <span className="slider round"></span>
                         </label>
                         <span className={gameMode === 'competitive' ? 'active' : ''}>Kompetitívna</span>
+                    </div>
+                </div>
+                <div className="time-limit-selection">
+                    <label>Časový limit pre hráča:</label>
+                    <div className="time-options">
+                        <button
+                            className={timeLimit === null ? 'active' : ''} 
+                            onClick={() => setTimeLimit(null)}
+                        >
+                            Bez limitu
+                        </button>
+                        <button 
+                            className={timeLimit === 15 ? 'active' : ''} 
+                            onClick={() => setTimeLimit(15)}
+                        >
+                            15 minút
+                        </button>
                     </div>
                 </div>
                 <button onClick={() => openConfirmation('Naozaj chcete vytvoriť novú hru?', handleCreateGame)} className="create-game-button">

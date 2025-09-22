@@ -1,71 +1,88 @@
 .scoreboard-container {
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   width: 100%;
-  max-width: 600px; /* Prispôsobte šírku podľa potreby */
+  max-width: 600px;
   margin-bottom: 20px;
   padding: 10px;
   background-color: #f0f0f0;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   align-items: center;
+  gap: 10px;
 }
 
-.player-score {
-  font-size: 20px;
-  font-weight: bold;
-  padding: 8px 15px;
-  border-radius: 5px;
+.player-info-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 10px;
+  border-radius: 8px;
   background-color: #e9e9e9;
   color: #555;
   transition: all 0.3s ease;
+  flex: 1;
+    /* Kľúčová vlastnosť, aby boli oba boxy rovnako veľké */
+    min-height: 90px;
+    /* Zabezpečí rovnakú výšku */
 }
 
-.player-score.active-player {
-  background-color: #4CAF50; /* Zelená farba pre aktívneho hráča */
+.player-info-box.active-player {
+  background-color: #4CAF50;
   color: white;
   box-shadow: 0 0 10px rgba(76, 175, 80, 0.5);
   transform: scale(1.05);
+}
+.player-name {
+  font-size: 1.1em;
+  font-weight: 600;
+  color: #6c757d;
+}
+
+.player-score {
+  font-size: 2em;
+  font-weight: 700;
+}
+
+.player-timer {
+  font-size: 1.1em;
+  font-weight: 600;
+  font-family: 'Courier New', Courier, monospace;
+}
+
+.player-info-box.active-player .player-name {
+  color: #f0f0f0;
+}
+
+.player-info-box.active-player .player-score,
+.player-info-box.active-player .player-timer {
+  color: white;
 }
 .game-mode-display {
   padding: 4px 12px;
   border-radius: 12px;
   font-weight: 600;
-  font-size: 0.9em;
+  font-size: 0.8em;
   text-align: center;
-  margin: 0 15px;
   flex-shrink: 0;
   border: 1px solid transparent;
 }
-
-/* Štýl pre kompetitívnu hru */
 .game-mode-display-competitive {
   background-color: #fffbeb;
   color: #b45309;
   border-color: #fde68a;
 }
-
-/* Štýl pre priateľskú hru */
 .game-mode-display-friendly {
   background-color: #f0fdf4;
   color: #15803d;
   border-color: #a7f3d0;
 }
-
 @media (max-width: 768px) {
-
-    .scoreboard-container {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 8px;
-      }
-    
-      .player-score {
-        text-align: center;
-      }
-    
-      .game-mode-display {
-        margin: 0 auto;
-        width: fit-content;
-      }
+  .scoreboard-container {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 8px;
     }
+}
