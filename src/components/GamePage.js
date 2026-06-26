@@ -372,18 +372,12 @@ function GamePage({ gameId, userId, onGoToLobby, slovakWordsSet, db }) {
                 {/* Tlačidlo sa zobrazí len mne a len vtedy, ak som ešte nelosoval */}
                 {myPlayerIndex !== null && gameState.turnDraw && gameState.turnDraw[myPlayerIndex] === null && (
                     <>
-                        <button 
-                            onClick={handleDrawForTurn} 
+                        <button
+                            onClick={handleDrawForTurn}
                             className="draw-button"
-                            disabled={!isOpponentPresent}
                         >
                             Vylosovať písmeno
                         </button>
-                        {!isOpponentPresent && (
-                            <p className="waiting-for-opponent-draw">
-                                Tlačidlo bude aktívne, keď sa do hry zaregistruje druhý hráč.
-                            </p>
-                        )}
                     </>
                 )}
 
