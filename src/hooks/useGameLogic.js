@@ -13,7 +13,7 @@ import {
   isWordContiguousOnBoard,
 } from '../utils/gameLogic';
 import { RACK_SIZE } from '../utils/constants';
-import { moveLetter as importedMoveLetter, applyMoveLetter } from '../utils/moveLetterLogic';
+import { moveLetter as importedMoveLetter } from '../utils/moveLetterLogic';
 import { sendPlayerAction } from '../utils/socketHandlers';
 import { useToastContext } from '../App';
 
@@ -53,17 +53,6 @@ function useGameLogic(socket, gameId, myPlayerIndex, slovakWordsSet, gameState, 
         setGameState(newGameState);
       }
       setIsActionInProgress(false);
-    };
-
-    // NOVÝ LISTENER: Pre malé, rýchle akcie presunu písmena
-    const handleMoveLetterAction = (action) => {
-      
-      // Akciu aplikujeme iba vtedy, ak prišla od iného hráča.
-      // Naše vlastné pohyby sú už aplikované lokálne ("optimisticky").
-      // Server nám do akcie pridá 'playerIndex', aby sme to vedeli rozlíšiť.
-      // if (action.playerIndex !== myPlayerIndex) {
-      //   setGameState(prevState => applyMoveLetter(prevState, action));
-      // }
     };
 
     const handleTimeUpdate = ({ playerTimes }) => {
@@ -379,6 +368,7 @@ function useGameLogic(socket, gameId, myPlayerIndex, slovakWordsSet, gameState, 
 
       sendPlayerAction(socket, gameId, 'updateGameState', updatedGameState);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gameState, myPlayerIndex, socket, gameId, validWordsSet, isActionInProgress]);
 
   const handleExchangeLetters = useCallback(() => {
@@ -484,6 +474,7 @@ function useGameLogic(socket, gameId, myPlayerIndex, slovakWordsSet, gameState, 
     // -------------------------------
 
     sendPlayerAction(socket, gameId, 'updateGameState', updatedGameState);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gameState, myPlayerIndex, socket, gameId, isActionInProgress]);
 
   const handlePassTurn = useCallback(() => {
@@ -572,6 +563,7 @@ function useGameLogic(socket, gameId, myPlayerIndex, slovakWordsSet, gameState, 
     // ---------------------------------
 
     sendPlayerAction(socket, gameId, 'updateGameState', updatedGameState);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gameState, myPlayerIndex, socket, gameId, isActionInProgress]);
 
    const handleSurrender = useCallback(() => {
@@ -592,6 +584,7 @@ function useGameLogic(socket, gameId, myPlayerIndex, slovakWordsSet, gameState, 
       surrenderingPlayerIndex: myPlayerIndex,
     });
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gameState.isGameOver, myPlayerIndex, socket, gameId, isActionInProgress]);
 
   const handleDrawForTurn = useCallback(() => {

@@ -55,7 +55,8 @@ const ChatWindow = forwardRef(({ chatMessages, newChatMessage, myPlayerIndex, ha
         onScrollStateChange();
       }
     }
-  }, []); // Prázdne pole závislostí zabezpečí, že sa spustí len raz
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleScroll = () => {
     const element = chatMessagesContainerRef.current;

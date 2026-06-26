@@ -1,7 +1,6 @@
 // src/components/UserMenuIcon.js
 import React, { useState } from 'react';
 import { signOut } from 'firebase/auth'; // Import signOut funkcie
-import { useNavigate } from 'react-router-dom'; // Pre navigáciu na profil (neskôr)
 import '../styles/UserMenuIcon.css'; // Import nového CSS súboru pre UserMenuIcon
 
 /**
@@ -14,7 +13,6 @@ import '../styles/UserMenuIcon.css'; // Import nového CSS súboru pre UserMenuI
  */
 function UserMenuIcon({ userId, auth }) {
     const [showUserMenu, setShowUserMenu] = useState(false);
-    const navigate = useNavigate(); // Hook pre navigáciu
 
     // Funkcia pre odhlásenie používateľa
     const handleLogout = async () => {

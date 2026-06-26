@@ -146,6 +146,7 @@ function GamePage({ gameId, userId, onGoToLobby, slovakWordsSet, db }) {
     if (socket) {
       sendPlayerAction(socket, gameId, 'resolveTurnValidation', { approved: true });
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [socket, gameId]);
 
   const handleRejectTurn = useCallback(() => {
@@ -153,6 +154,7 @@ function GamePage({ gameId, userId, onGoToLobby, slovakWordsSet, db }) {
     if (socket) {
       sendPlayerAction(socket, gameId, 'resolveTurnValidation', { approved: false });
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [socket, gameId]);
 
   const {
@@ -288,7 +290,7 @@ function GamePage({ gameId, userId, onGoToLobby, slovakWordsSet, db }) {
   const topPlayerIndex = myPlayerIndex !== null ? myPlayerIndex : 0;
   const bottomPlayerIndex = myPlayerIndex !== null ? 1 - myPlayerIndex : 1;
 
-  const isOpponentPresent = gameState.players && gameState.players[0] && gameState.players[1];
+
 
   return (
     <DndProvider backend={HTML5Backend}>

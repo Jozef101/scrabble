@@ -1,8 +1,7 @@
 // src/components/AuthPage.js
 import React, { useState } from 'react';
-import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
-// KLÚČOVÁ ZMENA: Importy pre Firestore
-import { doc, setDoc, runTransaction } from 'firebase/firestore';
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
+import { doc, runTransaction } from 'firebase/firestore';
 import '../styles/AuthPage.css'; // Import štýlov pre AuthPage
 
 /**

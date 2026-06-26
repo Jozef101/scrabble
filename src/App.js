@@ -1,6 +1,6 @@
 // src/App.js
 /* global __app_id, __firebase_config, __initial_auth_token */
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { Routes, Route, useNavigate, useParams, useLocation } from 'react-router-dom';

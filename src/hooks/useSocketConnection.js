@@ -86,7 +86,8 @@ function useSocketConnection(gameId, userId, setGameState, displayMessage) {
       setSocket(null); // Resetujeme stav socketu
       hasJoinedGameRef.current = false; // Resetujeme ref
     };
-  }, [gameId, userId, setGameState, displayMessage]); // Dôležité: závislosti pre useEffect
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [gameId, userId, setGameState, displayMessage]);
 
   return {
     socket,
