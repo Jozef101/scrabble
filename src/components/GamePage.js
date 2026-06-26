@@ -318,6 +318,8 @@ function GamePage({ gameId, userId, onGoToLobby, slovakWordsSet, db }) {
               myPlayerIndex={myPlayerIndex}
               gameMode={gameState.gameMode}
               playerTimes={gameState.playerTimes}
+              gameStatus={gameState.gameStatus}
+              turnDraw={gameState.turnDraw}
             />
             <LetterBag remainingLettersCount={letterBag.length} />
             {!gameState.gameStatus && (

@@ -21,6 +21,8 @@ function Scoreboard({
     myPlayerIndex,
     gameMode,
     playerTimes,
+    gameStatus,
+    turnDraw,
 }) {
     const formatTime = (seconds) => {
         if (seconds === null || seconds === undefined) return '--:--';
@@ -32,7 +34,7 @@ function Scoreboard({
     };
     return (
 		<div className="scoreboard-container">
-			<div className={`player-info-box ${currentPlayerIndex === 0 ? 'active-player' : ''}`}>
+			<div className={`player-info-box ${currentPlayerIndex === 0 || (gameStatus === 'drawing_for_turn' && turnDraw && turnDraw[0] === null) ? 'active-player' : ''}`}>
 				<div className="player-name">
 					{playerNicknames[0] || 'Hráč 1'} {playerElo[0] ? `(${playerElo[0]})` : ''}
 				</div>
@@ -46,7 +48,7 @@ function Scoreboard({
 				{gameMode === 'competitive' ? '🏆 Kompetitívna' : '😊 Priateľská'}
 			</div>
 		
-			<div className={`player-info-box ${currentPlayerIndex === 1 ? 'active-player' : ''}`}>
+			<div className={`player-info-box ${currentPlayerIndex === 1 || (gameStatus === 'drawing_for_turn' && turnDraw && turnDraw[1] === null) ? 'active-player' : ''}`}>
 				<div className="player-name">
 					{playerNicknames[1] || 'Hráč 2'} {playerElo[1] ? `(${playerElo[1]})` : ''}
 				</div>

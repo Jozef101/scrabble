@@ -271,7 +271,10 @@ function LobbyPage({ userId, currentUserNickname, onStartGame, db, appId }) {
                             return (
                                 <div
                                     key={game.id}
-                                    className={`game-item-wrapper ${game.currentPlayerIndex !== undefined && game.players[game.currentPlayerIndex]?.id === userId && game.status !== 'finished' ? 'my-turn-highlight' : ''} ${resultClass}`}
+                                    className={`game-item-wrapper ${(
+    (game.currentPlayerIndex !== undefined && game.players[game.currentPlayerIndex]?.id === userId && game.status !== 'finished') ||
+    (game.gameStatus === 'drawing_for_turn' && game.players.some((p, idx) => p?.id === userId && game.turnDraw?.[idx] === null) && game.status !== 'finished')
+) ? 'my-turn-highlight' : ''} ${resultClass}`}
                                     onClick={() => {
                                         const isAlreadyPlayer = game.players.some(p => p.id === userId);
 
