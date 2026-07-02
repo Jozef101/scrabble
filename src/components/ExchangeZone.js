@@ -4,7 +4,7 @@ import Letter from './Letter';
 import '../styles/ExchangeZone.css';
 
 // Pridávame selectedLetter, onTapLetter, onTapSlot ako prop
-function ExchangeZone({ lettersInZone, moveLetter, myPlayerIndex, currentPlayerIndex, selectedLetter, onTapLetter, onTapSlot, isActionInProgress, onRightClick }) {  const [{ isOver, canDrop: dropAllowed }, drop] = useDrop({ // Premenované canDrop na dropAllowed
+function ExchangeZone({ lettersInZone, moveLetter, myPlayerIndex, currentPlayerIndex, selectedLetter, onTapLetter, onTapSlot, isActionInProgress, onRightClick, gameStatus }) {  const [{ isOver, canDrop: dropAllowed }, drop] = useDrop({ // Premenované canDrop na dropAllowed
     accept: 'LETTER',
     canDrop: (item) => {
       // Povoliť drop iba ak je na ťahu správny hráč
@@ -57,7 +57,8 @@ function ExchangeZone({ lettersInZone, moveLetter, myPlayerIndex, currentPlayerI
               selectedLetter={selectedLetter}
               onTapLetter={onTapLetter}
               onRightClick={onRightClick}
-              isActionInProgress={isActionInProgress} // KLÚČOVÁ ZMENA: Posielame isActionInProgress do Letter (stále potrebné pre pravé kliknutie v Letter)
+              isActionInProgress={isActionInProgress}
+              gameStatus={gameStatus}
             />
           ))
         )}

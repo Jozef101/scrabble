@@ -501,6 +501,7 @@ function GamePage({ gameId, userId, onGoToLobby, slovakWordsSet, db }) {
                       onTapSlot={handleTapSlot}
                       onRightClick={handleRightClickFromExchangeZone}
                       isActionInProgress={isActionInProgress}
+                      gameStatus={gameState.gameStatus}
                     />
                   )}
                   <div className="player-rack-section">
