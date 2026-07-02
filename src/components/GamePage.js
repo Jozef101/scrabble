@@ -263,6 +263,45 @@ function GamePage({ gameId, userId, onGoToLobby, slovakWordsSet, db }) {
     onGoToLobby();
   };
 
+  const handleReturnAllToRack = () => {
+    if (myPlayerIndex === null || gameState.isGameOver) return;
+    const placedOnBoard = [];
+    for (let x = 0; x < gameState.board.length; x++) {
+      for (let y = 0; y < gameState.board[x].length; y++) {
+        if (gameState.board[x][y] !== null && gameState.boardAtStartOfTurn[x][y] === null) {
+          placedOnBoard.push({ letter: gameState.board[x][y], x, y });
+        }
+      }
+    }
+    const inExchangeZone = [...gameState.exchangeZoneLetters];
+    if (placedOnBoard.length === 0 && inExchangeZone.length === 0) return;
+
+    let newBoard = gameState.board.map(row => [...row]);
+    let newRack = [...(gameState.playerRacks[myPlayerIndex] || [])];
+    for (const { letter, x, y } of placedOnBoard) {
+      newBoard[x][y] = null;
+      const slot = newRack.findIndex(s => s === null);
+      if (slot !== -1) newRack[slot] = letter;
+    }
+    for (const letter of inExchangeZone) {
+      const slot = newRack.findIndex(s => s === null);
+      if (slot !== -1) newRack[slot] = letter;
+    }
+
+    setGameState(prev => ({
+      ...prev,
+      board: newBoard,
+      playerRacks: prev.playerRacks.map((r, i) => i === myPlayerIndex ? newRack : r),
+      exchangeZoneLetters: [],
+      hasPlacedOnBoardThisTurn: false,
+      hasMovedToExchangeZoneThisTurn: false,
+    }));
+
+    if (socket) {
+      sendPlayerAction(socket, gameId, 'returnAllToRack', {});
+    }
+  };
+
   const handleRightClickFromExchangeZone = (letterData, source) => {
     // Kontrolujeme, či je na ťahu aktuálny hráč a nie je divák
     if (myPlayerIndex === null || gameState.currentPlayerIndex !== myPlayerIndex) {
@@ -410,7 +449,16 @@ function GamePage({ gameId, userId, onGoToLobby, slovakWordsSet, db }) {
               <div className="right-panel-column">
                 <div className="player-racks-container">
                   <div className="player-rack-section">
-                      <h3>{playerNicknames[topPlayerIndex] || `Hráč ${topPlayerIndex + 1}`} Rack:</h3>
+                      <div className="rack-label-row">
+                        <h3>{playerNicknames[topPlayerIndex] || `Hráč ${topPlayerIndex + 1}`} Rack:</h3>
+                        {topPlayerIndex === myPlayerIndex && (
+                          <button
+                            className="return-to-rack-button"
+                            onClick={handleReturnAllToRack}
+                            disabled={!gameState.hasPlacedOnBoardThisTurn && gameState.exchangeZoneLetters.length === 0}
+                          >↩ Vrátiť</button>
+                        )}
+                      </div>
                       <PlayerRack
                           letters={playerRacks[topPlayerIndex]}
                           moveLetter={moveLetter}
