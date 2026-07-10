@@ -133,9 +133,9 @@ export const moveLetter = ({
     // 1. Vytvoríme akčný objekt
     const action = { letterData, source, target, playerIndex: myPlayerIndex };
 
-    // 2. Optimisticky aplikujeme zmenu na lokálny stav pomocou našej novej funkcie
-    const newGameState = applyMoveLetter(gameState, action);
-    setGameState(newGameState);
+    // 2. Optimisticky aplikujeme zmenu na lokálny stav pomocou funkcionálnej formy setState.
+    // Dôvod: pri rýchlych ťahoch (pred re-renderom) by sa inak použil stale gameState zo closure.
+    setGameState(prevState => applyMoveLetter(prevState, action));
 
     // 3. Pošleme malý akčný objekt na server
     sendPlayerAction(socket, gameIdToJoin, 'moveLetter', {

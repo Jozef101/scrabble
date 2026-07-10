@@ -265,38 +265,44 @@ function GamePage({ gameId, userId, onGoToLobby, slovakWordsSet, db }) {
 
   const handleReturnAllToRack = () => {
     if (myPlayerIndex === null || gameState.isGameOver) return;
-    const placedOnBoard = [];
-    for (let x = 0; x < gameState.board.length; x++) {
-      for (let y = 0; y < gameState.board[x].length; y++) {
-        if (gameState.board[x][y] !== null && gameState.boardAtStartOfTurn[x][y] === null) {
-          placedOnBoard.push({ letter: gameState.board[x][y], x, y });
+
+    // Všetka výpočtová logika je vnútri prev => aby sme vždy pracovali
+    // s aktuálnym stavom — nie so stale hodnotami zo closure.
+    setGameState(prev => {
+      const placedOnBoard = [];
+      for (let x = 0; x < prev.board.length; x++) {
+        for (let y = 0; y < prev.board[x].length; y++) {
+          if (prev.board[x][y] !== null && prev.boardAtStartOfTurn[x][y] === null) {
+            placedOnBoard.push({ letter: prev.board[x][y], x, y });
+          }
         }
       }
-    }
-    const inExchangeZone = [...gameState.exchangeZoneLetters];
-    if (placedOnBoard.length === 0 && inExchangeZone.length === 0) return;
+      const inExchangeZone = [...prev.exchangeZoneLetters];
+      if (placedOnBoard.length === 0 && inExchangeZone.length === 0) return prev;
 
-    let newBoard = gameState.board.map(row => [...row]);
-    let newRack = [...(gameState.playerRacks[myPlayerIndex] || [])];
-    for (const { letter, x, y } of placedOnBoard) {
-      newBoard[x][y] = null;
-      const slot = newRack.findIndex(s => s === null);
-      if (slot !== -1) newRack[slot] = letter;
-    }
-    for (const letter of inExchangeZone) {
-      const slot = newRack.findIndex(s => s === null);
-      if (slot !== -1) newRack[slot] = letter;
-    }
+      let newBoard = prev.board.map(row => [...row]);
+      let newRack = [...(prev.playerRacks[myPlayerIndex] || [])];
+      for (const { letter, x, y } of placedOnBoard) {
+        newBoard[x][y] = null;
+        const slot = newRack.findIndex(s => s === null);
+        if (slot !== -1) newRack[slot] = letter;
+      }
+      for (const letter of inExchangeZone) {
+        const slot = newRack.findIndex(s => s === null);
+        if (slot !== -1) newRack[slot] = letter;
+      }
 
-    setGameState(prev => ({
-      ...prev,
-      board: newBoard,
-      playerRacks: prev.playerRacks.map((r, i) => i === myPlayerIndex ? newRack : r),
-      exchangeZoneLetters: [],
-      hasPlacedOnBoardThisTurn: false,
-      hasMovedToExchangeZoneThisTurn: false,
-    }));
+      return {
+        ...prev,
+        board: newBoard,
+        playerRacks: prev.playerRacks.map((r, i) => i === myPlayerIndex ? newRack : r),
+        exchangeZoneLetters: [],
+        hasPlacedOnBoardThisTurn: false,
+        hasMovedToExchangeZoneThisTurn: false,
+      };
+    });
 
+    // Server má vlastnú kontrolu (if (!changed) break), takže volanie je vždy bezpečné.
     if (socket) {
       sendPlayerAction(socket, gameId, 'returnAllToRack', {});
     }
