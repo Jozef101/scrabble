@@ -8,7 +8,7 @@ import { Routes, Route, useNavigate, useParams, useLocation } from 'react-router
 // Firebase Imports
 import { initializeApp } from 'firebase/app';
 import { getAuth, signInWithCustomToken, onAuthStateChanged, applyActionCode } from 'firebase/auth';
-import { getFirestore, doc, getDoc } from 'firebase/firestore'; 
+import { getFirestore, doc, getDoc, collection, onSnapshot, query, orderBy } from 'firebase/firestore';
 
 // Import nových komponentov
 import AuthPage from './components/AuthPage';
@@ -18,6 +18,7 @@ import UserMenuIcon from './components/UserMenuIcon';
 import EmailVerificationPage from './components/EmailVerificationPage';
 import { ToastContainer } from './components/Toast';
 import { useToast } from './hooks/useToast';
+import { useFaviconTurnIndicator } from './hooks/useFaviconTurnIndicator';
 import { createContext, useContext } from 'react';
 
 import slovakWords from './data/slovakWords.json';
@@ -64,7 +65,8 @@ function App() {
     // const [isEmailVerified, setIsEmailVerified] = useState(false);
     // const [currentUserEmail, setCurrentUserEmail] = useState(null);
     const [currentUserNickname, setCurrentUserNickname] = useState(null);
-    const [slovakWordsSet, setSlovakWordsSet] = useState(null); 
+    const [slovakWordsSet, setSlovakWordsSet] = useState(null);
+    const [hasMyTurnSomewhere, setHasMyTurnSomewhere] = useState(false);
 
     const navigate = useNavigate();
     const location = useLocation();
@@ -202,6 +204,37 @@ function App() {
         handleEmailVerificationLink();
         }, [location.search, navigate, userId]);
 
+
+    // Sleduje, či je používateľ na ťahu v niektorej z jeho rozohraných hier —
+    // nezávisle od toho, či práve pozerá Lobby alebo je v inej hre. Používa sa
+    // na animovaný favicon (rovnaká logika ako "my-turn-highlight" v Lobby).
+    useEffect(() => {
+        if (!db || !userId) {
+            setHasMyTurnSomewhere(false);
+            return;
+        }
+
+        // Rovnaký dotaz ako v Lobby (orderBy createdAt) — Firestore mlčky vylúči
+        // dokumenty bez tohto poľa, takže staré/rozbité testovacie hry, ktoré
+        // nevidno v Lobby, neovplyvnia ani tento indikátor.
+        const gamesCollectionRef = collection(db, 'scrabbleGames');
+        const q = query(gamesCollectionRef, orderBy('createdAt', 'desc'));
+        const unsubscribe = onSnapshot(q, (snapshot) => {
+            const isMyTurn = (game) =>
+                game.status !== 'finished' &&
+                ((game.currentPlayerIndex !== undefined && game.players?.[game.currentPlayerIndex]?.id === userId) ||
+                    (game.gameStatus === 'drawing_for_turn' && game.players?.some((p, idx) => p?.id === userId && game.turnDraw?.[idx] === null)));
+
+            const someGameIsMyTurn = snapshot.docs.some(doc => isMyTurn(doc.data()));
+            setHasMyTurnSomewhere(someGameIsMyTurn);
+        }, (err) => {
+            console.error("App.js: Chyba pri sledovaní hier pre favicon indikátor:", err);
+        });
+
+        return () => unsubscribe();
+    }, [db, userId]);
+
+    useFaviconTurnIndicator(hasMyTurnSomewhere);
 
     const handleStartGame = (id) => {
         navigate(`/game/${id}`);

@@ -150,10 +150,24 @@ function LobbyPage({ userId, currentUserNickname, onStartGame, db, appId }) {
         }
         const userIsInGame = (game) => game.players.some(p => p.id === userId);
 
+        // Rovnaká podmienka ako pri "my-turn-highlight" nižšie — som na ťahu buď v bežnej
+        // hre, alebo počas losovania o prvý ťah, kým som si ešte nevylosoval písmeno.
+        const isMyTurn = (game) =>
+            (game.currentPlayerIndex !== undefined && game.players[game.currentPlayerIndex]?.id === userId) ||
+            (game.gameStatus === 'drawing_for_turn' && game.players.some((p, idx) => p?.id === userId && game.turnDraw?.[idx] === null));
+
+        // Najstaršie (tie, čo najdlhšie čakajú na náš/súperov ťah) prvé v rámci svojej skupiny.
+        const byTurnStartedAtAsc = (a, b) => (a.turnStartedAt ?? 0) - (b.turnStartedAt ?? 0);
+
         return {
-            myOngoingGames: games.filter(game =>
-                userIsInGame(game) && (game.status !== 'finished')
-            ),
+            myOngoingGames: games
+                .filter(game => userIsInGame(game) && (game.status !== 'finished'))
+                .sort((a, b) => {
+                    const aMine = isMyTurn(a);
+                    const bMine = isMyTurn(b);
+                    if (aMine !== bMine) return aMine ? -1 : 1;
+                    return byTurnStartedAtAsc(a, b);
+                }),
             waitingToJoin: games.filter(game =>
                 !userIsInGame(game) && game.status === 'waiting' && game.players.length < 2
             ),
