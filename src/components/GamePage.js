@@ -168,7 +168,14 @@ function GamePage({ gameId, userId, onGoToLobby, slovakWordsSet, db }) {
     isGameOver,
     highlightedLetters,
     playerNicknames,
+    players,
   } = gameState;
+
+  const opponentIndex = myPlayerIndex !== null ? 1 - myPlayerIndex : null;
+  const opponentPlayer = opponentIndex !== null
+    ? players?.find(p => p && p.playerIndex === opponentIndex)
+    : null;
+  const isOpponentAtTable = !!opponentPlayer?.socketId;
 
   useEffect(() => {
 }, [playerNicknames, gameState.players]);
@@ -369,9 +376,9 @@ function GamePage({ gameId, userId, onGoToLobby, slovakWordsSet, db }) {
               turnDraw={gameState.turnDraw}
             />
             <LetterBag remainingLettersCount={letterBag.length} />
-            {!gameState.gameStatus && (
+            {!isSpectator && (
               <div className="second-player-status-message">
-                <p>Druhý hráč nie je pri stole.</p>
+                <p>{isOpponentAtTable ? 'Súper je pri stole.' : 'Súper nie je pri stole.'}</p>
               </div>
             )}
             {/* Priradenie ref boardRef k hlavnému kontajneru hernej plochy */}
