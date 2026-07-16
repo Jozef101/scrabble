@@ -74,7 +74,10 @@ export const applyMoveLetter = (gameState, action) => {
             }
         }
     } else if (target.type === 'board') {
-        newBoard[target.x][target.y] = { ...letterToMove, originalRackIndex: letterData.originalRackIndex };
+        const { originalRackIndex, ...letterWithoutOriginalIndex } = letterToMove;
+        newBoard[target.x][target.y] = letterData.originalRackIndex !== undefined
+            ? { ...letterWithoutOriginalIndex, originalRackIndex: letterData.originalRackIndex }
+            : letterWithoutOriginalIndex;
     } else if (target.type === 'exchangeZone') {
         newExchangeZoneLetters.push(letterToMove);
     }
