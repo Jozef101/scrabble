@@ -264,7 +264,7 @@ function GamePage({ gameId, userId, onGoToLobby, slovakWordsSet, db }) {
   };
 
   const handleReturnAllToRack = () => {
-    if (myPlayerIndex === null || gameState.isGameOver) return;
+    if (myPlayerIndex === null || gameState.isGameOver || gameState.currentPlayerIndex !== myPlayerIndex) return;
 
     // Všetka výpočtová logika je vnútri prev => aby sme vždy pracovali
     // s aktuálnym stavom — nie so stale hodnotami zo closure.
@@ -461,7 +461,7 @@ function GamePage({ gameId, userId, onGoToLobby, slovakWordsSet, db }) {
                           <button
                             className="return-to-rack-button"
                             onClick={handleReturnAllToRack}
-                            disabled={!gameState.hasPlacedOnBoardThisTurn && gameState.exchangeZoneLetters.length === 0}
+                            disabled={(!gameState.hasPlacedOnBoardThisTurn && gameState.exchangeZoneLetters.length === 0) || gameState.currentPlayerIndex !== myPlayerIndex}
                           >↩ Vrátiť</button>
                         )}
                       </div>
