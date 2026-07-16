@@ -424,6 +424,46 @@
     background-color: #5a6268;
 }
 
+.second-player-status-message {
+    margin: 8px 0;
+    padding: 6px 16px;
+    border-radius: 20px;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.second-player-status-message p {
+    margin: 0;
+    font-weight: 600;
+}
+
+.second-player-status-message.opponent-online {
+    background-color: rgba(40, 167, 69, 0.12);
+    box-shadow: 0 0 10px 2px rgba(40, 167, 69, 0.6);
+    animation: opponent-online-pulse 2s ease-in-out infinite;
+}
+
+.second-player-status-message.opponent-online p {
+    color: #28a745;
+}
+
+.second-player-status-message.opponent-offline {
+    background-color: rgba(108, 117, 125, 0.08);
+}
+
+.second-player-status-message.opponent-offline p {
+    color: #6c757d;
+}
+
+@keyframes opponent-online-pulse {
+    0%, 100% {
+        box-shadow: 0 0 10px 2px rgba(40, 167, 69, 0.6);
+    }
+    50% {
+        box-shadow: 0 0 16px 5px rgba(40, 167, 69, 0.9);
+    }
+}
+
 .return-to-rack-button:disabled {
     background-color: #adb5bd;
     cursor: default;

@@ -377,7 +377,7 @@ function GamePage({ gameId, userId, onGoToLobby, slovakWordsSet, db }) {
             />
             <LetterBag remainingLettersCount={letterBag.length} />
             {!isSpectator && (
-              <div className="second-player-status-message">
+              <div className={`second-player-status-message ${isOpponentAtTable ? 'opponent-online' : 'opponent-offline'}`}>
                 <p>{isOpponentAtTable ? 'Súper je pri stole.' : 'Súper nie je pri stole.'}</p>
               </div>
             )}
