@@ -39,8 +39,12 @@ export const applyMoveLetter = (gameState, action) => {
         newBoard[source.x][source.y] = null;
         if (letterToMove.letter === '') letterToMove.assignedLetter = null;
     } else if (source.type === 'rack') {
-        letterToMove = { ...letterData };
-        if (newPlayerRacks[playerIndex]) {
+        // Nedôverujeme letterData ako takému — použijeme skutočný obsah racku
+        // na danom indexe, aby sme pri prípadnom stale closure nepresunuli
+        // na cieľ cudzie/duplicitné písmeno a pritom nezmazali iné.
+        const rackLetter = newPlayerRacks[playerIndex]?.[source.index];
+        if (rackLetter && rackLetter.id === letterData?.id) {
+            letterToMove = { ...rackLetter };
             newPlayerRacks[playerIndex][source.index] = null;
         }
     } else if (source.type === 'exchangeZone') {
