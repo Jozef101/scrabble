@@ -232,7 +232,7 @@ function App() {
         });
 
         return () => unsubscribe();
-    }, [db, userId]);
+    }, [userId]);
 
     useFaviconTurnIndicator(hasMyTurnSomewhere);
 
