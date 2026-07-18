@@ -33,25 +33,12 @@ function useGameLogic(socket, gameId, myPlayerIndex, slovakWordsSet, gameState, 
   useEffect(() => {
     if (!socket) return;
 
-    // Listener pre plnú aktualizáciu stavu (zostáva pre akcie ako confirmTurn, pass, atď.)
-    const handleGameStateUpdate = (newGameState) => {
-      // Špeciálna logika pre hráča, ktorý práve zamietol ťah
-      if (
-        newGameState.lastTurnInfo &&
-        newGameState.lastTurnInfo.type === 'rejected' &&
-        newGameState.lastTurnInfo.opponentIndex === myPlayerIndex
-      ) {
-        // Pre seba nastavíme stav s "čistou" hracou doskou
-        const stateForMe = {
-          ...newGameState,
-          board: newGameState.boardAtStartOfTurn,
-        };
-        setGameState(stateForMe);
-      } else {
-        // Pre všetky ostatné prípady (vrátane hráča, ktorého ťah bol zamietnutý)
-        // použijeme stav tak, ako prišiel zo servera.
-        setGameState(newGameState);
-      }
+    // Samotné setGameState pre túto udalosť rieši výhradne
+    // setupSocketListeners (src/utils/socketHandlers.js) — registruje sa tam
+    // synchrónne hneď pri vytvorení socketu, takže nemôže vzniknúť medzera,
+    // v ktorej by prvá správa po pripojení nemala kto spracovať. Tu si už len
+    // odomkneme UI po dokončení akcie.
+    const handleGameStateUpdate = () => {
       setIsActionInProgress(false);
     };
 
@@ -282,65 +269,32 @@ function useGameLogic(socket, gameId, myPlayerIndex, slovakWordsSet, gameState, 
       const finalRackAfterPlay = newRackForCurrentPlayer.filter(l => l !== null);
       const newHighlightedLetters = actualPlacedLetters.map(letter => ({ x: letter.x, y: letter.y }));
 
-      let updatedGameState;
-      if (currentBagEmpty && finalRackAfterPlay.length === 0) {
-        // Hra skončila, vypočítame finálne skóre a všetky detaily
-        const finalScoresData = calculateFinalScores(gameState.currentPlayerIndex, newScores, gameState.playerRacks, gameState.players);
+      const isGameEndingByEmptyRack = currentBagEmpty && finalRackAfterPlay.length === 0;
 
-        const turnDetails = {
-          actionType: 'placeLetters',
-          placedLetters: actualPlacedLetters.map(l => ({
-            x: l.x,
-            y: l.y,
-            letterData: l.letterData
-          })),
-          newWords: allFormedWords.map(w => w.wordString),
-          score: turnScore,
-          turnNumber: (gameState.turnNumber || 0) + 1,
-          playerIndex: myPlayerIndex,
-          timestamp: Date.now(),
-          exchangedLetters: null,
-          rackBeforeTurn: gameState.playerRacks[myPlayerIndex],
-          lettersDrawn: newLetters,
-          boardBeforeTurn: JSON.stringify(gameState.boardAtStartOfTurn),
-          boardAfterTurn: JSON.stringify(gameState.board), // Doska sa už v tomto bode nemení
-          letterBagBeforeTurn: gameState.letterBag,
-          letterBagAfterTurn: updatedBagAfterTurn,
-        };
-        sendPlayerAction(socket, gameId, 'turnSubmitted', turnDetails);
+      const updatedGameState = {
+        ...gameState,
+        letterBag: updatedBagAfterTurn,
+        playerRacks: gameState.playerRacks.map((rack, idx) => idx === gameState.currentPlayerIndex ? newRackForCurrentPlayer : rack),
+        board: gameState.board,
+        boardAtStartOfTurn: newBoardAtStartOfTurn,
+        isFirstTurn: false,
+        playerScores: newScores,
+        currentPlayerIndex: (gameState.currentPlayerIndex === 0 ? 1 : 0),
+        exchangeZoneLetters: [],
+        hasPlacedOnBoardThisTurn: false,
+        hasMovedToExchangeZoneThisTurn: false,
+        consecutivePasses: 0,
+        isGameOver: false,
+        isBagEmpty: currentBagEmpty,
+        highlightedLetters: newHighlightedLetters,
+        turnNumber: (gameState.turnNumber || 0) + 1,
+      };
 
-        // Pošleme JEDNU akciu so všetkými detailmi
-        sendPlayerAction(socket, gameId, 'gameOver', {
-            ...finalScoresData, // Tu sú: finalScores, deductions, bonus, winnerId, loserId, winnerIndex
-            initialScores: newScores, // Pošleme skóre pred úpravami
-            finishingPlayerIndex: gameState.currentPlayerIndex,
-            reason: 'standard_end'
-        });
-
-        // Zmažeme starú 'updateGameState' akciu, aby sme neposielali dáta duplicitne
-        // sendPlayerAction(socket, gameId, 'updateGameState', updatedGameState);
-        return; // DÔLEŽITÉ: Ukončíme funkciu tu
-      } else {
-        updatedGameState = {
-          ...gameState,
-          letterBag: updatedBagAfterTurn,
-          playerRacks: gameState.playerRacks.map((rack, idx) => idx === gameState.currentPlayerIndex ? newRackForCurrentPlayer : rack),
-          board: gameState.board,
-          boardAtStartOfTurn: newBoardAtStartOfTurn,
-          isFirstTurn: false,
-          playerScores: newScores,
-          currentPlayerIndex: (gameState.currentPlayerIndex === 0 ? 1 : 0),
-          exchangeZoneLetters: [],
-          hasPlacedOnBoardThisTurn: false,
-          hasMovedToExchangeZoneThisTurn: false,
-          consecutivePasses: 0,
-          isGameOver: false,
-          isBagEmpty: currentBagEmpty,
-          highlightedLetters: newHighlightedLetters,
-          turnNumber: (gameState.turnNumber || 0) + 1,
-        };
-      }
-      // --- ÚPRAVA: Uložíme log ťahu s novými informáciami. ---
+      // Jednotná schéma pre turnLogs (rovnaká pre placeLetters/pass/exchange,
+      // naprieč priamym aj schvaľovacím tokom — pozri socketHandler.js).
+      // Board/bag snapshoty sa už neukladajú — sú redundantné voči
+      // placedLetters/exchangedLetters a dajú sa z nich (spolu s rackBeforeTurn
+      // a lettersDrawn) kedykoľvek spätne dopočítať.
       const turnDetails = {
         actionType: 'placeLetters',
         placedLetters: actualPlacedLetters.map(l => ({
@@ -354,19 +308,29 @@ function useGameLogic(socket, gameId, myPlayerIndex, slovakWordsSet, gameState, 
         playerIndex: myPlayerIndex,
         timestamp: Date.now(),
         exchangedLetters: null,
-        // PRIDANÉ:
         rackBeforeTurn: gameState.playerRacks[myPlayerIndex],
         lettersDrawn: newLetters,
-        boardBeforeTurn: JSON.stringify(gameState.boardAtStartOfTurn), // Uložíme stav dosky pred ťahom
-        boardAfterTurn: JSON.stringify(updatedGameState.board),
-        letterBagBeforeTurn: gameState.letterBag,
-        letterBagAfterTurn: updatedBagAfterTurn,
-        // Uložíme stav dosky po ťahu
       };
       sendPlayerAction(socket, gameId, 'turnSubmitted', turnDetails);
       // ----------------------------
 
+      // DÔLEŽITÉ: 'updateGameState' musí ísť na server VŽDY, aj keď sa hra týmto
+      // ťahom končí — server si podľa neho autoritatívne prepočíta rack/bag/dosku
+      // a len z toho vie neskôr overiť, že 'gameOver' je oprávnený (pozri
+      // socketHandler.js, case 'gameOver'). Predtým sa pri konci hry táto akcia
+      // preskakovala, čím sa server o finálnom stave dozvedel len z klientovho
+      // (nedôveryhodného) 'gameOver' payloadu.
       sendPlayerAction(socket, gameId, 'updateGameState', updatedGameState);
+
+      if (isGameEndingByEmptyRack) {
+        const finalScoresData = calculateFinalScores(gameState.currentPlayerIndex, newScores, gameState.playerRacks, gameState.players);
+        sendPlayerAction(socket, gameId, 'gameOver', {
+            ...finalScoresData,
+            initialScores: newScores,
+            finishingPlayerIndex: gameState.currentPlayerIndex,
+            reason: 'standard_end'
+        });
+      }
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gameState, myPlayerIndex, socket, gameId, validWordsSet, isActionInProgress]);
@@ -515,21 +479,7 @@ function useGameLogic(socket, gameId, myPlayerIndex, slovakWordsSet, gameState, 
     let updatedPlayerScores = [...gameState.playerScores];
     let isGameOverCondition = (newConsecutivePasses >= 6);
 
-    if (isGameOverCondition) {
-        // Hra skončila pasovaním, vypočítame finálne skóre a detaily
-        const finalScoresData = calculateFinalScores(null, gameState.playerScores, gameState.playerRacks, gameState.players);
-
-        sendPlayerAction(socket, gameId, 'gameOver', {
-            ...finalScoresData, // Tu sú: finalScores, deductions, bonus, winnerId, loserId, winnerIndex
-            initialScores: gameState.playerScores,
-            finishingPlayerIndex: null, // Nikto aktívne nedohral
-            reason: 'pass_end'
-        });
-
-        // Zmažeme starú 'updateGameState' akciu
-        // sendPlayerAction(socket, gameId, 'updateGameState', updatedGameState);
-        return; // DÔLEŽITÉ: Ukončíme funkciu tu
-    } else {
+    if (!isGameOverCondition) {
       addToast("Ťah bol prenesený na ďalšieho hráča.");
     }
 
@@ -562,7 +512,22 @@ function useGameLogic(socket, gameId, myPlayerIndex, slovakWordsSet, gameState, 
     sendPlayerAction(socket, gameId, 'turnSubmitted', passDetails);
     // ---------------------------------
 
+    // DÔLEŽITÉ: 'updateGameState' ide na server VŽDY, aj pri ukončujúcom pasovaní —
+    // server si z neho autoritatívne prepočíta consecutivePasses a len z toho
+    // vie neskôr overiť, že nasledujúce 'gameOver' je oprávnené.
     sendPlayerAction(socket, gameId, 'updateGameState', updatedGameState);
+
+    if (isGameOverCondition) {
+        // Hra skončila pasovaním, vypočítame finálne skóre a detaily
+        const finalScoresData = calculateFinalScores(null, gameState.playerScores, gameState.playerRacks, gameState.players);
+
+        sendPlayerAction(socket, gameId, 'gameOver', {
+            ...finalScoresData, // Tu sú: finalScores, deductions, bonus, winnerId, loserId, winnerIndex
+            initialScores: gameState.playerScores,
+            finishingPlayerIndex: null, // Nikto aktívne nedohral
+            reason: 'pass_end'
+        });
+    }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gameState, myPlayerIndex, socket, gameId, isActionInProgress]);
 

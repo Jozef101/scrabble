@@ -61,13 +61,6 @@ function GamePage({ gameId, userId, onGoToLobby, slovakWordsSet, db }) {
 
   const [confirmation, setConfirmation] = useState({ isOpen: false, message: '', onConfirm: null });
 
-  const handleGameStateUpdate = React.useCallback(newGameState => {
-    setGameState(prevGameState => ({
-        ...prevGameState,
-        ...newGameState
-    }));
-}, []);
-
   const {
     socket,
     myPlayerIndex,
@@ -75,7 +68,7 @@ function GamePage({ gameId, userId, onGoToLobby, slovakWordsSet, db }) {
     chatMessages,
     newChatMessage,
     setNewChatMessage,
-  } = useSocketConnection(gameId, userId, handleGameStateUpdate);
+  } = useSocketConnection(gameId, userId, setGameState);
 
   useEffect(() => {
     // console.log('GamePage: Komponent pripojený (mounted)');

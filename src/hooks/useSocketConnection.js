@@ -22,6 +22,14 @@ function useSocketConnection(gameId, userId, setGameState, displayMessage) {
 
   const hasJoinedGameRef = useRef(false); // Používame ref na zabránenie duplicitného joinGame
 
+  // Drží vždy najaktuálnejšiu hodnotu myPlayerIndex, aby ju listener na
+  // 'gameStateUpdate' (zaregistrovaný raz pri vytvorení socketu) nečítal
+  // ako zastaranú hodnotu zo svojho pôvodného closure.
+  const myPlayerIndexRef = useRef(myPlayerIndex);
+  useEffect(() => {
+    myPlayerIndexRef.current = myPlayerIndex;
+  }, [myPlayerIndex]);
+
   useEffect(() => {
     if (socket && socket.connected) {
       return;
@@ -48,7 +56,8 @@ function useSocketConnection(gameId, userId, setGameState, displayMessage) {
       setGameState,
       setChatMessages,
       setWaitingForSecondPlayer,
-      displayMessage
+      displayMessage,
+      myPlayerIndexRef
     );
 
     // Pripojenie k hre po úspešnom pripojení socketu

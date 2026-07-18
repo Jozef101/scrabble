@@ -3,7 +3,10 @@ import { BOARD_SIZE, RACK_SIZE } from './constants'; // Importujeme konštanty
 
 // Funkcia na nastavenie Socket.IO poslucháčov
 // Pridaný parameter 'displayMessage' pre vlastné správy namiesto alert()
-export const setupSocketListeners = (socket, setConnectionStatus, setMyPlayerIndex, setGameState, setChatMessages, setWaitingForSecondPlayer, displayMessage) => {
+// myPlayerIndexRef: ref na aktuálnu hodnotu myPlayerIndex — POTREBNÝ (nie plain
+// hodnota), lebo tento listener sa registruje raz pri vytvorení socketu a jeho
+// closure by inak vždy videl len hodnotu z toho okamihu (typicky null).
+export const setupSocketListeners = (socket, setConnectionStatus, setMyPlayerIndex, setGameState, setChatMessages, setWaitingForSecondPlayer, displayMessage, myPlayerIndexRef) => {
     // KLÚČOVÁ ZMENA: ODSTRÁNENÝ DUPLICITNÝ 'connect' POSLUCHÁČ
     // Logika pripojenia a emitovania 'joinGame' je teraz plne spravovaná v useSocketConnection.js
 
@@ -49,7 +52,7 @@ export const setupSocketListeners = (socket, setConnectionStatus, setMyPlayerInd
             console.warn("Prijatý neplatný (undefined, null alebo nie objekt) stav hry zo servera cez Socket.IO. Preskakujem aktualizáciu v socketHandlers.");
             return; // Preskočíme aktualizáciu, ak je stav neplatný
         }
-        
+
         // DÔLEŽITÁ OPRAVA: Kontrolujeme počet hráčov pri každej aktualizácii stavu hry
         const connectedPlayersCount = serverGameState.players.filter(p => p !== null && p.socketId !== null).length;
         // console.log("Počet aktívnych hráčov v gameStateUpdate:", connectedPlayersCount);
@@ -59,13 +62,30 @@ export const setupSocketListeners = (socket, setConnectionStatus, setMyPlayerInd
             setWaitingForSecondPlayer(false);
         }
 
-        // KLÚČOVÁ ZMENA: setGameState teraz prijíma celý objekt serverGameState,
-        // ktorý už obsahuje playerNicknames a upravený players objekt.
-        setGameState(prevState => ({
-            ...prevState,
-            ...serverGameState,
-            hasInitialGameStateReceived: true // Teraz vieme, že máme kompletný stav
-        }));
+        // JEDINÉ miesto, ktoré nastavuje gameState z tejto udalosti — zámerne
+        // registrované tu, synchrónne hneď pri vytvorení socketu (nie až v
+        // samostatnom useEffect o render neskôr, ako predtým v useGameLogic.js),
+        // aby nemohla vzniknúť medzera, v ktorej by prvý 'gameStateUpdate' po
+        // pripojení nemal kto spracovať a stratil by sa (stav by ostal na
+        // pôvodných/predvolených hodnotách, napr. currentPlayerIndex: 0).
+        const myPlayerIndex = myPlayerIndexRef ? myPlayerIndexRef.current : null;
+        if (
+            serverGameState.lastTurnInfo &&
+            serverGameState.lastTurnInfo.type === 'rejected' &&
+            serverGameState.lastTurnInfo.opponentIndex === myPlayerIndex
+        ) {
+            // Hráč, ktorého ťah bol zamietnutý — pre neho vrátime "čistú" dosku.
+            setGameState({
+                ...serverGameState,
+                board: serverGameState.boardAtStartOfTurn,
+                hasInitialGameStateReceived: true,
+            });
+        } else {
+            setGameState({
+                ...serverGameState,
+                hasInitialGameStateReceived: true,
+            });
+        }
     });
 
     socket.on('gameError', (message) => {
