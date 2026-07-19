@@ -70,11 +70,7 @@ function AuthPage({ auth, db }) { // KLÚČOVÁ ZMENA: Prijímame aj db ako prop
         }
 
         try {
-            const actionCodeSettings = {
-                url: 'https://skrebl.vercel.app/reset-password',
-                handleCodeInApp: true,
-            };
-            await sendPasswordResetEmail(auth, email, actionCodeSettings);
+            await sendPasswordResetEmail(auth, email);
             setSuccessMessage("Ak e-mail existuje v systéme, bol naň odoslaný odkaz na reset hesla.");
         } catch (error) {
             console.error("Chyba pri odosielaní e-mailu pre reset hesla:", error);
