@@ -16,6 +16,7 @@ import LobbyPage from './components/LobbyPage';
 import GamePage from './components/GamePage';
 import UserMenuIcon from './components/UserMenuIcon';
 import EmailVerificationPage from './components/EmailVerificationPage';
+import ResetPasswordPage from './components/ResetPasswordPage';
 import { ToastContainer } from './components/Toast';
 import { useToast } from './hooks/useToast';
 import { useFaviconTurnIndicator } from './hooks/useFaviconTurnIndicator';
@@ -87,13 +88,13 @@ function App() {
                     console.log("App.js: Prihlásený pomocou vlastného tokenu (Canvas).");
                 } else {
                     // console.log("App.js: Žiadny Canvas token. Čakám na prihlásenie/registráciu používateľa cez AuthPage.");
-                    if (!auth.currentUser && location.pathname !== '/' && location.pathname !== '/verify-email') {
+                    if (!auth.currentUser && location.pathname !== '/' && location.pathname !== '/verify-email' && location.pathname !== '/reset-password') {
                         navigate('/');
                     }
                 }
             } catch (error) {
                 console.error("App.js: Chyba pri prihlasovaní do Firebase (z App.js):", error);
-                if (location.pathname !== '/' && location.pathname !== '/verify-email') {
+                if (location.pathname !== '/' && location.pathname !== '/verify-email' && location.pathname !== '/reset-password') {
                     navigate('/');
                 }
             }
@@ -152,7 +153,7 @@ function App() {
                 // setCurrentUserEmail(null);
                 setCurrentUserNickname(null); // Reset prezývky pri odhlásení
                 // console.log("App.js: Používateľ odhlásený z Firebase. Navigácia na /.");
-                if (location.pathname !== '/') {
+                if (location.pathname !== '/' && location.pathname !== '/reset-password') {
                     navigate('/');
                 }
             }
@@ -173,6 +174,7 @@ function App() {
             const currentUser = auth.currentUser;
 
             if (!oobCode) return; // Ak nie je oobCode, nerob nič
+            if (location.pathname === '/reset-password') return; // Reset hesla spracúva ResetPasswordPage
 
             if (!currentUser) {
             console.log("App.js: Čakám na načítanie currentUser pred overením e-mailu...");
@@ -202,7 +204,7 @@ function App() {
         };
 
         handleEmailVerificationLink();
-        }, [location.search, navigate, userId]);
+        }, [location.search, location.pathname, navigate, userId]);
 
 
     // Sleduje, či je používateľ na ťahu v niektorej z jeho rozohraných hier —
@@ -266,6 +268,11 @@ function App() {
                         <Route
                             path="/verify-email"
                             element={<EmailVerificationPage auth={auth} userId={userId} />}
+                        />
+
+                        <Route
+                            path="/reset-password"
+                            element={<ResetPasswordPage auth={auth} />}
                         />
 
                         <Route

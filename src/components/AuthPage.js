@@ -1,6 +1,6 @@
 // src/components/AuthPage.js
 import React, { useState } from 'react';
-import { signInWithEmailAndPassword, createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword, sendEmailVerification, sendPasswordResetEmail } from 'firebase/auth';
 import { doc, runTransaction } from 'firebase/firestore';
 import '../styles/AuthPage.css'; // Import štýlov pre AuthPage
 
@@ -54,6 +54,35 @@ function AuthPage({ auth, db }) { // KLÚČOVÁ ZMENA: Prijímame aj db ako prop
                 message = "Neplatný formát e-mailu.";
             } else if (error.code === 'auth/invalid-credential') {
                 message = "Nesprávne prihlasovacie údaje.";
+            }
+            setErrorMessage(message);
+        }
+    };
+
+    // Funkcia na odoslanie e-mailu pre reset hesla
+    const handlePasswordReset = async () => {
+        setErrorMessage('');
+        setSuccessMessage('');
+
+        if (!email) {
+            setErrorMessage("Najprv zadajte svoj e-mail, potom kliknite na 'Zabudli ste heslo?'.");
+            return;
+        }
+
+        try {
+            const actionCodeSettings = {
+                url: 'https://skrebl.vercel.app/reset-password',
+                handleCodeInApp: true,
+            };
+            await sendPasswordResetEmail(auth, email, actionCodeSettings);
+            setSuccessMessage("Ak e-mail existuje v systéme, bol naň odoslaný odkaz na reset hesla.");
+        } catch (error) {
+            console.error("Chyba pri odosielaní e-mailu pre reset hesla:", error);
+            let message = "Chyba pri odosielaní e-mailu. Skúste to znova.";
+            if (error.code === 'auth/invalid-email') {
+                message = "Neplatný formát e-mailu.";
+            } else if (error.code === 'auth/too-many-requests') {
+                message = "Príliš veľa pokusov. Skúste to neskôr.";
             }
             setErrorMessage(message);
         }
@@ -271,6 +300,15 @@ function AuthPage({ auth, db }) { // KLÚČOVÁ ZMENA: Prijímame aj db ako prop
                     }} className="auth-button auth-button-secondary">
                         {isRegistering ? 'Máš účet? Prihlás sa' : 'Nemáš účet? Zaregistruj sa'}
                     </button>
+                    {!isRegistering && (
+                        <button
+                            type="button"
+                            onClick={handlePasswordReset}
+                            className="auth-button auth-button-tertiary"
+                        >
+                            Nepamätam si heslo
+                        </button>
+                    )}
                 </div>
             </form>
         </div>
