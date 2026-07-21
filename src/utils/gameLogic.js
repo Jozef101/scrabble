@@ -51,18 +51,21 @@ export function createLetterBag() {
 export function drawLetters(currentBag, numToDraw) {
     const drawn = [];
     const tempBag = [...currentBag];
-    let bagEmpty = false;
 
     for (let i = 0; i < numToDraw; i++) {
         if (tempBag.length > 0) {
             drawn.push(tempBag.pop());
         } else {
             console.warn("Vrecúško je prázdne, nedá sa ťahať viac písmen.");
-            bagEmpty = true;
             break;
         }
     }
-    return { drawnLetters: drawn, remainingBag: tempBag, bagEmpty: bagEmpty };
+    // Vrecko je "prázdne" podľa skutočného stavu po ťahaní, nie podľa toho,
+    // či cyklus narazil na nedostatok písmen — inak sa flag nenastaví presne
+    // vtedy, keď posledný ťah vrecko presne vyprázdni (najbežnejší spôsob,
+    // akým sa hra štandardne končí), a isGameEndingByEmptyRack v useGameLogic
+    // nikdy nevyjde true.
+    return { drawnLetters: drawn, remainingBag: tempBag, bagEmpty: tempBag.length === 0 };
 }
 
 /**
