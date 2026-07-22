@@ -305,6 +305,7 @@ function GamePageWrapper({ userId, onGoToLobby, slovakWordsSet, db }) {
     const { gameId } = useParams();
     return (
         <GamePage
+            key={gameId}
             gameId={gameId}
             userId={userId}
             onGoToLobby={onGoToLobby}
